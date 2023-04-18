@@ -16,8 +16,7 @@
     "testEnvironment": "jest-environment-jsdom",
     "transform": {
       "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.scss$": "jest-scss-transform",
-      "^.+\\.css$": "<rootDir>/.jest/__mocks__/fileMock.js"
+      "^.+\\.scss$": "jest-scss-transform"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx|png|svg)$",
