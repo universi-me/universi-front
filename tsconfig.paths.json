@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "paths": {
+            "@/compoents/*" : ["./src/components/*"],
+            "@/config/*" : ["./src/config/*"],
+            "@/enums/*" : ["./src/enums/*"],
+            "@/hooks/*" : ["./src/hooks/*"],
+            "@/layouts/*" : ["./src/layouts/*"],
+            "@/pages/*" : ["./src/pages/*"],
+            "@/store/*" : ["./src/store/*"],
+            "@/utils/*" : ["./src/utils/*"],
+            
+            "@/assets/*" : ["./public/assets/*"],
+        }
+    }
+}
