@@ -1,0 +1,41 @@
+/* Poppins font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* Nunito font */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap');
+
+/* Variables */
+:root {
+    /* Colors */
+    --primary-color:    #4F518C;
+    --secondary-color:  #2C2A4A;
+    --background-color: #F5F4F4;
+
+    /* Font weights */
+    --font-weight-light:    300;
+    --font-weight-default:  400;
+    --font-weight-semibold: 600;
+    --font-weight-bold:     700;
+}
+
+/* Default settings */
+* {
+    font-family: 'Poppins', sans-serif;
+
+    /* Remove default margin and padding from elements that have it */
+    margin: 0;
+    padding: 0;
+
+    /*
+     Changes default box-sizing to include border so elements don't easily
+     overflow
+
+     For exemple: by default, an element with horizontal margin and width 100%
+     overflows
+    */
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--background-color);
+}
