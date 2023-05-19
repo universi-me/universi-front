@@ -1,9 +1,6 @@
+import UniversiHeader from './components/UniversiHeader'
 
-import Singin from "./components/singin/Singin" 
-export default function App() {
-  return (
-    
-    <Singin></Singin>
-    
-  )
+export function App() {
+    // todo: change to router
+    return <UniversiHeader />;
 }
