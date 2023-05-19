@@ -23,6 +23,9 @@
     --font-weight-default:  400;
     --font-weight-semibold: 600;
     --font-weight-bold:     700;
+
+    /* Timing */
+    --hover-transition-duration: 400ms;
 }
 
 /* Default settings */

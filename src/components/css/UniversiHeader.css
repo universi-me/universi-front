@@ -13,19 +13,25 @@
 
 #universi-header nav {
     font-weight: var(--font-weight-bold);
+    margin-left: 2em;
 }
 
 #universi-header nav a {
     text-decoration: none;
     color: var(--font-color-v1);
+    transition: var(--hover-transition-duration) color;
 }
 
 #universi-header nav a:not(:last-of-type) {
     margin-right: 2em;
 }
 
+#universi-header nav a:hover {
+    color: var(--secondary-color);
+}
+
 #universi-header #universi-header-first-half {
-    width: 35%;
+    width: 50%;
     height: 100%;
     justify-content: space-between;
     display: flex;
@@ -99,4 +105,6 @@
     line-height: 2em;
     font-weight: var(--font-weight-semibold);
     text-align: center;
+
+    text-transform: uppercase;
 }
