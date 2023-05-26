@@ -1,12 +1,12 @@
 import { Component, ReactElement, ReactNode } from "react";
-import UniversiLogo from './UniversiLogo'
-import "./css/UniversiHeader.css"
+import UniversiLogo from '../UniversiLogo'
+import "./UniversiHeader.css"
 
 export type UniversiHeaderProps = {
     // todo
 }
 
-export default class UniversiHeader extends Component {
+export class UniversiHeader extends Component {
     constructor( props: UniversiHeaderProps ) {
         super(props);
     }

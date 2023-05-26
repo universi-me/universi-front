@@ -1,11 +1,11 @@
-import { Component, ReactElement } from "react";
-import './css/UniversiLogo.css'
+import { Component } from "react";
+import './UniversiLogo.css'
 
 export type UniversiLogoProps = {
     // todo
 }
 
-export default class UniversiLogo extends Component {
+export class UniversiLogo extends Component {
     constructor( props: UniversiLogoProps ) {
         super(props);
     }
