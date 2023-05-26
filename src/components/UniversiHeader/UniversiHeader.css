@@ -107,4 +107,10 @@
     text-align: center;
 
     text-transform: uppercase;
+    text-decoration: none;
+    transition: var(--hover-transition-duration) background-color;
+}
+
+.login-button:hover {
+    background-color: var(--button-hover-color);
 }

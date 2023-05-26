@@ -47,7 +47,7 @@ export class UniversiHeader extends Component {
 function loginElement(): ReactElement {
     return (
         // todo: show "Olá, {user.nome}" and profile picture if user is logged
-        <a className="login-button">
+        <a className="login-button" href="">
             Entrar {/* todo: change to "Sair" if user is logged */}
         </a>
     );
