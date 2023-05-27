@@ -1,0 +1,20 @@
+.universi-logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* todo: change CSS when changing placeholder to final logo */
+.universi-logo .universi-image {
+    border-radius: 50%;
+    background-color: #D9D9D9;
+    height: 2.5em;
+    width: 2.5em;
+    margin-right: .75em;
+}
+
+.universi-logo .universi-name {
+    font-family: 'Nunito', sans-serif;
+    font-weight: var(--font-weight-bold);
+}
