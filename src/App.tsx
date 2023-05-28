@@ -4,9 +4,9 @@ export function App() {
   return (
     //exemplo:
     <div className="App">
-      //todo: Header
+      {/*todo: Header*/}
       <Outlet/>
-      //todo: Footer
+      {/*todo: Footer*/}
     </div>
   );
 }
