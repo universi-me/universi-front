@@ -1,6 +1,13 @@
+import { Outlet } from "react-router-dom";
+        
 import UniversiHeader from './components/UniversiHeader'
 
 export function App() {
-    // todo: change to router
-    return <UniversiHeader />;
+  return (
+    <div className="App">
+      <UniversiHeader />;
+      <Outlet/>
+      {/*todo: Footer*/}
+    </div>
+  );
 }
