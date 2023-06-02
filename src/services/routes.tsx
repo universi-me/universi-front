@@ -1,5 +1,7 @@
+import { element } from "prop-types";
 import { App } from "../App";
 import {createBrowserRouter} from 'react-router-dom'
+import Singin from "../../src/pages/singin/Singin";
 
 
 
@@ -26,6 +28,10 @@ export const router = createBrowserRouter([{
       // path: "caminhoantigo",
       // element: <Navigate to = "/novocaminho"/>
 
+    },
+    {
+      path: "/login",
+      element: <Singin/>
     }
     
   ]
