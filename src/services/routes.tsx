@@ -1,3 +1,4 @@
+import { QuizPage } from "../pages/Quiz";
 import { App } from "../App";
 import {createBrowserRouter} from 'react-router-dom'
 
@@ -14,8 +15,8 @@ export const router = createBrowserRouter([{
       // todo: element: Homepage
     },
     {
-      //todo: path: "NomeDoCaminho",
-      //todo: element: <Pagina/>
+      path: "/quiz/:id",
+      element: <QuizPage />
     },
     {//identificador unico - dynamic routes
       //path: "perfil/:id",

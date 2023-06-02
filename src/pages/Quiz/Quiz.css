@@ -1,0 +1,43 @@
+#question {
+    --box-border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 15% auto 0 auto;
+    width: 75%;
+    border: solid 1px var(--primary-color);
+    border-radius: var(--box-border-radius);
+    overflow: hidden;
+}
+
+#question .subject {
+    background-color: var(--primary-color);
+    width: 100%;
+}
+
+#question .subject h2 {
+    color: var(--font-color-v1);
+    margin: 0 auto;
+    width: fit-content;
+    font-weight: var(--font-weight-bold);
+    font-size: 1.5em;
+}
+
+#question .progress-container {
+    width: 100%;
+    height: 1em;
+    background-color: #B8B9BA;
+}
+
+#question .progress-current {
+    height: 100%;
+    width: 20%; /* width depends on quiz progress */
+    background-color: var(--skills-1-color);
+    transition: var(--hover-transition-duration) width;
+}
+
+#question .question-container {
+    width: 100%;
+    padding: 1.5em;
+}
