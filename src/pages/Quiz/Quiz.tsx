@@ -24,7 +24,8 @@ export function QuizPage() {
         { correct: true, id: 1, question_id: 1, title: "Gnome-desktop, Clementine e Openssh" },
         { correct: false, id: 2, question_id: 1, title: "Avast, Google Chrome e Openssh" },
         { correct: false, id: 3, question_id: 1, title: "MS Office, Mozila Firefox e Ubuntu" },
-        { correct: false, id: 4, question_id: 1, title: "LibreOffice, Virtualbox e Eclipse" }
+        { correct: false, id: 4, question_id: 1, title: "Openvpn, Virtualbox e Photoshop" },
+        { correct: false, id: 5, question_id: 1, title: "LibreOffice, Virtualbox e Eclipse" }
     ]
 
     return (
