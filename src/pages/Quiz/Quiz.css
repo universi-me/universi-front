@@ -106,9 +106,52 @@
     border: none;
     cursor: pointer;
     transition: var(--hover-transition-duration) background-color;
+    font-size: .85em;
 }
 
 
 #question .submit:hover {
+    background-color: var(--button-hover-color);
+}
+
+#feedback-container {
+    width: 75%;
+    margin: 3em auto 0 auto;
+}
+
+#feedback-container .feedback-bar {
+    width: 100%;
+    height: .5em;
+    border-radius: 10px;
+    background-color: var(--wave-color);
+}
+
+#feedback-container h3 {
+    font-weight: var(--font-weight-bold);
+    font-size: 1em;
+    margin-top: .25em;
+    margin-bottom: .5em;
+}
+
+#feedback-container .feedback {
+    max-width: 35%;
+    font-weight: var(--font-weight-regular);
+    font-size: .80em;
+    margin-bottom: 2.5em;
+}
+
+#feedback-container .see-more {
+    padding: .75em 6em;
+    background-color: var(--primary-color);
+    color: var(--font-color-v1);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: var(--font-weight-semibold);
+    border-radius: 10px;
+    transition: var(--hover-transition-duration) background-color;
+    font-size: .85em;
+}
+
+#feedback-container .see-more:hover {
     background-color: var(--button-hover-color);
 }
