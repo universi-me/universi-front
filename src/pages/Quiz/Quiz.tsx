@@ -40,19 +40,22 @@ export function QuizPage() {
             </div>
             <form className="question-container">
                 <h2>{question.title}</h2>
-                <RadioGroup.Root>
+                <RadioGroup.Root name="response">
                  {
                     alternatives.map((alternative, index) => {
                         const alternativeId = `alternative-${index}`;
                         return (
-                            <div className="alternative-container">
-                                <RadioGroup.Item className="alternative" value={`${alternative.id}`} id={alternativeId} />
+                            <div className="alternative-container" key={alternative.id}>
+                                <RadioGroup.Item className="alternative" value={`${alternative.id}`} id={alternativeId}>
+                                    <RadioGroup.Indicator className="alternative-indicator" />
+                                </RadioGroup.Item>
                                 <label htmlFor={alternativeId}>{alternative.title}</label>
                             </div>
                         );
                     })
                  }
                 </RadioGroup.Root>
+                 <button className="submit" type="submit">Enviar Resposta</button>
             </form>
         </div>
     );
