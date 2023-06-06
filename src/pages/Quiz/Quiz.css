@@ -90,6 +90,20 @@
     font-size: .85em;
 }
 
+#question .alternative-container[data-right-answer] ~ .alternative-container .alternative[data-state='checked'] .alternative-indicator {
+    background-color: red;
+    width: 100%;
+    height: 100%;
+}
+
+#question .alternative-container[data-right-answer] .alternative {
+    background-color: #27C93F;
+}
+
+#question .alternative-container[data-right-answer] .alternative-indicator {
+    display: none;
+}
+
 #question .alternative-container:last-of-type {
     margin-bottom: 3em;
 }

@@ -37,10 +37,6 @@ export function QuizPage() {
         link: "https://pt.wikipedia.org/wiki/Lorem_ipsum"
     }
 
-    const disabled = responseSent
-        ? { 'data-disabled': '' }
-        : { };
-
     return (
         <div>
             <div id="question">
@@ -54,12 +50,15 @@ export function QuizPage() {
                 </div>
                 <form className="question-container" onSubmit={sendResponse} >
                     <h2>{question.title}</h2>
-                    <RadioGroup.Root name="response" required={true} disabled={responseSent} >
+                    <RadioGroup.Root name="response" className={responseSent ? "show-answer" : ""} required={true} disabled={responseSent} >
                     {
                         alternatives.map((alternative, index) => {
                             const alternativeId = `alternative-${index}`;
+                            const rightAnswer = responseSent && alternative.correct
+                                ? { 'data-right-answer': '' }
+                                : {};
                             return (
-                                <div className="alternative-container" key={alternative.id}>
+                                <div className="alternative-container" key={alternative.id} {...rightAnswer}>
                                     <RadioGroup.Item className="alternative" value={`${alternative.id}`} id={alternativeId}>
                                         <RadioGroup.Indicator className="alternative-indicator" />
                                     </RadioGroup.Item>
