@@ -1,4 +1,4 @@
-import { App } from "../App";
+import { App } from "@/src/App";
 import {createBrowserRouter} from 'react-router-dom'
 
 

@@ -13,6 +13,7 @@
             "@/stories/*":    ["./src/stories/*"],
             "@/types/*":      ["./src/types/*"],
             "@/utils/*":      ["./src/utils/*"],
+            "@/src/*":        ["./src/*"],
 
             "@/assets/*":     ["./public/assets/*"],
         }

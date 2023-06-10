@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
         
-import UniversiHeader from './components/UniversiHeader'
+import UniversiHeader from '@/components/UniversiHeader'
 
 export function App() {
   return (
