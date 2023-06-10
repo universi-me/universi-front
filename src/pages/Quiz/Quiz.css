@@ -81,7 +81,7 @@
     background-color: var(--secondary-color);
 }
 
-#question .alternative-container .alternative[data-state='checked'] ~ label {
+#question #radio-group:not(.show-answer) .alternative[data-state='checked'] ~ label {
     font-weight: var(--font-weight-semibold);
 }
 
@@ -90,12 +90,11 @@
     font-size: .85em;
 }
 
-#question .alternative-container[data-right-answer] ~ .alternative-container .alternative-indicator,
-#question .alternative-container[data-right-answer] .alternative-indicator {
+#question .show-answer .alternative-indicator {
     display: none;
 }
 
-#question .alternative-container[data-right-answer] ~ .alternative-container .alternative[data-state='checked'] {
+#question #radio-group.show-answer .alternative-container:not([data-right-answer]) .alternative[data-state='checked'] {
     background-color: var(--alert-color);
 }
 

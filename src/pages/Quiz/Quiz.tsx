@@ -50,7 +50,7 @@ export function QuizPage() {
                 </div>
                 <form className="question-container" onSubmit={sendResponse} >
                     <h2>{question.title}</h2>
-                    <RadioGroup.Root name="response" className={responseSent ? "show-answer" : ""} required={true} disabled={responseSent} >
+                    <RadioGroup.Root name="response" id="radio-group" className={responseSent ? "show-answer" : ""} required={true} disabled={responseSent}>
                     {
                         alternatives.map((alternative, index) => {
                             const alternativeId = `alternative-${index}`;
