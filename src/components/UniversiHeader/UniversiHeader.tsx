@@ -1,5 +1,5 @@
 import { Component, ReactElement, ReactNode } from "react";
-import UniversiLogo from '../UniversiLogo'
+import UniversiLogo from '@/components/UniversiLogo'
 import "./UniversiHeader.css"
 
 export type UniversiHeaderProps = {
