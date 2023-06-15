@@ -2,14 +2,16 @@ import { useState } from "react";
 import "./signinForm.css";
 
 export default function SinginForm() {
-
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const isButtonDisable = email.length && password.length > 0 ? false : true;
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-  
+
   return (
     <div className="container">
       <form action="/login" method="post" className="form-container">
@@ -21,6 +23,8 @@ export default function SinginForm() {
             type="text"
             id="username"
             name="username"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Insira seu usuario ou e-mail"
             required
           />
@@ -31,24 +35,28 @@ export default function SinginForm() {
             <span className="material-symbols-outlined">lock</span>
           </div>
           <input
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Senha"
             required
           />
-          
-          <span className="toggle" onClick={ toggleShowPassword }>
+
+          <span className="toggle" onClick={toggleShowPassword}>
             <span className="material-symbols-outlined">
-              {showPassword == false ? 'visibility' : 'visibility_off'}
+              {showPassword == false ? "visibility" : "visibility_off"}
             </span>
           </span>
-        
         </div>
       </form>
 
-      <button type="submit" value="Entrar" className="btn_form">
+      <button
+        type="submit"
+        value="Entrar"
+        className="btn_form"
+        disabled={isButtonDisable}
+      >
         ENTRAR
       </button>
 
@@ -58,12 +66,7 @@ export default function SinginForm() {
         <div className="line"></div>
       </div>
 
-      <button
-        className="btn_form_dcx"
-        onClick={() => {
-          alert(1);
-        }}
-      >
+      <button className="btn_form_dcx">
         <img src="../../../public/assets/imgs/dcx-png 1.png" />
         EMAIL DCX
       </button>
