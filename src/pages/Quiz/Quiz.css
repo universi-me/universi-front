@@ -90,16 +90,20 @@
     font-size: .85em;
 }
 
-#question .show-answer .alternative-indicator {
-    display: none;
-}
-
-#question #radio-group.show-answer .alternative-container:not([data-right-answer]) .alternative[data-state='checked'] {
+#question .show-answer .alternative-container:not([data-right-answer]) .alternative[data-state='checked'] .alternative-indicator {
     background-color: var(--alert-color);
 }
 
-#question .alternative-container[data-right-answer] .alternative {
-    background-color: #27C93F;
+#question .show-answer .alternative-container[data-right-answer] .alternative-indicator {
+    background-color: #618F74;
+}
+
+#question #radio-group.show-answer .alternative-container:not([data-right-answer]) .alternative[data-state='checked'] ~ label {
+    color: var(--alert-color);
+}
+
+#question #radio-group.show-answer .alternative-container[data-right-answer] .alternative ~ label {
+    color: #618F74;
 }
 
 #question .alternative-container:last-of-type {
@@ -107,7 +111,6 @@
 }
 
 #question .submit {
-    background-color: var(--primary-color);
     text-transform: uppercase;
     color: var(--font-color-v1);
     margin-left: auto;
@@ -116,13 +119,20 @@
     padding: .75em 6em;
     border-radius: 10px;
     border: none;
-    cursor: pointer;
     transition: var(--hover-transition-duration) background-color;
     font-size: .85em;
 }
 
+#question .submit:not([disabled]) {
+    background-color: var(--primary-color);
+    cursor: pointer;
+}
 
-#question .submit:hover {
+#question .submit[disabled] {
+    background-color: #373858;
+}
+
+#question .submit:not([disabled]):hover {
     background-color: var(--button-hover-color);
 }
 

@@ -10,6 +10,7 @@ import { Feedback } from "../../types/feedback";
 
 export function QuizPage() {
     const [responseSent, setResponseSent] = useState<boolean>(false);
+    const [isChecked, setIsChecked] = useState<boolean>(false);
     const { id } = useParams();
     // todo: check if id is undefined
 
@@ -50,7 +51,7 @@ export function QuizPage() {
                 </div>
                 <form className="question-container" onSubmit={sendResponse} >
                     <h2>{question.title}</h2>
-                    <RadioGroup.Root name="response" id="radio-group" className={responseSent ? "show-answer" : ""} required={true} disabled={responseSent}>
+                    <RadioGroup.Root name="response" id="radio-group" className={responseSent ? "show-answer" : ""} required={true} disabled={responseSent} onValueChange={checkAlternative}>
                     {
                         alternatives.map((alternative, index) => {
                             const alternativeId = `alternative-${index}`;
@@ -60,7 +61,7 @@ export function QuizPage() {
                             return (
                                 <div className="alternative-container" key={alternative.id} {...rightAnswer}>
                                     <RadioGroup.Item className="alternative" value={`${alternative.id}`} id={alternativeId}>
-                                        <RadioGroup.Indicator className="alternative-indicator" />
+                                        <RadioGroup.Indicator className="alternative-indicator" forceMount={responseSent && alternative.correct ? true : undefined} />
                                     </RadioGroup.Item>
                                     <label htmlFor={alternativeId}>{alternative.title}</label>
                                 </div>
@@ -68,7 +69,7 @@ export function QuizPage() {
                         })
                     }
                     </RadioGroup.Root>
-                    <button className="submit" type="submit">{responseSent ? "Próxima questão" : "Enviar resposta"}</button>
+                    <button className="submit" type="submit" disabled={!isChecked}>{responseSent ? "Próxima questão" : "Enviar resposta"}</button>
                 </form>
             </div>
 
@@ -91,5 +92,9 @@ export function QuizPage() {
     function sendResponse(event: FormEvent) {
         event.preventDefault();
         setResponseSent(true);
+    }
+
+    function checkAlternative(value: string) {
+        setIsChecked(Boolean(value));
     }
 }
