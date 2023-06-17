@@ -7,17 +7,19 @@
 /* Variables */
 :root {
     /* Colors */
-    --primary-color:     #4F518C;
-    --secondary-color:   #2C2A4A;
-    --forms-color:       #E0E0E0;
-    --font-color-v1:     #FFFFFF;
-    --font-color-v2:     #191919;
-    --font-color-v3:     #8A8A8A;
-    --font-color-v4:     #7D7EAE;
-    --skills-1-color:    #8B8DD9;
-    --wave-color:        #9294CC;
-    --background-color:  #F5F4F4;
+    --primary-color:      #4F518C;
+    --secondary-color:    #2C2A4A;
+    --forms-color:        #E0E0E0;
+    --font-color-v1:      #FFFFFF;
+    --font-color-v2:      #191919;
+    --font-color-v3:      #8A8A8A;
+    --font-color-v4:      #7D7EAE;
+    --skills-1-color:     #8B8DD9;
+    --wave-color:         #9294CC;
+    --background-color:   #F5F4F4;
     --button-hover-color: #39375D;
+    --alert-color:        #CC615B;
+    --rank-color:         #6E70AF;
 
     /* Font weights */
     --font-weight-light:    300;
