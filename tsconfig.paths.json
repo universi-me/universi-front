@@ -1,16 +1,21 @@
 {
     "compilerOptions": {
         "paths": {
-            "@/compoents/*" : ["./src/components/*"],
-            "@/config/*" : ["./src/config/*"],
-            "@/enums/*" : ["./src/enums/*"],
-            "@/hooks/*" : ["./src/hooks/*"],
-            "@/layouts/*" : ["./src/layouts/*"],
-            "@/pages/*" : ["./src/pages/*"],
-            "@/store/*" : ["./src/store/*"],
-            "@/utils/*" : ["./src/utils/*"],
-            
-            "@/assets/*" : ["./public/assets/*"],
+            "@/components/*": ["./src/components/*"],
+            "@/configs/*":    ["./src/configs/*"],
+            "@/enums/*":      ["./src/enums/*"],
+            "@/hooks/*":      ["./src/hooks/*"],
+            "@/layouts/*":    ["./src/layouts/*"],
+            "@/locales/*":    ["./src/locales/*"],
+            "@/pages/*":      ["./src/pages/*"],
+            "@/services/*":   ["./src/services/*"],
+            "@/store/*":      ["./src/store/*"],
+            "@/stories/*":    ["./src/stories/*"],
+            "@/types/*":      ["./src/types/*"],
+            "@/utils/*":      ["./src/utils/*"],
+            "@/src/*":        ["./src/*"],
+
+            "@/assets/*":     ["./public/assets/*"],
         }
     }
 }

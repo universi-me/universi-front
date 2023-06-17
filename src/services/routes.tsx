@@ -1,5 +1,5 @@
-import { QuizPage } from "../pages/Quiz";
-import { App } from "../App";
+import { QuizPage } from "@/pages/Quiz";
+import { App } from "@/src/App";
 import {createBrowserRouter} from 'react-router-dom'
 
 
