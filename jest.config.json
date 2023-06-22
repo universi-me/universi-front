@@ -5,6 +5,7 @@
     "setupFilesAfterEnv": [
       "<rootDir>/.jest/setup-tests.js"
     ],
+    "coverageDirectory": "<rootDir>/.jest/coverage",
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
