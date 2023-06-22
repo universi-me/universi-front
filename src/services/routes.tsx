@@ -1,7 +1,8 @@
-import { element } from "prop-types";
 import { App } from "../App";
 import {createBrowserRouter} from 'react-router-dom'
 import Singin from "../../src/pages/singin/Singin";
+import { RequireAuth } from "../contexts/Auth/RequireAuth";
+import Profile from "../../src/pages/profile/Profile";
 
 
 
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([{
     {
       path: "/login",
       element: <Singin/>
+    },
+    {
+      path: "/profile", 
+      element: <RequireAuth><Profile></Profile></RequireAuth>
     }
     
   ]
