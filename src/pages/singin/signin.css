@@ -30,8 +30,15 @@ footer {
     width: 100vw;
 }
 
-
 .waves svg {
+    position: absolute;
     fill: var(--primary-color);
-    margin-bottom: -60px;
+    bottom: 0px;
+}
+
+@media screen and (max-width: 1187px) {
+    .waves svg {
+        position: relative;
+        margin-bottom: -10px;
+    }
 }

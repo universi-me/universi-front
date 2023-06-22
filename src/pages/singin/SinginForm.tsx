@@ -1,10 +1,32 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "./signinForm.css";
+import { AuthContext } from "../../contexts/Auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function SinginForm() {
+  
+  const auth = useContext(AuthContext)
+
+  const navigate = useNavigate();
+
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
+
+  const handleLogin = async () => {
+
+    if(email && password) {
+      console.log(email);
+      console.log(password);
+      
+      const isLogged = await auth.signin(email, password);
+      console.log(isLogged);
+      
+      if(isLogged) {
+        navigate("/profile");
+      }
+    }
+  }
 
   const isButtonDisable = email.length && password.length > 0 ? false : true;
 
@@ -56,6 +78,7 @@ export default function SinginForm() {
         value="Entrar"
         className="btn_form"
         disabled={isButtonDisable}
+        onClick={handleLogin}
       >
         ENTRAR
       </button>
