@@ -1,0 +1,25 @@
+#profile-page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: fit-content;
+
+    --user-header-bar-height: 12rem;
+}
+
+#profile-page #user-header-bar {
+    width: 100%;
+    height: var(--user-header-bar-height);
+}
+
+#profile-page .content {
+    margin: 0 2.5em;
+
+    display: grid;
+    grid-template-columns: 20% auto;
+}
+
+#profile-page #left-side {
+    --section-separator: 1.5em;
+    translate: 0 calc(var(--user-header-bar-height) / -2);
+}
