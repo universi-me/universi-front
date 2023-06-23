@@ -5,7 +5,7 @@ import UniversiHeader from '@/components/UniversiHeader'
 export function App() {
   return (
     <div className="App">
-      <UniversiHeader />;
+      <UniversiHeader />
       <Outlet/>
       {/*todo: Footer*/}
     </div>
