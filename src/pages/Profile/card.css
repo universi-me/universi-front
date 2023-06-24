@@ -30,12 +30,12 @@
 
 #profile-page #left-side .card .items-wrapper {
     margin: 0 auto;
+    width: 90%;
 }
 
 #profile-page #left-side .card .items-wrapper .show-items {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
 }
 
 #profile-page #left-side .card .items-wrapper .item {
