@@ -86,7 +86,7 @@
 }
 
 #question .alternative-container label {
-    font-weight: var(--font-weight-regular);
+    font-weight: var(--font-weight-default);
     font-size: .85em;
 }
 
@@ -157,7 +157,7 @@
 
 #feedback-container .feedback {
     max-width: 35%;
-    font-weight: var(--font-weight-regular);
+    font-weight: var(--font-weight-default);
     font-size: .80em;
     margin-bottom: 2.5em;
 }

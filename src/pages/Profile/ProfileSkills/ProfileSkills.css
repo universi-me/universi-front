@@ -51,7 +51,7 @@
 #profile-page #right-side .skills .skill-list .skill-item .learning {
     color: #000;
     font-size: 0.875em;
-    font-weight: var(--font-weight-regular);
+    font-weight: var(--font-weight-default);
 }
 
 #profile-page #right-side .skills .skill-list .skill-item .skill-level-list {

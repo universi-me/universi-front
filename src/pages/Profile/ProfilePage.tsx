@@ -4,6 +4,7 @@ import { ProfileGroups } from "./ProfileGroups/ProfileGroups";
 import { ProfileAchievements } from "./ProfileAchievements/ProfileAchievements";
 import { ProfileRecommendSettingsButton } from "./ProfileRecommendSettingsButton/ProfileRecommendSettingsButton";
 import { ProfileSkills } from "./ProfileSkills/ProfileSkills";
+import { ProfileLastRecommendations } from './ProfileLastRecommendations/ProfileLastRecommendations'
 
 import './Profile.css'
 import './card.css'
@@ -48,6 +49,7 @@ export function ProfilePage() {
                 <div id="right-side">
                     <ProfileRecommendSettingsButton loggedUserProfile={loggedUserProfile}/>
                     <ProfileSkills skills={['', '', '']} />
+                    <ProfileLastRecommendations recommendations={['', '']} />
                 </div>
             </div>
         </div>
