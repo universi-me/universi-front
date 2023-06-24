@@ -1,10 +1,10 @@
-import './ProfileRecommendButton.css'
+import './ProfileRecommendSettingsButton.css'
 
-export type ProfileRecommendButtonProps = {
+export type ProfileRecommendSettingsButtonProps = {
     loggedUserProfile: boolean;
 };
 
-export function ProfileRecommendButton(props: ProfileRecommendButtonProps) {
+export function ProfileRecommendSettingsButton(props: ProfileRecommendSettingsButtonProps) {
     const className = props.loggedUserProfile
         ? "settings"
         : "recommend";

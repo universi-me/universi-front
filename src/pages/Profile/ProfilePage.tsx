@@ -1,13 +1,13 @@
 import { useParams } from "react-router-dom";
-import { ProfileBio } from './LeftSide/ProfileBio'
-import { ProfileGroups } from "./LeftSide/ProfileGroups";
-import { ProfileAchievements } from "./LeftSide/ProfileAchievements";
+import { ProfileBio } from './ProfileBio/ProfileBio'
+import { ProfileGroups } from "./ProfileGroups/ProfileGroups";
+import { ProfileAchievements } from "./ProfileAchievements/ProfileAchievements";
+import { ProfileRecommendSettingsButton } from "./ProfileRecommendSettingsButton/ProfileRecommendSettingsButton";
+import { ProfileSkills } from "./ProfileSkills/ProfileSkills";
 
 import './Profile.css'
-import './LeftSide/card.css'
-import './LeftSide/section.css'
-import { ProfileRecommendButton } from "./RightSide/ProfileRecommendButton";
-import { ProfileSkills } from "./RightSide/ProfileSkills";
+import './card.css'
+import './section.css'
 
 export function ProfilePage() {
     const { id } = useParams();
@@ -46,7 +46,7 @@ export function ProfilePage() {
                 </div>
 
                 <div id="right-side">
-                    <ProfileRecommendButton loggedUserProfile={loggedUserProfile}/>
+                    <ProfileRecommendSettingsButton loggedUserProfile={loggedUserProfile}/>
                     <ProfileSkills skills={['', '', '']} />
                 </div>
             </div>

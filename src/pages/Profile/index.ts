@@ -2,6 +2,8 @@ import { ProfilePage } from './ProfilePage'
 export default ProfilePage;
 
 export * from './ProfilePage'
-export * from './LeftSide/ProfileAchievements'
-export * from './LeftSide/ProfileBio'
-export * from './LeftSide/ProfileGroups'
+export * from './ProfileAchievements/ProfileAchievements'
+export * from './ProfileBio/ProfileBio'
+export * from './ProfileGroups/ProfileGroups'
+export * from './ProfileRecommendSettingsButton/ProfileRecommendSettingsButton'
+export * from './ProfileSkills/ProfileSkills'
