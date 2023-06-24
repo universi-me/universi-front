@@ -1,3 +1,8 @@
+#left-side .bio .edit-button {
+    right: .75em;
+    top: .5em;
+}
+
 #left-side .bio .image {
     width: 9.5em;
     aspect-ratio: 1;

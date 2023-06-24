@@ -2,6 +2,7 @@ import './ProfileSkills.css'
 
 export type ProfileSkillsProps = {
     skills: string[];
+    loggedUserProfile: boolean;
 };
 
 export function ProfileSkills(props: ProfileSkillsProps) {
@@ -9,7 +10,19 @@ export function ProfileSkills(props: ProfileSkillsProps) {
 
     return (
         <div className="skills">
-            <div className="heading">Habilidades</div>
+            <div className="heading">
+                Habilidades
+                {
+                    props.loggedUserProfile ?
+                        <button className="edit-button"
+                            // todo: figure out why the button is bigger than the image
+                            style={{translate: '0 3px'}}
+                        >
+                            <img src='/assets/icons/edit.svg' alt="Editar" />
+                        </button>
+                    : null
+                }
+            </div>
             <div className="skill-list">
                 {
                     props.skills.map(skill => {

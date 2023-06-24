@@ -2,11 +2,11 @@
     width: 100%;
     height: fit-content;
 
-    margin-top: calc(var(--recommend-settings-button-translate) + 2em);
-
     border-radius: 20px;
     background: #D6D6D6;
     overflow: hidden;
+
+    translate: 0 0;
 }
 
 #profile-page #right-side .skills .heading {
@@ -20,6 +20,11 @@
     font-size: 1.875em;
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
+}
+
+#profile-page #right-side .skills .edit-button {
+    filter: brightness(0) saturate(100%) invert(100%);
+    right: 1.5em;
 }
 
 #profile-page #right-side .skills .skill-list {

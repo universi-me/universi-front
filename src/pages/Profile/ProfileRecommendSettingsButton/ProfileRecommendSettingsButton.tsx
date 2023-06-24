@@ -1,3 +1,4 @@
+import { CSSProperties } from 'react';
 import './ProfileRecommendSettingsButton.css'
 
 export type ProfileRecommendSettingsButtonProps = {
@@ -10,11 +11,16 @@ export function ProfileRecommendSettingsButton(props: ProfileRecommendSettingsBu
         : "recommend";
 
     const buttonContent = props.loggedUserProfile
-        ? <img src="/icons/settings.svg" />
+        ? <img src="/assets/icons/settings.svg" />
         : "Recomendar";
 
+    const buttonHeight = props.loggedUserProfile
+        ? '3.75em'
+        : '2.5em';
+
     return (
-        <button className={"recommend-settings-button " + className}>
+        <button className={"recommend-settings-button " + className}
+            style={{'--height': buttonHeight} as CSSProperties}>
             { buttonContent }
         </button>
     );

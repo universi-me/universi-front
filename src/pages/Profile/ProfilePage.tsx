@@ -19,7 +19,15 @@ export function ProfilePage() {
     return (
         <div id="profile-page">
             {/* todo: color from API */}
-            <div id="user-header-bar" style={{background: "#515151"}} />
+            <div id="user-header-bar" style={{background: "#515151"}}>
+                {
+                    loggedUserProfile ?
+                        <button className="edit-button" >
+                            <img src='/assets/icons/edit.svg' alt="Editar" />
+                        </button>
+                    : null
+                }
+            </ div>
 
             <div className="content">
                 <div id="left-side">
@@ -31,6 +39,7 @@ export function ProfilePage() {
                         functionPronouns={'Função | Pronome'}
                         aboutMe={'Lorem ipsum dolor sit amet. Hic dolor reiciendis rem earum voluptatem sit similique magnam est repellat mollitia. Et nesciunt consequuntur a vero rerum aut optio tempore aut.'}
                         links={['', '', '', '']}
+                        loggedUserProfile={loggedUserProfile}
                     />
 
                     {/* todo: groups from API */}
@@ -47,8 +56,8 @@ export function ProfilePage() {
                 </div>
 
                 <div id="right-side">
-                    <ProfileRecommendSettingsButton loggedUserProfile={loggedUserProfile}/>
-                    <ProfileSkills skills={['', '', '']} />
+                    <ProfileRecommendSettingsButton loggedUserProfile={loggedUserProfile} />
+                    <ProfileSkills skills={['', '', '']} loggedUserProfile={loggedUserProfile} />
                     <ProfileLastRecommendations recommendations={['', '']} />
                 </div>
             </div>

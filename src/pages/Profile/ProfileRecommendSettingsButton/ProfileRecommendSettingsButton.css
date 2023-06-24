@@ -5,6 +5,9 @@
 
     margin-left: auto;
 
+    height: var(--height);
+    translate: 0 calc(var(--height) / -2);
+
     background: var(--font-color-v1);
     box-shadow: 0 4px 40px 10px rgba(0, 0, 0, 0.15);
     border: none;
@@ -13,11 +16,9 @@
 }
 
 #profile-page #right-side .recommend-settings-button.recommend {
-    height: var(--recommend-settings-button-height);
     padding: 0 6.5em;
 
     margin-right: .3em;
-    translate: 0 var(--recommend-settings-button-translate);
 
     border-radius: 10px;
 
@@ -27,4 +28,10 @@
     text-transform: uppercase;
 }
 
+#profile-page #right-side .recommend-settings-button.settings {
+    width: var(--height);
 
+    aspect-ratio: 1;
+    padding: 1em;
+    border-radius: 50%;
+}

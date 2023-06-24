@@ -7,11 +7,20 @@ export type ProfileBioProps = {
     functionPronouns: string;
     aboutMe: string;
     links: string[];
+    loggedUserProfile: boolean;
 };
 
 export function ProfileBio(props: ProfileBioProps) {
     return (
         <div className="bio card">
+            {
+                props.loggedUserProfile ?
+                    <button className="edit-button">
+                        <img src="/assets/icons/edit.svg" alt="Editar" />
+                    </button>
+                : null
+            }
+
             <div className="intro section">
                 <div className="image" style={{backgroundColor: props.image}} />
                 <h2 className="card-heading name">{ props.name }</h2>
