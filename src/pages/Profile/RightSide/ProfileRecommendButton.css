@@ -1,0 +1,31 @@
+#profile-page #right-side .recommend-settings-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: auto;
+
+    background: var(--font-color-v1);
+    box-shadow: 0 4px 40px 10px rgba(0, 0, 0, 0.15);
+    border: none;
+
+    cursor: pointer;
+}
+
+#profile-page #right-side .recommend-settings-button.recommend {
+    --height: 2.5em;
+    height: var(--height);
+    padding: 0 6.5em;
+
+    margin-right: .3em;
+    translate: 0 calc(var(--height) / -2);
+
+    border-radius: 10px;
+
+    color: var(--secondary-color);
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+}
+
+

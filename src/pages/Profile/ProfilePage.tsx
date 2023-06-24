@@ -6,6 +6,7 @@ import { ProfileAchievements } from "./LeftSide/ProfileAchievements";
 import './Profile.css'
 import './LeftSide/card.css'
 import './LeftSide/section.css'
+import { ProfileRecommendButton } from "./RightSide/ProfileRecommendButton";
 
 export function ProfilePage() {
     const { id } = useParams();
@@ -41,6 +42,10 @@ export function ProfilePage() {
                         count={0}
                         achievements={['', '', '', '']}
                     />
+                </div>
+
+                <div id="right-side">
+                    <ProfileRecommendButton loggedUserProfile={loggedUserProfile}/>
                 </div>
             </div>
         </div>
