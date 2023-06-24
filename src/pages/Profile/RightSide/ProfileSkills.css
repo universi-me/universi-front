@@ -1,0 +1,79 @@
+#profile-page #right-side .skills {
+    width: 100%;
+    height: fit-content;
+
+    margin-top: calc(var(--recommend-settings-button-translate) + 2em);
+
+    border-radius: 20px;
+    background: #D6D6D6;
+    overflow: hidden;
+}
+
+#profile-page #right-side .skills .heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--primary-color);
+
+    color: #FFF;
+    font-size: 1.875em;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+}
+
+#profile-page #right-side .skills .skill-list {
+    padding: 2.25em 3em;
+}
+
+#profile-page #right-side .skills .skill-list .skill-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding: .75em 1em;
+
+    background: #F5F5F5;
+    border-radius: 20px;
+}
+
+#profile-page #right-side .skills .skill-list .skill-item:not(:last-of-type) {
+    margin-bottom: 1.7em;
+}
+
+#profile-page #right-side .skills .skill-list .skill-item .icon {
+    margin-right: 1.75em;
+
+    width: 1.875em;
+    aspect-ratio: 1;
+}
+
+#profile-page #right-side .skills .skill-list .skill-item .learning {
+    color: #000;
+    font-size: 0.875em;
+    font-weight: var(--font-weight-regular);
+}
+
+#profile-page #right-side .skills .skill-list .skill-item .skill-level-list {
+    display: flex;
+    flex-direction: row;
+
+    margin-left: auto;
+    margin-right: 2.5em;
+}
+
+#profile-page #right-side .skills .skill-list .skill-item .skill-level-list .skill-level {
+    width: 3.5em;
+    height: 0.5em;
+    border-radius: 10px;
+    background: #C1C1C1;
+}
+
+#profile-page #right-side .skills .skill-list .skill-item .skill-level-list .skill-level.learned {
+    background: var(--skills-1-color);
+    
+}
+
+#profile-page #right-side .skills .skill-list .skill-item .skill-level-list .skill-level:not(:last-of-type) {
+    margin-right: .5em;
+}

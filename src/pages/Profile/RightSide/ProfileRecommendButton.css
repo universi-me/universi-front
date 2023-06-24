@@ -13,12 +13,11 @@
 }
 
 #profile-page #right-side .recommend-settings-button.recommend {
-    --height: 2.5em;
-    height: var(--height);
+    height: var(--recommend-settings-button-height);
     padding: 0 6.5em;
 
     margin-right: .3em;
-    translate: 0 calc(var(--height) / -2);
+    translate: 0 var(--recommend-settings-button-translate);
 
     border-radius: 10px;
 

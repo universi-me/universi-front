@@ -23,3 +23,11 @@
     --section-separator: 1.5em;
     translate: 0 calc(var(--user-header-bar-height) / -2);
 }
+
+#profile-page #right-side {
+    width: 95%;
+    margin-left: auto;
+
+    --recommend-settings-button-height: 2.5em;
+    --recommend-settings-button-translate: calc(var(--recommend-settings-button-height) / -2);
+}

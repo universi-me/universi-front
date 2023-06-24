@@ -7,6 +7,7 @@ import './Profile.css'
 import './LeftSide/card.css'
 import './LeftSide/section.css'
 import { ProfileRecommendButton } from "./RightSide/ProfileRecommendButton";
+import { ProfileSkills } from "./RightSide/ProfileSkills";
 
 export function ProfilePage() {
     const { id } = useParams();
@@ -46,6 +47,7 @@ export function ProfilePage() {
 
                 <div id="right-side">
                     <ProfileRecommendButton loggedUserProfile={loggedUserProfile}/>
+                    <ProfileSkills skills={['', '', '']} />
                 </div>
             </div>
         </div>
