@@ -7,9 +7,14 @@ export default function Profile() {
     const authContext = useContext(AuthContext)
 
     return(
-        <h1>
+     <>
+           <h1>
             Pagina de perfil {authContext.user?.email}
         </h1>
+        <button onClick={authContext.signout}>
+            sair
+        </button>
+     </>
     )
 
 }

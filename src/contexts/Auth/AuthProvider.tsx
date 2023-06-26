@@ -11,6 +11,8 @@ export const AuthProvider =  ({children} : {children: JSX.Element}) => {
     useEffect(() => {
         const validateToken = async () => {
             const storageData = localStorage.getItem('AuthToken');
+            console.log(user);
+            
             console.log("storage", storageData);
             if (storageData) {
                 const data = await api.validateToken(storageData);
@@ -28,7 +30,6 @@ export const AuthProvider =  ({children} : {children: JSX.Element}) => {
         if(data.user && data.token){
             setUser(data.user)
             setToken(data.token)
-            console.log("entrou")
             return true
            
         }
@@ -37,6 +38,7 @@ export const AuthProvider =  ({children} : {children: JSX.Element}) => {
     const signout = async () => {
        await api.logout();
        setUser(null); 
+       setToken("");
     }
     const setToken = (token: string) => {
         localStorage.setItem("AuthToken", token);

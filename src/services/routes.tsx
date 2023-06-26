@@ -34,11 +34,12 @@ export const router = createBrowserRouter([{
       path: "/login",
       element: <Singin/>
     },
-    {
-      path: "/profile", 
-      element: <RequireAuth><Profile></Profile></RequireAuth>
-    }
+   
     
   ]
+},
+{
+  path: "/profile", 
+  element: <RequireAuth><Profile></Profile></RequireAuth>
 }
 ])

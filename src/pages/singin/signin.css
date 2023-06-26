@@ -34,6 +34,7 @@ footer {
     position: absolute;
     fill: var(--primary-color);
     bottom: 0px;
+    z-index: -1;
 }
 
 @media screen and (max-width: 1187px) {
