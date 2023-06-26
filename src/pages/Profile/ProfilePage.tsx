@@ -70,7 +70,26 @@ export function ProfilePage() {
             {
                 showProfileSettings &&
                 <Modal onClickOutside={toggleProfileSettings} >
-                    <ProfileSettings />
+                    {/* todo: gender options from API */}
+                    <ProfileSettings
+                        genderOptions={[
+                            { apiValue: 'M', name: 'Masculino' },
+                            { apiValue: 'F', name: 'Feminino' },
+                            { apiValue: 'O', name: 'Outro' },
+                            { apiValue: 'N', name: 'Não informar' },
+                        ]}
+                        pronounsOptions={[
+                            { apiValue: 'ELE', name: 'ele/dele' },
+                            { apiValue: 'ELA', name: 'ela/dela' },
+                            { apiValue: 'N',   name: 'Não informar' },
+                        ]}
+                        socialOptions={[
+                            { apiValue: 'facebook',  iconName: 'facebook',  name: 'Facebook' },
+                            { apiValue: 'github',    iconName: 'github',    name: 'Github' },
+                            { apiValue: 'instagram', iconName: 'instagram', name: 'Instagram' },
+                            { apiValue: 'linkedin',  iconName: 'linkedin',  name: 'LinkedIn' },
+                        ]}
+                    />
                 </Modal>
             }
         </div>
