@@ -10,7 +10,7 @@
 #profile-page #user-header-bar {
     width: 100%;
     height: var(--user-header-bar-height);
-    /* translate: 0 0; */
+    translate: 0 0;
 }
 
 #profile-page .content {
@@ -22,7 +22,7 @@
 
 #profile-page #left-side {
     --section-separator: 1.5em;
-    /* translate: 0 calc(var(--user-header-bar-height) / -2); */
+    translate: 0 calc(var(--user-header-bar-height) / -2);
 }
 
 #profile-page #right-side {
@@ -31,7 +31,7 @@
 }
 
 #profile-page .edit-button {
-    /* position: fixed; */
+    position: absolute;
     width: min-content;
     height: min-content;
 

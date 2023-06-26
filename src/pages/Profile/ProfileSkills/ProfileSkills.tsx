@@ -16,7 +16,7 @@ export function ProfileSkills(props: ProfileSkillsProps) {
                     props.loggedUserProfile ?
                         <button className="edit-button"
                             // todo: figure out why the button is bigger than the image
-                            // style={{translate: '0 3px'}}
+                            style={{translate: '0 3px'}}
                         >
                             <img src='/assets/icons/edit-1.svg' alt="Editar" />
                         </button>

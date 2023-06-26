@@ -1,10 +1,11 @@
 import { useParams } from "react-router-dom";
-import { ProfileBio } from './ProfileBio/ProfileBio'
-import { ProfileGroups } from "./ProfileGroups/ProfileGroups";
-import { ProfileAchievements } from "./ProfileAchievements/ProfileAchievements";
-import { ProfileRecommendSettingsButton } from "./ProfileRecommendSettingsButton/ProfileRecommendSettingsButton";
-import { ProfileSkills } from "./ProfileSkills/ProfileSkills";
-import { ProfileLastRecommendations } from './ProfileLastRecommendations/ProfileLastRecommendations'
+import { useState } from "react";
+import { Modal } from "@/components/Modal/Modal";
+
+import {
+    ProfileBio, ProfileGroups, ProfileAchievements, ProfileRecommendSettingsButton,
+    ProfileSkills, ProfileLastRecommendations, ProfileSettings
+} from '@/pages/Profile'
 
 import './Profile.css'
 import './card.css'
@@ -15,6 +16,8 @@ export function ProfilePage() {
 
     // todo: check if logged user has this id
     const loggedUserProfile = id == 'user';
+
+    const [showProfileSettings, setShowProfileSettings] = useState<boolean>(false);
 
     return (
         <div id="profile-page">
@@ -40,6 +43,8 @@ export function ProfilePage() {
                         aboutMe={'Lorem ipsum dolor sit amet. Hic dolor reiciendis rem earum voluptatem sit similique magnam est repellat mollitia. Et nesciunt consequuntur a vero rerum aut optio tempore aut.'}
                         links={['', '', '', '']}
                         loggedUserProfile={loggedUserProfile}
+
+                        editModalHelper={{shouldRender: showProfileSettings, onClickOutside: toggleProfileSettings}}
                     />
 
                     {/* todo: groups from API */}
@@ -61,6 +66,17 @@ export function ProfilePage() {
                     <ProfileLastRecommendations recommendations={['', '']} />
                 </div>
             </div>
+
+            {
+                showProfileSettings &&
+                <Modal onClickOutside={toggleProfileSettings} >
+                    <ProfileSettings />
+                </Modal>
+            }
         </div>
     );
+
+    function toggleProfileSettings() {
+        setShowProfileSettings(!showProfileSettings);
+    }
 }

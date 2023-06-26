@@ -3,14 +3,23 @@ import './Modal.css'
 
 export type ModalProps = {
     /**
-     * Content of the model
+     * Content of the modal
      */
     children: ReactNode;
 
     /**
      * Executed when the overlay is clicked
      */
-    onClickOutside?: MouseEventHandler<HTMLDivElement>;
+    onClickOutside?: MouseEventHandler;
+};
+
+/**
+ * Helps sending information if a modal should render if the modal is out of scope
+ * See ProfilePage.tsx and ProfileBio.tsx
+ */
+export type ModalHelper = {
+    shouldRender: boolean;
+    onClickOutside?: MouseEventHandler;
 };
 
 /**

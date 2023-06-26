@@ -6,7 +6,7 @@
     margin-left: auto;
 
     height: var(--height);
-    /* translate: 0 calc(var(--height) / -2); */
+    translate: 0 calc(var(--height) / -2);
 
     background: var(--font-color-v1);
     box-shadow: 0 4px 40px 10px rgba(0, 0, 0, 0.15);
