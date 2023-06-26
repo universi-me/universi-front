@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { Modal } from '@/components/Modal/Modal';
+import { ProfileSettings } from '../ProfileSettings/ProfileSettings';
 import './ProfileBio.css'
 
 export type ProfileBioProps = {
@@ -11,12 +14,14 @@ export type ProfileBioProps = {
 };
 
 export function ProfileBio(props: ProfileBioProps) {
+    const [ showSettings, setShowSettings ] = useState<boolean>(false);
+
     return (
         <div className="bio card">
             {
                 props.loggedUserProfile ?
-                    <button className="edit-button">
-                        <img src="/assets/icons/edit.svg" alt="Editar" />
+                    <button className="edit-button" onClick={toggleEditButton}>
+                        <img src="/assets/icons/edit-2.svg" alt="Editar" />
                     </button>
                 : null
             }
@@ -43,6 +48,17 @@ export function ProfileBio(props: ProfileBioProps) {
                 </div>
             </div>
             <div className="member-since">{`Membro desde: ${props.memberSince}`}</div>
+
+            {
+                showSettings &&
+                <Modal onClickOutside={toggleEditButton} >
+                    <ProfileSettings />
+                </Modal>
+            }
         </div>
     );
+
+    function toggleEditButton() {
+        setShowSettings(!showSettings);
+    }
 }

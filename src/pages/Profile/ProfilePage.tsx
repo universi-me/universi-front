@@ -23,7 +23,7 @@ export function ProfilePage() {
                 {
                     loggedUserProfile ?
                         <button className="edit-button" >
-                            <img src='/assets/icons/edit.svg' alt="Editar" />
+                            <img src='/assets/icons/edit-1.svg' alt="Editar" />
                         </button>
                     : null
                 }

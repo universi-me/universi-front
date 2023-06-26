@@ -6,7 +6,7 @@
     background: #D6D6D6;
     overflow: hidden;
 
-    translate: 0 0;
+    /* translate: 0 0; */
 }
 
 #profile-page #right-side .skills .heading {
@@ -23,7 +23,6 @@
 }
 
 #profile-page #right-side .skills .edit-button {
-    filter: brightness(0) saturate(100%) invert(100%);
     right: 1.5em;
 }
 
