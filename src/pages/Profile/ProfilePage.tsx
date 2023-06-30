@@ -3,7 +3,8 @@ import { useState } from "react";
 
 import {
     ProfileBio, ProfileGroups, ProfileAchievements, ProfileRecommendSettingsButton,
-    ProfileCompetences, ProfileLastRecommendations, ProfileSettings, CompetencesLevel, CompetencesSettings
+    ProfileCompetences, ProfileLastRecommendations, ProfileSettings,
+    CompetencesSettings, ProfileDiscardChanges
 } from '@/pages/Profile'
 import { Modal } from "@/components/Modal/Modal";
 
@@ -19,6 +20,7 @@ export function ProfilePage() {
 
     const [showProfileSettings, setShowProfileSettings] = useState<boolean>(false);
     const [showCompetencesSettings, setShowCompetencesSettings] = useState<boolean>(false);
+    const [showDiscardChanges, setShowDiscardChanges] = useState<boolean>(false);
 
     return (
         <div id="profile-page">
@@ -45,7 +47,7 @@ export function ProfilePage() {
                         links={['', '', '', '']}
                         loggedUserProfile={loggedUserProfile}
 
-                        editModalHelper={{shouldRender: showProfileSettings, onClickOutside: toggleProfileSettings}}
+                        onClickEdit={()=>{setShowProfileSettings(true)}}
                     />
 
                     {/* todo: groups from API */}
@@ -63,14 +65,14 @@ export function ProfilePage() {
 
                 <div id="right-side">
                     <ProfileRecommendSettingsButton loggedUserProfile={loggedUserProfile} />
-                    <ProfileCompetences competences={['', '', '']} loggedUserProfile={loggedUserProfile} editModalHelper={{shouldRender: showCompetencesSettings, onClickOutside: toggleCompetencesSettings}}/>
+                    <ProfileCompetences competences={['', '', '']} loggedUserProfile={loggedUserProfile} onClickEdit={()=>{setShowCompetencesSettings(true)}}/>
                     <ProfileLastRecommendations recommendations={['', '']} />
                 </div>
             </div>
 
             {
                 showProfileSettings &&
-                <Modal onClickOutside={toggleProfileSettings} >
+                <Modal>
                     {/* todo: gender options from API */}
                     <ProfileSettings
                         genderOptions={[
@@ -91,7 +93,7 @@ export function ProfilePage() {
                             { apiValue: 'instagram', name: 'Instagram' },
                             { apiValue: 'linkedin',  name: 'LinkedIn' },
                         ]}
-                        cancelChanges={toggleProfileSettings}
+                        cancelChanges={()=>{setShowDiscardChanges(true)}}
                         // todo: save profile settings
                         saveChanges={() => {alert('todo')}}
                     />
@@ -100,7 +102,7 @@ export function ProfilePage() {
 
             {
                 showCompetencesSettings &&
-                <Modal onClickOutside={toggleCompetencesSettings}>
+                <Modal>
                     <CompetencesSettings
                         // todo: Competences levels from API
                         levels={[
@@ -117,18 +119,27 @@ export function ProfilePage() {
                             {apiValue: 'java',       level: 2,    name: 'Java'},
                         ]}
 
-                        cancelAction={toggleCompetencesSettings}
+                        cancelAction={()=>{setShowDiscardChanges(true)}}
+                        submitAction={()=>{alert('todo')}}
+                    />
+                </Modal>
+            }
+
+            {
+                (showProfileSettings || showCompetencesSettings) && showDiscardChanges &&
+                <Modal>
+                    <ProfileDiscardChanges
+                        onDiscard={discardChanges}
+                        onCancel={()=>{setShowDiscardChanges(false);}}
                     />
                 </Modal>
             }
         </div>
     );
 
-    function toggleProfileSettings() {
-        setShowProfileSettings(!showProfileSettings);
-    }
-
-    function toggleCompetencesSettings() {
-        setShowCompetencesSettings(!showCompetencesSettings);
+    function discardChanges() {
+        setShowCompetencesSettings(false);
+        setShowProfileSettings(false);
+        setShowDiscardChanges(false);
     }
 }

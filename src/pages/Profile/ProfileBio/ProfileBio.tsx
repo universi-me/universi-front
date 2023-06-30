@@ -1,4 +1,4 @@
-import { ModalHelper } from '@/components/Modal/Modal';
+import { MouseEventHandler } from 'react';
 import './ProfileBio.css'
 
 export type ProfileBioProps = {
@@ -10,7 +10,7 @@ export type ProfileBioProps = {
     links: string[];
     loggedUserProfile: boolean;
 
-    editModalHelper: ModalHelper;
+    onClickEdit: MouseEventHandler;
 };
 
 export function ProfileBio(props: ProfileBioProps) {
@@ -18,7 +18,7 @@ export function ProfileBio(props: ProfileBioProps) {
         <div className="bio card">
             {
                 props.loggedUserProfile ?
-                    <button className="edit-button" onClick={props.editModalHelper.onClickOutside}>
+                    <button className="edit-button" onClick={props.onClickEdit}>
                         <img src="/assets/icons/edit-2.svg" alt="Editar" />
                     </button>
                 : null

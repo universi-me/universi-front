@@ -1,10 +1,11 @@
-import { ModalHelper } from '@/components/Modal/Modal';
+import { MouseEventHandler } from 'react';
 import './ProfileCompetences.css'
 
 export type ProfileCompetencesProps = {
     competences: string[];
     loggedUserProfile: boolean;
-    editModalHelper: ModalHelper;
+
+    onClickEdit: MouseEventHandler;
 };
 
 export function ProfileCompetences(props: ProfileCompetencesProps) {
@@ -16,7 +17,7 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
                 Habilidades
                 {
                     props.loggedUserProfile ?
-                        <button className="edit-button" onClick={props.editModalHelper.onClickOutside}
+                        <button className="edit-button" onClick={props.onClickEdit}
                             // todo: figure out why the button is bigger than the image
                             style={{translate: '0 3px'}}
                         >

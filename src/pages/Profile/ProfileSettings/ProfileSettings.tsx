@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEventHandler } from 'react';
+import { ChangeEvent } from 'react';
 import './ProfileSettings.css'
 
 type OptionProps = {
@@ -7,12 +7,12 @@ type OptionProps = {
 };
 
 export type ProfileSettingsProps = {
-    genderOptions: OptionProps[];
+    genderOptions:   OptionProps[];
     pronounsOptions: OptionProps[];
-    socialOptions: OptionProps[];
+    socialOptions:   OptionProps[];
 
-    cancelChanges: MouseEventHandler;
-    saveChanges: MouseEventHandler;
+    cancelChanges: () => any;
+    saveChanges:   () => any;
 };
 
 const BIO_MAX_LENGTH = 140;
