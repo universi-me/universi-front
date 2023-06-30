@@ -95,4 +95,11 @@
     text-transform: uppercase;
 
     cursor: pointer;
+
+    transition: var(--hover-transition-duration) background-color, color;
+}
+
+#profile-page #right-side .show-more:hover {
+    background: var(--primary-color);
+    color: var(--font-color-v1);
 }
