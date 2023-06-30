@@ -79,16 +79,20 @@ export function ProfilePage() {
                             { apiValue: 'N', name: 'Não informar' },
                         ]}
                         pronounsOptions={[
-                            { apiValue: 'ELE', name: 'ele/dele' },
-                            { apiValue: 'ELA', name: 'ela/dela' },
+                            { apiValue: 'ELE', name: 'Ele/Dele' },
+                            { apiValue: 'ELA', name: 'Ela/Dela' },
+                            { apiValue: 'ELU', name: 'Elu/Delu' },
                             { apiValue: 'N',   name: 'Não informar' },
                         ]}
                         socialOptions={[
-                            { apiValue: 'facebook',  iconName: 'facebook',  name: 'Facebook' },
-                            { apiValue: 'github',    iconName: 'github',    name: 'Github' },
-                            { apiValue: 'instagram', iconName: 'instagram', name: 'Instagram' },
-                            { apiValue: 'linkedin',  iconName: 'linkedin',  name: 'LinkedIn' },
+                            { apiValue: 'facebook',  name: 'Facebook' },
+                            { apiValue: 'github',    name: 'Github' },
+                            { apiValue: 'instagram', name: 'Instagram' },
+                            { apiValue: 'linkedin',  name: 'LinkedIn' },
                         ]}
+                        cancelChanges={toggleProfileSettings}
+                        // todo: save profile settings
+                        saveChanges={() => {alert('todo')}}
                     />
                 </Modal>
             }

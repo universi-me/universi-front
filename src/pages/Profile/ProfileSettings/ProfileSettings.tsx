@@ -1,21 +1,21 @@
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import * as RadioGroup from '@radix-ui/react-radio-group'
+import { ChangeEvent, MouseEventHandler } from 'react';
 import './ProfileSettings.css'
 
-type DropdownOption = {
+type OptionProps = {
     name: string;
     apiValue: string;
 };
 
-type SocialOption = DropdownOption & {
-    iconName: string
+export type ProfileSettingsProps = {
+    genderOptions: OptionProps[];
+    pronounsOptions: OptionProps[];
+    socialOptions: OptionProps[];
+
+    cancelChanges: MouseEventHandler;
+    saveChanges: MouseEventHandler;
 };
 
-export type ProfileSettingsProps = {
-    genderOptions: DropdownOption[];
-    pronounsOptions: DropdownOption[];
-    socialOptions: SocialOption[];
-};
+const BIO_MAX_LENGTH = 140;
 
 export function ProfileSettings(props: ProfileSettingsProps) {
     return (
@@ -30,63 +30,41 @@ export function ProfileSettings(props: ProfileSettingsProps) {
 
                 <div className="section biography">
                     <h2>Biografia</h2>
-                    <textarea name="biography" id="biography" placeholder='Escreva um pouco sobre você' />
+                    <textarea maxLength={BIO_MAX_LENGTH} name="biography" id="biography" placeholder='Escreva um pouco sobre você' onChange={onChangeBio} />
+                    <p className="remaining">
+                        <p className="number">{BIO_MAX_LENGTH}</p>
+                        <p>caracteres</p>
+                    </p>
                 </div>
 
                 <div className="section gender">
                     <h2>Gênero</h2>
-                    <DropdownMenu.Root>
-                        <DropdownMenu.Trigger asChild>
-                            <button className="dropdown-trigger">
-                                <h4>Selecione o seu gênero</h4>
-                                <img src="/assets/icons/chevron-down-1.svg" className="dropdown-icon" />
-                            </button>
-                        </DropdownMenu.Trigger>
-
-                        <DropdownMenu.Portal>
-                            <DropdownMenu.Content className='dropdown-content'>
-                                <RadioGroup.Root name='gender'>
-                                    {
-                                        props.genderOptions.map(gender => {
-                                            return (
-                                                <RadioGroup.Item className='radio-group-item' key={gender.apiValue} value={gender.apiValue}>
-                                                    { gender.name }
-                                                </RadioGroup.Item>
-                                            );
-                                        })
-                                    }
-                                </RadioGroup.Root>
-                            </DropdownMenu.Content>
-                        </DropdownMenu.Portal>
-                    </DropdownMenu.Root>
+                    <select name="gender" id="gender" className="dropdown-trigger" onChange={onChangeSelect} >
+                        {/* todo: change selected to user choice */}
+                        <option selected disabled>Selecione o seu gênero</option>
+                        {
+                            props.genderOptions.map(gender => {
+                                return (
+                                    <option value={gender.apiValue} key={gender.apiValue}>{gender.name}</option>
+                                );
+                            })
+                        }
+                    </select>
                 </div>
 
                 <div className="section pronouns">
                     <h2>Pronomes</h2>
-                    <DropdownMenu.Root>
-                        <DropdownMenu.Trigger asChild>
-                            <button className="dropdown-trigger">
-                                <h4>Selecione os seus pronomes</h4>
-                                <img src="/assets/icons/chevron-down-1.svg" className="dropdown-icon" />
-                            </button>
-                        </DropdownMenu.Trigger>
-
-                        <DropdownMenu.Portal>
-                            <DropdownMenu.Content className='dropdown-content'>
-                                <RadioGroup.Root name='gender'>
-                                    {
-                                        props.pronounsOptions.map(pronoun => {
-                                            return (
-                                                <RadioGroup.Item className='radio-group-item' key={pronoun.apiValue} value={pronoun.apiValue}>
-                                                    { pronoun.name }
-                                                </RadioGroup.Item>
-                                            );
-                                        })
-                                    }
-                                </RadioGroup.Root>
-                            </DropdownMenu.Content>
-                        </DropdownMenu.Portal>
-                    </DropdownMenu.Root>
+                    <select name="pronoun" id="pronoun" className="dropdown-trigger" onChange={onChangeSelect}>
+                        {/* todo: change selected to user choice */}
+                        <option selected disabled>Selecione os seus pronomes</option>
+                        {
+                            props.pronounsOptions.map(pronoun => {
+                                return (
+                                    <option value={pronoun.apiValue} key={pronoun.apiValue}>{pronoun.name}</option>
+                                );
+                            })
+                        }
+                    </select>
                 </div>
 
                 <div className="section social">
@@ -96,36 +74,34 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                             props.socialOptions.map(social => {
                                 return (
                                     <div className="item" key={social.apiValue}>
-                                        <img src={`/assets/icons/${social.iconName}.svg`} alt={social.name} />
+                                        <img src={`/assets/icons/${social.apiValue}.svg`} alt={social.name} />
                                         <input type="text" name={social.apiValue} placeholder='Insira seu usuário' />
                                     </div>
                                 );
                             })
                         }
-                        {/* <div className="item">
-                            <img src="/" alt="Facebook" className="icon" />
-                            <input type="text" name='facebook' />
-                        </div>
-                        <div className="item">
-                            <img src="/" alt="Github" className="icon" />
-                            <input type="text" name='github' />
-                        </div>
-                        <div className="item">
-                            <img src="/" alt="instagram" className="icon" />
-                            <input type="text" name='instagram' />
-                        </div>
-                        <div className="item">
-                            <img src="/" alt="LinkedIn" className="icon" />
-                            <input type="text" name='linkedin' />
-                        </div> */}
                     </div>
                 </div>
 
-                <div className="section submit">
-                    <button type='button' className="cancel">Cancelar alterações</button>
-                    <button type='button' className="submit">Salvar alterações</button>
+                <div className="submit">
+                    <button type='button' className="cancel-button" onClick={props.cancelChanges}>Cancelar alterações</button>
+                    <button type='button' className="submit-button" onClick={props.saveChanges}>Salvar alterações</button>
                 </div>
             </form>
         </div>
     );
+
+    function onChangeBio(e: ChangeEvent<HTMLTextAreaElement>) {
+        const remaining = document.querySelector("#profile-settings .section.biography .remaining .number");
+        if (remaining)
+            remaining.textContent = (e.target.maxLength - e.target.value.length).toString();
+    }
+
+    function onChangeSelect(e: ChangeEvent<HTMLSelectElement>) {
+        setSelectColor(e.target);
+    }
+    
+    function setSelectColor(sel: HTMLSelectElement) {
+        sel.style.color = sel.value ? 'black' : '';
+    }
 }
