@@ -1,8 +1,10 @@
+import { ModalHelper } from '@/components/Modal/Modal';
 import './ProfileSkills.css'
 
 export type ProfileSkillsProps = {
     skills: string[];
     loggedUserProfile: boolean;
+    editModalHelper: ModalHelper;
 };
 
 export function ProfileSkills(props: ProfileSkillsProps) {
@@ -14,7 +16,7 @@ export function ProfileSkills(props: ProfileSkillsProps) {
                 Habilidades
                 {
                     props.loggedUserProfile ?
-                        <button className="edit-button"
+                        <button className="edit-button" onClick={props.editModalHelper.onClickOutside}
                             // todo: figure out why the button is bigger than the image
                             style={{translate: '0 3px'}}
                         >

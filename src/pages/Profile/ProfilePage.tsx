@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { Modal } from "@/components/Modal/Modal";
 
 import {
     ProfileBio, ProfileGroups, ProfileAchievements, ProfileRecommendSettingsButton,
-    ProfileSkills, ProfileLastRecommendations, ProfileSettings
+    ProfileSkills, ProfileLastRecommendations, ProfileSettings, SkillsLevel, SkillsSettings
 } from '@/pages/Profile'
+import { Modal } from "@/components/Modal/Modal";
 
 import './Profile.css'
 import './card.css'
@@ -18,6 +18,7 @@ export function ProfilePage() {
     const loggedUserProfile = id == 'user';
 
     const [showProfileSettings, setShowProfileSettings] = useState<boolean>(false);
+    const [showSkillsSettings, setShowSkillsSettings] = useState<boolean>(false);
 
     return (
         <div id="profile-page">
@@ -62,7 +63,7 @@ export function ProfilePage() {
 
                 <div id="right-side">
                     <ProfileRecommendSettingsButton loggedUserProfile={loggedUserProfile} />
-                    <ProfileSkills skills={['', '', '']} loggedUserProfile={loggedUserProfile} />
+                    <ProfileSkills skills={['', '', '']} loggedUserProfile={loggedUserProfile} editModalHelper={{shouldRender: showSkillsSettings, onClickOutside: toggleSkillsSettings}}/>
                     <ProfileLastRecommendations recommendations={['', '']} />
                 </div>
             </div>
@@ -96,10 +97,36 @@ export function ProfilePage() {
                     />
                 </Modal>
             }
+
+            {
+                showSkillsSettings &&
+                <Modal onClickOutside={toggleSkillsSettings}>
+                    <SkillsSettings
+                        // todo: Skills levels from API
+                        levels={[
+                            { apiValue: 0, name: 'Nenhum' },
+                            { apiValue: 1, name: 'Iniciante' },
+                            { apiValue: 2, name: 'Experiente' },
+                            { apiValue: 3, name: 'Master' },
+                        ]}
+
+                        // todo: Skills from API
+                        skills={[
+                            {apiValue: 'javascript', level: 1, name: 'JavaScript'},
+                            {apiValue: 'python',     level: 3,    name: 'Python'},
+                            {apiValue: 'java',       level: 2,    name: 'Java'},
+                        ]}
+                    />
+                </Modal>
+            }
         </div>
     );
 
     function toggleProfileSettings() {
         setShowProfileSettings(!showProfileSettings);
+    }
+
+    function toggleSkillsSettings() {
+        setShowSkillsSettings(!showSkillsSettings);
     }
 }
