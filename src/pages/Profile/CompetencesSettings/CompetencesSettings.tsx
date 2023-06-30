@@ -1,5 +1,6 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, MouseEventHandler } from "react";
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import './CompetencesSettings.css'
 
 export type CompetencesLevel = {
     apiValue: number;
@@ -15,6 +16,9 @@ export type CompetencesSettingsProps = {
         name: string,
         level: Number
     }[];
+
+    cancelAction?: MouseEventHandler;
+    submitAction?: MouseEventHandler;
 };
 
 export function CompetencesSettings(props: CompetencesSettingsProps) {
@@ -46,9 +50,8 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
                             props.levels.map(level => {
                                 const radioId = `level-${level.apiValue}`;
                                 return (
-
                                     <div className="level-container" key={level.apiValue}>
-                                        <RadioGroup.Item value={level.apiValue.toString()} className="radio-item" id={radioId}>
+                                        <RadioGroup.Item value={level.apiValue.toString()} className="radio-item" id={radioId} >
                                             <RadioGroup.Indicator className="radio-indicator" />
                                         </RadioGroup.Item>
                                         <label htmlFor={radioId}>{level.name}</label>
@@ -59,14 +62,16 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
                     </RadioGroup.Root>
                 </div>
                 <div className="submit">
-                    <button type="button" className="cancel">Cancelar alterações</button>
-                    <button type="button" className="cancel">Salvar alterações</button>
+                    <button type="button" className="cancel-button" onClick={props.cancelAction}>Cancelar alterações</button>
+                    <button type="button" className="submit-button" onClick={props.submitAction}>Salvar alterações</button>
                 </div>
             </form>
         </div>
     );
 
     function changeCompetence(e: ChangeEvent<HTMLSelectElement>) {
-
+        e.target.style.color = 'black';
+        // todo: change description
+        // todo: change level
     }
 }

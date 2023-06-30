@@ -116,6 +116,8 @@ export function ProfilePage() {
                             {apiValue: 'python',     level: 3,    name: 'Python'},
                             {apiValue: 'java',       level: 2,    name: 'Java'},
                         ]}
+
+                        cancelAction={toggleCompetencesSettings}
                     />
                 </Modal>
             }
