@@ -51,13 +51,13 @@ export function ProfilePage() {
                     {/* todo: groups from API */}
                     <ProfileGroups
                         count={0}
-                        groups={['', '', '', '']}
+                        groups={['', '', '', '', '']}
                     />
 
                     {/* todo: achievements from API */}
                     <ProfileAchievements
                         count={0}
-                        achievements={['', '', '', '']}
+                        achievements={['', '', '']}
                     />
                 </div>
 

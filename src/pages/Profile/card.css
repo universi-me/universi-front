@@ -34,8 +34,10 @@
 }
 
 #profile-page #left-side .card .items-wrapper .show-items {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 1em;
+    row-gap: 1em;
 }
 
 #profile-page #left-side .card .items-wrapper .item {
@@ -43,10 +45,6 @@
     background-color: #F3F3F3;
     width: 3.75em;
     aspect-ratio: 1;
-}
-
-#profile-page #left-side .card .items-wrapper .item:not(:last-of-type) {
-    margin-right: 1em;
 }
 
 #profile-page #left-side .card .items-wrapper .show-all-items {

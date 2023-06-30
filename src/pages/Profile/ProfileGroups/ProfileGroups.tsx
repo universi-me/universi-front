@@ -22,8 +22,7 @@ export function ProfileGroups(props: ProfileGroupsProps) {
                 <div className="items-wrapper">
                     <div className="show-items">
                         {
-                            // todo: groups from API
-                            [0, 0, 0, 0].map((group) => {
+                            props.groups.map((group) => {
                                 return (
                                     <Link to={""} className="group item">
                                         {/* todo: set group url */}
