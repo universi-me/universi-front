@@ -36,7 +36,7 @@ export function ProfileAchievements(props: ProfileAchievementsProps) {
                     </div>
 
                     {/* todo: All achievements page */}
-                    <Link to={""} className="show-all-items">Ver todos as conquistas</Link>
+                    <Link to={""} className="show-all-items">Ver todas as conquistas</Link>
                 </div>
             </div>
         </div>
