@@ -21,6 +21,9 @@
     padding-right: 4.5em;
     padding-top: 1.75em;
     padding-bottom: 2em;
+
+    max-height: 80vh;
+    overflow: auto;
 }
 
 #profile-settings .settings-form .section {
