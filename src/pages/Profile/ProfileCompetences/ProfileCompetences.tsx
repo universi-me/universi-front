@@ -1,17 +1,17 @@
 import { ModalHelper } from '@/components/Modal/Modal';
-import './ProfileSkills.css'
+import './ProfileCompetences.css'
 
-export type ProfileSkillsProps = {
-    skills: string[];
+export type ProfileCompetencesProps = {
+    competences: string[];
     loggedUserProfile: boolean;
     editModalHelper: ModalHelper;
 };
 
-export function ProfileSkills(props: ProfileSkillsProps) {
-    const maxSkillLevel = 3;
+export function ProfileCompetences(props: ProfileCompetencesProps) {
+    const maxCompetenceLevel = 3;
 
     return (
-        <div className="skills">
+        <div className="competences">
             <div className="heading">
                 Habilidades
                 {
@@ -25,18 +25,18 @@ export function ProfileSkills(props: ProfileSkillsProps) {
                     : null
                 }
             </div>
-            <div className="skill-list">
+            <div className="competence-list">
                 {
-                    props.skills.map(skill => {
+                    props.competences.map(competence => {
                         return (
-                            <div className="skill-item">
+                            <div className="competence-item">
                                 {/* todo: icon from API */}
                                 <img src={`/assets/icons/${"javascript"}.svg`} alt={""} className="icon" />
                                 {/* todo: learning from API */}
                                 <h4 className="learning">Aprendi durante a minha formação</h4>
-                                <div className="skill-level-list">
+                                <div className="competence-level-list">
                                     {
-                                        Array.apply(null, Array(maxSkillLevel)).map((_, i) => {
+                                        Array.apply(null, Array(maxCompetenceLevel)).map((_, i) => {
                                             // todo: current level from API
                                             const currentLevel = 2;
                                             const learnedLevel = currentLevel >= i + 1
@@ -44,7 +44,7 @@ export function ProfileSkills(props: ProfileSkillsProps) {
                                                 : '';
 
                                             return (
-                                                <div className={`skill-level ${learnedLevel}`} />
+                                                <div className={`competence-level ${learnedLevel}`} />
                                             );
                                         })
                                     }

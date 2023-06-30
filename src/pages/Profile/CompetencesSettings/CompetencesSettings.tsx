@@ -1,35 +1,35 @@
 import { ChangeEvent } from "react";
 import * as RadioGroup from '@radix-ui/react-radio-group';
 
-export type SkillsLevel = {
+export type CompetencesLevel = {
     apiValue: number;
     name: string;
 };
 
-export type SkillsSettingsProps = {
-    levels: SkillsLevel[]
+export type CompetencesSettingsProps = {
+    levels: CompetencesLevel[]
 
-    // todo: Skill/Competence type according to API
-    skills: {
+    // todo: Competence type according to API
+    competences: {
         apiValue: string,
         name: string,
         level: Number
     }[];
 };
 
-export function SkillsSettings(props: SkillsSettingsProps) {
+export function CompetencesSettings(props: CompetencesSettingsProps) {
     return (
-        <div id="skills-settings">
+        <div id="competences-settings">
             <div className="heading">Editar minhas competências</div>
             <form action="" className="settings-form">
-                <div className="section skill">
+                <div className="section competence">
                     <h2>Competência</h2>
-                    <select name="skill" id="skill" onChange={changeSkill}>
+                    <select name="competence" id="competence" onChange={changeCompetence}>
                         <option value="" disabled selected>Selecione uma competência</option>
                         {
-                            props.skills.map(skill => {
+                            props.competences.map(competence => {
                                 return (
-                                    <option value={skill.apiValue} key={skill.apiValue}>{skill.name}</option>
+                                    <option value={competence.apiValue} key={competence.apiValue}>{competence.name}</option>
                                 );
                             })
                         }
@@ -66,7 +66,7 @@ export function SkillsSettings(props: SkillsSettingsProps) {
         </div>
     );
 
-    function changeSkill(e: ChangeEvent<HTMLSelectElement>) {
+    function changeCompetence(e: ChangeEvent<HTMLSelectElement>) {
 
     }
 }

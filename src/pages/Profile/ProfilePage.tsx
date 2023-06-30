@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import {
     ProfileBio, ProfileGroups, ProfileAchievements, ProfileRecommendSettingsButton,
-    ProfileSkills, ProfileLastRecommendations, ProfileSettings, SkillsLevel, SkillsSettings
+    ProfileCompetences, ProfileLastRecommendations, ProfileSettings, CompetencesLevel, CompetencesSettings
 } from '@/pages/Profile'
 import { Modal } from "@/components/Modal/Modal";
 
@@ -18,7 +18,7 @@ export function ProfilePage() {
     const loggedUserProfile = id == 'user';
 
     const [showProfileSettings, setShowProfileSettings] = useState<boolean>(false);
-    const [showSkillsSettings, setShowSkillsSettings] = useState<boolean>(false);
+    const [showCompetencesSettings, setShowCompetencesSettings] = useState<boolean>(false);
 
     return (
         <div id="profile-page">
@@ -63,7 +63,7 @@ export function ProfilePage() {
 
                 <div id="right-side">
                     <ProfileRecommendSettingsButton loggedUserProfile={loggedUserProfile} />
-                    <ProfileSkills skills={['', '', '']} loggedUserProfile={loggedUserProfile} editModalHelper={{shouldRender: showSkillsSettings, onClickOutside: toggleSkillsSettings}}/>
+                    <ProfileCompetences competences={['', '', '']} loggedUserProfile={loggedUserProfile} editModalHelper={{shouldRender: showCompetencesSettings, onClickOutside: toggleCompetencesSettings}}/>
                     <ProfileLastRecommendations recommendations={['', '']} />
                 </div>
             </div>
@@ -99,10 +99,10 @@ export function ProfilePage() {
             }
 
             {
-                showSkillsSettings &&
-                <Modal onClickOutside={toggleSkillsSettings}>
-                    <SkillsSettings
-                        // todo: Skills levels from API
+                showCompetencesSettings &&
+                <Modal onClickOutside={toggleCompetencesSettings}>
+                    <CompetencesSettings
+                        // todo: Competences levels from API
                         levels={[
                             { apiValue: 0, name: 'Nenhum' },
                             { apiValue: 1, name: 'Iniciante' },
@@ -110,8 +110,8 @@ export function ProfilePage() {
                             { apiValue: 3, name: 'Master' },
                         ]}
 
-                        // todo: Skills from API
-                        skills={[
+                        // todo: Competences from API
+                        competences={[
                             {apiValue: 'javascript', level: 1, name: 'JavaScript'},
                             {apiValue: 'python',     level: 3,    name: 'Python'},
                             {apiValue: 'java',       level: 2,    name: 'Java'},
@@ -126,7 +126,7 @@ export function ProfilePage() {
         setShowProfileSettings(!showProfileSettings);
     }
 
-    function toggleSkillsSettings() {
-        setShowSkillsSettings(!showSkillsSettings);
+    function toggleCompetencesSettings() {
+        setShowCompetencesSettings(!showCompetencesSettings);
     }
 }

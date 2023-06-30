@@ -1,4 +1,4 @@
-#profile-page #right-side .skills {
+#profile-page #right-side .competences {
     width: 100%;
     height: fit-content;
 
@@ -9,7 +9,7 @@
     translate: 0 0;
 }
 
-#profile-page #right-side .skills .heading {
+#profile-page #right-side .competences .heading {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,15 +22,15 @@
     text-transform: uppercase;
 }
 
-#profile-page #right-side .skills .edit-button {
+#profile-page #right-side .competences .edit-button {
     right: 1.5em;
 }
 
-#profile-page #right-side .skills .skill-list {
+#profile-page #right-side .competences .competence-list {
     padding: 2.25em 3em;
 }
 
-#profile-page #right-side .skills .skill-list .skill-item {
+#profile-page #right-side .competences .competence-list .competence-item {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -41,24 +41,24 @@
     border-radius: 20px;
 }
 
-#profile-page #right-side .skills .skill-list .skill-item:not(:last-of-type) {
+#profile-page #right-side .competences .competence-list .competence-item:not(:last-of-type) {
     margin-bottom: 1.7em;
 }
 
-#profile-page #right-side .skills .skill-list .skill-item .icon {
+#profile-page #right-side .competences .competence-list .competence-item .icon {
     margin-right: 1.75em;
 
     width: 1.875em;
     aspect-ratio: 1;
 }
 
-#profile-page #right-side .skills .skill-list .skill-item .learning {
+#profile-page #right-side .competences .competence-list .competence-item .learning {
     color: #000;
     font-size: 0.875em;
     font-weight: var(--font-weight-default);
 }
 
-#profile-page #right-side .skills .skill-list .skill-item .skill-level-list {
+#profile-page #right-side .competences .competence-list .competence-item .competence-level-list {
     display: flex;
     flex-direction: row;
 
@@ -66,18 +66,18 @@
     margin-right: 2.5em;
 }
 
-#profile-page #right-side .skills .skill-list .skill-item .skill-level-list .skill-level {
+#profile-page #right-side .competences .competence-list .competence-item .competence-level-list .competence-level {
     width: 3.5em;
     height: 0.5em;
     border-radius: 10px;
     background: #C1C1C1;
 }
 
-#profile-page #right-side .skills .skill-list .skill-item .skill-level-list .skill-level.learned {
+#profile-page #right-side .competences .competence-list .competence-item .competence-level-list .competence-level.learned {
     background: var(--skills-1-color);
     
 }
 
-#profile-page #right-side .skills .skill-list .skill-item .skill-level-list .skill-level:not(:last-of-type) {
+#profile-page #right-side .competences .competence-list .competence-item .competence-level-list .competence-level:not(:last-of-type) {
     margin-right: .5em;
 }
