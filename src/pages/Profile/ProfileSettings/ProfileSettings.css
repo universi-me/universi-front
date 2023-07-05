@@ -1,0 +1,182 @@
+#profile-settings {
+    overflow: hidden;
+
+    background-color: #D6D6D6;
+    border-radius: 20px;
+}
+
+#profile-settings .heading {
+    padding: .7em 0;
+    background-color: var(--primary-color);
+
+    color: #FFF;
+    font-size: 1.875em;
+    font-weight: var(--font-weight-bold);
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#profile-settings .settings-form {
+    padding-left: 4.5em;
+    padding-right: 4.5em;
+    padding-top: 1.75em;
+    padding-bottom: 2em;
+
+    max-height: 80vh;
+    overflow: auto;
+}
+
+#profile-settings .settings-form .section {
+    margin-bottom: 1em;
+}
+
+#profile-settings .settings-form .section h2 {
+    color: var(--font-color-v2);
+    font-size: 1.25em;
+    font-weight: var(--font-weight-light);
+    text-transform: uppercase;
+}
+
+#profile-settings .settings-form .section input,
+#profile-settings .settings-form .section textarea,
+#profile-settings .settings-form .section .dropdown-trigger,
+#profile-settings .settings-form .section .dropdown-content .radio-group-item {
+    width: 100%;
+
+    background-color: #FFF;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.9em;
+}
+
+#profile-settings .settings-form .section input {
+    padding: .5em 1.5em;
+}
+
+#profile-settings .settings-form .section textarea {
+    height: 5.5em;
+    padding: 1em 1.5em;
+    resize: none;
+}
+
+#profile-settings .settings-form .section ::placeholder {
+    color: #6F6F6F;
+}
+
+#profile-settings .settings-form .section input,
+#profile-settings .settings-form .section textarea,
+#profile-settings .settings-form .section ::placeholder {
+    font-size: 0.9em;
+    font-weight: var(--font-weight-light);
+}
+
+#profile-settings .settings-form .biography.section .remaining {
+    position: relative;
+    margin-left: auto;
+    margin-right: 1em;
+    top: -1.5em;
+
+    display: flex;
+    flex-direction: row;
+
+    width: fit-content;
+    height: 0;
+
+    color: #6F6F6F;
+    font-size: 0.9em;
+    font-weight: var(--font-weight-light);
+}
+
+#profile-settings .settings-form .biography.section .remaining .number {
+    margin-right: .25em;
+}
+
+#profile-settings .settings-form .section .dropdown-trigger {
+    appearance: none;
+    background-image: url(/assets/icons/chevron-down-1.svg);
+    background-repeat: no-repeat;
+    background-position-x: calc(100% - .3em);
+    background-position-y: 50%;
+
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-left: 1.5em;
+
+    color: #6F6F6F;
+    font-size: .9em;
+    font-weight: var(--font-weight-light);
+}
+
+#profile-settings .settings-form .section .dropdown-trigger option:disabled {
+    color: #6F6F6F;
+}
+
+#profile-settings .settings-form .section .dropdown-trigger option {
+    color: black
+}
+
+#profile-settings .settings-form .social.section .box .item {
+    display: flex;
+    flex-direction: row;
+}
+
+#profile-settings .settings-form .social.section .box .item img {
+    padding: .5em;
+    background-color: #FFF;
+    border-radius: 4px;
+}
+
+#profile-settings .settings-form .social.section .box .item input {
+    border-radius: 4px;
+    margin-left: 1.75em;
+}
+
+#profile-settings .settings-form .social.section .box .item:not(:last-of-type) {
+    margin-bottom: .5em;
+}
+
+#profile-settings .settings-form .submit {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#profile-settings .settings-form .submit button {
+    min-width: 17.5em;
+    max-width: max-content;
+    height: 2.5em;
+
+    border: 2px solid var(--primary-color);
+    border-radius: 0.625em;
+
+    font-size: 0.875em;
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+
+    cursor: pointer;
+    transition: var(--hover-transition-duration) background-color, border-color, color;
+}
+
+#profile-settings .settings-form .submit button:not(:last-of-type) {
+    margin-right: 3em;
+}
+
+#profile-settings .settings-form .submit .submit-button {
+    color: var(--font-color-v1);
+    background-color: var(--primary-color);
+}
+
+#profile-settings .settings-form .submit .submit-button:hover {
+    background-color: #39375D;
+    border-color: #39375D;
+}
+
+#profile-settings .settings-form .submit .cancel-button {
+    color: var(--primary-color);
+    background-color: transparent;
+}
+
+#profile-settings .settings-form .submit .cancel-button:hover {
+    color: var(--font-color-v1);
+    background-color: var(--primary-color);
+}

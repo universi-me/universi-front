@@ -1,5 +1,7 @@
 import { QuizPage } from "@/pages/Quiz";
 import { App } from "@/src/App";
+import ProfilePage from "@/pages/Profile";
+
 import {createBrowserRouter} from 'react-router-dom'
 
 
@@ -18,6 +20,7 @@ export const router = createBrowserRouter([{
       path: "/quiz/:id",
       element: <QuizPage />
     },
+    { path: "/profile/:id", element: <ProfilePage /> },
     {//identificador unico - dynamic routes
       //path: "perfil/:id",
       //element: <></>

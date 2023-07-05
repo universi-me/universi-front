@@ -52,3 +52,11 @@
 body {
     background-color: var(--background-color);
 }
+
+/**
+ * Currently does not work on firefox (2023-06-26)
+ * Compatibility status: https://developer.mozilla.org/en-US/docs/Web/CSS/:has#browser_compatibility
+ */
+body:has(.modal) {
+    overflow: hidden;
+}
