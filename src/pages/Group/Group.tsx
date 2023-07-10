@@ -27,6 +27,7 @@ export function GroupPage() {
                             description={"Lorem ipsum dolor sit amet. Hic dolor reiciendis rem earum voluptatem sit similique magnam est repellat mollitia. Et nesciunt consequuntur a vero rerum aut optio tempore aut."}
                             creationDate={"00/00/0000"}
                         />
+                        <button className="join-button">Participar</button>
                     </div>
                 </div>
             </div>
