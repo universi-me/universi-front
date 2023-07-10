@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { GroupBanner, GroupIntro, GroupAbout, GroupSubGroups } from "@/pages/Group"
 import "./Group.css"
 import "./card.css"
+import { GroupMembers } from "./GroupMembers/GroupMembers";
 
 export function GroupPage() {
     const { id } = useParams();
@@ -31,6 +32,14 @@ export function GroupPage() {
                         {/* todo: subgroups from API */}
                         <GroupSubGroups
                             subgroups={["", ""]}
+                            count={0}
+                        />
+                    </div>
+
+                    <div className="right-side">
+                        {/* todo: group members from API */}
+                        <GroupMembers
+                            members={["", "", "", "", "", ""]}
                             count={0}
                         />
                     </div>
