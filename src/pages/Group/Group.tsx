@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-import { GroupBanner, GroupIntro, GroupAbout } from "@/pages/Group"
+import { GroupBanner, GroupIntro, GroupAbout, GroupSubGroups } from "@/pages/Group"
 import "./Group.css"
 import "./card.css"
 
@@ -28,6 +28,11 @@ export function GroupPage() {
                             creationDate={"00/00/0000"}
                         />
                         <button className="join-button">Participar</button>
+                        {/* todo: subgroups from API */}
+                        <GroupSubGroups
+                            subgroups={["", ""]}
+                            count={0}
+                        />
                     </div>
                 </div>
             </div>
