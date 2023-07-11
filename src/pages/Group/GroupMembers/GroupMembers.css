@@ -87,4 +87,12 @@
     text-align: center;
     font-size: 0.875rem;
     font-weight: var(--font-weight-semibold);
+
+    cursor: pointer;
+    transition: var(--hover-transition-duration) color, background-color;
+}
+
+#group-page #members .show-all:hover {
+    background: var(--primary-color);
+    color: var(--font-color-v1);
 }
