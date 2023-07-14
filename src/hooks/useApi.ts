@@ -26,7 +26,7 @@ export const useApi = () => ({
     },
 
     login_google: async (access_token: string) =>{
-        const response = await api.post("/login/google", {token: "Bearer"+ access_token});
+        const response = await api.post("/login/google", {token: access_token});
        console.log("response: ",response.data)
         return response.data;
     }

@@ -9,12 +9,12 @@ export function oauthSignIn() {
     var params = {
         'client_id': '110833050076-ib680ela4hfqr2c0lhc9h19snrsvltnd.apps.googleusercontent.com',
         'redirect_uri': 'http://localhost:5173/google-oauth-redirect',
-        'response_type': 'id_token',
-        'scope': 'https://www.googleapis.com/auth/admin.directory.user.readonly',
+        'response_type': 'token id_token',
+        'scope': 'openid email',
         'include_granted_scopes': 'true',
         'state': 'pass-through value',
-        'nonce': 'aaa4ss-ss'
-       
+        'nonce': Date.now(),
+		
     };
 
     const url = new URL(
@@ -35,10 +35,9 @@ export function oauthSignIn() {
 export function Outh2Element() {
     // const [params, setParams] = useSearchParams()
     const params = new URLSearchParams(window.location.hash.substring(1))
-    const type_token =  params.get("token_type") as string
-    const access_token = params.get("access_token") as string
+    const id_token = params.get("id_token") as string
     console.log("token: ",params)
-    const response = useApi().login_google(`${type_token} ${access_token}`)
+    const response = useApi().login_google(`${id_token}`)
         .then((res)=> {
             console.log(res)
         })
