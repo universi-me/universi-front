@@ -2,29 +2,32 @@ import axios from "axios"
 
 const api = axios.create(
     {
-       // baseURL: process.env.URL_UNIVERSIME_API_USE
+        baseURL: "http://localhost:8080/api",
+        withCredentials: true,
+
     }
 )
 
 export const useApi = () => ({
-    validateToken: async (token: string) => {
-        return {
-            user: { id: 3, name: 'José', email: 'jose@gmail.com' }
-        };
-        const response = await api.post('/validate', { token });
-        return response.data;
+    validateToken: async () => {
+
+        const response = await api.get('/account');
+        return response.data.body;
     },
-    signin: async (email: string, password: string) => {
-        return {
-            user: { id: 3, name: 'José', email: 'jose@gmail.com' },
-            token: '123456789'
-        };
-        const response = await api.post('/signin', { email, password });
+    signin: async (username: string, password: string) => {
+        const response = await api.post("/signin", { username, password });
         return response.data;
+        
     },
     logout: async () => {
         return { status: true };
         const response = await api.post('/logout');
+        return response.data;
+    },
+
+    login_google: async (access_token: string) =>{
+        const response = await api.post("/login/google", {token: "Bearer"+ access_token});
+       console.log("response: ",response.data)
         return response.data;
     }
 });

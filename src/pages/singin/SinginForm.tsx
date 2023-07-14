@@ -3,10 +3,10 @@ import "./signinForm.css";
 import { AuthContext } from "../../contexts/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import firebase from "../../services/firebase";
+import { oauthSignIn } from "../../services/outh2-google";
 
 export default function SinginForm() {
-  
-  const auth = useContext(AuthContext)
+  const auth = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -15,46 +15,48 @@ export default function SinginForm() {
   const [email, setEmail] = useState("");
 
   const handleAuthLoginGoogle = async () => {
-    auth.signout()
+    auth.signout();
     const provider = new firebase.auth.GoogleAuthProvider();
-    
-    provider.setCustomParameters({ hd: 'dcx.ufpb.br' });
+
+    provider.setCustomParameters({ hd: "dcx.ufpb.br" });
 
     firebase
       .auth()
       .signInWithPopup(provider)
       .then(async (result) => {
-        console.log(result)
-        if(result.user?.email?.endsWith("@dcx.ufpb.br")){
-          const isLogged  = await auth.signin(result.user.email, "")
+        console.log(result);
+        if (result.user?.email?.endsWith("@dcx.ufpb.br")) {
+          const isLogged = await auth.signin(result.user.email, "");
           console.log(isLogged);
           
-          if(isLogged) {
+          if (isLogged) {
             navigate("/profile");
           }
+        } else {
+          firebase
+            .auth()
+            .signOut()
+            .then(() => {
+              console.log(
+                "Usuário não autorizado. Faça login com um e-mail válido."
+              );
+            });
         }
-        else {
-          firebase.auth().signOut().then(() => {
-            console.log('Usuário não autorizado. Faça login com um e-mail válido.');
-          });
-        }
-        
       })
       .catch((error) => {
         console.error(error);
       });
-    
-  }
+  };
 
   const handleLogin = async () => {
-    auth.signout()
-    if(email && password) {
+    auth.signout();
+    if (email && password) {
       const isLogged = await auth.signin(email, password);
-      if(isLogged) {
+      if (isLogged) {
         navigate("/profile");
       }
     }
-  }
+  };
 
   const isButtonDisable = email.length && password.length > 0 ? false : true;
 
@@ -117,10 +119,16 @@ export default function SinginForm() {
         <div className="line"></div>
       </div>
 
-      <button className="btn_form_dcx" type="submit" onClick={handleAuthLoginGoogle}>
+      <button
+        className="btn_form_dcx"
+        type="submit"
+        onClick={handleAuthLoginGoogle}
+      >
+       
         <img src="../../../public/assets/imgs/dcx-png 1.png" />
         EMAIL DCX
       </button>
+      <a href={oauthSignIn().toString()}>teste</a>
     </div>
   );
 }

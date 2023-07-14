@@ -9,7 +9,7 @@ export default function Profile() {
     return(
      <>
            <h1>
-            Pagina de perfil {authContext.user?.email}
+            Pagina de perfil {authContext.user?.name}
         </h1>
         <button onClick={authContext.signout}>
             sair

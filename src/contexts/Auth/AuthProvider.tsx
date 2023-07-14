@@ -11,29 +11,25 @@ export const AuthProvider =  ({children} : {children: JSX.Element}) => {
     useEffect(() => {
         const validateToken = async () => {
             const storageData = localStorage.getItem('AuthToken');
-            console.log(user);
-            
-            console.log("storage", storageData);
             if (storageData) {
-                const data = await api.validateToken(storageData);
+                const data = await api.validateToken();
                 if (data.user) {
                     setUser(data.user);
                 }
             }
         }
         validateToken();
-    }, []);
+    }, [api]);
 
     const signin = async (email :string , password : string) =>{
         const data = await api.signin(email,password)
-        console.log("data", data.user)
-        if(data.user && data.token){
-            setUser(data.user)
+        if(data.body.user && data.token){
+            setUser(data.body.user)
             setToken(data.token)
             return true
            
         }
-        return false
+        return false    
     }
     const signout = async () => {
        await api.logout();
