@@ -1,8 +1,7 @@
 import { useContext, useState } from "react";
 import "./signinForm.css";
 import { AuthContext } from "../../contexts/Auth/AuthContext";
-import { useNavigate } from "react-router-dom";
-import firebase from "../../services/firebase";
+import { redirect, useNavigate } from "react-router-dom";
 import { oauthSignIn } from "../../services/outh2-google";
 
 export default function SinginForm() {
@@ -15,37 +14,7 @@ export default function SinginForm() {
   const [email, setEmail] = useState("");
 
   const handleAuthLoginGoogle = async () => {
-    auth.signout();
-    const provider = new firebase.auth.GoogleAuthProvider();
-
-    provider.setCustomParameters({ hd: "dcx.ufpb.br" });
-
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then(async (result) => {
-        console.log(result);
-        if (result.user?.email?.endsWith("@dcx.ufpb.br")) {
-          const isLogged = await auth.signin(result.user.email, "");
-          console.log(isLogged);
-          
-          if (isLogged) {
-            navigate("/profile");
-          }
-        } else {
-          firebase
-            .auth()
-            .signOut()
-            .then(() => {
-              console.log(
-                "Usuário não autorizado. Faça login com um e-mail válido."
-              );
-            });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    window.location.href = oauthSignIn().toString();
   };
 
   const handleLogin = async () => {
@@ -121,14 +90,12 @@ export default function SinginForm() {
 
       <button
         className="btn_form_dcx"
-        type="submit"
+        type="button"
         onClick={handleAuthLoginGoogle}
       >
-       
         <img src="../../../public/assets/imgs/dcx-png 1.png" />
         EMAIL DCX
       </button>
-      <a href={oauthSignIn().toString()}>teste</a>
     </div>
   );
 }

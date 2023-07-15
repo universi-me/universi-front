@@ -11,7 +11,7 @@ export default function Profile() {
            <h1>
             Pagina de perfil {authContext.user?.name}
         </h1>
-        <button onClick={authContext.signout}>
+        <button type="button" onClick={authContext.signout}>
             sair
         </button>
      </>

@@ -10,24 +10,20 @@ const api = axios.create(
 
 export const useApi = () => ({
     validateToken: async () => {
-
         const response = await api.get('/account');
         return response.data.body;
     },
     signin: async (username: string, password: string) => {
         const response = await api.post("/signin", { username, password });
         return response.data;
-        
+
     },
     logout: async () => {
         return { status: true };
-        const response = await api.post('/logout');
-        return response.data;
     },
 
-    login_google: async (access_token: string) =>{
-        const response = await api.post("/login/google", {token: access_token});
-       console.log("response: ",response.data)
+    login_google: async (access_token: string) => {
+        const response = await api.post("/login/google", { token: access_token });
         return response.data;
     }
 });
