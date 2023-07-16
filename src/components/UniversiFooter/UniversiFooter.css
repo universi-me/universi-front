@@ -1,10 +1,13 @@
 .footer{
-    padding-top: 1em;
     margin-top: auto;
+    padding-top: 1em;
+    position: absolute;
+    bottom: 0;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     width: 100vw;
+    height: 6em;
 
 }
 .footer.home-page {

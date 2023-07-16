@@ -6,8 +6,10 @@ import UniversiFooter from "@/components/UniversiFooter"
 export function App() {
   return (
     <div className="App">
-      <UniversiHeader />
-      <Outlet/>
+      <div className="application-content-wrapper">
+        <UniversiHeader />
+        <Outlet/>
+      </div>
       <UniversiFooter/>
     </div>
   );

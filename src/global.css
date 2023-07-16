@@ -52,3 +52,12 @@
 body {
     background-color: var(--background-color);
 }
+
+.App{
+    position: relative;
+    min-height: 100vh;
+}
+
+.App > .application-content-wrapper{
+    padding-bottom: 7em;
+}
