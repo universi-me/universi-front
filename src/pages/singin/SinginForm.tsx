@@ -18,7 +18,6 @@ export default function SinginForm() {
   };
 
   const handleLogin = async () => {
-    auth.signout();
     if (email && password) {
       const isLogged = await auth.signin(email, password);
       if (isLogged) {
