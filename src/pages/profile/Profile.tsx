@@ -6,6 +6,7 @@ import Singin from "../singin/Singin";
 
 export default function Profile() {
   const authContext = useContext(AuthContext);
+ 
 
   if (authContext.user == null) {
     return <Singin></Singin>

@@ -3,6 +3,7 @@ import { useApi } from "../hooks/useApi";
 import {
   Navigate,
   redirect,
+  useNavigate,
   useParams,
   useSearchParams,
 } from "react-router-dom";
@@ -34,6 +35,7 @@ export function oauthSignIn() {
 
 export function Outh2Element() {
   const auth = useContext(AuthContext);
+  const navigate = useNavigate()
     
   const params = new URLSearchParams(window.location.hash.substring(1));
   const id_token = params.get("id_token") as string;
@@ -41,15 +43,17 @@ export function Outh2Element() {
     .login_google(`${id_token}`)
     .then((res) => {
       auth.signin_google(res);
-      
+      if (auth.user !== null)
+        navigate("/profile")
+              
     })
     .catch((err) => {
       console.log("Error ao logar com conta google");
     })
 
-    if(auth.user != null){
-      return <Navigate to={"/profile"}></Navigate>
-    }
+    // if(auth.user != null){
+    //   return <Navigate to={"/profile"}></Navigate>
+    // }
     
-  
+  return <></>
 }
