@@ -7,7 +7,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { AuthContext } from "../contexts/Auth/AuthContext";
-import Profile from "../pages/profile/Profile";
+
 
 export function oauthSignIn() {
   var oauth2Endpoint = "";
@@ -47,7 +47,9 @@ export function Outh2Element() {
       console.log("Error ao logar com conta google");
     })
 
-    return <Navigate to={"/profile"}></Navigate>
+    if(auth.user != null){
+      return <Navigate to={"/profile"}></Navigate>
+    }
     
   
 }

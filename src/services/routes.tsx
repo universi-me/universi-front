@@ -33,14 +33,12 @@ export const router = createBrowserRouter([{
     {
       path: "/login",
       element: <Singin/>
-    },
-    {
-      path: "/google-oauth-redirect",
-      element: <Outh2Element/>
-    }
-   
-    
+    },    
   ]
+},
+{
+  path: "/google-oauth-redirect",
+  element: <Outh2Element/>
 },
 {
   path: "/profile", 
