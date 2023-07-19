@@ -3,6 +3,7 @@ import "./signinForm.css";
 import { AuthContext } from "../../contexts/Auth/AuthContext";
 import { redirect, useNavigate } from "react-router-dom";
 import { oauthSignIn } from "../../services/outh2-google";
+import Modal from "./modal/Modal";
 
 export default function SinginForm() {
   const auth = useContext(AuthContext);
@@ -12,6 +13,7 @@ export default function SinginForm() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
+  const [isOpen, setIsOpen] = useState(Boolean);
 
   const handleAuthLoginGoogle = async () => {
     window.location.href = oauthSignIn().toString();
@@ -23,6 +25,13 @@ export default function SinginForm() {
       if (isLogged) {
         navigate("/profile");
       }
+      else {
+        setIsOpen(true)
+        setTimeout(()=>{
+          setIsOpen(false)
+        },3000)
+       
+      }
     }
   };
 
@@ -33,7 +42,10 @@ export default function SinginForm() {
   };
 
   return (
-    <div className="container">
+  <>
+  
+  <div className="container">
+  <Modal isOpen={isOpen}/>
       <form action="/login" method="post" className="form-container">
         <div className="form-group">
           <div className="label-form">
@@ -96,5 +108,7 @@ export default function SinginForm() {
         EMAIL DCX
       </button>
     </div>
+  </>
+  
   );
 }
