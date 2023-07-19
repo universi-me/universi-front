@@ -1,9 +1,8 @@
 import { App } from "../App";
 import {createBrowserRouter} from 'react-router-dom'
 import Singin from "../../src/pages/singin/Singin";
-import { RequireAuth } from "../contexts/Auth/RequireAuth";
-import Profile from "../../src/pages/profile/Profile";
-import {Outh2Element}  from './outh2-google';
+import Profile from "../../src/pages/Profile/Profile";
+import { OAuth2Element }  from './oauth2-google';
 
 
 
@@ -33,15 +32,15 @@ export const router = createBrowserRouter([{
     {
       path: "/login",
       element: <Singin/>
-    },    
+    },
+    {
+        path: "/google-oauth-redirect",
+        element: <OAuth2Element/>
+    },
+    {
+      path: "/profile", 
+      element: <Profile></Profile>,
+    }
   ]
 },
-{
-  path: "/google-oauth-redirect",
-  element: <Outh2Element/>
-},
-{
-  path: "/profile", 
-  element: <Profile></Profile>,
-}
 ])

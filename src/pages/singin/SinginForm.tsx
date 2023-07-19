@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import "./signinForm.css";
 import { AuthContext } from "../../contexts/Auth/AuthContext";
 import { redirect, useNavigate } from "react-router-dom";
-import { oauthSignIn } from "../../services/outh2-google";
+import { oauthSignIn } from "../../services/oauth2-google";
 import Modal from "./modal/Modal";
 
 export default function SinginForm() {
