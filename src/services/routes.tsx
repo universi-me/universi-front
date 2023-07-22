@@ -3,6 +3,8 @@ import { App } from "@/src/App";
 import ProfilePage from "@/pages/Profile";
 
 import {createBrowserRouter} from 'react-router-dom'
+import { element } from "prop-types";
+import CapacityPage from "@/pages/Capacity/Capacity";
 
 
 
@@ -15,6 +17,10 @@ export const router = createBrowserRouter([{
     {
       // todo: path: "/",
       // todo: element: Homepage
+    },
+    {
+      path: "/capacitacao",
+      element: <CapacityPage />
     },
     {
       path: "/quiz/:id",
