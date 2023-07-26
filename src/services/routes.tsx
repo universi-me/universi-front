@@ -5,6 +5,9 @@ import ProfilePage from "@/pages/Profile";
 import {createBrowserRouter} from 'react-router-dom'
 import { element } from "prop-types";
 import CapacityPage from "@/pages/Capacity/Capacity";
+import CategoryPage from "@/pages/Capacity/Category";
+import VideoPage from "@/pages/Capacity/VideoPlayer";
+import PlaylistPage from "@/pages/Capacity/Playlist";
 
 
 
@@ -19,8 +22,20 @@ export const router = createBrowserRouter([{
       // todo: element: Homepage
     },
     {
-      path: "/capacitacao",
+      path: "/capacitacao/",
       element: <CapacityPage />
+    },
+    {
+      path: "/capacitacao/categoria/:category",
+      element: <CategoryPage />
+    },
+    {
+      path: "/capacitacao/play/:videoId",
+      element: <VideoPage />
+    },
+    {
+      path: "/capacitacao/playlist/:playlist",
+      element: <PlaylistPage />
     },
     {
       path: "/quiz/:id",

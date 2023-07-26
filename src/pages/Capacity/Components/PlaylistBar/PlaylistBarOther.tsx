@@ -13,27 +13,27 @@ const PlaylistBar: React.FC = () => {
   return (
     <div className="playlist-bar">
       <div className="playlist-container">
-        <a href="" className="playlist-card">
+        <a href="capacitacao/playlist/figma-basico" className="playlist-card">
           <img src={figmaBasicoImg} alt="Logo da playlist de capacitação" />
           <span className="playlist-title">Figma - Básico</span>
         </a>
-        <a href="" className="playlist-card">
+        <a href="capacitacao/playlist/banco-de-dados" className="playlist-card">
           <img src={conceitoBancodeDadosImg} alt="Logo da playlist de capacitação" />
           <span className="playlist-title">Conceitos de Banco de Dados</span>
         </a>
-        <a href="" className="playlist-card">
+        <a href="capacitacao/playlist/habitos-programadores" className="playlist-card">
           <img src={habitosProgramadorImg} alt=" Logo da playlist de capacitação" />
           <span className="playlist-title">Melhore seus hábitos como programador</span>
         </a>
-        <a href="" className="playlist-card">
+        <a href="capacitacao/playlist/comunicacao-empresa" className="playlist-card">
           <img src={comunicacaoEmpresaImg} alt="Logo da playlist de capacitação" />
           <span className="playlist-title">Comunicação:Como melhorar nas empresas?</span>
         </a>
-        <a href="" className="playlist-card">
+        <a href="capacitacao/playlist/aprendendo-postgres" className="playlist-card">
           <img src={aprendendoPostgresSQLImg} alt="Logo da playlist de capacitação" />
           <span className="playlist-title">Conhecendo e Aprendendo PostgresSQL</span>
         </a>
-        <a href="" className="playlist-card">
+        <a href="capacitacao/playlist/melhorar-linkendln" className="playlist-card">
           <img src={melhorarLinkedlnImg} alt="Logo da playlist de capacitação" />
           <span className="playlist-title">Como melhorar seu Linkedln</span>
         </a>

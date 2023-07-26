@@ -1,0 +1,35 @@
+:root{
+    --scrollbar: #cfcfcf;
+}
+
+#conteudo-destaque {
+    max-width: 100%;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.video-top {
+    display: flex;
+    overflow-x: auto;
+    padding: 1vw;
+}
+
+.video-top::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    margin-bottom: 10px;
+}
+
+.video-top::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar);
+    border-radius: 4px;
+    
+}
+
+.video-top::-webkit-scrollbar-button {
+    display: none;
+}
+
+.content-rating{
+    display: flex;
+}
