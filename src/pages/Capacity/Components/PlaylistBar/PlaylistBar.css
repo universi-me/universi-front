@@ -87,3 +87,7 @@
 .playlist-bar ::-webkit-scrollbar{
     display: none;
 }
+
+.content-rating{
+    display: flex;
+}

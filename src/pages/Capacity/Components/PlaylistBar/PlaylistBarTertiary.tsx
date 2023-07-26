@@ -13,27 +13,27 @@ const PlaylistBar: React.FC = () => {
   return (
     <div className="playlist-bar">
       <div className="playlist-container">
-        <a href="" className="playlist-card">
+        <a href="capacitacao/playlist/golang" className="playlist-card">
           <img src={golangInicianteImg} alt="Logo da playlist de capacitação" />
           <span className="playlist-title">O que é Golang ?</span>
         </a>
-        <a href="" className="playlist-card">
+        <a href="capacitacao/playlist/desenvolvedor-web" className="playlist-card">
           <img src={desenvolvimentoWebImg} alt="Logo da playlist de capacitação" />
           <span className="playlist-title">Desenvolvedor WEB</span>
         </a>
-        <a href="" className="playlist-card">
+        <a href="capacitacao/playlist/react" className="playlist-card">
           <img src={aplicacaoReactImg} alt=" Logo da playlist de capacitação" />
           <span className="playlist-title">Aplicação em React</span>
         </a>
-        <a href="" className="playlist-card">
+        <a href="capacitacao/playlist/vue.js" className="playlist-card">
           <img src={aplicacaoVueImg} alt="Logo da playlist de capacitação" />
           <span className="playlist-title">Aplicação em Vue.js</span>
         </a>
-        <a href="" className="playlist-card">
+        <a href="capacitacao/playlist/golang-pratica" className="playlist-card">
           <img src={golangPraticaImg} alt="Logo da playlist de capacitação" />
           <span className="playlist-title">Golang na Prática</span>
         </a>
-        <a href="" className="playlist-card">
+        <a href="capacitacao/playlist/algoritmos" className="playlist-card">
           <img src={aprendendoAlgoritmoImg} alt="Logo da playlist de capacitação" />
           <span className="playlist-title">Algoritmos</span>
         </a>
