@@ -6,6 +6,7 @@
     align-items: center;
     flex-direction: column;
     border-radius: 10px;
+    margin-top: 40px;
 }
 
 .form-container {

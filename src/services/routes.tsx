@@ -1,7 +1,7 @@
 import { App } from "../App";
 import {createBrowserRouter} from 'react-router-dom'
 import Singin from "../../src/pages/singin/Singin";
-import Profile from "../../src/pages/Profile/Profile";
+import Profile from "../../src/pages/profile/Profile";
 import { OAuth2Element }  from './oauth2-google';
 
 
