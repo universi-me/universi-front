@@ -1,0 +1,45 @@
+.signin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.logo {
+    height: 300px;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    letter-spacing: 2px;
+    gap: 2px;
+}
+
+.logo h1 {
+    width: 500px;
+    font-size: 50px;
+    font-family: 'Poppins';
+    font-weight: 600;
+    text-align: 10px;
+    color: var(--primary-color);
+
+}
+
+footer {
+    width: 100vw;
+}
+
+.waves svg {
+    position: absolute;
+    fill: var(--primary-color);
+    bottom: 0px;
+    z-index: -1;
+}
+
+@media screen and (max-width: 1187px) {
+    .waves svg {
+        position: relative;
+        margin-bottom: -10px;
+    }
+}

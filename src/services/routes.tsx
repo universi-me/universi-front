@@ -1,9 +1,12 @@
 import { QuizPage } from "@/pages/Quiz";
 import { App } from "@/src/App";
-import ProfilePage from "@/pages/Profile";
+import {ProfilePage} from "@/pages/Profile";
 
 import {createBrowserRouter} from 'react-router-dom'
-import { element } from "prop-types";
+import Singin from "../../src/pages/singin/Singin";
+
+import { OAuth2Element }  from './oauth2-google';
+
 import CapacityPage from "@/pages/Capacity/Capacity";
 import CategoryPage from "@/pages/Capacity/Category";
 import VideoPage from "@/pages/Capacity/VideoPlayer";
@@ -51,8 +54,16 @@ export const router = createBrowserRouter([{
       // path: "caminhoantigo",
       // element: <Navigate to = "/novocaminho"/>
 
-    }
-    
+    },
+    {
+      path: "/login",
+      element: <Singin/>
+    },
+    {
+        path: "/google-oauth-redirect",
+        element: <OAuth2Element/>
+    },
+  
   ]
-}
+},
 ])
