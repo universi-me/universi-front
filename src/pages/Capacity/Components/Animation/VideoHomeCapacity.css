@@ -1,0 +1,6 @@
+.video-container {
+    padding-top: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
