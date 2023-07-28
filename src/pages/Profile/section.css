@@ -1,0 +1,18 @@
+#profile-page #left-side  .section {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    padding: var(--section-separator);
+}
+
+#profile-page #left-side  .section + .section {
+    padding-top: 0;
+}
+
+#profile-page #left-side  .section-heading {
+    color: var(--font-color-v2);
+    font-size: 1.25em;
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+}

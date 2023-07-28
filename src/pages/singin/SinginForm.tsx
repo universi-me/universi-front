@@ -23,7 +23,7 @@ export default function SinginForm() {
     if (email && password) {
       const isLogged = await auth.signin(email, password);
       if (isLogged) {
-        navigate("/profile");
+        navigate(`/profile/${auth.user?.name}`);
       }
       else {
         setIsOpen(true)
@@ -93,10 +93,10 @@ export default function SinginForm() {
         ENTRAR
       </button>
 
-      <div className="container-line">
-        <div className="line"></div>
-        <p>ou entre com</p>
-        <div className="line"></div>
+      <div className="container-line-form">
+        <div className="line-form"></div>
+        <div>ou entre com</div>
+        <div className="line-form"></div>
       </div>
 
       <button

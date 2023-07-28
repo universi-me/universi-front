@@ -71,7 +71,7 @@
     cursor: pointer;
 }
 
-.container-line {
+.container-line-form {
     color: #fff;
     display: flex;
     align-items: center;
@@ -81,7 +81,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-.line {
+.line-form {
     width: 120px;
     background-color: white;
     height: 1px;

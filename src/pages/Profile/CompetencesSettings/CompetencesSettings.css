@@ -1,0 +1,139 @@
+#profile-page #competences-settings {
+    border-radius: 20px;
+    background-color: #D6D6D6;
+    overflow: hidden;
+}
+
+#profile-page #competences-settings .heading {
+    background-color: var(--primary-color);
+    color: var(--font-color-v1);
+    text-transform: uppercase;
+    padding: .5em;
+    text-align: center;
+    font-size: 1.875em;
+    font-weight: var(--font-weight-bold);
+}
+
+#profile-page #competences-settings .settings-form {
+    padding: 2em;
+    padding-top: 1.5em;
+
+    width: 50vw;
+    overflow-y: auto;
+    max-height: 70vh;
+}
+
+#profile-page #competences-settings .settings-form .section:not(:last-of-type) {
+    margin-bottom: 1em;
+}
+
+#profile-page #competences-settings .settings-form .section h2 {
+    color: var(--font-color-v2);
+    font-size: 1.25em;
+    font-weight: var(--font-weight-default);
+    text-transform: uppercase;
+}
+
+#profile-page #competences-settings .settings-form .section select,
+#profile-page #competences-settings .settings-form .section textarea {
+    width: 100%;
+    background-color: #FFF;
+    border-radius: 10px;
+    border: none;
+}
+
+#profile-page #competences-settings .settings-form .section select {
+    appearance: none;
+    background-image: url(/assets/icons/chevron-down-1.svg);
+    background-repeat: no-repeat;
+    background-position-x: calc(100% - .3em);
+    background-position-y: 50%;
+
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-left: 1.5em;
+
+    color: #6F6F6F;
+    font-weight: var(--font-weight-light);
+}
+
+#profile-page #competences-settings .settings-form .section select option:disabled {
+    color: #6F6F6F;
+}
+
+#profile-page #competences-settings .settings-form .section select option:not(:disabled) {
+    color: black;
+}
+
+#profile-page #competences-settings .settings-form .section textarea {
+    resize: none;
+    padding: .5em 1.5em;
+}
+
+#profile-page #competences-settings .settings-form .section .radio-root .level-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#profile-page #competences-settings .settings-form .section .radio-root .level-container .radio-item {
+    width: 1.25em;
+    height: 1.25em;
+    border-radius: 0.125em;
+    background: #FFF;
+    border: none;
+    margin-right: 1.1em;
+}
+
+#profile-page #competences-settings .settings-form .section .radio-root .level-container .radio-item .radio-indicator {
+    display: block;
+    background: var(--primary-color);
+    width: 60%;
+    height: 60%;
+    margin: auto;
+    border-radius: 50%;
+}
+
+#profile-page #competences-settings .settings-form .submit {
+    margin-left: auto;
+    width: max-content;
+}
+
+#profile-page #competences-settings .settings-form .submit button {
+    width: 17.125rem;
+    height: 2.125rem;
+
+    border: 2px solid var(--primary-color);
+    border-radius: 0.625rem;
+
+    text-transform: uppercase;
+    font-size: 0.875em;
+    font-weight: var(--font-weight-semibold);
+
+    cursor: pointer;
+    transition: var(--hover-transition-duration) background-color, border-color, color;
+}
+
+#profile-page #competences-settings .settings-form .submit button:not(:last-of-type) {
+    margin-right: 1.2rem;
+}
+
+#profile-page #competences-settings .settings-form .submit .cancel-button {
+    background-color: transparent;
+    color: var(--primary-color);
+}
+
+#profile-page #competences-settings .settings-form .submit .cancel-button:hover {
+    color: var(--font-color-v1);
+    background-color: var(--primary-color);
+}
+
+#profile-page #competences-settings .settings-form .submit .submit-button {
+    color: var(--font-color-v1);
+    background-color: var(--primary-color);
+}
+
+#profile-page #competences-settings .settings-form .submit .submit-button:hover {
+    border-color: #39375D;
+    background-color: #39375D;
+}

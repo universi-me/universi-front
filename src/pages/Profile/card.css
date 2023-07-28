@@ -1,0 +1,66 @@
+#profile-page #left-side .card {
+    width: 100%;
+    background: #D9D9D9;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+
+#profile-page #left-side .card:not(:last-of-type) {
+    margin-bottom: 2em;
+}
+
+#profile-page #left-side .card-heading {
+    color: var(--font-color-v2);
+    font-size: 1.5em;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+}
+
+#profile-page #left-side .card-heading.counter {
+    color: var(--skills-1-color);
+    margin-left: .25em;
+}
+
+#profile-page #left-side .card .counter-wrapper {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: .5em;
+}
+
+#profile-page #left-side .card .items-wrapper {
+    margin: 0 auto;
+    width: 90%;
+}
+
+#profile-page #left-side .card .items-wrapper .show-items {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 1em;
+    row-gap: 1em;
+}
+
+#profile-page #left-side .card .items-wrapper .item {
+    border-radius: 5px;
+    background-color: #F3F3F3;
+    width: 3.75em;
+    aspect-ratio: 1;
+}
+
+#profile-page #left-side .card .items-wrapper .show-all-items {
+    display: block;
+    width: 100%;
+    padding: .5em 0;
+    margin-top: 2.5em;
+
+    border-radius: 10px;
+    background-color: #FFF;
+    
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+
+    color: var(--secondary-color);
+    font-size: 0.875em;
+    font-weight: var(--font-weight-semibold);
+}

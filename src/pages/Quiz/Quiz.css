@@ -1,0 +1,179 @@
+#question {
+    --box-border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 5em auto 0 auto;
+    width: 75%;
+    border: solid 1px var(--primary-color);
+    border-radius: var(--box-border-radius);
+    overflow: hidden;
+}
+
+#question .subject {
+    background-color: var(--primary-color);
+    width: 100%;
+}
+
+#question .subject h2 {
+    color: var(--font-color-v1);
+    margin: 0 auto;
+    width: fit-content;
+    font-weight: var(--font-weight-bold);
+    font-size: 1.5em;
+}
+
+#question .progress-container {
+    width: 100%;
+    height: 1em;
+    background-color: #B8B9BA;
+}
+
+#question .progress-current {
+    height: 100%;
+    width: 20%; /* width depends on quiz progress */
+    background-color: var(--skills-1-color);
+    transition: var(--hover-transition-duration) width;
+}
+
+#question .question-container {
+    width: 100%;
+    padding: 1.5em;
+}
+
+#question .question-container h2 {
+    font-weight: var(--font-weight-bold);
+    font-size: 1.5em;
+    margin-bottom: .5em;
+}
+
+#question .alternative-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+#question .alternative-container .alternative {
+    --size: 1.5em;
+    height: var(--size);
+    width: var(--size);
+
+    border-radius: 50%;
+    background-color: var(--background-color);
+    border: solid 1px var(--font-color-v4);
+    margin-right: 1em;
+    margin-left: 1.25em;
+
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+#question .alternative-container .alternative-indicator {
+    --size: 66.6%;
+    width: var(--size);
+    height: var(--size);
+
+    display: block;
+    border-radius: 50%;
+    background-color: var(--secondary-color);
+}
+
+#question #radio-group:not(.show-answer) .alternative[data-state='checked'] ~ label {
+    font-weight: var(--font-weight-semibold);
+}
+
+#question .alternative-container label {
+    font-weight: var(--font-weight-default);
+    font-size: .85em;
+}
+
+#question .show-answer .alternative-container:not([data-right-answer]) .alternative[data-state='checked'] .alternative-indicator {
+    background-color: var(--alert-color);
+}
+
+#question .show-answer .alternative-container[data-right-answer] .alternative-indicator {
+    background-color: #618F74;
+}
+
+#question #radio-group.show-answer .alternative-container:not([data-right-answer]) .alternative[data-state='checked'] ~ label {
+    color: var(--alert-color);
+}
+
+#question #radio-group.show-answer .alternative-container[data-right-answer] .alternative ~ label {
+    color: #618F74;
+}
+
+#question .alternative-container:last-of-type {
+    margin-bottom: 3em;
+}
+
+#question .submit {
+    text-transform: uppercase;
+    color: var(--font-color-v1);
+    margin-left: auto;
+    display: flex;
+    font-weight: var(--font-weight-semibold);
+    padding: .75em 6em;
+    border-radius: 10px;
+    border: none;
+    transition: var(--hover-transition-duration) background-color;
+    font-size: .85em;
+}
+
+#question .submit:not([disabled]) {
+    background-color: var(--primary-color);
+    cursor: pointer;
+}
+
+#question .submit[disabled] {
+    background-color: #373858;
+}
+
+#question .submit:not([disabled]):hover {
+    background-color: var(--button-hover-color);
+}
+
+#feedback-container {
+    width: 75%;
+    margin: 3em auto 0 auto;
+}
+
+#feedback-container .feedback-bar {
+    width: 100%;
+    height: .5em;
+    border-radius: 10px;
+    background-color: var(--wave-color);
+}
+
+#feedback-container h3 {
+    font-weight: var(--font-weight-bold);
+    font-size: 1em;
+    margin-top: .25em;
+    margin-bottom: .5em;
+}
+
+#feedback-container .feedback {
+    max-width: 35%;
+    font-weight: var(--font-weight-default);
+    font-size: .80em;
+    margin-bottom: 2.5em;
+}
+
+#feedback-container .see-more {
+    padding: .75em 6em;
+    background-color: var(--primary-color);
+    color: var(--font-color-v1);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: var(--font-weight-semibold);
+    border-radius: 10px;
+    transition: var(--hover-transition-duration) background-color;
+    font-size: .85em;
+}
+
+#feedback-container .see-more:hover {
+    background-color: var(--button-hover-color);
+}

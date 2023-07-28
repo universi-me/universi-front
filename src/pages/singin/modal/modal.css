@@ -15,7 +15,7 @@
     right: 30px;
 }
 
-.alert {
+.alert-modal {
     color: white;
 }
 
@@ -23,7 +23,7 @@
     font-weight: 600;
 }
 
-.text-warn {
+.text-warn-modal {
     width: 100%;
     font-weight: 300;
     font-size: 14px;

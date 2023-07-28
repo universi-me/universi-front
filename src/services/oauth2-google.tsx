@@ -39,7 +39,7 @@ export function OAuth2Element() {
 
             else {
                 auth.signin_google(res)
-                navigate("/profile")
+                navigate(`/profile/${res.body.user.name}`)
             }
         })
         .catch((err) => {

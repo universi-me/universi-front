@@ -9,13 +9,13 @@ export default function Modal({isOpen} : isModal) {
   if(isOpen){
     return (
       <div className="container-modal-popup">
-        <div className="text-warn">
+        <div className="text-warn-modal">
           
             <div>
-              <span className="material-symbols-outlined alert">warning</span>
+              <span className="material-symbols-outlined alert-modal">warning</span>
             </div>
-            <div className="text-warn">
-              EMAIL OU SENHA <p className="warn">INVÁLIDOS</p>
+            <div className="text-warn-modal">
+              EMAIL OU SENHA <div className="warn">INVÁLIDOS</div>
             </div>
           
         </div>

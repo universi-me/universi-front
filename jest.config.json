@@ -5,6 +5,7 @@
     "setupFilesAfterEnv": [
       "<rootDir>/.jest/setup-tests.js"
     ],
+    "coverageDirectory": "<rootDir>/.jest/coverage",
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
@@ -23,19 +24,22 @@
       "^.+\\.module\\.(css|sass|scss)$"
     ],
     "moduleNameMapper": {
-      "^.+\\.module\\.(css|sass|scss|png)$": "identity-obj-proxy",
+      "\\.(css|sass|scss|png)$": "identity-obj-proxy",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":  "<rootDir>/.jest/__mocks__/fileMock.js",
-      "^@components(.*)$": "<rootDir>/src/components$1",
-      "^@config(.*)$": "<rootDir>/src/config$1",
-      "^@enums(.*)$": "<rootDir>/src/enums$1",
-      "^@hooks(.*)$": "<rootDir>/src/hooks$1",
-      "^@layouts(.*)$": "<rootDir>/src/layouts$1",
-      "^@locales(.*)$": "<rootDir>/src/locales$1",
-      "^@pages(.*)$": "<rootDir>/src/pages$1",
-      "^@services(.*)$": "<rootDir>/src/services$1",
-      "^@store(.*)$": "<rootDir>/src/store$1",
-      "^@utils(.*)$": "<rootDir>/src/utils$1",
-      "^@types(.*)$": "<rootDir>/src/@types$1"
+      "^@\\/components\\/(.*)$": "<rootDir>/src/components/$1",
+      "^@\\/configs\\/(.*)$":    "<rootDir>/src/configs/$1",
+      "^@\\/enums\\/(.*)$":      "<rootDir>/src/enums/$1",
+      "^@\\/hooks\\/(.*)$":      "<rootDir>/src/hooks/$1",
+      "^@\\/layouts\\/(.*)$":    "<rootDir>/src/layouts/$1",
+      "^@\\/locales\\/(.*)$":    "<rootDir>/src/locales/$1",
+      "^@\\/pages\\/(.*)$":      "<rootDir>/src/pages/$1",
+      "^@\\/services\\/(.*)$":   "<rootDir>/src/services/$1",
+      "^@\\/store\\/(.*)$":      "<rootDir>/src/store/$1",
+      "^@\\/stories\\/(.*)$":    "<rootDir>/src/stories/$1",
+      "^@\\/types\\/(.*)$":      "<rootDir>/src/types/$1",
+      "^@\\/utils\\/(.*)$":      "<rootDir>/src/utils/$1",
+      "^@\\/src\\/(.*)$":        "<rootDir>/src/$1",
+      "^@\\/assets\\/(.*)$":     "<rootDir>/public/assets/$1"
     },
     "watchPlugins": [
       "jest-watch-typeahead/filename",

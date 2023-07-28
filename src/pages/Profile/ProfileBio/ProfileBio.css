@@ -1,0 +1,67 @@
+#left-side .bio .edit-button {
+    right: .75em;
+    top: .5em;
+}
+
+#left-side .bio .image {
+    width: 9.5em;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 5px solid #FFF;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#left-side .bio .name {
+    margin-top: .25em;
+}
+
+#left-side .bio .function-pronoun {
+    color: var(--font-color-v2);
+    font-size: 1.125em;
+    font-weight: var(--font-weight-light);
+}
+
+#left-side .bio .intro {
+    align-items: center;
+}
+
+#left-side .bio .about-me {
+    margin-top: 2em;
+}
+
+#left-side .bio .about-me p {
+    font-size: .8em;
+}
+
+#left-side .bio .links .link-wrapper {
+    /* todo: change to fit-content when the links come from API */
+    width: 75%;
+}
+
+#left-side .bio .links .link {
+    display: block;
+    border-radius: 4px;
+    background-color: #B2B2B2;
+    height: 2em;
+    width: 100%;
+}
+
+#left-side .bio .links .link:not(:last-of-type) {
+    margin-bottom: 1em;
+}
+
+#left-side .bio .member-since {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3em;
+    width: 100%;
+
+    font-size: 0.875em;
+    color: var(--font-color-v3);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+
+    border-top: solid #B2B2B2 2px;
+}

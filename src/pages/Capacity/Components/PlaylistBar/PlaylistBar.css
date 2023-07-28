@@ -1,0 +1,93 @@
+:root {
+    --background-scrollbar: #f3ebd9;
+    --background-tela: #2C2A4A;
+
+    --color-scrollbar: #D9D9D9;
+    --color-card-playlist: #fff;
+    --color-font-black: #000000;
+    --hover-card-playlist: #5c5fa5;
+}
+
+
+.playlist-bar {
+    display: flex;
+    align-items: center;
+    overflow-x: hidden;
+    padding: 10px 0;
+    position: relative;
+}
+
+@media (max-width: 1200px) {
+    .playlist-bar {
+      overflow-x: auto;
+    }
+}
+
+.playlist-bar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: var(--background-scrollbar);
+}
+
+.playlist-bar::-webkit-scrollbar-thumb {
+    background-color: var(--color-scrollbar);
+    border-radius: 4px;
+}
+  
+.playlist-bar::-webkit-scrollbar-track {
+    background-color: var(--background-tela);
+}
+  
+.playlist-bar::-webkit-scrollbar-button {
+    display: none;
+}
+  
+.playlist-container {
+    display: flex;
+    transition: transform 0.3s ease;
+}
+  
+.playlist-card {
+    width: 220px;
+    height: 258px;
+    border-radius: 10px;
+    margin-right: 18px;
+    background-color: var(--color-card-playlist);
+    box-shadow: 0 2px 4px #0000001a;
+    transition: box-shadow 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--color-font-black);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+  
+.playlist-card:hover {
+    color: var(--hover-card-playlist);
+    box-shadow: 0 4px 8px #00000033;
+}
+  
+.playlist-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+  
+.playlist-title {
+    display: block;
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+    white-space:normal;
+
+}
+
+.playlist-bar ::-webkit-scrollbar{
+    display: none;
+}
+
+.content-rating{
+    display: flex;
+}

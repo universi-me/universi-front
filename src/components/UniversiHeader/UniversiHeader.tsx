@@ -1,7 +1,6 @@
-import { Component, ReactElement, ReactNode } from "react";
-import UniversiLogo from "../UniversiLogo";
-import "./UniversiHeader.css";
-import { useLocation } from "react-router-dom";
+import { Component, ReactNode } from "react";
+import UniversiLogo from '@/components/UniversiLogo'
+import "./UniversiHeader.css"
 
 export type UniversiHeaderProps = {
   // todo
