@@ -7,7 +7,7 @@ import { AuthContext } from "../contexts/Auth/AuthContext";
 const oauth2Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";
 const oauth2Params = {
     client_id: "110833050076-ib680ela4hfqr2c0lhc9h19snrsvltnd.apps.googleusercontent.com",
-    redirect_uri: "http://localhost:5173/google-oauth-redirect",
+    redirect_uri: location.origin + "/google-oauth-redirect",
     response_type: "token id_token",
     scope: "openid email",
     include_granted_scopes: "true",
