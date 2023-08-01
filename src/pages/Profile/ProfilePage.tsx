@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useContext, useState } from "react";
 
 import {
     ProfileBio, ProfileGroups, ProfileAchievements, ProfileRecommendSettingsButton,
@@ -7,20 +7,27 @@ import {
     CompetencesSettings, ProfileDiscardChanges
 } from '@/pages/Profile'
 import { Modal } from "@/components/Modal/Modal";
+import { AuthContext } from "@/src/contexts/Auth/AuthContext";
 
 import './Profile.css'
 import './card.css'
 import './section.css'
 
 export function ProfilePage() {
-    const { id } = useParams();
+    const auth = useContext(AuthContext);
+    const navigate = useNavigate();
 
-    // todo: check if logged user has this id
-    const loggedUserProfile = id == 'user';
+    const { id } = useParams();
 
     const [showProfileSettings, setShowProfileSettings] = useState<boolean>(false);
     const [showCompetencesSettings, setShowCompetencesSettings] = useState<boolean>(false);
     const [showDiscardChanges, setShowDiscardChanges] = useState<boolean>(false);
+
+    if (auth.user === null) {
+        navigate('/login');
+    }
+
+    const loggedUserProfile = id == auth.user?.name;
 
     return (
         <div id="profile-page">
