@@ -1,12 +1,12 @@
 import SinginForm from "./SinginForm";
 import "./signin.css";
-import UniversiLogo from "../../components/UniversiLogo";
+// import UniversiLogo from "../../../public/assets/imgs/universi-me.png";
 export default function Singin() {
   return (
     <div>
       <div className="signin-container">
         <div className="logo">
-          <UniversiLogo />
+          {/* <UniversiLogo /> */}
 
           <h1>Faça seu login na rede social</h1>
         </div>
