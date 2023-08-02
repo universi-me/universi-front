@@ -25,4 +25,10 @@ export namespace UniversimeApi {
         const response = await api.post("/login/google", { token: access_token });
         return response.data;
     }
+
+    export namespace ProfileApi {
+        export async function get(profileId?: number, username?: string) {
+            return (await api.post('/profile/get', { profileId, username })).data
+        }
+    }
 }
