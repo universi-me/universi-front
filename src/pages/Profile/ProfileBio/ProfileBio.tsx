@@ -1,23 +1,20 @@
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, useContext } from 'react';
+import { ProfileContext } from '../ProfileContext';
 import './ProfileBio.css'
 
 export type ProfileBioProps = {
-    name: string;
-    image: string;
-    memberSince: string;
-    functionPronouns: string;
-    aboutMe: string;
-    links: string[];
-    loggedUserProfile: boolean;
-
     onClickEdit: MouseEventHandler;
 };
 
 export function ProfileBio(props: ProfileBioProps) {
+    const profileContext = useContext(ProfileContext)
+
     return (
+        profileContext === null ? null :
+
         <div className="bio card">
             {
-                props.loggedUserProfile ?
+                profileContext.accessingLoggedUser ?
                     <button className="edit-button" onClick={props.onClickEdit}>
                         <img src="/assets/icons/edit-2.svg" alt="Editar" />
                     </button>
@@ -25,27 +22,48 @@ export function ProfileBio(props: ProfileBioProps) {
             }
 
             <div className="intro section">
-                <div className="image" style={{backgroundColor: props.image}} />
-                <h2 className="card-heading name">{ props.name }</h2>
-                <div className="function-pronoun">{ props.functionPronouns }</div>
+                <img className="image" src={profileContext.profile.image ?? ''} />
+                <h2 className="card-heading name">{ `${profileContext.profile.firstname} ${profileContext.profile.lastname}` }</h2>
+                <div className="function-pronoun">{ getFunctionGender() }</div>
             </div>
 
             <div className="about-me section">
                 <h3 className="section-heading">Sobre mim</h3>
-                <p>{ props.aboutMe }</p>
+                {
+                    profileContext.profile.bio === null || profileContext.profile.bio.length === 0
+                    ? <p style={{fontStyle: 'italic'}}>Nenhuma bio</p>
+                    : <p>{ profileContext.profile.bio }</p>
+                }
             </div>
 
-            <div className="links section">
-                <h3 className="section-heading">Links Importantes</h3>
-                <div className="link-wrapper">
-                    {
-                        props.links.map((link) => {
-                            return (<a key={""} href="" className="link"></a>);
-                        })
-                    }
+            {
+                profileContext.profile.links.length === 0 ? null :
+                <div className="links section">
+                    <h3 className="section-heading">Links Importantes</h3>
+                    <div className="link-wrapper">
+                        {
+                            profileContext.profile.links.map((link) => {
+                                return (<a key={""} href="" className="link"></a>);
+                            })
+                        }
+                    </div>
                 </div>
-            </div>
-            <div className="member-since">{`Membro desde: ${props.memberSince}`}</div>
+            }
+            <div className="member-since">{`Membro desde: ${ getMemberSince() }`}</div>
         </div>
     );
+
+    function getMemberSince() {
+        const date = new Date(profileContext?.profile.creationDate ?? '')
+
+        const day = date.getDate().toLocaleString('pt-BR', { minimumIntegerDigits: 2, useGrouping: false });
+        const month = date.getMonth().toLocaleString('pt-BR', { minimumIntegerDigits: 2, useGrouping: false });
+        const year = date.getFullYear().toLocaleString('pt-BR', { minimumIntegerDigits: 2, useGrouping: false });
+
+        return `${day}/${month}/${year}`
+    }
+
+    function getFunctionGender() {
+        return `${profileContext?.profile.gender}`
+    }
 }

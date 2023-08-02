@@ -1,13 +1,16 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 
 import {
     ProfileBio, ProfileGroups, ProfileAchievements, ProfileRecommendSettingsButton,
     ProfileCompetences, ProfileLastRecommendations, ProfileSettings,
-    CompetencesSettings, ProfileDiscardChanges
+    CompetencesSettings, ProfileDiscardChanges, ProfileContext
 } from '@/pages/Profile'
 import { Modal } from "@/components/Modal/Modal";
 import { AuthContext } from "@/src/contexts/Auth/AuthContext";
+import { UniversimeApi } from "@/hooks/UniversimeApi";
+
+import type { ProfileContextType } from '@/pages/Profile'
 
 import './Profile.css'
 import './card.css'
@@ -16,25 +19,28 @@ import './section.css'
 export function ProfilePage() {
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
-
     const { id } = useParams();
 
     const [showProfileSettings, setShowProfileSettings] = useState<boolean>(false);
     const [showCompetencesSettings, setShowCompetencesSettings] = useState<boolean>(false);
     const [showDiscardChanges, setShowDiscardChanges] = useState<boolean>(false);
 
+    const [profileContext, setProfileContext] = useState<ProfileContextType>(null);
+    useEffect(loadAccessedUser, [])
+
     if (auth.user === null) {
         navigate('/login');
     }
 
-    const loggedUserProfile = id == auth.user?.name;
-
     return (
+        !profileContext ? null :
+
+        <ProfileContext.Provider value={profileContext} >
         <div id="profile-page">
             {/* todo: color from API */}
             <div id="user-header-bar" style={{background: "#515151"}}>
                 {
-                    loggedUserProfile ?
+                    profileContext?.accessingLoggedUser ?
                         <button className="edit-button" >
                             <img src='/assets/icons/edit-1.svg' alt="Editar" />
                         </button>
@@ -46,14 +52,6 @@ export function ProfilePage() {
                 <div id="left-side">
                     {/* todo: bio data from API */}
                     <ProfileBio
-                        name={'Nome & Sobrenome'}
-                        image={'#505050'}
-                        memberSince={'00/00/0000'}
-                        functionPronouns={'Função | Pronome'}
-                        aboutMe={'Lorem ipsum dolor sit amet. Hic dolor reiciendis rem earum voluptatem sit similique magnam est repellat mollitia. Et nesciunt consequuntur a vero rerum aut optio tempore aut.'}
-                        links={['', '', '', '']}
-                        loggedUserProfile={loggedUserProfile}
-
                         onClickEdit={()=>{setShowProfileSettings(true)}}
                     />
 
@@ -71,8 +69,8 @@ export function ProfilePage() {
                 </div>
 
                 <div id="right-side">
-                    <ProfileRecommendSettingsButton loggedUserProfile={loggedUserProfile} />
-                    <ProfileCompetences competences={['', '', '']} loggedUserProfile={loggedUserProfile} onClickEdit={()=>{setShowCompetencesSettings(true)}}/>
+                    <ProfileRecommendSettingsButton loggedUserProfile={profileContext?.accessingLoggedUser ?? false} />
+                    <ProfileCompetences loggedUserProfile={profileContext?.accessingLoggedUser ?? false} competences={['', '', '']} onClickEdit={()=>{setShowCompetencesSettings(true)}}/>
                     <ProfileLastRecommendations recommendations={['', '']} />
                 </div>
             </div>
@@ -80,7 +78,7 @@ export function ProfilePage() {
             {
                 showProfileSettings &&
                 <Modal>
-                    {/* todo: gender options from API */}
+                    {/* todo: gender options from API */ }
                     <ProfileSettings
                         genderOptions={[
                             { apiValue: 'M', name: 'Masculino' },
@@ -142,11 +140,23 @@ export function ProfilePage() {
                 </Modal>
             }
         </div>
+        </ProfileContext.Provider>
     );
 
     function discardChanges() {
         setShowCompetencesSettings(false);
         setShowProfileSettings(false);
         setShowDiscardChanges(false);
+    }
+
+    function loadAccessedUser() {
+        UniversimeApi.ProfileApi.get(undefined, id)
+        .then(r => {
+            setProfileContext({
+                profile: r.body.profile,
+                accessingLoggedUser: id == auth.user?.name
+            });
+            console.dir(r.body.profile)
+        })
     }
 }
