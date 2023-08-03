@@ -37,14 +37,14 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                     <h2>Biografia</h2>
                     <textarea maxLength={BIO_MAX_LENGTH} name="biography" id="biography" placeholder='Escreva um pouco sobre você' onChange={onChangeBio} defaultValue={profileContext.profile.bio ?? ""}/>
                     <p className="remaining">
-                        <p className="number">{BIO_MAX_LENGTH}</p>
+                        <p className="number">{BIO_MAX_LENGTH - (profileContext.profile.bio ?? "").length}</p>
                         <p>caracteres</p>
                     </p>
                 </div>
 
                 <div className="section gender">
                     <h2>Gênero</h2>
-                    <select name="gender" id="gender" className="dropdown-trigger" onChange={onChangeSelect} defaultValue={profileContext.profile.gender ?? ''} >
+                    <select name="gender" id="gender" className="dropdown-trigger" onChange={onChangeSelect} defaultValue={profileContext.profile.gender ?? ''} style={{color: profileContext.profile.gender ? 'black' : '#6F6F6F'}} >
                         <option disabled value={''}>Selecione o seu gênero</option>
                         {
                             GENDER_OPTIONS.map(gender => {
