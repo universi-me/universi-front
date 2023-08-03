@@ -50,16 +50,8 @@ export function ProfilePage() {
 
             <div className="content">
                 <div id="left-side">
-                    {/* todo: bio data from API */}
-                    <ProfileBio
-                        onClickEdit={()=>{setShowProfileSettings(true)}}
-                    />
-
-                    {/* todo: groups from API */}
-                    <ProfileGroups
-                        count={0}
-                        groups={['', '', '', '', '']}
-                    />
+                    <ProfileBio onClickEdit={()=>{setShowProfileSettings(true)}} />
+                    <ProfileGroups />
 
                     {/* todo: achievements from API */}
                     <ProfileAchievements

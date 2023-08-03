@@ -1,17 +1,22 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 
-export type ProfileGroupsProps = {
-    count: number;
-    groups: string[];
-};
+import { ProfileContext } from "@/pages/Profile";
 
-export function ProfileGroups(props: ProfileGroupsProps) {
-    const groupCount = props.count.toLocaleString('pt-BR', {
+export function ProfileGroups() {
+    const profileContext = useContext(ProfileContext);
+
+    if (profileContext === null)
+        return null;
+
+    const groupCount = profileContext.profile.groups.length.toLocaleString('pt-BR', {
         minimumIntegerDigits: 2,
         useGrouping: false,
     })
 
     return (
+        profileContext.profile.groups.length <= 0 ? null :
+
         <div className="groups card">
             <div className="section">
                 <div className="counter-wrapper">
@@ -22,7 +27,7 @@ export function ProfileGroups(props: ProfileGroupsProps) {
                 <div className="items-wrapper">
                     <div className="show-items">
                         {
-                            props.groups.map((group) => {
+                            profileContext.profile.groups.map((group) => {
                                 return (
                                     <Link to={""} className="group item">
                                         {/* todo: set group url */}
