@@ -26,11 +26,12 @@ export function ProfilePage() {
     const [showDiscardChanges, setShowDiscardChanges] = useState<boolean>(false);
 
     const [profileContext, setProfileContext] = useState<ProfileContextType>(null);
-    useEffect(loadAccessedUser, [])
 
     if (auth.user === null) {
         navigate('/login');
     }
+
+    useEffect(loadAccessedUser, [])
 
     return (
         !profileContext ? null :
@@ -61,7 +62,7 @@ export function ProfilePage() {
                 </div>
 
                 <div id="right-side">
-                    <ProfileRecommendSettingsButton loggedUserProfile={profileContext?.accessingLoggedUser ?? false} />
+                    <ProfileRecommendSettingsButton />
                     <ProfileCompetences loggedUserProfile={profileContext?.accessingLoggedUser ?? false} competences={['', '', '']} onClickEdit={()=>{setShowCompetencesSettings(true)}}/>
                     <ProfileLastRecommendations recommendations={['', '']} />
                 </div>
@@ -148,7 +149,7 @@ export function ProfilePage() {
                 profile: r.body.profile,
                 accessingLoggedUser: id == auth.user?.name
             });
-            console.dir(r.body.profile)
+            console.dir(r)
         })
     }
 }

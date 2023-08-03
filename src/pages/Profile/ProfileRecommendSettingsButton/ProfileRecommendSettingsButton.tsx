@@ -1,20 +1,22 @@
-import { CSSProperties } from 'react';
+import { CSSProperties, useContext } from 'react';
+import { ProfileContext } from '@/pages/Profile';
+
 import './ProfileRecommendSettingsButton.css'
 
-export type ProfileRecommendSettingsButtonProps = {
-    loggedUserProfile: boolean;
-};
+export function ProfileRecommendSettingsButton() {
+    const profileContext = useContext(ProfileContext);
+    if (profileContext === null)
+        return null;
 
-export function ProfileRecommendSettingsButton(props: ProfileRecommendSettingsButtonProps) {
-    const className = props.loggedUserProfile
+    const className = profileContext.accessingLoggedUser
         ? "settings"
         : "recommend";
 
-    const buttonContent = props.loggedUserProfile
+    const buttonContent = profileContext.accessingLoggedUser
         ? <img src="/assets/icons/settings.svg" />
         : "Recomendar";
 
-    const buttonHeight = props.loggedUserProfile
+    const buttonHeight = profileContext.accessingLoggedUser
         ? '3.75em'
         : '2.5em';
 
