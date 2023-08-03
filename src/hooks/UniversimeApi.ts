@@ -30,5 +30,16 @@ export namespace UniversimeApi {
         export async function get(profileId?: number, username?: string) {
             return (await api.post('/profile/get', { profileId, username })).data
         }
+
+        export type ProfileEditBody = {
+            profileId: string;
+            name?: string;
+            lastname?: string;
+            bio?: string;
+            sexo?: string;
+        };
+        export async function edit(body: ProfileEditBody) {
+            return (await api.post('/profile/edit', body)).data
+        }
     }
 }

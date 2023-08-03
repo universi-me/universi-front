@@ -71,29 +71,9 @@ export function ProfilePage() {
             {
                 showProfileSettings &&
                 <Modal>
-                    {/* todo: gender options from API */ }
                     <ProfileSettings
-                        genderOptions={[
-                            { apiValue: 'M', name: 'Masculino' },
-                            { apiValue: 'F', name: 'Feminino' },
-                            { apiValue: 'O', name: 'Outro' },
-                            { apiValue: 'N', name: 'Não informar' },
-                        ]}
-                        pronounsOptions={[
-                            { apiValue: 'ELE', name: 'Ele/Dele' },
-                            { apiValue: 'ELA', name: 'Ela/Dela' },
-                            { apiValue: 'ELU', name: 'Elu/Delu' },
-                            { apiValue: 'N',   name: 'Não informar' },
-                        ]}
-                        socialOptions={[
-                            { apiValue: 'facebook',  name: 'Facebook' },
-                            { apiValue: 'github',    name: 'Github' },
-                            { apiValue: 'instagram', name: 'Instagram' },
-                            { apiValue: 'linkedin',  name: 'LinkedIn' },
-                        ]}
-                        cancelChanges={()=>{setShowDiscardChanges(true)}}
-                        // todo: save profile settings
-                        saveChanges={() => {alert('todo')}}
+                        cancelChanges={() => {setShowDiscardChanges(true)}}
+                        toggleModal={setShowProfileSettings}
                     />
                 </Modal>
             }
@@ -147,8 +127,11 @@ export function ProfilePage() {
         .then(r => {
             setProfileContext({
                 profile: r.body.profile,
-                accessingLoggedUser: id == auth.user?.name
+                accessingLoggedUser: id == auth.user?.name,
+                reloadPage: loadAccessedUser,
             });
+
+            discardChanges();
             console.dir(r)
         })
     }
