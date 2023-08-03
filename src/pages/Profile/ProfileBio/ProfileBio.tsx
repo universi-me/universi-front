@@ -1,5 +1,6 @@
 import { MouseEventHandler, useContext } from 'react';
-import { ProfileContext } from '../ProfileContext';
+import { ProfileContext } from '@/pages/Profile';
+import { getGenderName } from '@/utils/profileUtils';
 import './ProfileBio.css'
 
 export type ProfileBioProps = {
@@ -64,6 +65,6 @@ export function ProfileBio(props: ProfileBioProps) {
     }
 
     function getFunctionGender() {
-        return `${profileContext?.profile.gender}`
+        return `Gênero: ${getGenderName(profileContext?.profile.gender)}`
     }
 }

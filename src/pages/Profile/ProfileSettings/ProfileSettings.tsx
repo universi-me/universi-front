@@ -1,6 +1,6 @@
 import { ChangeEvent, useContext, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
-import { getFullName, separateFullName } from '@/utils/profileUtils';
+import { getFullName, separateFullName, GENDER_OPTIONS } from '@/utils/profileUtils';
 import { UniversimeApi } from '@/hooks/UniversimeApi';
 import './ProfileSettings.css'
 
@@ -10,11 +10,6 @@ export type ProfileSettingsProps = {
 };
 
 const BIO_MAX_LENGTH = 140;
-const GENDER_OPTIONS = [
-    { apiValue: 'M', name: 'Masculino' },
-    { apiValue: 'F', name: 'Feminino' },
-    { apiValue: 'O', name: 'Outro' },
-];
 
 export function ProfileSettings(props: ProfileSettingsProps) {
     const profileContext = useContext(ProfileContext);
@@ -47,9 +42,9 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                     <select name="gender" id="gender" className="dropdown-trigger" onChange={onChangeSelect} defaultValue={profileContext.profile.gender ?? ''} style={{color: profileContext.profile.gender ? 'black' : '#6F6F6F'}} >
                         <option disabled value={''}>Selecione o seu gênero</option>
                         {
-                            GENDER_OPTIONS.map(gender => {
+                            Object.entries(GENDER_OPTIONS).map(([apiValue, name]) => {
                                 return (
-                                    <option value={gender.apiValue} key={gender.apiValue}>{gender.name}</option>
+                                    <option value={apiValue} key={apiValue}>{name}</option>
                                 );
                             })
                         }
