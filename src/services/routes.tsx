@@ -7,6 +7,7 @@ import Singin from "../../src/pages/singin/Singin";
 
 import { OAuth2Element }  from './oauth2-google';
 
+import { Home } from "@/pages/Home";
 import CapacityPage from "@/pages/Capacity/Capacity";
 import CategoryPage from "@/pages/Capacity/Category";
 import VideoPage from "@/pages/Capacity/VideoPlayer";
@@ -21,8 +22,8 @@ export const router = createBrowserRouter([{
   //todo: errorElement: Erro404page,
   children: [
     {
-      // todo: path: "/",
-      // todo: element: Homepage
+      path: "/",
+      element: <Home />
     },
     {
       path: "/capacitacao/",
