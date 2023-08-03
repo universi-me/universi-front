@@ -1,4 +1,5 @@
 import type { User } from "@/types/User";
+import type { Competence } from "@/types/Competence";
 
 export type Gender = "M" | "F" | "O";
 
@@ -13,6 +14,7 @@ export type Profile = {
     sexo:         Gender | null;
     bio:          string | null;
     creationDate: string;
+    competences:  Competence[];
 
     // todo: type this properties
     groups:                 any[];

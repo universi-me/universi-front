@@ -58,12 +58,20 @@
     font-weight: var(--font-weight-default);
 }
 
+#profile-page #right-side .competences .competence-list .competence-item .level-container {
+    margin-left: auto;
+    margin-right: 2.5em;
+}
+
+#profile-page #right-side .competences .competence-list .competence-item .level-container .level-label {
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+}
+
 #profile-page #right-side .competences .competence-list .competence-item .competence-level-list {
     display: flex;
     flex-direction: row;
-
-    margin-left: auto;
-    margin-right: 2.5em;
 }
 
 #profile-page #right-side .competences .competence-list .competence-item .competence-level-list .competence-level {
@@ -80,4 +88,10 @@
 
 #profile-page #right-side .competences .competence-list .competence-item .competence-level-list .competence-level:not(:last-of-type) {
     margin-right: .5em;
+}
+
+#profile-page #right-side .competences .competence-list .empty-competences {
+    font-style: italic;
+    width: 100%;
+    text-align: center;
 }
