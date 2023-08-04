@@ -78,6 +78,12 @@
     translate: 0 -1em;
 }
 
+#profile-page #right-side .empty-recommendations {
+    font-style: italic;
+    width: 100%;
+    text-align: center;
+}
+
 #profile-page #right-side .show-more {
     display: flex;
 
