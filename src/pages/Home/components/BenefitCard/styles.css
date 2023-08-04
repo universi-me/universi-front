@@ -1,0 +1,24 @@
+.benefit-container {
+  padding: 1.5rem 2.5rem;
+  border-radius: 15px;
+  background-color: var(--secondary-color);
+  
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.benefit-container svg {
+  height: 1.875rem;
+  width: 1.875rem;
+  color: #9294cc;
+}
+
+.benefit-container span {
+  font-size: 1.125rem;
+  text-align: center;
+  color: #fff;
+}

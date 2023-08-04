@@ -1,5 +1,5 @@
 .home-container {
-  
+  padding-bottom: 5rem;
 }
 
 .home-container main {
@@ -46,7 +46,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   border-radius: 10px;
-  color: #2C2A4A;
+  color: #2c2a4a;
   background: #ffff;
 }
 
@@ -59,4 +59,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.benefits-box {
+  max-width: 39rem;
+  width: 100%;
+  text-align: center;
+  margin: 6.25rem auto 0;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4.75rem;
+}
+
+.benefits-box-description {
+  font-size: 2rem;
+  color: var(--font-color-v2);
+  line-height: 120%;
+  font-weight: 600;
+}
+
+.benefits-box-content {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(15rem, 18.75rem));
+  gap: 1.5rem;
+}
+
+.benefits-box-footer {
+  display: flex;
+  flex-direction: column;
 }
