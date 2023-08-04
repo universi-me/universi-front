@@ -1,5 +1,6 @@
 import "./styles.css";
 import Wave from "../../../public/assets/imgs/wave-background.svg";
+import SocialNetwoork from "../../../public/assets/imgs/social-network.svg";
 import Logo from "../../../public/assets/imgs/u-logo.svg";
 import { BenefitCard } from "./components/BenefitCard";
 import { FiUsers, FiVideo } from "react-icons/fi";
@@ -48,7 +49,7 @@ export function Home() {
 
             <BenefitCard title="Elabore seu currículo" icon={<FiUsers />} />
           </div>
-          
+
           <div className="benefits-box-footer">
             <strong className="benefits-box-description">
               ...e muito mais
@@ -59,6 +60,26 @@ export function Home() {
           </div>
         </section>
       </main>
+
+      <footer className="home-footer">
+        <div className="home-footer-img">
+          <img src={SocialNetwoork} alt="" />
+        </div>
+
+        <div className="home-footer-content">
+          <div className="home-footer-span-description">
+            <strong>
+              Nossa comunidade já conta com mais de <span>000</span> usuários.
+            </strong>
+
+            <span >
+              Cadastre-se no Universi.me e aproveite os benefícios agora!
+            </span>
+          </div>
+
+          <button>CLIQUE AQUI PARA COMEÇAR</button>
+        </div>
+      </footer>
     </div>
   );
 }

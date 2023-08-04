@@ -1,5 +1,4 @@
 .home-container {
-  padding-bottom: 5rem;
 }
 
 .home-container main {
@@ -66,7 +65,7 @@
   width: 100%;
   text-align: center;
   margin: 6.25rem auto 0;
-  
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -90,4 +89,60 @@
 .benefits-box-footer {
   display: flex;
   flex-direction: column;
+}
+
+.home-footer {
+  max-width: 71.75rem;
+  width: 100%;
+  margin: 0 auto;
+  padding-bottom: 5rem;
+
+  display: flex;
+  align-items: center;
+  gap: 6.25rem;
+}
+
+.home-footer-content {
+  flex: 1;
+}
+
+.home-footer-span-description {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-footer-content strong {
+  font-size: 1.875rem;
+  color: #fff;
+}
+
+.home-footer-content strong > span {
+  font-size: 1.875rem;
+  color: var(--secondary-color);
+}
+
+.home-footer-content span {
+  font-size: 1.25rem;
+  color: #fff;
+}
+
+.home-footer-img {
+  max-width: 29.125rem;
+}
+
+.home-footer-img img {
+  width: 100%;
+  height: 100%;
+}
+
+
+.home-footer-content button {
+  border: 0;
+  padding: 0.5rem 2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 10px;
+  margin-top: 1.5rem;
+  color: #2c2a4a;
+  background: #ffff;
 }
