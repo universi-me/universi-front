@@ -15,9 +15,9 @@ export type Profile = {
     bio:          string | null;
     creationDate: string;
     competences:  Competence[];
+    groups:       number[];
 
     // todo: type this properties
-    groups:                 any[];
     links:                  any[];
     recomendacoesFeitas:    any[];
     recomendacoesRecebidas: any[];

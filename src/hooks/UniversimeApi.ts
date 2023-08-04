@@ -42,4 +42,12 @@ export namespace UniversimeApi {
             return (await api.post('/profile/edit', body)).data
         }
     }
+
+    export namespace Group {
+        export async function get(groupId: string) {
+            return (await api.post('/grupo/obter', {
+                grupoId: groupId
+            })).data;
+        }
+    }
 }

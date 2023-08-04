@@ -27,11 +27,12 @@ export function ProfileGroups() {
                 <div className="items-wrapper">
                     <div className="show-items">
                         {
-                            profileContext.profile.groups.map((group) => {
-                                return (
-                                    <Link to={""} className="group item">
+                            profileContext.profile.groups.map((groupId) => {
+                                const group = profileContext.groups[groupId];
+                                return group === undefined ? null : (
+                                    <Link to={""} className="group item" title={group.name} key={groupId}>
                                         {/* todo: set group url */}
-                                        {/* todo: render group icon */}
+                                        <img src={group.image} alt="" />
                                     </Link>
                                 );
                             })

@@ -11,6 +11,7 @@ import { AuthContext } from "@/src/contexts/Auth/AuthContext";
 import { UniversimeApi } from "@/hooks/UniversimeApi";
 
 import type { ProfileContextType } from '@/pages/Profile'
+import type { Group } from "@/types/Group";
 
 import './Profile.css'
 import './card.css'
@@ -63,7 +64,7 @@ export function ProfilePage() {
 
                 <div id="right-side">
                     <ProfileRecommendSettingsButton />
-                    <ProfileCompetences loggedUserProfile={profileContext?.accessingLoggedUser ?? false} competences={['', '', '']} onClickEdit={()=>{setShowCompetencesSettings(true)}}/>
+                    <ProfileCompetences onClickEdit={()=>{setShowCompetencesSettings(true)}}/>
                     <ProfileLastRecommendations recommendations={['', '']} />
                 </div>
             </div>
@@ -124,15 +125,31 @@ export function ProfilePage() {
 
     function loadAccessedUser() {
         UniversimeApi.ProfileApi.get(undefined, id)
-        .then(r => {
-            setProfileContext({
-                profile: r.body.profile,
-                accessingLoggedUser: id == auth.user?.name,
-                reloadPage: loadAccessedUser,
-            });
+        .then(profileResponse => {
+            loadGroups(profileResponse.body.profile.groups)
+                .then(groupResponse => {
+                    setProfileContext({
+                        profile: profileResponse.body.profile,
+                        accessingLoggedUser: id == auth.user?.name,
+                        reloadPage: loadAccessedUser,
+                        groups: groupResponse
+                    });
+                })
 
             discardChanges();
-            console.dir(r)
         })
+    }
+
+    async function loadGroups(groupIds: number[]) {
+        let groupObject: {[id: number]: Group} = {};
+        const groups: Group[] = await Promise.all(groupIds.map(async id => {
+            return (await UniversimeApi.Group.get(id.toString())).body.grupo;
+        }))
+
+        groups.forEach(g => {
+            groupObject[g.id] = g
+        });
+
+        return groupObject;
     }
 }

@@ -49,7 +49,7 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
                                                     : '';
 
                                                 return (
-                                                    <div className={`competence-level ${learnedLevel}`} />
+                                                    <div className={`competence-level ${learnedLevel}`} key={`${competence.id}-${i}`}/>
                                                 );
                                             })
                                         }
