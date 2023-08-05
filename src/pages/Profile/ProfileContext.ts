@@ -4,6 +4,7 @@ import type { Group } from "@/types/Group";
 import type { Competence } from "@/types/Competence";
 import { Recommendation } from "@/types/Recommendation";
 import { Link } from "@/types/Link";
+import { Achievements } from "@/types/Achievements";
 
 export type ProfileContextType = null | {
     accessingLoggedUser: boolean;
@@ -16,6 +17,7 @@ export type ProfileContextType = null | {
         links:                   Link[];
         recommendationsSend:     Recommendation[];
         recommendationsReceived: Recommendation[];
+        achievements:            Achievements[];
     };
 
     reloadPage: () => void | Promise<void>;

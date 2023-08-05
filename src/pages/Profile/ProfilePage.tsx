@@ -55,12 +55,7 @@ export function ProfilePage() {
                 <div id="left-side">
                     <ProfileBio onClickEdit={()=>{setShowProfileSettings(true)}} />
                     <ProfileGroups />
-
-                    {/* todo: achievements from API */}
-                    <ProfileAchievements
-                        count={0}
-                        achievements={['', '', '']}
-                    />
+                    <ProfileAchievements />
                 </div>
 
                 <div id="right-side">
@@ -143,6 +138,7 @@ export function ProfilePage() {
             links: linksRes.body.links,
             recommendationsSend: recommendationsRes.body.recomendationsSend,
             recommendationsReceived: recommendationsRes.body.recomendationsReceived,
+            achievements: [], // todo: fetch achievements
         };
     }
 }
