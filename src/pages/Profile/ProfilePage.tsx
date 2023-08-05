@@ -130,15 +130,19 @@ export function ProfilePage() {
     }
 
     async function loadProfileListData(profileId: number) {
-        const [groupsResponse, competencesResponse] = await Promise.all([
+        const [groupsRes, competencesRes, linksRes] = await Promise.all([
             UniversimeApi.Profile.groups(profileId),
             UniversimeApi.Profile.competences(profileId),
+            UniversimeApi.Profile.links(profileId),
         ]);
 
+        console.dir(linksRes);
+        
+
         return {
-            groups: groupsResponse.body.groups,
-            competences: competencesResponse.body.competences,
-            links: [],
+            groups: groupsRes.body.groups,
+            competences: competencesRes.body.competences,
+            links: linksRes.body.links,
             recommendationsSend: [],
             recommendationsReceived: [],
         };

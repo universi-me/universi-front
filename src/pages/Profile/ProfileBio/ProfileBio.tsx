@@ -44,7 +44,10 @@ export function ProfileBio(props: ProfileBioProps) {
                     <div className="link-wrapper">
                         {
                             profileContext.profileListData.links.map((link) => {
-                                return (<a key={""} href="" className="link"></a>);
+                                return (<a key={link.id} href={link.url} target='_blank' className="link">
+                                    {/* todo: add link icon */}
+                                    {link.name}
+                                </a>);
                             })
                         }
                     </div>

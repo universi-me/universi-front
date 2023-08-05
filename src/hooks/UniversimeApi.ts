@@ -55,6 +55,13 @@ export namespace UniversimeApi {
                 username,
             })).data
         }
+
+        export async function links(profileId?: number, username?: string) {
+            return (await api.post('/profile/links', {
+                profileId: profileId?.toString(),
+                username,
+            })).data
+        }
     }
 
     export namespace Group {

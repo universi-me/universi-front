@@ -3,6 +3,7 @@ import type { Profile } from "@/types/Profile";
 import type { Group } from "@/types/Group";
 import type { Competence } from "@/types/Competence";
 import { Recommendation } from "@/types/Recommendation";
+import { Link } from "@/types/Link";
 
 export type ProfileContextType = null | {
     accessingLoggedUser: boolean;
@@ -12,7 +13,7 @@ export type ProfileContextType = null | {
     profileListData: {
         groups:                  Group[];
         competences:             Competence[];
-        links:                   any[]; // todo: typed links
+        links:                   Link[];
         recommendationsSend:     Recommendation[];
         recommendationsReceived: Recommendation[];
     };

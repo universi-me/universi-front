@@ -36,16 +36,21 @@
 }
 
 #left-side .bio .links .link-wrapper {
-    /* todo: change to fit-content when the links come from API */
-    width: 75%;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
 }
 
 #left-side .bio .links .link {
-    display: block;
     border-radius: 4px;
     background-color: #B2B2B2;
-    height: 2em;
     width: 100%;
+    padding: 0 .5em;
+    text-align: left;
+    text-decoration: none;
+    color: var(--font-color-v2);
+    line-height: 2rem;
+    height: 2rem;
 }
 
 #left-side .bio .links .link:not(:last-of-type) {
