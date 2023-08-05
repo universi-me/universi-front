@@ -48,6 +48,13 @@ export namespace UniversimeApi {
                 username,
             })).data
         }
+
+        export async function competences(profileId?: number, username?: string) {
+            return (await api.post('/profile/competences', {
+                profileId: profileId?.toString(),
+                username,
+            })).data
+        }
     }
 
     export namespace Group {
