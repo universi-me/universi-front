@@ -26,7 +26,7 @@ export namespace UniversimeApi {
         return response.data;
     }
 
-    export namespace ProfileApi {
+    export namespace Profile {
         export async function get(profileId?: number, username?: string) {
             return (await api.post('/profile/get', { profileId, username })).data
         }
@@ -40,6 +40,13 @@ export namespace UniversimeApi {
         };
         export async function edit(body: ProfileEditBody) {
             return (await api.post('/profile/edit', body)).data
+        }
+
+        export async function groups(profileId?: number, username?: string) {
+            return (await api.post('/profile/groups', {
+                profileId: profileId?.toString(),
+                username,
+            })).data
         }
     }
 

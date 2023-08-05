@@ -112,7 +112,7 @@ export function ProfilePage() {
     async function loadAccessedUser() {
         const [competenceRes, profileRes] = await Promise.all([
             UniversimeApi.Competence.list(),
-            UniversimeApi.ProfileApi.get(undefined, id)
+            UniversimeApi.Profile.get(undefined, id)
         ]);
 
         const profileListData = await loadProfileListData(profileRes.body.profile.id);
@@ -130,25 +130,16 @@ export function ProfilePage() {
     }
 
     async function loadProfileListData(profileId: number) {
+        const [groupsResponse] = await Promise.all([
+            UniversimeApi.Profile.groups(profileId)
+        ]);
+
         return {
-            groups: [],
+            groups: groupsResponse.body.groups,
             competences: [],
             links: [],
             recommendationsSend: [],
             recommendationsReceived: [],
         };
-    }
-
-    async function loadGroups(groupIds: number[]) {
-        let groupObject: {[id: number]: Group} = {};
-        const groups: Group[] = await Promise.all(groupIds.map(async id => {
-            return (await UniversimeApi.Group.get(id.toString())).body.grupo;
-        }))
-
-        groups.forEach(g => {
-            groupObject[g.id] = g
-        });
-
-        return groupObject;
     }
 }
