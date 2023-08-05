@@ -1,4 +1,5 @@
 .home-container {
+  
 }
 
 .home-container main {
@@ -104,6 +105,8 @@
 
 .home-footer-content {
   flex: 1;
+  max-width: 31.625rem;
+  width: 100%;
 }
 
 .home-footer-span-description {
@@ -145,4 +148,11 @@
   margin-top: 1.5rem;
   color: #2c2a4a;
   background: #ffff;
+}
+
+.bg-image {
+  background-image: url("../../../public/assets/imgs/wave-background.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  max-width: 100vw;
 }

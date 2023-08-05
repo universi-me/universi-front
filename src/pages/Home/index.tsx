@@ -28,7 +28,9 @@ export function Home() {
             </div>
           </div>
         </section>
+      </main>
 
+      <div className="bg-image">
         <section className="benefits-box">
           <strong className="benefits-box-description">
             Benefícios que encontrará na nossa rede social
@@ -59,27 +61,27 @@ export function Home() {
             </strong>
           </div>
         </section>
-      </main>
 
-      <footer className="home-footer">
-        <div className="home-footer-img">
-          <img src={SocialNetwoork} alt="" />
-        </div>
-
-        <div className="home-footer-content">
-          <div className="home-footer-span-description">
-            <strong>
-              Nossa comunidade já conta com mais de <span>000</span> usuários.
-            </strong>
-
-            <span >
-              Cadastre-se no Universi.me e aproveite os benefícios agora!
-            </span>
+        <footer className="home-footer">
+          <div className="home-footer-img">
+            <img src={SocialNetwoork} alt="" />
           </div>
 
-          <button>CLIQUE AQUI PARA COMEÇAR</button>
-        </div>
-      </footer>
+          <div className="home-footer-content">
+            <div className="home-footer-span-description">
+              <strong>
+                Nossa comunidade já conta com mais de <span>000</span> usuários.
+              </strong>
+
+              <span>
+                Cadastre-se no Universi.me e aproveite os benefícios agora!
+              </span>
+            </div>
+
+            <button>CLIQUE AQUI PARA COMEÇAR</button>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }
