@@ -32,7 +32,8 @@ export function ProfilePage() {
         navigate('/login');
     }
 
-    useEffect(loadAccessedUser, [])
+    useEffect(() => { loadAccessedUser() }, [])
+    console.dir(profileContext)
 
     return (
         !profileContext ? null :
@@ -65,7 +66,7 @@ export function ProfilePage() {
                 <div id="right-side">
                     <ProfileRecommendSettingsButton />
                     <ProfileCompetences onClickEdit={()=>{setShowCompetencesSettings(true)}}/>
-                    <ProfileLastRecommendations recommendations={['', '']} />
+                    <ProfileLastRecommendations />
                 </div>
             </div>
 
@@ -83,21 +84,6 @@ export function ProfilePage() {
                 showCompetencesSettings &&
                 <Modal>
                     <CompetencesSettings
-                        // todo: Competences levels from API
-                        levels={[
-                            { apiValue: 0, name: 'Nenhum' },
-                            { apiValue: 1, name: 'Iniciante' },
-                            { apiValue: 2, name: 'Experiente' },
-                            { apiValue: 3, name: 'Master' },
-                        ]}
-
-                        // todo: Competences from API
-                        competences={[
-                            {apiValue: 'javascript', level: 1, name: 'JavaScript'},
-                            {apiValue: 'python',     level: 3,    name: 'Python'},
-                            {apiValue: 'java',       level: 2,    name: 'Java'},
-                        ]}
-
                         cancelAction={()=>{setShowDiscardChanges(true)}}
                         submitAction={()=>{alert('todo')}}
                     />
@@ -123,21 +109,34 @@ export function ProfilePage() {
         setShowDiscardChanges(false);
     }
 
-    function loadAccessedUser() {
-        UniversimeApi.ProfileApi.get(undefined, id)
-        .then(profileResponse => {
-            loadGroups(profileResponse.body.profile.groups)
-                .then(groupResponse => {
-                    setProfileContext({
-                        profile: profileResponse.body.profile,
-                        accessingLoggedUser: id == auth.user?.name,
-                        reloadPage: loadAccessedUser,
-                        groups: groupResponse
-                    });
-                })
+    async function loadAccessedUser() {
+        const [competenceRes, profileRes] = await Promise.all([
+            UniversimeApi.Competence.list(),
+            UniversimeApi.ProfileApi.get(undefined, id)
+        ]);
 
-            discardChanges();
-        })
+        const profileListData = await loadProfileListData(profileRes.body.profile.id);
+
+        setProfileContext({
+            accessingLoggedUser: id == auth.user?.name,
+            profile: profileRes.body.profile,
+            allCompetences: competenceRes.body.lista,
+            profileListData: profileListData,
+
+            reloadPage: loadAccessedUser,
+        });
+
+        discardChanges();
+    }
+
+    async function loadProfileListData(profileId: number) {
+        return {
+            groups: [],
+            competences: [],
+            links: [],
+            recommendationsSend: [],
+            recommendationsReceived: [],
+        };
     }
 
     async function loadGroups(groupIds: number[]) {

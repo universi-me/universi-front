@@ -31,8 +31,8 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
             </div>
             <div className="competence-list">
                 {
-                    profileContext.profile.competences.length > 0
-                    ? profileContext.profile.competences.map(competence => {
+                    profileContext.profileListData.competences.length > 0
+                    ? profileContext.profileListData.competences.map(competence => {
                         return (
                             <div className="competence-item" key={competence.id}>
                                 {/* todo: fix competence icon */}

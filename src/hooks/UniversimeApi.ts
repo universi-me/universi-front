@@ -50,4 +50,10 @@ export namespace UniversimeApi {
             })).data;
         }
     }
+
+    export namespace Competence {
+        export async function list() {
+            return (await api.post('/competencia/listar', {})).data
+        }
+    }
 }

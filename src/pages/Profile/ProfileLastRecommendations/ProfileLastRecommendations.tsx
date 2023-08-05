@@ -13,10 +13,10 @@ export function ProfileLastRecommendations() {
     return (
         <div className="last-recommendations">
             <h2 className="heading">Últimas Recomendações</h2>
-            { profileContext.profile.recomendacoesRecebidas.length > 0 ?
+            { profileContext.profileListData.recommendationsReceived.length > 0 ?
                 <div className="list">
                     {
-                        profileContext.profile.recomendacoesRecebidas.map((recommendation, i) => {
+                        profileContext.profileListData.recommendationsReceived.map((recommendation, i) => {
                             if (i >= MAX_RECOMMENDATIONS_QUANTITY)
                                 return null;
 

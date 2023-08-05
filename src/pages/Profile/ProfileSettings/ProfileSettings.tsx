@@ -16,7 +16,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
     if (profileContext === null)
         return null;
 
-    const [profileLinks, setProfileLinks] = useState<any[]>(profileContext.profile.links);
+    const [profileLinks, setProfileLinks] = useState<any[]>(profileContext.profileListData.links);
 
     return (
         <div id="profile-settings">

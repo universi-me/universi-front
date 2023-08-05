@@ -38,12 +38,12 @@ export function ProfileBio(props: ProfileBioProps) {
             </div>
 
             {
-                profileContext.profile.links.length === 0 ? null :
+                profileContext.profileListData.links.length === 0 ? null :
                 <div className="links section">
                     <h3 className="section-heading">Links Importantes</h3>
                     <div className="link-wrapper">
                         {
-                            profileContext.profile.links.map((link) => {
+                            profileContext.profileListData.links.map((link) => {
                                 return (<a key={""} href="" className="link"></a>);
                             })
                         }

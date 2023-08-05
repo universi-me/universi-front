@@ -9,13 +9,13 @@ export function ProfileGroups() {
     if (profileContext === null)
         return null;
 
-    const groupCount = profileContext.profile.groups.length.toLocaleString('pt-BR', {
+    const groupCount = profileContext.profileListData.groups.length.toLocaleString('pt-BR', {
         minimumIntegerDigits: 2,
         useGrouping: false,
     })
 
     return (
-        profileContext.profile.groups.length <= 0 ? null :
+        profileContext.profileListData.groups.length <= 0 ? null :
 
         <div className="groups card">
             <div className="section">
@@ -27,10 +27,9 @@ export function ProfileGroups() {
                 <div className="items-wrapper">
                     <div className="show-items">
                         {
-                            profileContext.profile.groups.map((groupId) => {
-                                const group = profileContext.groups[groupId];
+                            profileContext.profileListData.groups.map((group) => {
                                 return group === undefined ? null : (
-                                    <Link to={""} className="group item" title={group.name} key={groupId}>
+                                    <Link to={""} className="group item" title={group.name} key={group.id}>
                                         {/* todo: set group url */}
                                         <img src={group.image} alt="" />
                                     </Link>
