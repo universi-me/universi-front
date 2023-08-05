@@ -114,6 +114,19 @@
     color: black
 }
 
+#profile-settings .settings-form .social.section .heading-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#profile-settings .settings-form .social.section .heading-wrapper .add-link {
+    background: none;
+    border: none;
+    font-size: 1.25em;
+}
+
 #profile-settings .settings-form .social.section .box .item {
     display: flex;
     flex-direction: row;
@@ -131,11 +144,21 @@
 
 #profile-settings .settings-form .social.section .box .item input {
     border-radius: 4px;
-    margin-left: 1.75em;
+    margin-left: 1em;
+}
+
+#profile-settings .settings-form .social.section .box .item .remove-link {
+    font-size: 1.5em;
+    color: red;
+    background: none;
+    border: none;
+    margin-left: .5rem;
 }
 
 #profile-settings .settings-form .social.section .box .item:not(:last-of-type) {
-    margin-bottom: .5em;
+    margin-bottom: .3em;
+    padding-bottom: .3em;
+    border-bottom: 2px solid #ABABAB;
 }
 
 #profile-settings .settings-form .submit {

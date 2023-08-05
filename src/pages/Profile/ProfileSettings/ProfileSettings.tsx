@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useState } from 'react';
+import { ChangeEvent, MouseEvent, useContext, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { Link, TypeLinkToBootstrapIcon } from '@/types/Link';
 import { getFullName, separateFullName, GENDER_OPTIONS } from '@/utils/profileUtils';
@@ -11,6 +11,7 @@ export type ProfileSettingsProps = {
 };
 
 const BIO_MAX_LENGTH = 140;
+let   NEW_LINK_ID =    -1;
 
 export function ProfileSettings(props: ProfileSettingsProps) {
     const profileContext = useContext(ProfileContext);
@@ -52,6 +53,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                     </select>
                 </div>
 
+                {/* pronouns were removed because the API doesn't support it yet */}
                 {/* <div className="section pronouns">
                     <h2>Pronomes</h2>
                     <select name="pronoun" id="pronoun" className="dropdown-trigger" onChange={onChangeSelect}>
@@ -67,7 +69,12 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                 </div> */}
 
                 <div className="section social">
-                    <h2>Gerenciar Links</h2>
+                    <div className="heading-wrapper">
+                        <h2>Gerenciar Links</h2>
+                        <button type="button" title="Adicionar novo link" onClick={addLink} className="add-link">
+                            <i className="bi bi-plus-circle-fill" />
+                        </button>
+                    </div>
                     <div className="box">
                         {
                             profileLinks.map(link => {
@@ -75,6 +82,9 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                                     <div className="item" key={link.id}>
                                         <i className={`icon bi-${TypeLinkToBootstrapIcon[link.typeLink]}`} style={{fontSize: "1.5rem", color: "black"}}></i>
                                         <input type="text" name={link.id.toString()} placeholder='Insira o link' defaultValue={link.url} />
+                                        <button className="remove-link" type="button" onClick={removeLink} data-link-name={link.id}>
+                                            <i className="bi bi-trash-fill" />
+                                        </button>
                                     </div>
                                 );
                             })
@@ -102,6 +112,26 @@ export function ProfileSettings(props: ProfileSettingsProps) {
     
     function setSelectColor(sel: HTMLSelectElement) {
         sel.style.color = sel.value ? 'black' : '';
+    }
+
+    function addLink() {
+        if (profileContext === null)
+            return;
+
+        setProfileLinks([...profileLinks, {
+            id: NEW_LINK_ID--,
+            name: "",
+            perfil: profileContext.profile,
+            typeLink: "LINK",
+            url: "",
+        }])
+    }
+
+    function removeLink(e: MouseEvent<HTMLButtonElement>) {
+        const button = e.currentTarget;
+        const linkId = button.getAttribute('data-link-name')
+
+        setProfileLinks(profileLinks.filter(l => l.id.toString() !== linkId))
     }
 
     function saveChanges() {
