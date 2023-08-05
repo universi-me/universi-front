@@ -43,6 +43,7 @@
     font-size: 1.25em;
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
+    text-decoration: none;
 }
 
 #profile-page #right-side .list .recommendation .recommended-by {

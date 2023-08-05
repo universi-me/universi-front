@@ -62,6 +62,13 @@ export namespace UniversimeApi {
                 username,
             })).data
         }
+
+        export async function recommendations(profileId?: number, username?: string) {
+            return (await api.post('/profile/recomendations', {
+                profileId: profileId?.toString(),
+                username,
+            })).data
+        }
     }
 
     export namespace Group {

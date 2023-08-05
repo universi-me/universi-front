@@ -1,7 +1,8 @@
 import { useContext } from 'react';
-import './ProfileLastRecommendations.css'
-import { ProfileContext } from '../ProfileContext';
+import { Link } from 'react-router-dom';
+import { ProfileContext } from '@/pages/Profile';
 import { getFullName } from '@/utils/profileUtils';
+import './ProfileLastRecommendations.css'
 
 const MAX_RECOMMENDATIONS_QUANTITY = 3;
 
@@ -20,16 +21,20 @@ export function ProfileLastRecommendations() {
                             if (i >= MAX_RECOMMENDATIONS_QUANTITY)
                                 return null;
 
-                            const hasOriginImage = recommendation.origin.image === null;
+                            const hasOriginImage = recommendation.origin.image !== null;
+                            const originUrl = `/profile/${recommendation.origin.user.name}`;
                             return (
                                 <div className="recommendation" key={recommendation.id}>
-                                    <div className="image" style={ hasOriginImage
-                                        ? {backgroundImage: recommendation.origin.image as string}
-                                        : {backgroundColor: "#8A8A8A"}
-                                    } />
+                                    <Link to={originUrl} target='_blank'>
+                                    {
+                                        hasOriginImage
+                                        ? <img className="image" src={recommendation.origin.image as string} />
+                                        : <div className="image" style={{backgroundColor: "#8A8A8A"}} />
+                                    }
+                                    </Link>
 
                                     <div className="box">
-                                        <h2 className="user-name">{getFullName(recommendation.origin)}</h2>
+                                        <Link to={originUrl} target='_blank' className="user-name">{getFullName(recommendation.origin)}</Link>
                                         <h3 className="recommended-by">Recomendou pela competência:</h3>
                                         <h3 className="competence-name">{recommendation.competenceType.name}</h3>
                                     </div>
