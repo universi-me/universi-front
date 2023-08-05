@@ -1,5 +1,6 @@
 import { ChangeEvent, useContext, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
+import { Link, TypeLinkToBootstrapIcon } from '@/types/Link';
 import { getFullName, separateFullName, GENDER_OPTIONS } from '@/utils/profileUtils';
 import { UniversimeApi } from '@/hooks/UniversimeApi';
 import './ProfileSettings.css'
@@ -16,7 +17,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
     if (profileContext === null)
         return null;
 
-    const [profileLinks, setProfileLinks] = useState<any[]>(profileContext.profileListData.links);
+    const [profileLinks, setProfileLinks] = useState<Link[]>(profileContext.profileListData.links);
 
     return (
         <div id="profile-settings">
@@ -71,9 +72,9 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                         {
                             profileLinks.map(link => {
                                 return (
-                                    <div className="item" key={link.apiValue}>
-                                        <img src={`/assets/icons/${link.apiValue}.svg`} alt={link.name} />
-                                        <input type="text" name={link.apiValue} placeholder='Insira seu usuário' />
+                                    <div className="item" key={link.id}>
+                                        <i className={`icon bi-${TypeLinkToBootstrapIcon[link.typeLink]}`} style={{fontSize: "1.5rem", color: "black"}}></i>
+                                        <input type="text" name={link.id.toString()} placeholder='Insira o link' defaultValue={link.url} />
                                     </div>
                                 );
                             })

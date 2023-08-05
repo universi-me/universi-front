@@ -1,6 +1,7 @@
 import { MouseEventHandler, useContext } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { getGenderName } from '@/utils/profileUtils';
+import { TypeLinkToBootstrapIcon } from '@/types/Link';
 import './ProfileBio.css'
 
 export type ProfileBioProps = {
@@ -45,7 +46,7 @@ export function ProfileBio(props: ProfileBioProps) {
                         {
                             profileContext.profileListData.links.map((link) => {
                                 return (<a key={link.id} href={link.url} target='_blank' className="link">
-                                    {/* todo: add link icon */}
+                                    <i className={`icon bi-${TypeLinkToBootstrapIcon[link.typeLink]}`} style={{fontSize: "1.5rem", color: "black"}}></i>
                                     {link.name}
                                 </a>);
                             })

@@ -45,12 +45,17 @@
     border-radius: 4px;
     background-color: #B2B2B2;
     width: 100%;
-    padding: 0 .5em;
+    padding: .125em .5em;
     text-align: left;
     text-decoration: none;
     color: var(--font-color-v2);
     line-height: 2rem;
-    height: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+#left-side .bio .links .link .icon {
+    margin-right: .5rem;
 }
 
 #left-side .bio .links .link:not(:last-of-type) {

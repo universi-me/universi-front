@@ -119,10 +119,14 @@
     flex-direction: row;
 }
 
-#profile-settings .settings-form .social.section .box .item img {
-    padding: .5em;
+#profile-settings .settings-form .social.section .box .item .icon {
+    height: 2.5rem;
+    aspect-ratio: 1;
     background-color: #FFF;
     border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #profile-settings .settings-form .social.section .box .item input {
