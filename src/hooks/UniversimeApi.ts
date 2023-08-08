@@ -84,4 +84,30 @@ export namespace UniversimeApi {
             return (await api.post('/competencia/listar', {})).data
         }
     }
+
+    export namespace Link {
+        export type LinkCreateDTO = {
+            url: string;
+            tipo: string;
+            nome: string;
+        };
+
+        export async function create(body: LinkCreateDTO) {
+            return (await api.post("/link/criar", body)).data;
+        }
+
+        export type LinkUpdateDTO = {
+            linkId: string;
+            url: string;
+            tipo: string;
+            nome: string;
+        };
+        export async function update(body: LinkUpdateDTO) {
+            return (await api.post("/link/atualizar", body)).data;
+        }
+
+        export async function remove(linkId: string) {
+            return (await api.post("/link/remover", {linkId})).data;
+        }
+    }
 }

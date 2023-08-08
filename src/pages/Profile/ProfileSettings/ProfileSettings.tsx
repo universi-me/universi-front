@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useContext, useState } from 'react';
+import { ChangeEvent, MouseEvent, useContext, useMemo, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { Link, TypeLinkToBootstrapIcon } from '@/types/Link';
 import { getFullName, separateFullName, GENDER_OPTIONS } from '@/utils/profileUtils';
@@ -15,12 +15,11 @@ let   NEW_LINK_ID =    -1;
 
 export function ProfileSettings(props: ProfileSettingsProps) {
     const profileContext = useContext(ProfileContext);
-    if (profileContext === null)
-        return null;
-
-    const [profileLinks, setProfileLinks] = useState<Link[]>(profileContext.profileListData.links);
+    const [profileLinks, setProfileLinks] = useState<Link[]>(profileContext?.profileListData.links ?? []);
+    let   competencesToDelete = useMemo<string[]>(() => [], [profileContext?.profileListData.links]);
 
     return (
+        profileContext === null ? null :
         <div id="profile-settings">
             <div className="heading">Editar meu perfil</div>
 
@@ -129,9 +128,10 @@ export function ProfileSettings(props: ProfileSettingsProps) {
 
     function removeLink(e: MouseEvent<HTMLButtonElement>) {
         const button = e.currentTarget;
-        const linkId = button.getAttribute('data-link-name')
+        const linkId = button.getAttribute('data-link-name') ?? "";
 
-        setProfileLinks(profileLinks.filter(l => l.id.toString() !== linkId))
+        competencesToDelete.push(linkId);
+        setProfileLinks(profileLinks.filter(l => l.id.toString() !== linkId));
     }
 
     function saveChanges() {
@@ -160,6 +160,77 @@ export function ProfileSettings(props: ProfileSettingsProps) {
             sexo: gender,
         }).then(r => {
             profileContext?.reloadPage();
+        });
+
+        const links = classifyLinks();
+        links?.toCreate.forEach(link => {
+            UniversimeApi.Link.create({
+                nome: link.name,
+                tipo: link.typeLink,
+                url: link.url,
+            })
+        });
+
+        links?.toDelete.forEach(id => {
+            UniversimeApi.Link.remove(id)
+        });
+
+        links?.toUpdate.forEach(link => {
+            UniversimeApi.Link.update({
+                linkId: link.id.toString(),
+                nome: link.name,
+                tipo: link.typeLink,
+                url: link.url,
+            })
         })
+    }
+
+    function classifyLinks() {
+        if (profileContext === null)
+            return;
+
+        const toCreate = profileLinks
+            .filter(l => l.id < 0)
+            .map(l => {
+                const urlInputElement = document
+                    .querySelector(`#profile-settings .section.social .box .item input[name="${l.id}"]`) as HTMLInputElement | null;
+
+                return {
+                    ...l,
+                    name: l.name, // todo: get from some input
+                    typeLink: l.typeLink, // todo: get from some input
+                    url: urlInputElement?.value ?? ""
+                } as Link
+            });
+
+        const toUpdate = (Array.from(document.querySelectorAll("#profile-settings .section.social .box .item input")) as HTMLInputElement[])
+            .map(i => {
+                const nameAttr = i.getAttribute("name");
+                if (nameAttr === null)
+                    return null;
+
+                const linkId = parseInt(nameAttr);
+                if (linkId < 0)
+                    return null;
+
+                const link = profileLinks.find(l => l.id === linkId) as Link;
+                return {
+                    id: linkId,
+                    name: link.name, // todo: get from some input
+                    url: i.value,
+                    typeLink: link.typeLink, // todo: get from some input
+                    perfil: profileContext.profile
+                } as Link
+            })
+            .filter(l => {
+                const link = profileLinks.find(link => l?.id === link.id) as Link;
+                return l !== null && (l.name !== link.name || l.typeLink !== link.typeLink || l.url !== link.url);
+            }) as Link[]
+
+        return {
+            toUpdate,
+            toDelete: competencesToDelete,
+            toCreate,
+        };
     }
 }
