@@ -1,0 +1,109 @@
+.container{
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 50% 50%;
+}
+.container .highPartOne{
+    display: flex;
+    align-items: center;
+    margin: 6em;
+}
+.container .highPartOne span{
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.container .highPartTwo{
+    display: flex;
+    align-items: center;
+    width: 40em;
+    height: 30em;
+}
+
+.container .highPartTwo img{
+    width: 100%;
+    height: 30em;
+}
+
+
+.container .carousel{
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    grid-column: 1 / span 2;
+    display: flex;
+    justify-content: center;
+}
+.container .carousel .profile{
+    width: fit-content;
+    transition: transform 0.3s ease;
+}
+.profile:hover{
+    transform: scale(1.1);
+
+}
+.container .carousel .profile .profilePic img{
+    width: 14em;
+    height: 14em;
+}
+.carousel .profile .header{
+    background: #282C34;
+    width: 100%;
+    height: 2em;
+    border-radius: 1em 1em 0 0;
+}
+.container .carousel .profile .socialMedia{
+    background-color: #C0C0C0;
+    width: 3em;
+    height: 9em;
+    border-radius: 0.5em 0.5em 0.5em 0.5em;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items:center;
+    
+}
+.container .carousel .profile .socialMedia a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 1em;
+    margin: 0.4em;
+    width: 1.5em;
+    height: 1.5em;
+    background-color: #838285;
+    border-radius: 0.3em 0.3em 0.3em 0.3em;
+}
+.container .carousel .profile .socialMedia #github{
+    background-color: #2C2A4A;
+}
+.container .carousel .profile .socialMedia #instagram{
+    filter: invert(100%);
+}
+.container .carousel .profile .socialMedia #linkedin{
+    filter: invert(100%);
+}
+
+.carousel .profile .info{
+    background: #282C34;
+    width: 100%;
+    height: fit-content;
+    border-radius: 0 0 1em 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between
+}
+.carousel .profile .info span{
+    color: white;
+}
+.carousel .profile .info .name{
+    font-size: 0.87em;
+    font-weight: var(--font-weight-semibold)
+}
+.carousel .profile .info .function{
+    font-size: 0.77em;
+    font-weight: light;
+}

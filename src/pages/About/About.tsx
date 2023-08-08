@@ -1,4 +1,4 @@
-
+import React from 'react';
 import './About.css'
 
 export const About = () => {
@@ -6,20 +6,20 @@ export const About = () => {
     return (
       <div className='container'>
 
-        <div className='highPart'>
+        <div className='highPartOne'>
 
           <div className='text'>
-            <h1>UMA EQUIPE DE OUTRO UNIVERSO!</h1>
+            <span>UMA EQUIPE DE OUTRO UNIVERSO!</span>
             <p>
               Lorem ipsum dolor sit amet. Et accusantium quia ut iste quasi et
               galisum voluptas non accusantium dolore sit culpa unde eum.
             </p>
           </div>
-  
-          <div>
-            <img src='public/assets/imgs/New_team_members.svg' alt='equipe' />
-          </div>
 
+        </div>
+
+        <div className='highPartTwo'>
+            <img src='public/assets/imgs/New_team_members.svg' alt='equipe' />
         </div>
 
         <div className='carousel'>
@@ -27,17 +27,19 @@ export const About = () => {
             <div className='profile'>
 
                 <div className='header'></div>
-                
-                <img src="" alt="" />
 
-                <div className='socialmedia'>
-                    <a>
-                        <img src="public/assets/icons/github.svg" alt="github" />
+                <div className='profilePic'>
+                    <img src="https://i.pinimg.com/564x/cd/1f/82/cd1f823254cf35f697da05196448195e.jpg" alt="" />
+                </div>
+
+                <div className='socialMedia'>
+                    <a id = 'github'>
+                        <img src="public/assets/icons/githubwhite.svg" alt="github" />
                     </a>
-                    <a>
+                    <a id='instagram'>
                         <img src="public/assets/icons/instagram.svg" alt="instagram" />
                     </a>
-                    <a>
+                    <a id= 'linkedin'>
                         <img src="public/assets/icons/linkedin.svg" alt="linkedin" />
                     </a>
                 </div>
