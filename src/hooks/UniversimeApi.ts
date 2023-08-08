@@ -1,8 +1,7 @@
 import axios from "axios"
 
 const api = axios.create({
-    // todo: change to online API on production
-    baseURL: "http://localhost:8080/api",
+    baseURL: import.meta.env.VITE_UNIVERSIME_API,
     withCredentials: true,
 })
 
