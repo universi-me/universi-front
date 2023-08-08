@@ -5,11 +5,7 @@
 
 #left-side .bio .image {
     width: 9.5em;
-    aspect-ratio: 1;
-    border-radius: 50%;
     border: 5px solid #FFF;
-    background-repeat: no-repeat;
-    background-size: contain;
 }
 
 #left-side .bio .name {

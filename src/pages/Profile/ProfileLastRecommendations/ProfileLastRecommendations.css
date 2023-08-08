@@ -31,11 +31,7 @@
 
 #profile-page #right-side .list .recommendation .image {
     margin-right: 1em;
-
     width: 4.5em;
-    aspect-ratio: 1;
-
-    border-radius: 50%;
 }
 
 #profile-page #right-side .list .recommendation .user-name {

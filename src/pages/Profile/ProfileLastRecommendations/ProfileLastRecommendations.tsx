@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ProfileContext } from '@/pages/Profile';
 import { getFullName } from '@/utils/profileUtils';
+import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
 import './ProfileLastRecommendations.css'
 
 const MAX_RECOMMENDATIONS_QUANTITY = 3;
@@ -21,16 +22,11 @@ export function ProfileLastRecommendations() {
                             if (i >= MAX_RECOMMENDATIONS_QUANTITY)
                                 return null;
 
-                            const hasOriginImage = recommendation.origin.image !== null;
                             const originUrl = `/profile/${recommendation.origin.user.name}`;
                             return (
                                 <div className="recommendation" key={recommendation.id}>
                                     <Link to={originUrl} target='_blank'>
-                                    {
-                                        hasOriginImage
-                                        ? <img className="image" src={recommendation.origin.image as string} />
-                                        : <div className="image" style={{backgroundColor: "#8A8A8A"}} />
-                                    }
+                                    <ProfileImage className="image" imageUrl={recommendation.origin.image} noImageColor='#8A8A8A' />
                                     </Link>
 
                                     <div className="box">
