@@ -37,12 +37,20 @@
 .container .carousel .profile{
     width: fit-content;
     transition: transform 0.3s ease;
+    transform: scale(1);
 }
-.profile:hover{
+.container .carousel .profile:hover{
     transform: scale(1.1);
-
+}
+.container .carousel .profile:hover .socialMedia{
+    visibility: visible;
+    transform: translateX(0);
+}
+.container .carousel .profile .profilePic {
+    margin-bottom: -0.4em;
 }
 .container .carousel .profile .profilePic img{
+    margin: 0;
     width: 14em;
     height: 14em;
 }
@@ -51,9 +59,35 @@
     width: 100%;
     height: 2em;
     border-radius: 1em 1em 0 0;
+    display: flex;
+    align-items: center;
+}
+.carousel .profile .header .dot{
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.5em;
+}
+.carousel .profile .header .dot #redDot{
+    margin-left: 0.4em;
+    background-color: #FF5F56;
+    width: 0.6em;
+    height: 0.6em;
+    border-radius:50%;
+}
+.carousel .profile .header .dot #yellowDot{
+    background-color: #FFBD2E;
+    width: 0.6em;
+    height: 0.6em;
+    border-radius:50%;
+}
+.carousel .profile .header .dot #greenDot{
+    background-color: #27C93F;
+    width: 0.6em;
+    height: 0.6em;
+    border-radius:50%;
 }
 .container .carousel .profile .socialMedia{
-    background-color: #C0C0C0;
+    background-color: rgba(192, 192, 192, 0.42);
     width: 3em;
     height: 9em;
     border-radius: 0.5em 0.5em 0.5em 0.5em;
@@ -62,6 +96,12 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items:center;
+    position:absolute;
+    top:25%;
+    right: 0%;
+    visibility: hidden;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
     
 }
 .container .carousel .profile .socialMedia a{
@@ -75,6 +115,7 @@
     height: 1.5em;
     background-color: #838285;
     border-radius: 0.3em 0.3em 0.3em 0.3em;
+    cursor: pointer;
 }
 .container .carousel .profile .socialMedia #github{
     background-color: #2C2A4A;
@@ -86,7 +127,7 @@
     filter: invert(100%);
 }
 
-.carousel .profile .info{
+.container .carousel .profile .info{
     background: #282C34;
     width: 100%;
     height: fit-content;

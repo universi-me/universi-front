@@ -26,20 +26,26 @@ export const About = () => {
 
             <div className='profile'>
 
-                <div className='header'></div>
+                <div className='header'>
+                    <div className='dot'>
+                        <div id='redDot'></div>
+                        <div id='yellowDot'></div>
+                        <div id='greenDot'></div>
+                    </div>
+                </div>
 
                 <div className='profilePic'>
                     <img src="https://i.pinimg.com/564x/cd/1f/82/cd1f823254cf35f697da05196448195e.jpg" alt="" />
                 </div>
 
                 <div className='socialMedia'>
-                    <a id = 'github'>
+                    <a id = 'github' href=''>
                         <img src="public/assets/icons/githubwhite.svg" alt="github" />
                     </a>
-                    <a id='instagram'>
+                    <a id='instagram' href=''>
                         <img src="public/assets/icons/instagram.svg" alt="instagram" />
                     </a>
-                    <a id= 'linkedin'>
+                    <a id= 'linkedin' href=''>
                         <img src="public/assets/icons/linkedin.svg" alt="linkedin" />
                     </a>
                 </div>
