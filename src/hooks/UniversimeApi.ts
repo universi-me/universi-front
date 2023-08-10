@@ -105,8 +105,8 @@ export namespace UniversimeApi {
         };
         export async function update(body: CompetenceUpdateDTO) {
             return (await api.post("/competencia/atualizar", {
-                competenciaId:     body.competenceId,
-                competenciaTipoId: body.competenceTypeId,
+                competenciaId:     body.competenceId.toString(),
+                competenciaTipoId: body.competenceTypeId.toString(),
                 descricao:         body.description,
                 nivel:             body.level,
             })).data;

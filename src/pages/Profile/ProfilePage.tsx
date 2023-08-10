@@ -58,7 +58,7 @@ export function ProfilePage() {
 
                 <div id="right-side">
                     <ProfileRecommendSettingsButton />
-                    <ProfileCompetences onClickEdit={()=>{setShowCompetencesSettings(true)}}/>
+                    <ProfileCompetences onClickEdit={()=>{setShowCompetencesSettings(true)}} updateProfileContext={setProfileContext}/>
                     <ProfileLastRecommendations />
                 </div>
             </div>

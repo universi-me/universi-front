@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext } from "react";
 import { ProfileContext } from "@/pages/Profile";
 import { LevelToLabel } from "@/types/Competence";
 import './CompetencesSettings.less'
@@ -84,7 +84,7 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
                 level,
             });
 
-        apiOperation.then(() => {
+        apiOperation.then((r) => {
             profileContext?.reloadPage();
         })
     }
