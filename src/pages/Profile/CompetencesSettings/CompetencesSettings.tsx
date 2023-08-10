@@ -1,11 +1,11 @@
-import { MouseEventHandler, useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { ProfileContext } from "@/pages/Profile";
 import { LevelToLabel } from "@/types/Competence";
 import './CompetencesSettings.less'
+import { UniversimeApi } from "@/hooks/UniversimeApi";
 
 export type CompetencesSettingsProps = {
-    cancelAction?: MouseEventHandler;
-    submitAction?: MouseEventHandler;
+    cancelChanges: () => any;
 };
 
 export function CompetencesSettings(props: CompetencesSettingsProps) {
@@ -51,10 +51,41 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
                 </div>
 
                 <div className="submit">
-                    <button type="button" className="cancel-button" onClick={props.cancelAction}>Cancelar alterações</button>
-                    <button type="button" className="submit-button" onClick={props.submitAction}>Salvar alterações</button>
+                    <button type="button" className="cancel-button" onClick={props.cancelChanges}>Cancelar alterações</button>
+                    <button type="button" className="submit-button" onClick={saveCompetence}>Salvar alterações</button>
                 </div>
             </div>
         </div>
     );
+
+    function saveCompetence() {
+        const typeElement = document.querySelector('[name="competence-type"]') as HTMLSelectElement;
+        const competenceTypeId = parseInt(typeElement.value);
+
+        const descriptionElement = document.querySelector('[name="description"]') as HTMLTextAreaElement;
+        const description = descriptionElement.value;
+
+        const levelElement = document.querySelector('[name="level"]') as HTMLSelectElement;
+        const level = levelElement.value;
+
+        const competenceId = profileContext?.editCompetence?.id ?? null;
+
+        const apiOperation = competenceId === null
+            ? UniversimeApi.Competence.create({
+                competenceTypeId,
+                description,
+                level,
+            })
+
+            : UniversimeApi.Competence.update({
+                competenceId,
+                competenceTypeId,
+                description,
+                level,
+            });
+
+        apiOperation.then(() => {
+            profileContext?.reloadPage();
+        })
+    }
 }

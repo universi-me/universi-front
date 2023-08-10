@@ -83,6 +83,34 @@ export namespace UniversimeApi {
         export async function list() {
             return (await api.post('/competencia/listar', {})).data
         }
+
+        export type CreateCompetenceDTO = {
+            competenceTypeId: number;
+            description:      string;
+            level:            string;
+        };
+        export async function create(body: CreateCompetenceDTO) {
+            return (await api.post("/competencia/criar", {
+                competenciatipoId: body.competenceTypeId.toString(),
+                descricao:         body.description,
+                nivel:             body.level,
+            })).data;
+        }
+
+        export type CompetenceUpdateDTO = {
+            competenceId:     number;
+            competenceTypeId: number;
+            description:      string;
+            level:            string;
+        };
+        export async function update(body: CompetenceUpdateDTO) {
+            return (await api.post("/competencia/atualizar", {
+                competenciaId:     body.competenceId,
+                competenciaTipoId: body.competenceTypeId,
+                descricao:         body.description,
+                nivel:             body.level,
+            })).data;
+        }
     }
 
     export namespace CompetenceType {

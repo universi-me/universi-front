@@ -77,8 +77,7 @@ export function ProfilePage() {
                 showCompetencesSettings &&
                 <Modal>
                     <CompetencesSettings
-                        cancelAction={()=>{setShowDiscardChanges(true)}}
-                        submitAction={()=>{alert('todo')}}
+                        cancelChanges={()=>{setShowDiscardChanges(true)}}
                     />
                 </Modal>
             }
