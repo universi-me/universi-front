@@ -21,6 +21,9 @@ export function ProfileRecommendSettingsButton() {
         : '2.5em';
 
     return (
+        // todo: remove this once the configure button does something
+        className === "settings" ? <div style={{height: "3.75rem"}}/> :
+
         <button className={"recommend-settings-button " + className}
             style={{'--height': buttonHeight} as CSSProperties}>
             { buttonContent }

@@ -41,11 +41,11 @@ export function ProfilePage() {
             {/* todo: color from API */}
             <div id="user-header-bar" style={{background: "#515151"}}>
                 {
-                    profileContext?.accessingLoggedUser ?
-                        <button className="edit-button" >
-                            <img src='/assets/icons/edit-1.svg' alt="Editar" />
-                        </button>
-                    : null
+                    // profileContext?.accessingLoggedUser ?
+                    //     <button className="edit-button" >
+                    //         <img src='/assets/icons/edit-1.svg' alt="Editar" />
+                    //     </button>
+                    // : null
                 }
             </ div>
 
