@@ -45,6 +45,12 @@
     margin-bottom: 1.7em;
 }
 
+#profile-page #right-side .competences .competence-list .competence-item .edit-competence {
+    background: none;
+    border: none;
+    margin-right: .25rem;
+}
+
 #profile-page #right-side .competences .competence-list .competence-item .icon {
     margin-right: 1.75em;
 
