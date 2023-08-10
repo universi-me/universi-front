@@ -1,23 +1,23 @@
-import { MouseEventHandler, MouseEvent, useContext } from 'react';
+import { MouseEventHandler, MouseEvent, useContext, useMemo } from 'react';
 import { ProfileContext, ProfileContextType } from '@/pages/Profile'
 import { LevelToLabel, LevelToNumber } from '@/types/Competence';
 import EditIcon from "@/assets/icons/edit-2.svg"
 import './ProfileCompetences.css'
 
 export type ProfileCompetencesProps = {
-    onClickEdit:          MouseEventHandler;
-    updateProfileContext: (pc: ProfileContextType) => any;
+    openCompetenceSettings: MouseEventHandler;
+    updateProfileContext:   (pc: ProfileContextType) => any;
 };
 
 const MAX_COMPETENCE_LEVEL = 4;
 
 export function ProfileCompetences(props: ProfileCompetencesProps) {
     const profileContext = useContext(ProfileContext);
+    const sortedCompetences = [...(profileContext?.profileListData.competences ?? [])]
+        .sort((c1, c2) => new Date(c1.creationDate).getTime() - new Date(c2.creationDate).getTime());
+
     if (profileContext === null)
         return null;
-
-    const sortedCompetences = [...profileContext.profileListData.competences]
-        .sort(c => -new Date(c.creationDate).getTime());
 
     return (
         <div className="competences">
@@ -25,11 +25,8 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
                 Habilidades
                 {
                     profileContext.accessingLoggedUser ?
-                        <button className="edit-button" onClick={props.onClickEdit}
-                            // todo: figure out why the button is bigger than the image
-                            style={{translate: '0 3px'}}
-                        >
-                            <img src='/assets/icons/edit-1.svg' alt="Editar" />
+                        <button className="edit-button" onClick={addCompetence}>
+                            <i className="bi bi-plus-circle-fill" style={{color: "#FFF", fontSize: "1.5rem"}} />
                         </button>
                     : null
                 }
@@ -75,6 +72,18 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
         </div>
     );
 
+    function addCompetence(e: MouseEvent<HTMLButtonElement>) {
+        if (profileContext === null)
+            return;
+
+        props.updateProfileContext({
+            ...profileContext,
+            editCompetence: null,
+        })
+
+        props.openCompetenceSettings(e);
+    }
+
     function editCompetence(e: MouseEvent<HTMLElement>) {
         if (profileContext === null)
             return;
@@ -86,6 +95,6 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
             editCompetence: competence,
         });
 
-        props.onClickEdit(e);
+        props.openCompetenceSettings(e);
     }
 }
