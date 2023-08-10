@@ -50,15 +50,18 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
                     </select>
                 </div>
 
-                <div className="submit">
+                <div className="buttons">
                     {
                         profileContext.editCompetence?.id === undefined ? null :
-                        <button type="button" className="remove-button" onClick={removeCompetence}>
+                        <button type="button" className="remove-button" onClick={removeCompetence} title="Remover competência">
                             <i className="bi bi-trash-fill" />
                         </button>
                     }
-                    <button type="button" className="cancel-button" onClick={props.cancelChanges}>Cancelar alterações</button>
-                    <button type="button" className="submit-button" onClick={saveCompetence}>Salvar alterações</button>
+
+                    <div className="submit">
+                        <button type="button" className="cancel-button" onClick={props.cancelChanges}>Cancelar alterações</button>
+                        <button type="button" className="submit-button" onClick={saveCompetence}>Salvar alterações</button>
+                    </div>
                 </div>
             </div>
         </div>
