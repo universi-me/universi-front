@@ -1,0 +1,101 @@
+@import url("src/layouts/transitions.less");
+
+#profile-page #competences-settings {
+    border-radius: 20px;
+    background-color: #D6D6D6;
+    overflow: hidden;
+
+    .heading {
+        background-color: var(--primary-color);
+        color: var(--font-color-v1);
+        text-transform: uppercase;
+        padding: .5em;
+        text-align: center;
+        font-size: 1.875em;
+        font-weight: var(--font-weight-bold);
+    }
+
+    .settings-form {
+        padding: 2em;
+        padding-top: 1.5em;
+    
+        width: 50vw;
+        overflow-y: auto;
+        max-height: 70vh;
+
+        .accordion-root {
+            width: 100%;
+
+            .accordion-item {
+                width: 100%;
+
+                .accordion-trigger {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    background: none;
+                    border: none;
+                    color: var(--font-color-v2);
+                    text-transform: uppercase;
+                    font-size: 1.25rem;
+
+                    .competence-arrow {
+                        font-size: 1.5em;
+                        transition: rotate 200ms;
+                    }
+
+                    &[data-state="open"] .competence-arrow {
+                        rotate: -180deg;
+                    }
+                }
+            }
+        }
+
+        .submit {
+            margin-left: auto;
+            width: max-content;
+
+            button {
+                width: 17.125rem;
+                height: 2.125rem;
+            
+                border: 2px solid var(--primary-color);
+                border-radius: 0.625rem;
+            
+                text-transform: uppercase;
+                font-size: 0.875em;
+                font-weight: var(--font-weight-semibold);
+            
+                cursor: pointer;
+                transition: var(--hover-transition-duration) background-color, border-color, color;
+
+                &:not(:last-of-type) {
+                    margin-right: 1.2rem;
+                }
+            }
+
+            .cancel-button {
+                background-color: transparent;
+                color: var(--primary-color);
+
+                &:hover {
+                    color: var(--font-color-v1);
+                    background-color: var(--primary-color);
+                }
+            }
+
+            .submit-button {
+                color: var(--font-color-v1);
+                background-color: var(--primary-color);
+
+                &:hover {
+                    border-color: #39375D;
+                    background-color: #39375D;
+                }
+            }
+        }
+    }
+}

@@ -85,6 +85,12 @@ export namespace UniversimeApi {
         }
     }
 
+    export namespace CompetenceType {
+        export async function list() {
+            return (await api.post("/competencetype/list", {})).data;
+        }
+    }
+
     export namespace Link {
         export type LinkCreateDTO = {
             url: string;

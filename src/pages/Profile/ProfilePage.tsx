@@ -9,9 +9,7 @@ import {
 import { Modal } from "@/components/Modal/Modal";
 import { AuthContext } from "@/src/contexts/Auth/AuthContext";
 import { UniversimeApi } from "@/hooks/UniversimeApi";
-
 import type { ProfileContextType } from '@/pages/Profile'
-import type { Group } from "@/types/Group";
 
 import './Profile.css'
 import './card.css'
@@ -105,18 +103,20 @@ export function ProfilePage() {
     }
 
     async function loadAccessedUser() {
-        const [competenceRes, profileRes] = await Promise.all([
-            UniversimeApi.Competence.list(),
-            UniversimeApi.Profile.get(undefined, id)
+        const [profileRes, competenceTypeRes] = await Promise.all([
+            UniversimeApi.Profile.get(undefined, id),
+            UniversimeApi.CompetenceType.list(),
         ]);
 
         const profileListData = await loadProfileListData(profileRes.body.profile.id);
+        console.log(id, "==", auth.user?.name);
 
         setProfileContext({
             accessingLoggedUser: id == auth.user?.name,
             profile: profileRes.body.profile,
-            allCompetences: competenceRes.body.lista,
+            allCompetenceTypes: competenceTypeRes.body.list,
             profileListData: profileListData,
+            editCompetence: null,
 
             reloadPage: loadAccessedUser,
         });
