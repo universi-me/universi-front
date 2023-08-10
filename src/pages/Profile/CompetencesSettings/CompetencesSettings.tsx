@@ -51,6 +51,12 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
                 </div>
 
                 <div className="submit">
+                    {
+                        profileContext.editCompetence?.id === undefined ? null :
+                        <button type="button" className="remove-button" onClick={removeCompetence}>
+                            <i className="bi bi-trash-fill" />
+                        </button>
+                    }
                     <button type="button" className="cancel-button" onClick={props.cancelChanges}>Cancelar alterações</button>
                     <button type="button" className="submit-button" onClick={saveCompetence}>Salvar alterações</button>
                 </div>
@@ -87,5 +93,10 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
         apiOperation.then((r) => {
             profileContext?.reloadPage();
         })
+    }
+
+    function removeCompetence() {
+        UniversimeApi.Competence.remove(profileContext?.editCompetence?.id ?? -1)
+            .then((r) => profileContext?.reloadPage());
     }
 }

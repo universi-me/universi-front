@@ -111,6 +111,12 @@ export namespace UniversimeApi {
                 nivel:             body.level,
             })).data;
         }
+
+        export async function remove(competenceId: number) {
+            return (await api.post("/competencia/remover", {
+                competenciaId: competenceId.toString(),
+            })).data;
+        }
     }
 
     export namespace CompetenceType {
