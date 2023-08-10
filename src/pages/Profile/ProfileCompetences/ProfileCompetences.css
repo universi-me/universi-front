@@ -51,6 +51,13 @@
     margin-right: .25rem;
 }
 
+#profile-page #right-side .competences .competence-list .competence-item .competence-type {
+    font-size: 1rem;
+    margin-right: .5em;
+    text-transform: uppercase;
+    font-weight: var(--font-weight-bold);
+}
+
 #profile-page #right-side .competences .competence-list .competence-item .icon {
     margin-right: 1.75em;
 

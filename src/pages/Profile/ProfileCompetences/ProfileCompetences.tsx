@@ -37,14 +37,15 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
                     ? sortedCompetences.map(competence => {
                         return (
                             <div className="competence-item" key={competence.id}>
-                                {/* todo: fix competence icon */}
                                 {
                                     !profileContext.accessingLoggedUser ? null :
-                                        <button className="edit-competence" data-competence-edit-id={competence.id} onClick={editCompetence} title="Editar competência">
+                                    <button className="edit-competence" data-competence-edit-id={competence.id} onClick={editCompetence} title="Editar competência">
                                             <img src={EditIcon} />
                                         </button>
                                 }
-                                <img src={`/assets/icons/${competence.competenceType.name}.svg`} alt={""} className="icon" title={competence.competenceType.name} />
+                                {/* todo: fix competence icon */}
+                                {/* <img src={`/assets/icons/${competence.competenceType.name}.svg`} alt={""} className="icon" title={competence.competenceType.name} /> */}
+                                <h4 className="competence-type">{competence.competenceType.name}</h4>
                                 <h4 className="learning">{competence.description}</h4>
                                 <div className="level-container">
                                     <h2 className="level-label">{LevelToLabel[competence.level]}</h2>
