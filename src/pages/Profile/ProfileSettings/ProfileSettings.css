@@ -133,6 +133,14 @@
     flex-direction: row;
 }
 
+#profile-settings .settings-form .social.section .box .item .name-type-wrapper {
+    margin-bottom: .25rem;
+}
+
+#profile-settings .settings-form .social.section .box .item [name="link-type"] {
+    width: 50%;
+}
+
 #profile-settings .settings-form .social.section .box .item .icon {
     height: 2.5rem;
     aspect-ratio: 1;
@@ -157,8 +165,8 @@
 }
 
 #profile-settings .settings-form .social.section .box .item:not(:last-of-type) {
-    margin-bottom: .3em;
-    padding-bottom: .3em;
+    margin-bottom: .5rem;
+    padding-bottom: .5rem;
     border-bottom: 2px solid #ABABAB;
 }
 

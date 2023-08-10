@@ -85,7 +85,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                                 return (
                                     <div className="item" key={link.id} data-link-id={link.id}>
                                         <div className="name-type-wrapper">
-                                            <select name="link-type" defaultValue={link.typeLink} onChange={changeLinkType}>
+                                            <select name="link-type" defaultValue={link.typeLink} onChange={changeLinkType} className='dropdown-trigger'>
                                                 <option disabled value="">Tipo do link</option>
                                                 {
                                                     sortedTypeLink.map(([typeLink, label]) => {
