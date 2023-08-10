@@ -127,7 +127,8 @@
     font-size: 1.25em;
 }
 
-#profile-settings .settings-form .social.section .box .item {
+#profile-settings .settings-form .social.section .box .item .name-type-wrapper,
+#profile-settings .settings-form .social.section .box .item .url-remove-wrapper {
     display: flex;
     flex-direction: row;
 }

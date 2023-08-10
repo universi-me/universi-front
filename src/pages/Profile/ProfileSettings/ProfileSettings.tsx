@@ -1,6 +1,6 @@
 import { ChangeEvent, MouseEvent, useContext, useMemo, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
-import { Link, TypeLinkToBootstrapIcon } from '@/types/Link';
+import { Link, TypeLink, TypeLinkToBootstrapIcon, TypeLinkToLabel } from '@/types/Link';
 import { getFullName, separateFullName, GENDER_OPTIONS } from '@/utils/profileUtils';
 import { UniversimeApi } from '@/hooks/UniversimeApi';
 import './ProfileSettings.css'
@@ -17,6 +17,11 @@ export function ProfileSettings(props: ProfileSettingsProps) {
     const profileContext = useContext(ProfileContext);
     const [profileLinks, setProfileLinks] = useState<Link[]>(profileContext?.profileListData.links ?? []);
     let   competencesToDelete = useMemo<string[]>(() => [], [profileContext?.profileListData.links]);
+    const sortedTypeLink = Object
+        .entries(TypeLinkToLabel)
+        .sort((tl1, tl2) => {
+            return tl1[1].localeCompare(tl2[1])
+        })
 
     return (
         profileContext === null ? null :
@@ -78,12 +83,29 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                         {
                             profileLinks.map(link => {
                                 return (
-                                    <div className="item" key={link.id}>
-                                        <i className={`icon bi-${TypeLinkToBootstrapIcon[link.typeLink]}`} style={{fontSize: "1.5rem", color: "black"}}></i>
-                                        <input type="text" name={link.id.toString()} placeholder='Insira o link' defaultValue={link.url} />
-                                        <button className="remove-link" type="button" onClick={removeLink} data-link-name={link.id}>
-                                            <i className="bi bi-trash-fill" />
-                                        </button>
+                                    <div className="item" key={link.id} data-link-id={link.id}>
+                                        <div className="name-type-wrapper">
+                                            <select name="link-type" defaultValue={link.typeLink} onChange={changeLinkType}>
+                                                <option disabled value="">Tipo do link</option>
+                                                {
+                                                    sortedTypeLink.map(([typeLink, label]) => {
+                                                        return (
+                                                            <option value={typeLink} key={`typelink-${typeLink}-${link.id}`}>
+                                                                {label}
+                                                            </option>
+                                                        );
+                                                    })
+                                                }
+                                            </select>
+                                            <input type="text" name="link-name" placeholder="Insira o nome do link" defaultValue={link.name} />
+                                        </div>
+                                        <div className="url-remove-wrapper">
+                                            <i className={`icon bi-${TypeLinkToBootstrapIcon[link.typeLink]}`} style={{fontSize: "1.5rem", color: "black"}}></i>
+                                            <input type="text" name="link-url" placeholder='Insira o link' defaultValue={link.url} />
+                                            <button className="remove-link" type="button" onClick={removeLink} data-link-name={link.id}>
+                                                <i className="bi bi-trash-fill" />
+                                            </button>
+                                        </div>
                                     </div>
                                 );
                             })
@@ -124,6 +146,14 @@ export function ProfileSettings(props: ProfileSettingsProps) {
             typeLink: "LINK",
             url: "",
         }])
+    }
+
+    function changeLinkType(e: ChangeEvent<HTMLSelectElement>) {
+        const linkId = e.currentTarget.getAttribute("data-link-id") as string;
+        const iconElement = document.querySelector(`.url-remove-wrapper i[data-link-id="${linkId}"]`);
+        console.dir(iconElement);
+        if (iconElement)
+            iconElement.className = `icon bi-${TypeLinkToBootstrapIcon[e.currentTarget.value as TypeLink]}`;
     }
 
     function removeLink(e: MouseEvent<HTMLButtonElement>) {
@@ -183,6 +213,8 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                 url: link.url,
             })
         })
+
+        console.dir(links);
     }
 
     function classifyLinks() {
@@ -192,20 +224,30 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         const toCreate = profileLinks
             .filter(l => l.id < 0)
             .map(l => {
-                const urlInputElement = document
-                    .querySelector(`#profile-settings .section.social .box .item input[name="${l.id}"]`) as HTMLInputElement | null;
+                const itemBox = document.querySelector(`#profile-settings .section.social .box .item[data-link-id="${l.id}"]`) as HTMLElement;
+
+                const urlInputElement = itemBox
+                    .querySelector(`[name="link-name"]`) as HTMLInputElement;
+
+                const typeLinkElement = itemBox
+                    .querySelector(`[name="link-type"]`) as HTMLSelectElement;
+
+                const nameElement = itemBox
+                    .querySelector(`[name="link-name"]`) as HTMLInputElement;
+
+                console.log("create-name", nameElement);
 
                 return {
                     ...l,
-                    name: l.name, // todo: get from some input
-                    typeLink: l.typeLink, // todo: get from some input
-                    url: urlInputElement?.value ?? ""
+                    name: nameElement.value,
+                    typeLink: typeLinkElement.value,
+                    url: urlInputElement.value,
                 } as Link
             });
 
-        const toUpdate = (Array.from(document.querySelectorAll("#profile-settings .section.social .box .item input")) as HTMLInputElement[])
-            .map(i => {
-                const nameAttr = i.getAttribute("name");
+        const toUpdate = Array.from(document.querySelectorAll("#profile-settings .section.social .box .item"))
+            .map(linkItem => {
+                const nameAttr = linkItem.getAttribute("data-link-id");
                 if (nameAttr === null)
                     return null;
 
@@ -213,12 +255,22 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                 if (linkId < 0)
                     return null;
 
-                const link = profileLinks.find(l => l.id === linkId) as Link;
+                const typeLinkElement = linkItem
+                    .querySelector(`[name="link-type"]`) as HTMLSelectElement;
+
+                const nameElement = linkItem
+                    .querySelector(`[name="link-name"]`) as HTMLInputElement;
+
+                const urlElement = linkItem
+                    .querySelector(`[name="link-url"]`) as HTMLInputElement;
+
+                console.log("update-name", nameElement);
+
                 return {
                     id: linkId,
-                    name: link.name, // todo: get from some input
-                    url: i.value,
-                    typeLink: link.typeLink, // todo: get from some input
+                    name: nameElement.value,
+                    url: urlElement.value,
+                    typeLink: typeLinkElement.value,
                     perfil: profileContext.profile
                 } as Link
             })
