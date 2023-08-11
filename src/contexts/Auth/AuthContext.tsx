@@ -1,10 +1,13 @@
 import { createContext } from "react";
 import { User } from "../../types/User";
+import { Profile } from "@/types/Profile";
 
 export type AuthContextType = {
     user : User | null;
+    profile: Profile | null;
+
     signin: (email : string, password: string) => Promise<boolean>;
-    signin_google: (user: any) => boolean;
+    signin_google: (user: any) => Promise<boolean>;
     signout: () => void;
 }
 

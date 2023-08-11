@@ -26,6 +26,10 @@ export namespace UniversimeApi {
     }
 
     export namespace Profile {
+        export async function profile() {
+            return (await api.get('/profile', {})).data
+        }
+
         export async function get(profileId?: number, username?: string) {
             return (await api.post('/profile/get', { profileId, username })).data
         }

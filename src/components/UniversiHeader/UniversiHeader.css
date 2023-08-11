@@ -33,7 +33,6 @@
 #universi-header #universi-header-first-half {
     width: 50%;
     height: 100%;
-    justify-content: space-between;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -94,8 +93,27 @@
     height: 2em;
 }
 
+#universi-header #universi-header-second-half .welcome-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+}
+
+#universi-header #universi-header-second-half .welcome-message {
+    margin-right: .75rem;
+    color: var(--font-color-v1);
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-default);
+}
+
+#universi-header #universi-header-second-half .logged-user-image {
+    height: 4rem;
+    margin-right: 1.5rem;
+}
+
 /* todo: Change 'color' and 'background-color' if user is logged */
-.login-button {
+.auth-button {
     background-color: var(--primary-color);
     border-radius: 10px;
     border: 1px solid var(--primary-color);
@@ -111,6 +129,11 @@
     transition: var(--hover-transition-duration) background-color;
 }
 
-.login-button:hover {
+.auth-button:hover {
     background-color: var(--button-hover-color);
+}
+
+.auth-button.logout {
+    color: var(--primary-color);
+    background: none;
 }
