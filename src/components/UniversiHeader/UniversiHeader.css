@@ -94,11 +94,23 @@
     height: 2em;
 }
 
+#universi-header #universi-header-second-half .welcome-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+}
+
 #universi-header #universi-header-second-half .welcome-message {
     margin-right: .75rem;
     color: var(--font-color-v1);
     font-size: 1.25rem;
     font-weight: var(--font-weight-default);
+}
+
+#universi-header #universi-header-second-half .logged-user-image {
+    height: 4rem;
+    margin-right: 1.5rem;
 }
 
 /* todo: Change 'color' and 'background-color' if user is logged */

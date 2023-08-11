@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import UniversiLogo from '@/components/UniversiLogo'
+import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { AuthContext, AuthContextType } from "@/src/contexts/Auth/AuthContext";
 import "./UniversiHeader.css"
 
@@ -35,10 +36,13 @@ export function UniversiHeader() {
                     </button>
                 </form>
 
+
                 {
-                    isLogged
-                        ? <div className="welcome-message">{`Olá, ${authContext.profile?.firstname}`}</div>
-                        : null
+                    !isLogged ? null
+                    : <Link className="welcome-wrapper" to={`/profile/${authContext.user?.name}`}>
+                        <div className="welcome-message">{`Olá, ${authContext.profile?.firstname}`}</div>
+                        <ProfileImage className="logged-user-image" imageUrl={authContext.profile?.image} noImageColor="#D9D9D9" />
+                      </Link>
                 }
                 { loginLogoutButton(authContext, isLogged) }
             </div>
