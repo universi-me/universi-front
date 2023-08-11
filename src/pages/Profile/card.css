@@ -45,6 +45,14 @@
     background-color: #F3F3F3;
     width: 3.75em;
     aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#profile-page #left-side .card .items-wrapper .item > * {
+    max-width: 90%;
+    max-height: 90%;
 }
 
 #profile-page #left-side .card .items-wrapper .show-all-items {

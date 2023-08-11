@@ -1,12 +1,13 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { ProfileContext } from "@/pages/Profile";
 
-export type ProfileAchievementsProps = {
-    count: number;
-    achievements: string[];
-};
+export function ProfileAchievements() {
+    const profileContext = useContext(ProfileContext);
+    if (profileContext === null || profileContext.profileListData.achievements.length == 0)
+        return null;
 
-export function ProfileAchievements(props: ProfileAchievementsProps) {
-    const achievementsCount = props.count.toLocaleString('pt-BR', {
+    const achievementsCount = profileContext.profileListData.achievements.length.toLocaleString('pt-BR', {
         minimumIntegerDigits: 2,
         useGrouping: false,
     })
@@ -24,11 +25,11 @@ export function ProfileAchievements(props: ProfileAchievementsProps) {
                     <div className="show-items">
                         {
                             // todo: achievements from API
-                            props.achievements.map((achievement) => {
+                            profileContext.profileListData.achievements.map((achievement) => {
                                 return (
-                                    <Link to={""} className="achievement item">
+                                    <Link to={""} className="achievement item" key={achievement.id} title={achievement.title}>
                                         {/* todo: set achievement url */}
-                                        {/* todo: render achievement icon */}
+                                        <img src={achievement.icon} alt="" />
                                     </Link>
                                 );
                             })
