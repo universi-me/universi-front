@@ -6,7 +6,7 @@ import {
     ProfileCompetences, ProfileLastRecommendations, ProfileSettings,
     CompetencesSettings, ProfileDiscardChanges, ProfileContext
 } from '@/pages/Profile'
-import { Modal } from "@/components/Modal/Modal";
+import { UniversiModal } from "@/components/UniversiModal";
 import { AuthContext } from "@/src/contexts/Auth/AuthContext";
 import { UniversimeApi } from "@/hooks/UniversimeApi";
 import type { ProfileContextType } from '@/pages/Profile'
@@ -68,31 +68,31 @@ export function ProfilePage() {
 
             {
                 showProfileSettings &&
-                <Modal>
+                <UniversiModal>
                     <ProfileSettings
                         cancelChanges={() => {setShowDiscardChanges(true)}}
                         toggleModal={setShowProfileSettings}
                     />
-                </Modal>
+                </UniversiModal>
             }
 
             {
                 showCompetencesSettings &&
-                <Modal>
+                <UniversiModal>
                     <CompetencesSettings
                         cancelChanges={()=>{setShowDiscardChanges(true)}}
                     />
-                </Modal>
+                </UniversiModal>
             }
 
             {
                 (showProfileSettings || showCompetencesSettings) && showDiscardChanges &&
-                <Modal>
+                <UniversiModal>
                     <ProfileDiscardChanges
                         onDiscard={discardChanges}
                         onCancel={()=>{setShowDiscardChanges(false);}}
                     />
-                </Modal>
+                </UniversiModal>
             }
         </div>
         </ProfileContext.Provider>
