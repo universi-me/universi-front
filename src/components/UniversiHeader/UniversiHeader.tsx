@@ -35,11 +35,15 @@ export function UniversiHeader() {
                     </button>
                 </form>
 
+                {
+                    isLogged
+                        ? <div className="welcome-message">{`Olá, ${authContext.user?.name}`}</div>
+                        : null
+                }
                 { loginLogoutButton(authContext, isLogged) }
             </div>
         </header>
     );
-
 }
 
 /**

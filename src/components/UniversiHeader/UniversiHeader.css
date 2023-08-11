@@ -94,6 +94,13 @@
     height: 2em;
 }
 
+#universi-header #universi-header-second-half .welcome-message {
+    margin-right: .75rem;
+    color: var(--font-color-v1);
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-default);
+}
+
 /* todo: Change 'color' and 'background-color' if user is logged */
 .auth-button {
     background-color: var(--primary-color);
