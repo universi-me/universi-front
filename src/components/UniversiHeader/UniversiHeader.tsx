@@ -37,7 +37,7 @@ export function UniversiHeader() {
 
                 {
                     isLogged
-                        ? <div className="welcome-message">{`Olá, ${authContext.user?.name}`}</div>
+                        ? <div className="welcome-message">{`Olá, ${authContext.profile?.firstname}`}</div>
                         : null
                 }
                 { loginLogoutButton(authContext, isLogged) }
