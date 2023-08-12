@@ -93,6 +93,12 @@ export namespace UniversimeApi {
                 groupId: groupId.toString(),
             })).data;
         }
+
+        export async function join(groupId: number) {
+            return (await api.post('/group/participant/enter', {
+                groupId: groupId.toString(),
+            })).data;
+        }
     }
 
     export namespace Competence {

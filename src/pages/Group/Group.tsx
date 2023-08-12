@@ -32,7 +32,7 @@ export function GroupPage() {
                 <div className="group-infos">
                     <div className="left-side">
                         <GroupAbout />
-                        <button className="join-button">Participar</button>
+                        <button onClick={ joinGroup } className="join-button">Participar</button>
                         <GroupSubGroups />
                     </div>
 
@@ -57,5 +57,15 @@ export function GroupPage() {
             subgroups: subgroupsRes.body.subgroups,
             participants: participantsRes.body.participants,
         });
+    }
+
+    function joinGroup() {
+        if (groupContext === null)
+            return;
+
+        UniversimeApi.Group.join(groupContext.group.id)
+            .then(r => {
+                console.dir(r);
+            });
     }
 }
