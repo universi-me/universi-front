@@ -1,26 +1,34 @@
-import { useParams } from "react-router-dom";
-
-import { GroupBanner, GroupIntro, GroupAbout, GroupSubGroups } from "@/pages/Group"
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { UniversimeApi } from "@/hooks/UniversimeApi";
+import { AuthContext } from "@/src/contexts/Auth/AuthContext";
+import { GroupBanner, GroupIntro, GroupAbout, GroupSubGroups, GroupMembers, GroupContext, GroupContextType } from "@/pages/Group"
 import "./Group.css"
 import "./card.css"
-import { GroupMembers } from "./GroupMembers/GroupMembers";
 
 export function GroupPage() {
-    const { id } = useParams();
-    // todo: Get group info from API
+    const auth = useContext(AuthContext);
+    const navigate = useNavigate();
+    const { id: nickname } = useParams();
+
+    const [groupContext, setGroupContext] = useState<GroupContextType>(null);
+
+    if (auth.user === null) {
+        navigate('/login');
+    }
+
+    useEffect(() => { loadAccessedGroup() }, [])
 
     return (
+        !groupContext ? null :
+
+        <GroupContext.Provider value={groupContext}>
         <div id="group-page">
             {/* todo: get banner content from API */}
             <GroupBanner bannerContent={"#4E4E4E"} />
             <div className="content">
                 {/* todo: group intro content from API */}
-                <GroupIntro
-                    imageUrl="#D9D9D9"
-                    name="Nome do grupo"
-                    type="Tipo"
-                    verified={true}
-                />
+                <GroupIntro verified={true}/>
                 <div className="group-infos">
                     <div className="left-side">
                         {/* todo: group about content from API */}
@@ -46,5 +54,14 @@ export function GroupPage() {
                 </div>
             </div>
         </div>
+        </GroupContext.Provider>
     );
+
+    async function loadAccessedGroup() {
+        const groupRes = await UniversimeApi.Group.get(undefined, nickname);
+
+        setGroupContext({
+            group: groupRes.body.group,
+        });
+    }
 }

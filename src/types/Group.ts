@@ -9,7 +9,7 @@ export type Group = {
     type:         GroupType;
     nickname:     string;
     subgroups:    Group[];
-    image:        string;
+    image:        string | null;
     createdAt:    string;
 };
 
