@@ -1,0 +1,104 @@
+#group-page #members {
+    min-width: max-content;
+    background-color: #D9D9D9;
+    border-radius: 1.25rem;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#group-page #members .heading {
+    width: 100%;
+    padding-top: 1rem;
+    padding-bottom: .3rem;
+
+    background-color: #4F518C;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    color: var(--font-color-v1);
+    font-size: 1.875rem;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+}
+
+#group-page #members .heading .counter {
+    color: var(--skills-1-color);
+    margin-left: .25em;
+}
+
+#group-page #members .member-list {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    padding: 0 2.65rem;
+    padding-top: 1.3rem;
+    padding-bottom: 1.7rem;
+
+    row-gap: 1rem;
+    column-gap: 10rem;
+}
+
+#group-page #members .member-list .member-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+    border-radius: .625rem;
+}
+
+#group-page #members .member-list .member-item .image {
+    width: 5rem;
+    height: 5rem;
+    margin-right: 1rem;
+
+    border-radius: 0.3rem;
+    background-color: #F3F3F3;
+}
+
+#group-page #members .member-list .member-item .info {
+    width: 100%;
+}
+
+#group-page #members .member-list .member-item .name {
+    color: var(--font-color-v2);
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-semibold);
+    max-width: 75%;
+}
+
+#group-page #members .member-list .member-item .function {
+    color: var(--font-color-v2);
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-light);
+}
+
+#group-page #members .show-all {
+    margin-bottom: 1.5rem;
+    width: 18.375rem;
+    height: 2.125rem;
+
+    background-color: transparent;
+    border: .125rem solid #4F518C;
+    border-radius: 0.625rem;
+
+    color: var(--primary-color);
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-semibold);
+
+    cursor: pointer;
+    transition: var(--hover-transition-duration) color, background-color;
+}
+
+#group-page #members .show-all:hover {
+    background: var(--primary-color);
+    color: var(--font-color-v1);
+}

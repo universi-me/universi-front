@@ -1,0 +1,37 @@
+#group-page #group-intro {
+    margin: 0 auto;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#group-page #group-intro .image {
+    width: var(--group-image-height);
+    height: var(--group-image-height);
+
+    border: solid .5rem #FFF;
+    border-radius: 50%;
+}
+
+#group-page #group-intro .name {
+    display: flex;
+    flex-direction: row;
+    text-transform: uppercase;
+    align-items: center;
+
+    width: fit-content;
+    color: var(--font-color-v2);
+    font-weight: var(--font-weight-bold);
+    font-size: 1.5rem;
+}
+
+#group-page #group-intro .verified-icon {
+    margin-left: .38rem;
+}
+
+#group-page #group-intro .type {
+    color: var(--font-color-v2);
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-light);
+}

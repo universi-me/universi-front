@@ -75,9 +75,34 @@ export namespace UniversimeApi {
     }
 
     export namespace Group {
-        export async function get(groupId: string) {
-            return (await api.post('/grupo/obter', {
-                grupoId: groupId
+        export async function get(groupId?: number, nickname?: string) {
+            return (await api.post('/group/get', {
+                groupId: groupId?.toString(),
+                nickname,
+            })).data;
+        }
+
+        export async function subgroups(groupId: number) {
+            return (await api.post('/group/list', {
+                groupId: groupId.toString(),
+            })).data;
+        }
+
+        export async function participants(groupId: number) {
+            return (await api.post('/group/participant/list', {
+                groupId: groupId.toString(),
+            })).data;
+        }
+
+        export async function join(groupId: number) {
+            return (await api.post('/group/participant/enter', {
+                groupId: groupId.toString(),
+            })).data;
+        }
+
+        export async function exit(groupId: number) {
+            return (await api.post('/group/participant/exit', {
+                groupId: groupId.toString(),
             })).data;
         }
     }
