@@ -1,25 +1,21 @@
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { GroupContext } from "@/pages/Group";
+import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import "./GroupMembers.css"
+import { getFullName } from "@/utils/profileUtils";
 
-export type GroupMembersProps = {
-    // todo: change to Member[]
-    /**
-     * Members to render on the member list
-     */
-    members: string[];
+export function GroupMembers() {
+    const groupContext = useContext(GroupContext);
 
-    /**
-     * Total member count
-     */
-    count: number;
-};
-
-export function GroupMembers(props: GroupMembersProps) {
-    const membersCount = props.count.toLocaleString('pt-BR', {
+    const membersCount = (groupContext?.participants.length ?? 0).toLocaleString('pt-BR', {
         minimumIntegerDigits: 2,
         useGrouping: false,
     })
 
     return (
+        groupContext === null ? null :
+
         <div id="members">
             <div className="heading">
                 Membros
@@ -28,17 +24,15 @@ export function GroupMembers(props: GroupMembersProps) {
 
             <div className="member-list">
                 {
-                    props.members.map(member => {
-                        /* todo: member info from API */
+                    groupContext.participants.map(member => {
                         return (
-                            <div className="member-item" key={member}>
-                                {/* todo: member image as <img> */}
-                                <div className="image" />
+                            <Link to={`/profile/${member.user.name}`} className="member-item" key={member.user.name}>
+                                <ProfileImage className="image" imageUrl={member.image} noImageColor="#F3F3F3" />
                                 <div className="info">
-                                    <h2 className="name">{"Nome & Sobrenome"}</h2>
-                                    <h4 className="function">{"(Função)"}</h4>
+                                    <h2 className="name">{getFullName(member)}</h2>
+                                    {/* <h4 className="function">{"(Função)"}</h4> */}
                                 </div>
-                            </div>
+                            </Link>
                         );
                     })
                 }

@@ -28,7 +28,6 @@ export function GroupPage() {
             {/* todo: get banner content from API */}
             <GroupBanner bannerContent={"#4E4E4E"} />
             <div className="content">
-                {/* todo: group intro content from API */}
                 <GroupIntro verified={true}/>
                 <div className="group-infos">
                     <div className="left-side">
@@ -38,11 +37,7 @@ export function GroupPage() {
                     </div>
 
                     <div className="right-side">
-                        {/* todo: group members from API */}
-                        <GroupMembers
-                            members={["", "", "", "", "", ""]}
-                            count={0}
-                        />
+                        <GroupMembers />
                     </div>
                 </div>
             </div>
@@ -52,13 +47,15 @@ export function GroupPage() {
 
     async function loadAccessedGroup() {
         const groupRes = await UniversimeApi.Group.get(undefined, nickname);
-        const [subgroupsRes] = await Promise.all([
-            UniversimeApi.Group.subgroups(groupRes.body.group.id)
+        const [subgroupsRes, participantsRes] = await Promise.all([
+            UniversimeApi.Group.subgroups(groupRes.body.group.id),
+            UniversimeApi.Group.participants(groupRes.body.group.id),
         ]);
 
         setGroupContext({
             group: groupRes.body.group,
             subgroups: subgroupsRes.body.subgroups,
+            participants: participantsRes.body.participants,
         });
     }
 }

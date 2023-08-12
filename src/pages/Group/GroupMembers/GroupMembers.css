@@ -50,6 +50,8 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
+    border-radius: .625rem;
 }
 
 #group-page #members .member-list .member-item .image {
@@ -65,6 +67,7 @@
     color: var(--font-color-v2);
     font-size: 1.25rem;
     font-weight: var(--font-weight-semibold);
+    max-width: 75%;
 }
 
 #group-page #members .member-list .member-item .function {
