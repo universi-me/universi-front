@@ -99,6 +99,12 @@ export namespace UniversimeApi {
                 groupId: groupId.toString(),
             })).data;
         }
+
+        export async function exit(groupId: number) {
+            return (await api.post('/group/participant/exit', {
+                groupId: groupId.toString(),
+            })).data;
+        }
     }
 
     export namespace Competence {

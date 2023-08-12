@@ -32,7 +32,9 @@ export function GroupPage() {
                 <div className="group-infos">
                     <div className="left-side">
                         <GroupAbout />
-                        <button onClick={ joinGroup } className="join-button">Participar</button>
+                        <button onClick={ groupContext.isParticipant ? exitGroup : joinGroup } className="join-button">
+                            { groupContext.isParticipant ? "Sair" : "Participar" }
+                        </button>
                         <GroupSubGroups />
                     </div>
 
@@ -56,6 +58,9 @@ export function GroupPage() {
             group: groupRes.body.group,
             subgroups: subgroupsRes.body.subgroups,
             participants: participantsRes.body.participants,
+            isParticipant: participantsRes.body.participants.find(p => p.user.name === auth.user?.name) !== undefined,
+
+            reloadPage: loadAccessedGroup,
         });
     }
 
@@ -66,6 +71,18 @@ export function GroupPage() {
         UniversimeApi.Group.join(groupContext.group.id)
             .then(r => {
                 console.dir(r);
+                groupContext.reloadPage();
+            });
+    }
+
+    function exitGroup() {
+        if (groupContext === null)
+            return;
+
+        UniversimeApi.Group.exit(groupContext.group.id)
+            .then(r => {
+                console.dir(r);
+                groupContext.reloadPage();
             });
     }
 }
