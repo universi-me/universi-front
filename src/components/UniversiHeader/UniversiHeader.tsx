@@ -1,60 +1,61 @@
-import { Component, ReactNode } from "react";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
 import UniversiLogo from '@/components/UniversiLogo'
+import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
+import { AuthContext, AuthContextType } from "@/src/contexts/Auth/AuthContext";
 import "./UniversiHeader.css"
 
 export type UniversiHeaderProps = {
-  // todo
+    // todo
 };
 
-export class UniversiHeader extends Component {
-  constructor(props: UniversiHeaderProps) {
-    super(props);
-  }
+export function UniversiHeader() {
+    const authContext = useContext(AuthContext);
+    const isLogged =    !!authContext?.user;
 
-  render(): ReactNode {
     return (
-      <header id="universi-header">
-        <div id="universi-header-first-half">
-          <UniversiLogo />
-          <nav>
-            {/* todo: links to other pages */}
-            {/* todo: current page has 'color:var(--secondary-color)'    */}
-            <a href="">Início</a>
-            <a href="">Equipe</a>
-            <a href="">Sobre</a>
-          </nav>
-        </div>
+        <header id="universi-header">
+            <div id="universi-header-first-half">
+                <UniversiLogo />
+                <nav>
+                    {/* todo: current page has 'color:var(--secondary-color)'    */}
+                    <Link to="/">Início</Link>
+                    <Link to="/sobre">Sobre</Link>
+                </nav>
+            </div>
 
-        <div id="universi-header-second-half">
-          <form id="universi-header-search">
-            <input
-              type="search"
-              id="universi-header-search-bar"
-              placeholder="Pesquisar..."
-            />
-            <button type="submit" id="universi-header-search-button">
-              <img src="/assets/icons/search.svg" alt="Pesquisar" />
-            </button>
-          </form>
+            <div id="universi-header-second-half">
+                <form id="universi-header-search">
+                    <input
+                        type="search"
+                        id="universi-header-search-bar"
+                        placeholder="Pesquisar..."
+                    />
+                    <button type="submit" id="universi-header-search-button">
+                        <img src="/assets/icons/search.svg" alt="Pesquisar" />
+                    </button>
+                </form>
 
-          {loginElement()}
-        </div>
-      </header>
+
+                {
+                    !isLogged ? null
+                    : <Link className="welcome-wrapper" to={`/profile/${authContext.user?.name}`}>
+                        <div className="welcome-message">{`Olá, ${authContext.profile?.firstname}`}</div>
+                        <ProfileImage className="logged-user-image" imageUrl={authContext.profile?.image} noImageColor="#D9D9D9" />
+                      </Link>
+                }
+                { loginLogoutButton(authContext, isLogged) }
+            </div>
+        </header>
     );
-  }
 }
 
 /**
  * Renders the login button on the header and the user's name and profile
  * picture
  */
-function loginElement() {
-  if (location.pathname != "/login") {
-    return (
-      // todo: show "Olá, {user.nome}" and profile picture if user is logged
-      <a className="login-button" href="/login">
-        Entrar {/* todo: change to "Sair" if user is logged */}
-      </a>
-    );
-  }
+function loginLogoutButton(authContext: AuthContextType, isLogged: boolean) {
+    return isLogged
+        ? <button onClick={authContext?.signout} className="auth-button logout">Sair</button>
+        : <Link to="/login" className="auth-button login">Entrar</Link>;
 }

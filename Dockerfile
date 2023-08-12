@@ -1,15 +1,11 @@
-FROM node:gallium-alpine3.17
+FROM node:18-alpine
 
 WORKDIR /opt/app
 
 ENV NODE_ENV production
 
-COPY package*.json ./
-
-RUN npm ci 
-
 COPY . /opt/app
 
-RUN npm install --dev && npm run build
+RUN npm install --include=dev
 
-CMD [ "npm", "serve" ]
+ENTRYPOINT ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "8088"]
