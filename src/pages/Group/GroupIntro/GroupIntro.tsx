@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { GroupContext } from "@/pages/Group";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
+import { GroupTypeToLabel } from "@/types/Group";
 import "./GroupIntro.css"
 
 export type GroupIntroProps = {
@@ -26,7 +27,7 @@ export function GroupIntro(props: GroupIntroProps) {
                     : null
                 }
             </div>
-            <div className="type">{groupContext.group.type}</div>
+            <div className="type">{GroupTypeToLabel[groupContext.group.type]}</div>
         </div>
     );
 }
