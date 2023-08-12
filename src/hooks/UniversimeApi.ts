@@ -75,10 +75,16 @@ export namespace UniversimeApi {
     }
 
     export namespace Group {
-        export async function get(groupId?: string, nickname?: string) {
+        export async function get(groupId?: number, nickname?: string) {
             return (await api.post('/group/get', {
-                groupId,
+                groupId: groupId?.toString(),
                 nickname,
+            })).data;
+        }
+
+        export async function subgroups(groupId: number) {
+            return (await api.post('/group/list', {
+                groupId: groupId.toString(),
             })).data;
         }
     }

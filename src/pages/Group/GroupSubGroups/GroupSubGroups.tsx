@@ -1,27 +1,19 @@
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { GroupContext } from "@/pages/Group";
 import "./GroupSubGroups.css"
 
-export type GroupSubGroupsProps = {
-    // todo: change to Group[]
-    /**
-     * Array with subgroups to render
-     */
-    subgroups: string[];
+export function GroupSubGroups() {
+    const groupContext = useContext(GroupContext);
 
-    /**
-     * Total number of subgroups
-     */
-    count: number;
-};
-
-export function GroupSubGroups(props: GroupSubGroupsProps) {
-    const subgroupCount = props.count.toLocaleString('pt-BR', {
+    const subgroupCount = (groupContext?.group.subGroups.length ?? 0).toLocaleString('pt-BR', {
         minimumIntegerDigits: 2,
         useGrouping: false,
     })
 
     return (
-        // todo: card component
+        groupContext === null || groupContext.subgroups.length <= 0 ? null :
+
         <div id="subgroups" className="card">
             <div className="section">
                 <div className="counter-wrapper">
@@ -32,11 +24,11 @@ export function GroupSubGroups(props: GroupSubGroupsProps) {
                 <div className="items-wrapper">
                     <div className="show-items">
                         {
-                            props.subgroups.map((group) => {
+                            groupContext.subgroups.map((group) => {
                                 return (
-                                    <Link to={""} className="group item">
+                                    <Link to={`/group/${group.nickname}`} className="group item" key={group.nickname} title={group.name}>
                                         {/* todo: set group url */}
-                                        {/* todo: render group icon */}
+                                        {group.image ? <img src={group.image} /> : null}
                                     </Link>
                                 );
                             })

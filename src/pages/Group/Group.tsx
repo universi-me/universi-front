@@ -34,11 +34,7 @@ export function GroupPage() {
                     <div className="left-side">
                         <GroupAbout />
                         <button className="join-button">Participar</button>
-                        {/* todo: subgroups from API */}
-                        <GroupSubGroups
-                            subgroups={["", ""]}
-                            count={0}
-                        />
+                        <GroupSubGroups />
                     </div>
 
                     <div className="right-side">
@@ -56,9 +52,13 @@ export function GroupPage() {
 
     async function loadAccessedGroup() {
         const groupRes = await UniversimeApi.Group.get(undefined, nickname);
+        const [subgroupsRes] = await Promise.all([
+            UniversimeApi.Group.subgroups(groupRes.body.group.id)
+        ]);
 
         setGroupContext({
             group: groupRes.body.group,
+            subgroups: subgroupsRes.body.subgroups,
         });
     }
 }

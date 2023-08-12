@@ -43,6 +43,11 @@
     aspect-ratio: 1;
 }
 
+#profile-page #left-side .card .items-wrapper .item > * {
+    max-width: 90%;
+    max-height: 90%;
+}
+
 #group-page .content .group-infos .left-side .card .items-wrapper .show-all-items {
     display: block;
     width: 100%;
