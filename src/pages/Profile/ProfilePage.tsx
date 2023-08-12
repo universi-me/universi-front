@@ -30,7 +30,7 @@ export function ProfilePage() {
         navigate('/login');
     }
 
-    useEffect(() => { loadAccessedUser() }, [])
+    useEffect(() => { loadAccessedUser() }, [id]);
     console.dir(profileContext)
 
     return (
