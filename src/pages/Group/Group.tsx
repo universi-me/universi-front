@@ -18,6 +18,7 @@ export function GroupPage() {
     }
 
     useEffect(() => { loadAccessedGroup() }, [])
+    console.dir(groupContext);
 
     return (
         !groupContext ? null :
@@ -31,11 +32,7 @@ export function GroupPage() {
                 <GroupIntro verified={true}/>
                 <div className="group-infos">
                     <div className="left-side">
-                        {/* todo: group about content from API */}
-                        <GroupAbout
-                            description={"Lorem ipsum dolor sit amet. Hic dolor reiciendis rem earum voluptatem sit similique magnam est repellat mollitia. Et nesciunt consequuntur a vero rerum aut optio tempore aut."}
-                            creationDate={"00/00/0000"}
-                        />
+                        <GroupAbout />
                         <button className="join-button">Participar</button>
                         {/* todo: subgroups from API */}
                         <GroupSubGroups

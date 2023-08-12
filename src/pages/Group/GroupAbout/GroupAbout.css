@@ -25,6 +25,10 @@
     margin-bottom: 3.25rem;
     background-color: #FFF;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     border-radius: 0.625rem;
     border: none;
     height: 2.125rem;
@@ -34,6 +38,7 @@
     color: var(--secondary-color);
     font-size: 0.875rem;
     font-weight: var(--font-weight-semibold);
+    text-decoration: none;
 
     cursor: pointer;
 }
