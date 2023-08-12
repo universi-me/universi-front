@@ -41,9 +41,13 @@
     background-color: #F3F3F3;
     width: 3.75em;
     aspect-ratio: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#profile-page #left-side .card .items-wrapper .item > * {
+#group-page .content .group-infos .left-side .card .items-wrapper .item > * {
     max-width: 90%;
     max-height: 90%;
 }

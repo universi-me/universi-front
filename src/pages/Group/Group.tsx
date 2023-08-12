@@ -17,7 +17,7 @@ export function GroupPage() {
         navigate('/login');
     }
 
-    useEffect(() => { loadAccessedGroup() }, [])
+    useEffect(() => { loadAccessedGroup() }, [nickname])
     console.dir(groupContext);
 
     return (
