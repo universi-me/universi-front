@@ -1,13 +1,9 @@
-:root{
-    --color-font-titulo: #FFF;
-}
-
 #title {
     margin-top: 20px;
     margin-bottom: 5px;
     font-size: 20px;
     font-weight: 700;
-    color: var(--color-font-titulo);
+    color: #FFF;
 }
 
 

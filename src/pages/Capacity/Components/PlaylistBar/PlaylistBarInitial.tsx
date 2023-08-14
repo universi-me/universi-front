@@ -19,9 +19,9 @@ const PlaylistBar: React.FC = () => {
         </a>
         <a href="capacitacao/playlist/golang-iniciante" className="playlist-card">
           <img src={golangInicianteImg} alt="Logo da playlist de capacitação" />
-          <span className="playlist-title">O que é Golang ?</span>
+          <span className="playlist-title">Golang Iniciante</span>
         </a>
-        <a href="/playlist/comunicacao-empresa" className="playlist-card">
+        <a href="capacitacao/playlist/comunicacao-empresa" className="playlist-card">
           <img src={comunicacaoEmpresaImg} alt=" Logo da playlist de capacitação" />
           <span className="playlist-title">Comunicação: Como melhorar nas empresas?</span>
         </a>

@@ -70,7 +70,7 @@ const VideoPage: React.FC = () => {
             <div id="conteudo-video">
                 <div id="player" className="youtube-video"></div>
                 <VideoAnimationPlayer/>
-                <p className="error-video">Falha ao carregar o vídeo: Recarregue a página...</p>
+                <p className="error-video">Atenção: Caso demore para iniciar o vídeo reinicie a página</p>
             </div>
             <div id="information-video">
                 <div className="details-video">

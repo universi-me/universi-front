@@ -12,6 +12,7 @@ import CapacityPage from "@/pages/Capacity/Capacity";
 import CategoryPage from "@/pages/Capacity/Category";
 import VideoPage from "@/pages/Capacity/VideoPlayer";
 import PlaylistPage from "@/pages/Capacity/Playlist";
+import ManagerCapacity from "@/pages/Capacity/ManagerCapacity";
 
 
 
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([{
     {
       path: "/capacitacao/playlist/:playlist",
       element: <PlaylistPage />
+    },
+    {
+      path: "/capacitacao/gerenciador", 
+      element: <ManagerCapacity/>
     },
     {
       path: "/quiz/:id",

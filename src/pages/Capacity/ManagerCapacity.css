@@ -1,0 +1,134 @@
+.title-page{
+  margin-top: 12px;
+    font-size: 36px;
+    text-align: center;
+    font-weight: 400;
+}
+
+.videos-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+  
+.videos-table th,
+.videos-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+  
+.videos-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  text-align: center;
+}
+  
+.videos-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.space-text{
+  margin-bottom: 15px;
+}
+
+.confirmation-container{
+  padding-top: 150px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999
+}
+
+.confirmation-box-delete{
+  background-color: #2C2A4A;
+  border-radius: 25px;
+  width: 550px;
+  height: 180px;
+  color: #f2f2f2;
+}
+
+.confirmation-box-edit{
+  background-color: #2C2A4A;
+  border-radius: 25px;
+  width: 400px;
+  height: 380px;
+  color: #f2f2f2;
+}
+
+.titulo-box{
+  padding-top: 10px;
+}
+
+.button-boxDelete{
+  margin-left: 30px;
+  border-radius: 5px;
+  border: none;
+  width: 80px;
+  height: 30px;
+  background-color: #f81212;
+  color: #f5f5f5;
+}
+
+.button-boxSalve{
+  margin-left: 30px;
+  border-radius: 5px;
+  border: none;
+  width: 80px;
+  height: 30px;
+  background-color: #12a4f8;
+  color: #f5f5f5;
+}
+
+.button-boxCancel{
+  border-radius: 5px;
+  border: none;
+  width: 90px;
+  height: 30px;
+  background-color: #5f5f5f;
+  color: #f5f5f5;
+}
+
+.button-edit {
+  border: none;
+  border-radius: 2px;
+  background-color: #008cff;
+  color: #f5f5f5;
+  margin-right: 5px;
+  width: 50px;
+  height: 30px;
+}
+
+.button-delete {
+  border: none;
+  border-radius: 2px;
+  background-color: #b40000;
+  color: #f5f5f5;
+  width: 65px;
+  height: 30px;
+}
+
+.button-adicionar{
+  margin-left: 15px;
+  border: none;
+  border-radius: 2px;
+  background-color: #00a6ac;
+  color: #f5f5f5;
+  width: 140px;
+  height: 40px;
+}
+
+.input-text{
+  margin-left: 8px;
+  height: 28px;
+  border-radius: 3px;
+}
+
+
+
