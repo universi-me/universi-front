@@ -36,10 +36,16 @@ export function OAuth2Element() {
         .then((res) => {
             if (!res.success)
                 navigate("/login")
-
+            
             else {
                 auth.signin_google(res)
-                navigate(`/profile/${res.body.user.name}`)
+                .then(success => {
+                    if (success)
+                        navigate(`/profile/${res.body.user.name}`);
+
+                    else
+                        navigate("/login")
+                })
             }
         })
         .catch((err) => {
