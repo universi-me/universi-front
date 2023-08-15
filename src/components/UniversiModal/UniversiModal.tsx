@@ -1,7 +1,7 @@
 import { MouseEventHandler, ReactNode } from "react";
-import './Modal.css'
+import './UniversiModal.less'
 
-export type ModalProps = {
+export type UniversiModalProps = {
     /**
      * Content of the modal
      */
@@ -10,16 +10,7 @@ export type ModalProps = {
     /**
      * Executed when the overlay is clicked
      */
-    onClickOutside?: MouseEventHandler;
-};
-
-/**
- * Helps sending information if a modal should render if the modal is out of scope
- * See ProfilePage.tsx and ProfileBio.tsx
- */
-export type ModalHelper = {
-    shouldRender: boolean;
-    onClickOutside?: MouseEventHandler;
+    onClickOutside?: MouseEventHandler<HTMLDivElement>;
 };
 
 /**
@@ -27,14 +18,14 @@ export type ModalHelper = {
  * 
  * @returns The JSX.Element of the modal to be drawn if `props.children` evaluates to `true`. Otherwise returns `null`.
  */
-export function Modal(props: ModalProps) {
+export function UniversiModal(props: UniversiModalProps) {
     if (!props.children)
         return null;
 
     return (
-        <div className="modal" >
-            <div className="modal-overlay" onClick={props.onClickOutside} />
-            <div className="modal-content">
+        <div className="universi-modal" >
+            <div className="universi-modal-overlay" onClick={props.onClickOutside} />
+            <div className="universi-modal-content">
                 { props.children }
             </div>
         </div>

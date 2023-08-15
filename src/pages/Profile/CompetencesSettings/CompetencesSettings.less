@@ -1,0 +1,119 @@
+@import url("src/layouts/transitions.less");
+@import url("src/layouts/fonts.less");
+@import url("src/layouts/colors.less");
+
+#profile-page #competences-settings {
+    border-radius: 20px;
+    background-color: #D6D6D6;
+    overflow: hidden;
+
+    .heading {
+        background-color: var(--primary-color);
+        color: var(--font-color-v1);
+        text-transform: uppercase;
+        padding: .5em;
+        text-align: center;
+        font-size: 1.875em;
+        font-weight: var(--font-weight-bold);
+    }
+
+    .settings-form {
+        padding: 2em;
+        padding-top: 1.5em;
+    
+        width: 50vw;
+        overflow-y: auto;
+        max-height: 70vh;
+
+        .section {
+            width: 100%;
+
+            &:not(:last-of-type) {
+                margin-bottom: 1rem;
+            }
+
+            .section-heading {
+                text-transform: uppercase;
+                font-size: 1.25rem;
+                font-weight: @font-weight-default;
+            }
+
+            select, textarea {
+                width: 100%;
+                background-color: #FFF;
+                border: none;
+                padding: .5rem 1.5rem;
+                border-radius: .625rem;
+
+                &:focus {
+                    outline: #9294CC 3px solid;
+                }
+            }
+
+            select option:disabled {
+                color: #6F6F6F;
+            }
+
+            textarea {
+                min-height: 4rem;
+            }
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+
+            .remove-button {
+                background: none;
+                border: none;
+                color: #F00;
+                font-size: 1.5rem;
+            }
+
+            .submit {
+                width: fit-content;
+                margin-left: auto;
+
+                .cancel-button, .submit-button {
+                    width: 17.125rem;
+                    height: 2.125rem;
+
+                    border: 2px solid var(--primary-color);
+                    border-radius: 0.625rem;
+
+                    text-transform: uppercase;
+                    font-size: 0.875em;
+                    font-weight: var(--font-weight-semibold);
+
+                    cursor: pointer;
+                    transition: var(--hover-transition-duration) background-color, border-color, color;
+
+                    &:not(:last-of-type) {
+                        margin-right: 1.2rem;
+                    }
+                }
+
+                .cancel-button {
+                    background-color: transparent;
+                    color: var(--primary-color);
+
+                    &:hover {
+                        color: var(--font-color-v1);
+                        background-color: var(--primary-color);
+                    }
+                }
+    
+                .submit-button {
+                    color: var(--font-color-v1);
+                    background-color: var(--primary-color);
+
+                    &:hover {
+                        border-color: #39375D;
+                        background-color: #39375D;
+                    }
+                }
+            }
+        }
+
+    }
+}

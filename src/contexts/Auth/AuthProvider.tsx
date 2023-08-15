@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
-import { User } from "../../types/User";
-import { UniversimeApi } from "../../hooks/UniversimeApi";
+import { User } from "@/types/User";
+import { Profile } from "@/types/Profile";
+import { UniversimeApi } from "@/hooks/UniversimeApi";
 
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
     validateToken();
   }, [UniversimeApi]);
 
   return (
-    <AuthContext.Provider value={{ user, signin, signout, signin_google }}>
+    <AuthContext.Provider value={{ user, signin, signout, signin_google, profile }}>
       {children}
     </AuthContext.Provider>
   );
@@ -26,31 +28,33 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     }
   }
 
-  async function signin(email: string, password: string) {
-      const data = await UniversimeApi.signin(email, password);
-      if (data.body.user && data.token) {
-        setUser(data.body.user);
-        setToken(data.token);
-        return true;
-      }
-  
+  function setLoggedUser(user: User, token: string, profile: Profile): boolean {
+    if (!user || !token || !profile)
       return false;
+
+    setUser(user);
+    setProfile(profile);
+    setToken(token);
+    return true;
   }
 
-  function signin_google(user: any) {
+  async function signin(email: string, password: string) {
+      const data = await UniversimeApi.signin(email, password);
+      const profile = await UniversimeApi.Profile.profile();
+      return setLoggedUser(data.body.user, data.token, profile.body.profile);
+  }
+
+  async function signin_google(user: any) {
       const data = user;
-      if (data.body.user && data.token) {
-        setUser(data.body.user);
-        setToken(data.token);
-        return true;
-      }
-      return false;
+      const profile = await UniversimeApi.Profile.profile();
+      return setLoggedUser(data.body.user, data.token, profile.body.profile);
     };
 
   function signout() {
     setUser(null);
+    setProfile(null);
     setToken("");
-    window.location.href = "/login"
+    window.location.href = location.origin + "/login";
   };
 
   function setToken(token: string) {

@@ -31,11 +31,7 @@
 
 #profile-page #right-side .list .recommendation .image {
     margin-right: 1em;
-
     width: 4.5em;
-    aspect-ratio: 1;
-
-    border-radius: 50%;
 }
 
 #profile-page #right-side .list .recommendation .user-name {
@@ -43,6 +39,7 @@
     font-size: 1.25em;
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
+    text-decoration: none;
 }
 
 #profile-page #right-side .list .recommendation .recommended-by {
@@ -76,6 +73,12 @@
 
     height: 1.8em;
     translate: 0 -1em;
+}
+
+#profile-page #right-side .empty-recommendations {
+    font-style: italic;
+    width: 100%;
+    text-align: center;
 }
 
 #profile-page #right-side .show-more {
