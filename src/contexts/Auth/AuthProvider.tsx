@@ -21,9 +21,11 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   async function validateToken() {
     const storageData = localStorage.getItem("AuthToken");
     if (storageData) {
-      const data = await UniversimeApi.validateToken();
-      if (data.user) {
-        setUser(data.user);
+      const data = await UniversimeApi.Profile.profile();
+
+      if (data.body.profile) {
+        setUser(data.body.profile.user);
+        setProfile(data.body.profile);
       }
     }
   }
