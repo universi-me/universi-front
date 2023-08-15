@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import UniversiLogo from "../../../public/assets/imgs/universi-me2.png";
 import { SearchInput } from "./components/SearchInput";
+import { LoginButton } from "./components/LoginButton/LoginButton";
 import "./styles.css";
 
 export function Header() {
@@ -14,6 +15,7 @@ export function Header() {
         <Link to="/sobre">Sobre</Link>
       </nav>
       <SearchInput />
+      <LoginButton />
     </header>
   );
 }
