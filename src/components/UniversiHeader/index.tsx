@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import UniversiLogo from "../../../public/assets/imgs/universi-me2.png";
 import { SearchInput } from "./components/SearchInput";
 import "./styles.css";
@@ -5,13 +6,12 @@ import "./styles.css";
 export function Header() {
   return (
     <header className="header">
-      <div>
+      <Link to="/">
         <img src={UniversiLogo} alt="Logo universi.me" />
-      </div>
+      </Link>
       <nav>
-        <a href="#">Início</a>
-        <a href="#">Equipe</a>
-        <a href="#">Sobre</a>
+        <Link to="/">Início</Link>
+        <Link to="/sobre">Sobre</Link>
       </nav>
       <SearchInput />
     </header>
