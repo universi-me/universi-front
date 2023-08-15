@@ -26,7 +26,7 @@ export function GroupSubGroups() {
                         {
                             groupContext.subgroups.map((group) => {
                                 return (
-                                    <Link to={group.path} className="group item" key={group.nickname} title={group.name}>
+                                    <Link to={`/group${group.path}`} className="group item" key={group.nickname} title={group.name}>
                                         {/* todo: set group url */}
                                         {group.image ? <img src={group.image} /> : null}
                                     </Link>
