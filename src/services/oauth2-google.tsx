@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UniversimeApi } from "../hooks/UniversimeApi";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../contexts/Auth/AuthContext";
+import { AuthContext } from "@/contexts/Auth/AuthContext";
 
 
 const oauth2Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";

@@ -3,6 +3,7 @@
         "paths": {
             "@/components/*": ["./src/components/*"],
             "@/configs/*":    ["./src/configs/*"],
+            "@/contexts/*":   ["./src/contexts/*"],
             "@/enums/*":      ["./src/enums/*"],
             "@/hooks/*":      ["./src/hooks/*"],
             "@/layouts/*":    ["./src/layouts/*"],

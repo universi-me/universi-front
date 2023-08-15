@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
-import { AuthContext } from "@/src/contexts/Auth/AuthContext";
+import { AuthContext } from "@/contexts/Auth";
 import "./WelcomeUser.less"
 
 export function WelcomeUser() {
