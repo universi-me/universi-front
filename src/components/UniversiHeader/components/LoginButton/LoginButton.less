@@ -1,0 +1,32 @@
+header.header {
+
+    /* todo: Change 'color' and 'background-color' if user is logged */
+    .auth-button {
+        border-radius: 10px;
+        border: 1px solid var(--primary-color);
+        margin-left: 1.5rem;
+
+        width: 5.75em;
+        line-height: 2em;
+        font-weight: var(--font-weight-semibold);
+        text-align: center;
+
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: var(--hover-transition-duration) background-color;
+
+        &:hover {
+            background-color: var(--button-hover-color);
+        }
+
+        &.login {
+            background-color: var(--primary-color);
+            color: var(--font-color-v1);
+        }
+
+        &.logout {
+            color: var(--primary-color);
+            background: none;
+        }
+    }
+}
