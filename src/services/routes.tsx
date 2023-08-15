@@ -51,7 +51,7 @@ export const router = createBrowserRouter([{
       element: <QuizPage />
     },
     { path: "/profile/:id", element: <ProfilePage /> },
-    { path: "/group/:id", element: <GroupPage /> },
+    { path: "/group/*", element: <GroupPage /> },
     {//identificador unico - dynamic routes
       //path: "perfil/:id",
       //element: <></>

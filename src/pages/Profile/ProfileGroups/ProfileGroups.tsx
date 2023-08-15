@@ -29,7 +29,7 @@ export function ProfileGroups() {
                         {
                             profileContext.profileListData.groups.map((group) => {
                                 return group === undefined ? null : (
-                                    <Link to={`/group/${group.nickname}`} className="group item" title={group.name} key={group.id}>
+                                    <Link to={`/group${group.path}`} className="group item" title={group.name} key={group.id}>
                                         {/* todo: set group url */}
                                         <img src={group.image} alt="" />
                                     </Link>
