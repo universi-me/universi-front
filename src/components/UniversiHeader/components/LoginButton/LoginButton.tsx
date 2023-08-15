@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "@/src/contexts/Auth/AuthContext";
+import { AuthContext } from "@/contexts/Auth";
 import "./LoginButton.less"
 
 export function LoginButton() {

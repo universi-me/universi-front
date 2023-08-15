@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UniversimeApi } from "@/hooks/UniversimeApi";
-import { AuthContext } from "@/src/contexts/Auth/AuthContext";
+import { AuthContext } from "@/contexts/Auth";
 import { GroupBanner, GroupIntro, GroupAbout, GroupSubGroups, GroupMembers, GroupContext, GroupContextType } from "@/pages/Group"
 import "./Group.css"
 import "./card.css"

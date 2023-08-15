@@ -7,7 +7,7 @@ import {
     CompetencesSettings, ProfileDiscardChanges, ProfileContext
 } from '@/pages/Profile'
 import { UniversiModal } from "@/components/UniversiModal";
-import { AuthContext } from "@/src/contexts/Auth/AuthContext";
+import { AuthContext } from "@/contexts/Auth";
 import { UniversimeApi } from "@/hooks/UniversimeApi";
 import type { ProfileContextType } from '@/pages/Profile'
 
