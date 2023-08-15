@@ -6,7 +6,7 @@ import "./GroupSubGroups.css"
 export function GroupSubGroups() {
     const groupContext = useContext(GroupContext);
 
-    const subgroupCount = (groupContext?.group.subGroups.length ?? 0).toLocaleString('pt-BR', {
+    const subgroupCount = (groupContext?.subgroups?.length ?? 0).toLocaleString('pt-BR', {
         minimumIntegerDigits: 2,
         useGrouping: false,
     })
@@ -26,7 +26,7 @@ export function GroupSubGroups() {
                         {
                             groupContext.subgroups.map((group) => {
                                 return (
-                                    <Link to={`/group/${group.nickname}`} className="group item" key={group.nickname} title={group.name}>
+                                    <Link to={group.path} className="group item" key={group.nickname} title={group.name}>
                                         {/* todo: set group url */}
                                         {group.image ? <img src={group.image} /> : null}
                                     </Link>

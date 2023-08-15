@@ -9,7 +9,7 @@ import "./card.css"
 export function GroupPage() {
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
-    const { id: nickname } = useParams();
+    const groupPath = '/' + useParams()["*"];
 
     const [groupContext, setGroupContext] = useState<GroupContextType>(null);
 
@@ -17,7 +17,7 @@ export function GroupPage() {
         navigate('/login');
     }
 
-    useEffect(() => { loadAccessedGroup() }, [nickname])
+    useEffect(() => { loadAccessedGroup() }, [groupPath])
     console.dir(groupContext);
 
     return (
@@ -48,7 +48,7 @@ export function GroupPage() {
     );
 
     async function loadAccessedGroup() {
-        const groupRes = await UniversimeApi.Group.get(undefined, nickname);
+        const groupRes = await UniversimeApi.Group.get(undefined, groupPath);
         const [subgroupsRes, participantsRes] = await Promise.all([
             UniversimeApi.Group.subgroups(groupRes.body.group.id),
             UniversimeApi.Group.participants(groupRes.body.group.id),
