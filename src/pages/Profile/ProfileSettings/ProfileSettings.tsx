@@ -183,11 +183,11 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         const [name, lastname] = separateFullName(fullname);
 
         UniversimeApi.Profile.edit({
-            profileId: (profileContext?.profile.id ?? 0).toString(),
+            profileId: profileContext?.profile.id ?? -1,
             name,
             lastname,
             bio,
-            sexo: gender,
+            gender,
         }).then(r => {
             profileContext?.reloadPage();
         });

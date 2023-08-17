@@ -6,49 +6,57 @@ const profileApi = axios.create({
 });
 
 export type ProfileEditBody = {
-    profileId: string;
-    name?: string;
+    profileId: number;
+    name?:     string;
     lastname?: string;
-    bio?: string;
-    sexo?: string;
+    bio?:      string;
+    gender?:   string;
+};
+
+export type ProfileIdAndUsername = {
+    profileId?: number;
+    username?:  string;
 };
 
 export async function profile() {
     return (await profileApi.get('', {})).data
 }
 
-export async function get(profileId?: number, username?: string) {
-    return (await profileApi.post('/get', { profileId, username })).data
+export async function get(body: ProfileIdAndUsername) {
+    return (await profileApi.post('/get', {
+        profileId: body.profileId?.toString(),
+        username:  body.username,
+    })).data
 }
 
 export async function edit(body: ProfileEditBody) {
     return (await profileApi.post('/edit', body)).data
 }
 
-export async function groups(profileId?: number, username?: string) {
+export async function groups(body: ProfileIdAndUsername) {
     return (await profileApi.post('/groups', {
-        profileId: profileId?.toString(),
-        username,
+        profileId: body.profileId?.toString(),
+        username:  body.username,
     })).data
 }
 
-export async function competences(profileId?: number, username?: string) {
+export async function competences(body: ProfileIdAndUsername) {
     return (await profileApi.post('/competences', {
-        profileId: profileId?.toString(),
-        username,
+        profileId: body.profileId?.toString(),
+        username:  body.username,
     })).data
 }
 
-export async function links(profileId?: number, username?: string) {
+export async function links(body: ProfileIdAndUsername) {
     return (await profileApi.post('/links', {
-        profileId: profileId?.toString(),
-        username,
+        profileId: body.profileId?.toString(),
+        username:  body.username,
     })).data
 }
 
-export async function recommendations(profileId?: number, username?: string) {
+export async function recommendations(body: ProfileIdAndUsername) {
     return (await profileApi.post('/recomendations', {
-        profileId: profileId?.toString(),
-        username,
+        profileId: body.profileId?.toString(),
+        username:  body.username,
     })).data
 }
