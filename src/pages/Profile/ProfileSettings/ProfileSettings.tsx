@@ -195,21 +195,21 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         const links = classifyLinks();
         links?.toCreate.forEach(link => {
             UniversimeApi.Link.create({
-                nome: link.name,
-                tipo: link.typeLink,
+                name: link.name,
+                linkType: link.typeLink,
                 url: link.url,
             })
         });
 
         links?.toDelete.forEach(id => {
-            UniversimeApi.Link.remove(id)
+            UniversimeApi.Link.remove({linkId: parseInt(id)})
         });
 
         links?.toUpdate.forEach(link => {
             UniversimeApi.Link.update({
-                linkId: link.id.toString(),
-                nome: link.name,
-                tipo: link.typeLink,
+                linkId: link.id,
+                name: link.name,
+                linkType: link.typeLink,
                 url: link.url,
             })
         })
