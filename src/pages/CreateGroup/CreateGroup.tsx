@@ -1,6 +1,9 @@
-import { GroupTypeToLabel } from "@/types/Group";
+import UniversimeApi from "@/services/UniversimeApi";
+import { GroupType, GroupTypeToLabel } from "@/types/Group";
 
 export function CreateGroupPage() {
+
+    // todo: Change defaultValues if updating existing group
     return <form id="create-group-page">
         <fieldset className="name">
             <legend>Nome do grupo</legend>
@@ -13,11 +16,15 @@ export function CreateGroupPage() {
             {/* todo: disable nickname if updating existing group */}
         </fieldset>
 
+        <fieldset className="description">
+            <legend>Descrição do grupo</legend>
+            <textarea name="description" />
+        </fieldset>
+
         <fieldset className="type">
             <legend>Tipo do grupo</legend>
-            <select defaultValue={"-1"} name="type">
-                {/* Change defaultValue if updating existing group */}
-                <option disabled value="-1">Selecione o tipo do grupo</option>
+            <select defaultValue={""} name="type">
+                <option disabled value="">Selecione o tipo do grupo</option>
                 {
                     Object.entries(GroupTypeToLabel)
                         .map(([groupType, groupTypeLabel]) => {
@@ -53,7 +60,54 @@ export function CreateGroupPage() {
             <input type="checkbox" name="groupRoot" />
             {/* todo: select parent group */}
         </fieldset>
+
+        <button type="button" onClick={createGroup}>Criar grupo</button>
+        {/* todo: change to "Atualizar grupo" if updating existing group */}
     </form>;
+}
+
+function getValuesFromPage() {
+    const pageElement = document.querySelector("#create-group-page") as HTMLFormElement;
+
+    const nameElement = pageElement.querySelector('input[name="name"]') as HTMLInputElement;
+    const nicknameElement = pageElement.querySelector('input[name="nickname"]') as HTMLInputElement;
+    const descriptionElement = pageElement.querySelector('textarea[name="description"]') as HTMLTextAreaElement;
+    const groupTypeElement = pageElement.querySelector('select[name="type"]') as HTMLSelectElement;
+    const imageElement = pageElement.querySelector('input[name="image"]') as HTMLInputElement;
+    const canCreateGroupElement = pageElement.querySelector('input[name="canCreateGroup"]') as HTMLInputElement;
+    const publicGroupElement = pageElement.querySelector('input[name="publicGroup"]') as HTMLInputElement;
+    const canEnterElement = pageElement.querySelector('input[name="canEnter"]') as HTMLInputElement;
+    const groupRootElement = pageElement.querySelector('input[name="groupRoot"]') as HTMLInputElement;
+
+    return {
+        name: nameElement.value,
+        description: descriptionElement.value,
+        nickname: nicknameElement.value,
+        type: groupTypeElement.value as GroupType,
+        imageUrl: imageElement.value,
+        canCreateGroup: canCreateGroupElement.checked,
+        publicGroup: publicGroupElement.checked,
+        canEnter: canEnterElement.checked,
+        groupRoot: groupRootElement.checked,
+    };
+}
+
+function createGroup() {
+    const values = getValuesFromPage();
+    UniversimeApi.Group.create({
+        name:            values.name,
+        nickname:        values.nickname,
+        description:     values.description,
+        groupType:       values.type,
+        canHaveSubgroup: values.canCreateGroup,
+        isPublic:        values.publicGroup,
+        canJoin:         values.canEnter,
+        imageUrl:        values.imageUrl,
+        isRootGroup:     values.groupRoot,
+    })
+        .then(r => {
+            console.dir(r)
+        });
 }
 
 /* 
