@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UniversimeApi } from "../hooks/UniversimeApi";
+import { UniversimeApi } from "@/services/UniversimeApi";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 
@@ -32,7 +32,7 @@ export function OAuth2Element() {
     const params = new URLSearchParams(window.location.hash.substring(1));
     const id_token = params.get("id_token") as string;
 
-    UniversimeApi.login_google(`${id_token}`)
+    UniversimeApi.Auth.login_google(`${id_token}`)
         .then((res) => {
             if (!res.success)
                 navigate("/login")

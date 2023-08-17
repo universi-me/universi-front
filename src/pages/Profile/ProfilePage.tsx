@@ -8,7 +8,7 @@ import {
 } from '@/pages/Profile'
 import { UniversiModal } from "@/components/UniversiModal";
 import { AuthContext } from "@/contexts/Auth";
-import { UniversimeApi } from "@/hooks/UniversimeApi";
+import { UniversimeApi } from "@/services/UniversimeApi";
 import type { ProfileContextType } from '@/pages/Profile'
 
 import './Profile.css'
@@ -106,7 +106,7 @@ export function ProfilePage() {
 
     async function loadAccessedUser() {
         const [profileRes, competenceTypeRes] = await Promise.all([
-            UniversimeApi.Profile.get(undefined, id),
+            UniversimeApi.Profile.get({username: id}),
             UniversimeApi.CompetenceType.list(),
         ]);
 
@@ -128,10 +128,10 @@ export function ProfilePage() {
 
     async function loadProfileListData(profileId: number) {
         const [groupsRes, competencesRes, linksRes, recommendationsRes] = await Promise.all([
-            UniversimeApi.Profile.groups(profileId),
-            UniversimeApi.Profile.competences(profileId),
-            UniversimeApi.Profile.links(profileId),
-            UniversimeApi.Profile.recommendations(profileId),
+            UniversimeApi.Profile.groups({profileId}),
+            UniversimeApi.Profile.competences({profileId}),
+            UniversimeApi.Profile.links({profileId}),
+            UniversimeApi.Profile.recommendations({profileId}),
         ]);
 
         return {

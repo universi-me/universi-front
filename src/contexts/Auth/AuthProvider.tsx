@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { User } from "@/types/User";
 import { Profile } from "@/types/Profile";
-import { UniversimeApi } from "@/hooks/UniversimeApi";
+import { UniversimeApi } from "@/services/UniversimeApi";
 
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   }
 
   async function signin(email: string, password: string) {
-      const data = await UniversimeApi.signin(email, password);
+      const data = await UniversimeApi.Auth.signin(email, password);
       const profile = await UniversimeApi.Profile.profile();
       return setLoggedUser(data.body.user, data.token, profile.body.profile);
   }

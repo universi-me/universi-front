@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { UniversimeApi } from "@/hooks/UniversimeApi";
+import { UniversimeApi } from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
 import { GroupBanner, GroupIntro, GroupAbout, GroupSubGroups, GroupMembers, GroupContext, GroupContextType } from "@/pages/Group"
 import "./Group.css"
@@ -48,10 +48,10 @@ export function GroupPage() {
     );
 
     async function loadAccessedGroup() {
-        const groupRes = await UniversimeApi.Group.get(undefined, groupPath);
+        const groupRes = await UniversimeApi.Group.get({groupPath});
         const [subgroupsRes, participantsRes] = await Promise.all([
-            UniversimeApi.Group.subgroups(groupRes.body.group.id),
-            UniversimeApi.Group.participants(groupRes.body.group.id),
+            UniversimeApi.Group.subgroups({groupId: groupRes.body.group.id}),
+            UniversimeApi.Group.participants({groupId: groupRes.body.group.id}),
         ]);
 
         setGroupContext({
@@ -68,7 +68,7 @@ export function GroupPage() {
         if (groupContext === null)
             return;
 
-        UniversimeApi.Group.join(groupContext.group.id)
+        UniversimeApi.Group.join({groupId: groupContext.group.id})
             .then(r => {
                 console.dir(r);
                 groupContext.reloadPage();
@@ -79,7 +79,7 @@ export function GroupPage() {
         if (groupContext === null)
             return;
 
-        UniversimeApi.Group.exit(groupContext.group.id)
+        UniversimeApi.Group.exit({groupId: groupContext.group.id})
             .then(r => {
                 console.dir(r);
                 groupContext.reloadPage();

@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { ProfileContext } from "@/pages/Profile";
 import { LevelToLabel } from "@/types/Competence";
 import './CompetencesSettings.less'
-import { UniversimeApi } from "@/hooks/UniversimeApi";
+import { UniversimeApi } from "@/services/UniversimeApi";
 
 export type CompetencesSettingsProps = {
     cancelChanges: () => any;
@@ -99,7 +99,7 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
     }
 
     function removeCompetence() {
-        UniversimeApi.Competence.remove(profileContext?.editCompetence?.id ?? -1)
+        UniversimeApi.Competence.remove({competenceId: profileContext?.editCompetence?.id ?? -1})
             .then((r) => profileContext?.reloadPage());
     }
 }

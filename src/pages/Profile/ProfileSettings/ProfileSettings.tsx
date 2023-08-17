@@ -2,7 +2,7 @@ import { ChangeEvent, MouseEvent, useContext, useMemo, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { Link, TypeLink, TypeLinkToBootstrapIcon, TypeLinkToLabel } from '@/types/Link';
 import { getFullName, separateFullName, GENDER_OPTIONS } from '@/utils/profileUtils';
-import { UniversimeApi } from '@/hooks/UniversimeApi';
+import { UniversimeApi } from '@/services/UniversimeApi';
 import './ProfileSettings.css'
 
 export type ProfileSettingsProps = {
@@ -183,11 +183,11 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         const [name, lastname] = separateFullName(fullname);
 
         UniversimeApi.Profile.edit({
-            profileId: (profileContext?.profile.id ?? 0).toString(),
+            profileId: profileContext?.profile.id ?? -1,
             name,
             lastname,
             bio,
-            sexo: gender,
+            gender,
         }).then(r => {
             profileContext?.reloadPage();
         });
@@ -195,21 +195,21 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         const links = classifyLinks();
         links?.toCreate.forEach(link => {
             UniversimeApi.Link.create({
-                nome: link.name,
-                tipo: link.typeLink,
+                name: link.name,
+                linkType: link.typeLink,
                 url: link.url,
             })
         });
 
         links?.toDelete.forEach(id => {
-            UniversimeApi.Link.remove(id)
+            UniversimeApi.Link.remove({linkId: parseInt(id)})
         });
 
         links?.toUpdate.forEach(link => {
             UniversimeApi.Link.update({
-                linkId: link.id.toString(),
-                nome: link.name,
-                tipo: link.typeLink,
+                linkId: link.id,
+                name: link.name,
+                linkType: link.typeLink,
                 url: link.url,
             })
         })
