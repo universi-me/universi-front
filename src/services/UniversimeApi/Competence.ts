@@ -14,6 +14,18 @@ export type CreateCompetenceDTO = {
     description:      string;
     level:            string;
 };
+
+export type CompetenceUpdateDTO = {
+    competenceId:     number;
+    competenceTypeId: number;
+    description:      string;
+    level:            string;
+};
+
+export type CompetenceIdDTO = {
+    competenceId: number;
+};
+
 export async function create(body: CreateCompetenceDTO) {
     return (await competenceApi.post("/criar", {
         competenciatipoId: body.competenceTypeId.toString(),
@@ -22,12 +34,6 @@ export async function create(body: CreateCompetenceDTO) {
     })).data;
 }
 
-export type CompetenceUpdateDTO = {
-    competenceId:     number;
-    competenceTypeId: number;
-    description:      string;
-    level:            string;
-};
 export async function update(body: CompetenceUpdateDTO) {
     return (await competenceApi.post("/atualizar", {
         competenciaId:     body.competenceId.toString(),
@@ -37,8 +43,8 @@ export async function update(body: CompetenceUpdateDTO) {
     })).data;
 }
 
-export async function remove(competenceId: number) {
+export async function remove(body: CompetenceIdDTO) {
     return (await competenceApi.post("/remover", {
-        competenciaId: competenceId.toString(),
+        competenciaId: body.competenceId.toString(),
     })).data;
 }

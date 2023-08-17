@@ -99,7 +99,7 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
     }
 
     function removeCompetence() {
-        UniversimeApi.Competence.remove(profileContext?.editCompetence?.id ?? -1)
+        UniversimeApi.Competence.remove({competenceId: profileContext?.editCompetence?.id ?? -1})
             .then((r) => profileContext?.reloadPage());
     }
 }
