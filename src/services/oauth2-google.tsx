@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UniversimeApi } from "../hooks/UniversimeApi";
+import { UniversimeApi } from "@/services/UniversimeApi";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 

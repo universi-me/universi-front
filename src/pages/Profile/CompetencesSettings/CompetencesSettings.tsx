@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { ProfileContext } from "@/pages/Profile";
 import { LevelToLabel } from "@/types/Competence";
 import './CompetencesSettings.less'
-import { UniversimeApi } from "@/hooks/UniversimeApi";
+import { UniversimeApi } from "@/services/UniversimeApi";
 
 export type CompetencesSettingsProps = {
     cancelChanges: () => any;

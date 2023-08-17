@@ -8,7 +8,7 @@ import {
 } from '@/pages/Profile'
 import { UniversiModal } from "@/components/UniversiModal";
 import { AuthContext } from "@/contexts/Auth";
-import { UniversimeApi } from "@/hooks/UniversimeApi";
+import { UniversimeApi } from "@/services/UniversimeApi";
 import type { ProfileContextType } from '@/pages/Profile'
 
 import './Profile.css'
