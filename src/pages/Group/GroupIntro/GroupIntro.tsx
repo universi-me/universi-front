@@ -18,7 +18,7 @@ export function GroupIntro(props: GroupIntroProps) {
         groupContext === null ? null :
 
         <div id="group-intro">
-            <ProfileImage style={{backgroundColor: "#f5f4f4"}} className="image" imageUrl={groupContext.group.image} noImageColor="#D9D9D9" />
+            <ProfileImage style={{backgroundColor: "#f5f4f4"}} className="image" imageUrl={groupContext.group.image} noImageColor="var(--card-background-color)" />
             <div className="name">
                 <h2 >{groupContext.group.name}</h2>
                 {

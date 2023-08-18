@@ -19,7 +19,7 @@
 }
 
 .playlist-bar::-webkit-scrollbar-thumb {
-    background-color: #D9D9D9;
+    background-color: var(--card-background-color);
     border-radius: 4px;
 }
   

@@ -2,7 +2,7 @@
   height: 2rem;
   border-radius: 9999px;
   padding-left: 1.75rem;
-  background: #d9d9d9;
+  background: var(--card-background-color);
   margin-left: auto;
 
   display: flex;

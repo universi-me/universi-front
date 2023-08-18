@@ -39,7 +39,7 @@
 }
 
 #group-page .content .group-infos .left-side .join-button:hover {
-    background-color: #39375D;
+    background-color: var(--button-hover-color);
 }
 
 #group-page .content .group-infos .right-side {

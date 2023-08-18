@@ -1,6 +1,6 @@
 #group-page #members {
     min-width: max-content;
-    background-color: #D9D9D9;
+    background-color: var(--card-background-color);
     border-radius: 1.25rem;
     overflow: hidden;
 

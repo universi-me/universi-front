@@ -62,8 +62,8 @@
 }
 
 #profile-page #discard-changes .buttons .discard-button:hover {
-    background-color: #39375D;
-    border-color: #39375D;
+    background-color: var(--button-hover-color);
+    border-color: var(--button-hover-color);
 }
 
 #profile-page #discard-changes .buttons .cancel-button {

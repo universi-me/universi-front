@@ -202,8 +202,8 @@
 }
 
 #profile-settings .settings-form .submit .submit-button:hover {
-    background-color: #39375D;
-    border-color: #39375D;
+    background-color: var(--button-hover-color);
+    border-color: var(--button-hover-color);
 }
 
 #profile-settings .settings-form .submit .cancel-button {
