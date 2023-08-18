@@ -37,7 +37,7 @@
 
     padding: .75em 1em;
 
-    background: #F5F5F5;
+    background: var(--font-color-v5);
     border-radius: 20px;
 }
 
