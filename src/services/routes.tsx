@@ -3,7 +3,7 @@ import { App } from "@/src/App";
 import GroupPage from "@/pages/Group";
 import {ProfilePage} from "@/pages/Profile";
 
-import {createBrowserRouter} from 'react-router-dom'
+import {Navigate, createBrowserRouter} from 'react-router-dom'
 import Singin from "../../src/pages/singin/Singin";
 
 import { OAuth2Element }  from './oauth2-google';
@@ -23,8 +23,8 @@ export const router = createBrowserRouter([{
   //todo: errorElement: Erro404page,
   children: [
     {
-      // todo: path: "/",
-      // todo: element: Homepage
+      path: "/",
+      element: <Navigate to="/login" />
     },
     {
       path: "/capacitacao/",
