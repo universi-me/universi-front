@@ -38,7 +38,7 @@
 
 #group-page .content .group-infos .left-side .card .items-wrapper .item {
     border-radius: 5px;
-    background-color: #F3F3F3;
+    background-color: var(--card-item-color);
     width: 3.75em;
     aspect-ratio: 1;
 
