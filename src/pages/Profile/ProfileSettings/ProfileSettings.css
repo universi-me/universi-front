@@ -60,7 +60,7 @@
 }
 
 #profile-settings .settings-form .section ::placeholder {
-    color: #6F6F6F;
+    color: var(--font-disabled-color);
 }
 
 #profile-settings .settings-form .section input,
@@ -82,7 +82,7 @@
     width: fit-content;
     height: 0;
 
-    color: #6F6F6F;
+    color: var(--font-disabled-color);
     font-size: 0.9em;
     font-weight: var(--font-weight-light);
 }
@@ -107,7 +107,7 @@
 }
 
 #profile-settings .settings-form .section .dropdown-trigger option:disabled {
-    color: #6F6F6F;
+    color: var(--font-disabled-color);
 }
 
 #profile-settings .settings-form .section .dropdown-trigger option {
