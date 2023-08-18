@@ -3,7 +3,7 @@
     height: fit-content;
 
     border-radius: 20px;
-    background: #D6D6D6;
+    background: var(--card-background-color);
     overflow: hidden;
 
     translate: 0 0;

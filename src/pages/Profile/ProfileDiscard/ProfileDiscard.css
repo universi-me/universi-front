@@ -1,6 +1,6 @@
 #profile-page #discard-changes {
     border-radius: 1.125rem;
-    background-color: #D6D6D6;
+    background-color: var(--card-background-color);
 
     display: flex;
     flex-direction: column;

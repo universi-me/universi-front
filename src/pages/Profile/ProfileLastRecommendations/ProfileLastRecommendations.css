@@ -22,7 +22,7 @@
     padding-right: 3.8em;
 
     border-radius: 20px;
-    background-color: #D6D6D6;
+    background-color: var(--card-background-color);
 }
 
 #profile-page #right-side .list .recommendation:not(:last-of-type) {
