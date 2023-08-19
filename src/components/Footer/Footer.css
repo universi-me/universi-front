@@ -3,7 +3,7 @@
     --Background-Line: #fff;
     --Background-Scroll-button: #2C2A4A;
 
-    --Color-border-button: #4F518C;
+    --Color-border-button: var(--primary-color);
 }
 
 .footer-container {
