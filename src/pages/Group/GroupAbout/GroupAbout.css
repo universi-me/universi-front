@@ -51,7 +51,7 @@
     text-transform: uppercase;
     font-size: 0.875rem;
     font-weight: var(--font-weight-semibold);
-    color: #4E4E4E;
+    color: var(--font-color-v6);
     text-align: center;
 
     border-top: solid 2px #B3B3B3;
