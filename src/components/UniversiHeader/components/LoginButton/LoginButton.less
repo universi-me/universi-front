@@ -1,31 +1,40 @@
+@import url("src/layouts/colors.less");
+@import url("src/layouts/fonts.less");
+@import url("src/layouts/transitions.less");
+
 header.header {
 
     /* todo: Change 'color' and 'background-color' if user is logged */
     .auth-button {
         border-radius: 10px;
-        border: 1px solid var(--primary-color);
+        border: 1px solid @primary-color;
         margin-left: 1.5rem;
 
         width: 5.75em;
         line-height: 2em;
-        font-weight: var(--font-weight-semibold);
+        font-weight: @font-weight-semibold;
         text-align: center;
 
         text-transform: uppercase;
         text-decoration: none;
-        transition: var(--hover-transition-duration) background-color;
+        transition: @hover-transition-duration background-color;
 
-        &:hover {
-            background-color: var(--button-hover-color);
+        &, &.login, &.logout {
+            &:hover {
+                background-color: @button-hover-color;
+                border-color: @button-hover-color;
+                color: @primary-color;
+            }
         }
 
         &.login {
-            background-color: var(--primary-color);
-            color: var(--font-color-v1);
+            background-color: @secondary-color;
+            color: @font-color-v1;
         }
 
         &.logout {
-            color: var(--primary-color);
+            color: @secondary-color;
+            border-color: @secondary-color;
             background: none;
         }
     }

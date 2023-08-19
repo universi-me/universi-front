@@ -16,7 +16,7 @@
 
     background: var(--primary-color);
 
-    color: #FFF;
+    color: var(--font-color-v1);
     font-size: 1.875em;
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
@@ -24,6 +24,8 @@
 
 #profile-page #right-side .competences .edit-button {
     right: 1.5em;
+    color: var(--font-color-v1);
+    font-size: 1.5rem;
 }
 
 #profile-page #right-side .competences .competence-list {

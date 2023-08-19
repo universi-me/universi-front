@@ -207,11 +207,13 @@
 }
 
 #profile-settings .settings-form .submit .cancel-button {
-    color: var(--primary-color);
+    color: var(--secondary-color);
+    border-color: var(--secondary-color);
     background-color: transparent;
 }
 
 #profile-settings .settings-form .submit .cancel-button:hover {
     color: var(--font-color-v1);
-    background-color: var(--primary-color);
+    border-color: var(--button-hover-color);
+    background-color: var(--button-hover-color);
 }
