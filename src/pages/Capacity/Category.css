@@ -1,10 +1,6 @@
 * { margin: 0; padding: 0; }
 
 :root{
-    --background-tela: #2C2A4A;
-    --background-banner: #121416;
-
-    --color-font-titulo: #FFF;
     --rating-number: #ac7000;
     --rating-star: #ffa500;
 }
