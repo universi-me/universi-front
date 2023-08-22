@@ -10,25 +10,25 @@ export async function list() {
 }
 
 export type CreateCompetenceDTO = {
-    competenceTypeId: number;
+    competenceTypeId: string;
     description:      string;
     level:            string;
 };
 
 export type CompetenceUpdateDTO = {
-    competenceId:     number;
-    competenceTypeId: number;
+    competenceId:     string;
+    competenceTypeId: string;
     description:      string;
     level:            string;
 };
 
 export type CompetenceIdDTO = {
-    competenceId: number;
+    competenceId: string;
 };
 
 export async function create(body: CreateCompetenceDTO) {
     return (await competenceApi.post("/criar", {
-        competenciatipoId: body.competenceTypeId.toString(),
+        competenciatipoId: body.competenceTypeId,
         descricao:         body.description,
         nivel:             body.level,
     })).data;
@@ -36,8 +36,8 @@ export async function create(body: CreateCompetenceDTO) {
 
 export async function update(body: CompetenceUpdateDTO) {
     return (await competenceApi.post("/atualizar", {
-        competenciaId:     body.competenceId.toString(),
-        competenciaTipoId: body.competenceTypeId.toString(),
+        competenciaId:     body.competenceId,
+        competenciaTipoId: body.competenceTypeId,
         descricao:         body.description,
         nivel:             body.level,
     })).data;
@@ -45,6 +45,6 @@ export async function update(body: CompetenceUpdateDTO) {
 
 export async function remove(body: CompetenceIdDTO) {
     return (await competenceApi.post("/remover", {
-        competenciaId: body.competenceId.toString(),
+        competenciaId: body.competenceId,
     })).data;
 }
