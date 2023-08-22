@@ -15,16 +15,16 @@
 .playlist-bar::-webkit-scrollbar {
     width: 8px;
     height: 8px;
-    background-color: #f3ebd9;
+    background-color: var(--card-background-color);
 }
 
 .playlist-bar::-webkit-scrollbar-thumb {
-    background-color: var(--card-background-color);
+    background-color: #4e4e4e;
     border-radius: 4px;
 }
   
 .playlist-bar::-webkit-scrollbar-track {
-    background-color: #2C2A4A;
+    background-color:  var(--card-background-color);
 }
   
 .playlist-bar::-webkit-scrollbar-button {
