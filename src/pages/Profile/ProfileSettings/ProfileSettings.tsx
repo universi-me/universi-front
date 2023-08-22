@@ -140,7 +140,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
             return;
 
         setProfileLinks([...profileLinks, {
-            id: NEW_LINK_ID--,
+            id: (NEW_LINK_ID--).toString(),
             name: "",
             perfil: profileContext.profile,
             typeLink: "LINK",
@@ -205,7 +205,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         });
 
         links?.toDelete.forEach(id => {
-            UniversimeApi.Link.remove({linkId: parseInt(id)})
+            UniversimeApi.Link.remove({linkId: id})
         });
 
         links?.toUpdate.forEach(link => {
@@ -225,7 +225,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
             return;
 
         const toCreate = profileLinks
-            .filter(l => l.id < 0)
+            .filter(l => isNewLink(l.id))
             .map(l => {
                 const itemBox = document.querySelector(`#profile-settings .section.social .box .item[data-link-id="${l.id}"]`) as HTMLElement;
 
@@ -251,11 +251,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         const toUpdate = Array.from(document.querySelectorAll("#profile-settings .section.social .box .item"))
             .map(linkItem => {
                 const nameAttr = linkItem.getAttribute("data-link-id");
-                if (nameAttr === null)
-                    return null;
-
-                const linkId = parseInt(nameAttr);
-                if (linkId < 0)
+                if (nameAttr === null || isNewLink(nameAttr))
                     return null;
 
                 const typeLinkElement = linkItem
@@ -270,7 +266,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                 console.log("update-name", nameElement);
 
                 return {
-                    id: linkId,
+                    id: nameAttr,
                     name: nameElement.value,
                     url: urlElement.value,
                     typeLink: typeLinkElement.value,
@@ -287,5 +283,10 @@ export function ProfileSettings(props: ProfileSettingsProps) {
             toDelete: competencesToDelete,
             toCreate,
         };
+    }
+
+    function isNewLink(linkId: string) {
+        const num = parseInt(linkId);
+        return !isNaN(num) && num < 0;
     }
 }

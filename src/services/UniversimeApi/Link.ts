@@ -12,14 +12,14 @@ export type LinkCreateDTO = {
 };
 
 export type LinkUpdateDTO = {
-    linkId:   number;
+    linkId:   string;
     url:      string;
     linkType: string;
     name:     string;
 };
 
 export type LinkIdDTO = {
-    linkId: number;
+    linkId: string;
 }
 
 export async function create(body: LinkCreateDTO) {
@@ -32,7 +32,7 @@ export async function create(body: LinkCreateDTO) {
 
 export async function update(body: LinkUpdateDTO) {
     return (await linkApi.post("/atualizar", {
-        linkId: body.linkId.toString(),
+        linkId: body.linkId,
         url:    body.url,
         tipo:   body.linkType,
         nome:   body.name,
@@ -41,6 +41,6 @@ export async function update(body: LinkUpdateDTO) {
 
 export async function remove(body: LinkIdDTO) {
     return (await linkApi.post("/remover", {
-        linkId: body.linkId.toString(),
+        linkId: body.linkId,
     })).data;
 }
