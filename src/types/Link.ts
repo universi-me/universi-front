@@ -1,7 +1,7 @@
 import { Profile } from "@/types/Profile";
 
 export type Link = {
-    id:       number;
+    id:       string;
     name:     string;
     url:      string;
     typeLink: TypeLink;
