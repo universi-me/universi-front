@@ -165,6 +165,9 @@ export function ProfileSettings(props: ProfileSettingsProps) {
     }
 
     function saveChanges() {
+        if (profileContext === null)
+            return;
+
         const nameElement = document.getElementById("name");
         const fullname = nameElement !== null
             ? (nameElement as HTMLInputElement).value
@@ -183,13 +186,13 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         const [name, lastname] = separateFullName(fullname);
 
         UniversimeApi.Profile.edit({
-            profileId: profileContext?.profile.id ?? -1,
+            profileId: profileContext.profile.id,
             name,
             lastname,
             bio,
             gender,
         }).then(r => {
-            profileContext?.reloadPage();
+            profileContext.reloadPage();
         });
 
         const links = classifyLinks();
