@@ -1,20 +1,20 @@
 import type { Profile } from "@/types/Profile";
 
 export type Group = {
-    id:                number;
+    id:                string;
     name:              string;
     description:       string;
     admin:             Profile;
-    participants:      number[];
     type:              GroupType;
     nickname:          string;
-    subGroups:         number[];
+    path:              string;
     image:             string | null;
     createdAt:         string;
     canAddParticipant: boolean;
     canCreateGroup:    boolean;
     canEnter:          boolean;
     publicGroup:       boolean;
+    rootGroup:         boolean;
 };
 
 export type GroupType = "INSTITUTION" | "CAMPUS" | "COURSE" | "PROJECT" | "CLASSROOM" | "MONITORIA" | "LABORATORY"

@@ -1,11 +1,11 @@
 import axios from "axios";
 
 export type GroupIdDTO = {
-    groupId: number;
+    groupId: string;
 };
 
 export type GroupIdOrPathDTO = {
-    groupId?:   number;
+    groupId?:   string;
     groupPath?: string;
 };
 
@@ -16,31 +16,31 @@ const groupApi = axios.create({
 
 export async function get(body: GroupIdOrPathDTO) {
     return (await groupApi.post('/get', {
-        groupId:   body.groupId?.toString(),
+        groupId:   body.groupId,
         groupPath: body.groupPath,
     })).data;
 }
 
 export async function subgroups(body: GroupIdDTO) {
     return (await groupApi.post('/list', {
-        groupId: body.groupId.toString(),
+        groupId: body.groupId,
     })).data;
 }
 
 export async function participants(body: GroupIdDTO) {
     return (await groupApi.post('/participant/list', {
-        groupId: body.groupId.toString(),
+        groupId: body.groupId,
     })).data;
 }
 
 export async function join(body: GroupIdDTO) {
     return (await groupApi.post('/participant/enter', {
-        groupId: body.groupId.toString(),
+        groupId: body.groupId,
     })).data;
 }
 
 export async function exit(body: GroupIdDTO) {
     return (await groupApi.post('/participant/exit', {
-        groupId: body.groupId.toString(),
+        groupId: body.groupId,
     })).data;
 }

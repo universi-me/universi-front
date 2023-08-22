@@ -126,7 +126,7 @@ export function ProfilePage() {
         discardChanges();
     }
 
-    async function loadProfileListData(profileId: number) {
+    async function loadProfileListData(profileId: string) {
         const [groupsRes, competencesRes, linksRes, recommendationsRes] = await Promise.all([
             UniversimeApi.Profile.groups({profileId}),
             UniversimeApi.Profile.competences({profileId}),

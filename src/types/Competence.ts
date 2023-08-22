@@ -1,16 +1,20 @@
 import type { Profile } from '@/types/Profile'
 
 export type Competence = {
-    id: number;
-    description: string;
-    level: Level;
-    creationDate: string;
+    id:             string;
+    description:    string;
+    level:          Level;
+    creationDate:   string;
     competenceType: CompetenceType;
-    profile: Profile;
+    profile:        Profile;
+    title:          string | null;
+    startDate:      string | null;
+    presentDate:    string | null;
+    endDate:        string | null;
 };
 
 export type CompetenceType = {
-    id: number;
+    id:   string;
     name: string;
 };
 
