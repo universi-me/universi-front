@@ -1,8 +1,21 @@
-import React from 'react';
-import './About.css'
+
+import { useState } from 'react';
+import './About.css';
+import teamMembers from './teamMember';
 
 export const About = () => {
-  
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const slidesToShow = 5;
+
+    const goNextSlide = () => {
+        const nextIndex = (currentIndex + 1) % teamMembers.length;
+        setCurrentIndex(nextIndex);
+    }
+      
+    const goPreviousSlide = () => {
+        const nextIndex = (currentIndex - 1 + teamMembers.length) % teamMembers.length;
+        setCurrentIndex(nextIndex);
+    }
     return (
       <div className='container'>
 
@@ -23,8 +36,11 @@ export const About = () => {
         </div>
 
         <div className='carousel'>
-
-            <div className='profile'>
+            {teamMembers
+            .slice(currentIndex, currentIndex + slidesToShow)
+            .concat(teamMembers.slice(0, slidesToShow - 1))
+            .map((member, index) => (
+            <div className='profile' key={index}>
 
                 <div className='header'>
                     <div className='dot'>
@@ -35,32 +51,41 @@ export const About = () => {
                 </div>
 
                 <div className='profilePic'>
-                    <img src="https://i.pinimg.com/564x/cd/1f/82/cd1f823254cf35f697da05196448195e.jpg" alt="" />
+                    <img src= {member.profilePic} alt="" />
                 </div>
 
                 <div className='socialMedia'>
-                    <a id = 'github' href=''>
-                        <img src="public/assets/icons/githubwhite.svg" alt="github" />
+                    <a id = 'github' href={member.socialMedia.github} target="_blank">
+                        <img src={"public/assets/icons/githubwhite.svg"} alt="github" />
                     </a>
-                    <a id='instagram' href=''>
+                    <a id='instagram' href={member.socialMedia.instagram} target="_blank">
                         <img src="public/assets/icons/instagram.svg" alt="instagram" />
                     </a>
-                    <a id= 'linkedin' href=''>
+                    <a id= 'linkedin' href={member.socialMedia.linkedin} target="_blank">
                         <img src="public/assets/icons/linkedin.svg" alt="linkedin" />
                     </a>
                 </div>
 
                 <div className='info'>
-                    <span className='name'>
-                        NOME&SOBRENOME
+                    <span className='name'> 
+                        {member.name}
                     </span>
 
-                    <span className='function'>
-                        FUNÇÃO
+                    <span className='role'>
+                        {member.role}
                     </span>
                 </div>
 
             </div>
+        ))}
+        <div className='buttons'>
+            <button id='left' onClick={goPreviousSlide}>
+                <img src=".\public\assets\icons\chevron-down-1.svg" alt="esquerda" />
+            </button>
+            <button id='right' onClick={goNextSlide}>
+                <img src=".\public\assets\icons\chevron-down-1.svg" alt="direita" />
+            </button>
+        </div>
 
         </div>
         

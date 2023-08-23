@@ -33,11 +33,13 @@
     grid-column: 1 / span 2;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 .container .carousel .profile{
     width: fit-content;
     transition: transform 0.3s ease;
     transform: scale(1);
+    padding: 0.5em;
 }
 .container .carousel .profile:hover{
     transform: scale(1.1);
@@ -129,7 +131,7 @@
 
 .container .carousel .profile .info{
     background: #282C34;
-    width: 100%;
+    width: 14em;
     height: fit-content;
     border-radius: 0 0 1em 1em;
     display: flex;
@@ -144,7 +146,30 @@
     font-size: 0.87em;
     font-weight: var(--font-weight-semibold)
 }
-.carousel .profile .info .function{
+.carousel .profile .info .role{
     font-size: 0.77em;
     font-weight: light;
+    padding: 0.2em;
 }
+.carousel .buttons{
+    opacity: 50%;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: absolute;
+}
+.carousel .buttons button{
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0.5em;
+    width: 3em;
+    height: 5em;
+}
+.carousel .buttons #left img{
+    transform: rotate(90deg);
+}
+.carousel .buttons #right img{
+    transform: rotate(-90deg);
+}
+
