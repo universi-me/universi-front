@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
+import UniversimeApi from '@/services/UniversimeApi';
 import './Category.css';
 import VideoStar from './Components/Video/VideoStar';
 import NotFoundVideo from './Components/NotFoundVideo/NotFoundVideo';
@@ -23,9 +23,12 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     const fetchVideosByCategory = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/capacitacao/categoria/${category}`);
-        setVideos(response.data);
-        if (response.data.length === 0) {
+        if (category === undefined)
+          throw new Error("Categoria não informada");
+
+        const response = await UniversimeApi.Capacity.videosInCategory({category});
+        setVideos(response);
+        if (response.length === 0) {
           setHasError(true);
         }
       } catch (error) {
