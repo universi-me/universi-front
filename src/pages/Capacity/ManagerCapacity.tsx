@@ -162,7 +162,7 @@ const CrudTela: React.FC = () => {
             {showConfirmation && (
             <div className="confirmation-container">
                 <div className="confirmation-box-delete">
-                    <h2 style={{marginTop:'20px'}} className="titulo-box">Confirmar exclusão</h2>
+                    <h2 className="titulo-box">Confirmar exclusão</h2>
                     <p>Deseja deletar o vídeo "{selectedVideo?.title}" ?</p>
                     <div className="confirmation-buttons">
                     <button className="button-boxCancel" onClick={() => setShowConfirmation(false)}>Cancelar</button>
@@ -174,14 +174,14 @@ const CrudTela: React.FC = () => {
             {showEditModal && (
         <div className="confirmation-container">
           <div className="confirmation-box-edit">
-            <h2 style={{marginTop:'20px'}} className="titulo-box">Editar vídeo</h2>
+            <h2 className="titulo-box">Editar vídeo</h2>
             <div className="space-text">
               <label>Título:</label>
               <input className='input-text' style={{width: '300px'}} type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
             </div>
             <div className="space-text">
               <label>Descrição:</label>
-              <input className='input-text' style={{width: '263px'}} type="text" value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} />
+              <textarea className='input-text' style={{width: '263px', resize: "vertical"}} rows={5} value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} />
             </div>
             <div className="space-text">
               <label>URL:</label>
@@ -213,14 +213,14 @@ const CrudTela: React.FC = () => {
       {showAddModal && (
         <div className="confirmation-container">
           <div className="confirmation-box-edit">
-            <h2 style={{ marginTop: '20px' }} className="titulo-box">Adicionar vídeo</h2>
+            <h2 className="titulo-box">Adicionar vídeo</h2>
             <div className="space-text">
               <label>Título:</label>
               <input className='input-text' style={{ width: '300px'}} type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
             </div>
             <div className="space-text">
               <label>Descrição:</label>
-              <input className='input-text' style={{ width: '263px'}} type="text" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
+              <textarea className='input-text' style={{ width: '263px', resize: "vertical"}} rows={5} value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
             </div>
             <div className="space-text">
               <label>URL:</label>
