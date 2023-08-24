@@ -24,7 +24,6 @@ const CapacityPage: React.FC = () => {
       <div id="home">
             <div id="conteudo-playlist">
               <h1 id="title">Recomendado para você</h1>
-                <PlaylistRecomendada/>
                 <AnimationHome/>
                 <h1 id="title">Capacitação em Java</h1>
                 <PlaylistSecundary />
