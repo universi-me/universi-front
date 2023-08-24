@@ -10,14 +10,12 @@ export type VideoIdDTO = {
 };
 
 export type VideoCreateDTO = {
-    id:          string | null;
     url:         string;
     title:       string;
     description: string;
     category:    string;
     playlist:    string;
     rating:      number;
-    createdAt:   Date;
 };
 
 export type VideoEditDTO = {
@@ -28,7 +26,6 @@ export type VideoEditDTO = {
     category:    string;
     playlist:    string;
     rating:      number;
-    createdAt:   Date;
 };
 
 export type CategoryDTO = {
@@ -52,7 +49,7 @@ export async function createVideo(body: VideoCreateDTO) {
 }
 
 export async function editVideo(body: VideoEditDTO) {
-    return (await capacityApi.put(`/edit/${body.id}`)).data;
+    return (await capacityApi.put(`/edit/${body.id}`, body)).data;
 }
 
 export async function removeVideo(body: VideoIdDTO) {

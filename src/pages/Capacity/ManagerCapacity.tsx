@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import UniversimeApi from '@/services/UniversimeApi';
+import { Video } from '@/types/Capacity';
 import './ManagerCapacity.css'
-
-interface Video {
-  id: number;
-  title: string;
-  description: string;
-  url: string;
-  rating: number;
-  category: string;
-  playlist: string;
-}
 
 const CrudTela: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -42,8 +33,8 @@ const CrudTela: React.FC = () => {
 
   const fetchVideos = async () => {
     try {
-      const response = await axios.get<Video[]>('http://localhost:8080/api/capacitacao/gerenciador');
-      setVideos(response.data);
+      const response = await UniversimeApi.Capacity.videoList();
+      setVideos(response);
     } catch (error) {
       console.error('Erro ao buscar os vídeos:', error);
     }
@@ -56,7 +47,10 @@ const CrudTela: React.FC = () => {
 
   const handleDeleteVideo = async () => {
     try {
-      await axios.delete(`http://localhost:8080/api/capacitacao/delete/${selectedVideo!.id}`);
+      if (selectedVideo === null)
+        throw new Error("Nenhum vídeo selecionado");
+
+      await UniversimeApi.Capacity.removeVideo({id: selectedVideo.id});
       setShowConfirmation(false);
       setSelectedVideo(null);
       fetchVideos();
@@ -79,7 +73,12 @@ const CrudTela: React.FC = () => {
 
   const handleEditVideo = async () => {
     try {
-      await axios.put(`http://localhost:8080/api/capacitacao/edit/${editedVideo!.id}`, {
+      if (editedVideo === null)
+        throw new Error("Nenhum vídeo selecionado");
+
+    await UniversimeApi.Capacity.editVideo({
+        id: editedVideo.id,
+
         title: editedTitle,
         description: editedDescription,
         url: editedUrl,
@@ -87,6 +86,7 @@ const CrudTela: React.FC = () => {
         category: editedCategory,
         playlist: editedPlaylist,
       });
+
       setShowEditModal(false);
       setIsEditing(false);
       setEditedVideo(null);
@@ -104,16 +104,14 @@ const CrudTela: React.FC = () => {
 
   const handleAddVideo = async () => {
     try {
-      const newVideo: Video = {
-        id: videos.length + 1,
+      await UniversimeApi.Capacity.createVideo({
         title: newTitle,
         description: newDescription,
         url: newUrl,
         rating: newRating,
         category: newCategory,
         playlist: newPlaylist,
-      };
-      await axios.post('http://localhost:8080/api/capacitacao/add', newVideo);
+      });
 
       setShowAddModal(false);
       setNewTitle('');
