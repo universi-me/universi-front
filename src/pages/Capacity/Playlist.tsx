@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
+import UniversimeApi from '@/services/UniversimeApi';
 import './Playlist.css';
 import NotFoundVideo from './Components/NotFoundVideo/NotFoundVideo';
 import InfoButton from './Components/InfoButton/InfoButton';
@@ -23,9 +23,12 @@ const PlaylistPage: React.FC = () => {
   useEffect(() => {
     const fetchVideosByPlaylist = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/capacitacao/playlist/${playlist}`);
-        setVideos(response.data);
-        if (response.data.length === 0) {
+        if (playlist === undefined)
+            throw new Error("Playlist não informada");
+
+        const response = await UniversimeApi.Capacity.videosInPlaylist({playlist});
+        setVideos(response);
+        if (response.length === 0) {
           setHasError(true);
         }
       } catch (error) {
