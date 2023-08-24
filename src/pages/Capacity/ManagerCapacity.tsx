@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import UniversimeApi from '@/services/UniversimeApi';
 import { Video } from '@/types/Capacity';
 import './ManagerCapacity.css'
-import { AuthContext } from '@/contexts/Auth';
-import { Navigate, useNavigate } from 'react-router';
 
 const CrudTela: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -128,10 +126,7 @@ const CrudTela: React.FC = () => {
     }
   };
 
-  const auth = useContext(AuthContext);
-
   return (
-    auth.user === null ? <Navigate to="/login" /> :
     <div>
         <h1 className="title-page">Gerenciador de Vídeos</h1>
         <button className='button-adicionar' type="button" onClick={() => setShowAddModal(true)}>Adicionar Vídeo</button>
