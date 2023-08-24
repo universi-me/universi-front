@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import UniversimeApi from '@/services/UniversimeApi';
 import './VideoPlayer.css'
 import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
@@ -24,8 +24,11 @@ const VideoPage: React.FC = () => {
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/capacitacao/video/${videoId}`);
-        setVideo(response.data);
+        if (videoId === undefined)
+            throw new Error("ID do vídeo não foi informado");
+
+        const response = await UniversimeApi.Capacity.getVideo({id: videoId});
+        setVideo(response);
       } catch (error) {
         console.error('Erro ao buscar o vídeo:', error);
       }
