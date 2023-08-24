@@ -23,15 +23,8 @@ const CapacityPage: React.FC = () => {
     <div className="capacity-tela">
       <div id="home">
             <div id="conteudo-playlist">
-              <h1 id="title">Recomendado para você</h1>
-                <AnimationHome/>
-                <h1 id="title">Capacitação em Java</h1>
-                <PlaylistSecundary />
-                <h1 id="title">Diversas Linguagens</h1>
-                <PlaylistTertiary />
-                <h1 id="title">Outras Competências</h1>
-                <PlaylistBarOther />
                 <RecommendedCategories />
+                <AnimationHome/>
                 <NavbarCategory />
                 <Footer />
             </div>
