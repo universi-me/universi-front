@@ -45,7 +45,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
 
                 <div className="section gender">
                     <h2>Gênero</h2>
-                    <select name="gender" id="gender" className="dropdown-trigger" onChange={onChangeSelect} defaultValue={profileContext.profile.gender ?? ''} style={{color: profileContext.profile.gender ? 'black' : '#6F6F6F'}} >
+                    <select name="gender" id="gender" className="dropdown-trigger" onChange={onChangeSelect} defaultValue={profileContext.profile.gender ?? ''} style={{color: profileContext.profile.gender ? 'black' : 'var(--font-disabled-color)'}} >
                         <option disabled value={''}>Selecione o seu gênero</option>
                         {
                             Object.entries(GENDER_OPTIONS).map(([apiValue, name]) => {

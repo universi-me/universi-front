@@ -1,6 +1,6 @@
 #group-page #members {
     min-width: max-content;
-    background-color: #D9D9D9;
+    background-color: var(--card-background-color);
     border-radius: 1.25rem;
     overflow: hidden;
 
@@ -14,7 +14,7 @@
     padding-top: 1rem;
     padding-bottom: .3rem;
 
-    background-color: #4F518C;
+    background-color: var(--primary-color);
 
     display: flex;
     flex-direction: row;
@@ -59,7 +59,7 @@
     margin-right: 1rem;
 
     border-radius: 0.3rem;
-    background-color: #F3F3F3;
+    background-color: var(--card-item-color);
 }
 
 #group-page #members .member-list .member-item .info {
@@ -85,7 +85,7 @@
     height: 2.125rem;
 
     background-color: transparent;
-    border: .125rem solid #4F518C;
+    border: .125rem solid var(--primary-color);
     border-radius: 0.625rem;
 
     color: var(--primary-color);

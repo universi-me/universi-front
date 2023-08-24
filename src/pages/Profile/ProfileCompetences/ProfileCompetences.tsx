@@ -26,7 +26,7 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
                 {
                     profileContext.accessingLoggedUser ?
                         <button className="edit-button" onClick={addCompetence}>
-                            <i className="bi bi-plus-circle-fill" style={{color: "#FFF", fontSize: "1.5rem"}} />
+                            <i className="bi bi-plus-circle-fill" />
                         </button>
                     : null
                 }

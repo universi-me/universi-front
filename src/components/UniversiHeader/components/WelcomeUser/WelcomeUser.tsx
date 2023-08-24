@@ -14,6 +14,6 @@ export function WelcomeUser() {
     return !isLogged ? null
     : <Link className="welcome-wrapper" to={`/profile/${auth.user?.name}`}>
         <div className="welcome-message">{`Olá, ${auth.profile?.firstname}`}</div>
-        <ProfileImage className="logged-user-image" imageUrl={auth.profile?.image} noImageColor="#D9D9D9" />
+        <ProfileImage className="logged-user-image" imageUrl={auth.profile?.image} noImageColor="var(--card-background-color)" />
       </Link>
 }

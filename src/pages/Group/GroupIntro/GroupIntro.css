@@ -12,6 +12,7 @@
 
     border: solid .5rem #FFF;
     border-radius: 50%;
+    background-color: var(--background-color);
 }
 
 #group-page #group-intro .name {

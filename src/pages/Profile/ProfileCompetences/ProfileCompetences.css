@@ -3,7 +3,7 @@
     height: fit-content;
 
     border-radius: 20px;
-    background: #D6D6D6;
+    background: var(--card-background-color);
     overflow: hidden;
 
     translate: 0 0;
@@ -16,7 +16,7 @@
 
     background: var(--primary-color);
 
-    color: #FFF;
+    color: var(--font-color-v1);
     font-size: 1.875em;
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
@@ -24,6 +24,8 @@
 
 #profile-page #right-side .competences .edit-button {
     right: 1.5em;
+    color: var(--font-color-v1);
+    font-size: 1.5rem;
 }
 
 #profile-page #right-side .competences .competence-list {
@@ -37,7 +39,7 @@
 
     padding: .75em 1em;
 
-    background: #F5F5F5;
+    background: var(--font-color-v5);
     border-radius: 20px;
 }
 

@@ -1,9 +1,10 @@
 :root {
-    --Background-cirular-button: #2C2A4A;
-    --Background-Line: #fff;
-    --Background-Scroll-button: #2C2A4A;
+    --Background-cirular-button: var(--primary-color);
+    --Background-Line: var(--tertiary-color);
+    --Background-Scroll-button: var(--primary-color);
+    --Icon-Text-color: var(--tertiary-color);
 
-    --Color-border-button: #4F518C;
+    --Color-border-button: var(--secondary-color);
 }
 
 .footer-container {
@@ -17,7 +18,7 @@
 .line {
     width: 400px;
     height: 5px;
-    background-color: #fff;
+    background-color: var(--Background-Line);
 }
   
 .buttons-container {
@@ -54,7 +55,7 @@
 }
 
 .copyright{
-    color: #FFF;
+    color: var(--Icon-Text-color);
     font-size: 14px;
     font-style: normal;
     font-weight: 300;

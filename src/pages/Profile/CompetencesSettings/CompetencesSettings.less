@@ -4,7 +4,7 @@
 
 #profile-page #competences-settings {
     border-radius: 20px;
-    background-color: #D6D6D6;
+    background-color: @card-background-color;
     overflow: hidden;
 
     .heading {
@@ -46,12 +46,12 @@
                 border-radius: .625rem;
 
                 &:focus {
-                    outline: #9294CC 3px solid;
+                    outline: @wave-color 3px solid;
                 }
             }
 
             select option:disabled {
-                color: #6F6F6F;
+                color: @font-disabled-color;
             }
 
             textarea {
@@ -108,8 +108,8 @@
                     background-color: var(--primary-color);
 
                     &:hover {
-                        border-color: #39375D;
-                        background-color: #39375D;
+                        border-color: @button-hover-color;
+                        background-color: @button-hover-color;
                     }
                 }
             }
