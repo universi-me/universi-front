@@ -22,9 +22,6 @@ const CapacityPage: React.FC = () => {
   return (
     <div className="capacity-tela">
       <div id="home">
-            <div id="conteudo-carrosel">
-                <Carousel images={slides} />
-            </div>
             <div id="conteudo-playlist">
               <h1 id="title">Recomendado para você</h1>
                 <PlaylistRecomendada/>
