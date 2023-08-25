@@ -36,52 +36,56 @@ export const About = () => {
         </div>
 
         <div className='carousel'>
-            {teamMembers
-            .slice(currentIndex, currentIndex + slidesToShow)
-            .concat(teamMembers.slice(0, slidesToShow - 1))
-            .map((member, index) => (
-            <div className='profile' key={index}>
-
-                <div className='header'>
-                    <div className='dot'>
-                        <div id='redDot'></div>
-                        <div id='yellowDot'></div>
-                        <div id='greenDot'></div>
-                    </div>
-                </div>
-
-                <div className='profilePic'>
-                    <img src= {member.profilePic} alt="" />
-                </div>
-
-                <div className='socialMedia'>
-                    <a id = 'github' href={member.socialMedia.github} target="_blank">
-                        <img src={"public/assets/icons/githubwhite.svg"} alt="github" />
-                    </a>
-                    <a id='instagram' href={member.socialMedia.instagram} target="_blank">
-                        <img src="public/assets/icons/instagram.svg" alt="instagram" />
-                    </a>
-                    <a id= 'linkedin' href={member.socialMedia.linkedin} target="_blank">
-                        <img src="public/assets/icons/linkedin.svg" alt="linkedin" />
-                    </a>
-                </div>
-
-                <div className='info'>
-                    <span className='name'> 
-                        {member.name}
-                    </span>
-
-                    <span className='role'>
-                        {member.role}
-                    </span>
-                </div>
-
+            <div className='buttons'>
+                <button id='left' onClick={goPreviousSlide}>
+                    <img src=".\public\assets\icons\chevron-down-1.svg" alt="esquerda" />
+                </button>
             </div>
+            <div className='profile-container'>
+                {teamMembers
+                .concat(teamMembers.slice(0, slidesToShow - 1)
+                .slice(currentIndex, currentIndex + slidesToShow))
+                .map((member, index) => (
+                <div className='profile' key={index}>
+
+                    <div className='header'>
+                        <div className='dot'>
+                            <div id='redDot'></div>
+                            <div id='yellowDot'></div>
+                            <div id='greenDot'></div>
+                        </div>
+                    </div>
+
+                    <div className='profilePic'>
+                        <img src= {member.profilePic} alt="" />
+                    </div>
+
+                    <div className='socialMedia'>
+                        <a id = 'github' href={member.socialMedia.github} target="_blank">
+                            <img src={"public/assets/icons/githubwhite.svg"} alt="github" />
+                        </a>
+                        <a id='instagram' href={member.socialMedia.instagram} target="_blank">
+                            <img src="public/assets/icons/instagram.svg" alt="instagram" />
+                        </a>
+                        <a id= 'linkedin' href={member.socialMedia.linkedin} target="_blank">
+                            <img src="public/assets/icons/linkedin.svg" alt="linkedin" />
+                        </a>
+                    </div>
+
+                    <div className='info'>
+                        <span className='name'> 
+                            {member.name}
+                        </span>
+
+                        <span className='role'>
+                            {member.role}
+                        </span>
+                    </div>
+
+                </div>
         ))}
+        </div>
         <div className='buttons'>
-            <button id='left' onClick={goPreviousSlide}>
-                <img src=".\public\assets\icons\chevron-down-1.svg" alt="esquerda" />
-            </button>
             <button id='right' onClick={goNextSlide}>
                 <img src=".\public\assets\icons\chevron-down-1.svg" alt="direita" />
             </button>

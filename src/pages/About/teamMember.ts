@@ -48,7 +48,7 @@ type TeamMember = {
           linkedin: 'https://www.linkedin.com/in/whoisclebs',
         },
         profilePic: 'https://ayty.org/equipe/img/clebson.jpg',
-        role: 'devOps / software engineer(Ex-bolsista)'
+        role: 'devOps / software engineer'
       },
       {
         name:'Júlio Verne',
