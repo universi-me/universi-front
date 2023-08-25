@@ -167,8 +167,9 @@
 .carousel .buttons button{
     transition: transform 0.3s ease;
     cursor: pointer;
-    width: 3em;
     height: 5em;
+    display: flex;
+    align-items: center;
 }
 .carousel .buttons #left img{
     transform: rotate(90deg);

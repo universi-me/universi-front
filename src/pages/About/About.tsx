@@ -16,6 +16,9 @@ export const About = () => {
         const nextIndex = (currentIndex - 1 + teamMembers.length) % teamMembers.length;
         setCurrentIndex(nextIndex);
     }
+
+    const extendedTeamMembers = teamMembers.concat(teamMembers.slice(0, slidesToShow - 1));
+
     return (
       <div className='container'>
 
@@ -42,9 +45,8 @@ export const About = () => {
                 </button>
             </div>
             <div className='profile-container'>
-                {teamMembers
-                .concat(teamMembers.slice(0, slidesToShow - 1)
-                .slice(currentIndex, currentIndex + slidesToShow))
+                {extendedTeamMembers
+                .slice(currentIndex, currentIndex + slidesToShow)
                 .map((member, index) => (
                 <div className='profile' key={index}>
 
