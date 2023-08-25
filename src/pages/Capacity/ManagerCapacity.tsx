@@ -35,7 +35,7 @@ const CrudTela: React.FC = () => {
   const fetchVideos = async () => {
     try {
       const response = await UniversimeApi.Capacity.videoList();
-      setVideos(response);
+      setVideos(response.videos);
     } catch (error) {
       console.error('Erro ao buscar os vídeos:', error);
     }
@@ -111,7 +111,6 @@ const CrudTela: React.FC = () => {
         url: newUrl,
         rating: newRating,
         category: newCategory,
-        playlist: newPlaylist,
       });
 
       setShowAddModal(false);

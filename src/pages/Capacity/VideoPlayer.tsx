@@ -28,7 +28,7 @@ const VideoPage: React.FC = () => {
             throw new Error("ID do vídeo não foi informado");
 
         const response = await UniversimeApi.Capacity.getVideo({id: videoId});
-        setVideo(response);
+        setVideo(response.video);
       } catch (error) {
         console.error('Erro ao buscar o vídeo:', error);
       }

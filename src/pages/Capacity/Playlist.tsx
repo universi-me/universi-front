@@ -26,9 +26,9 @@ const PlaylistPage: React.FC = () => {
         if (playlist === undefined)
             throw new Error("Playlist não informada");
 
-        const response = await UniversimeApi.Capacity.videosInPlaylist({playlist});
-        setVideos(response);
-        if (response.length === 0) {
+        const response = await UniversimeApi.Capacity.videosInPlaylist({id: playlist});
+        setVideos(response.videos);
+        if (response.videos.length === 0) {
           setHasError(true);
         }
       } catch (error) {

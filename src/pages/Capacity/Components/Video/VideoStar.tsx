@@ -16,8 +16,8 @@ const VideoStar: React.FC = () => {
         if (category === undefined)
           throw new Error("Categoria não informada");
 
-        const response = await UniversimeApi.Capacity.videosInCategory({category});
-        setVideos(response);
+        const response = await UniversimeApi.Capacity.videosInCategory({id: category});
+        setVideos(response.videos);
       } catch (error) {
         console.error('Erro ao buscar os vídeos:', error);
       }
