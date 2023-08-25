@@ -13,7 +13,7 @@ export function Header() {
       </Link>
       <nav>
         <Link to="/">Início</Link>
-        <Link to="/sobre">Sobre</Link>
+        {/* <Link to="/sobre">Sobre</Link> */}
         <Link to="/capacitacao">Capacitação</Link>
       </nav>
       <div className="right-items">
