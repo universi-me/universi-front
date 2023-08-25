@@ -22,7 +22,7 @@ export default function AllPlaylists() {
                         ? <div className="empty-list">Nenhuma playlist cadastrada.</div>
                         : availablePlaylists.map(p =>
                         <div className="playlist-container" key={p.id}>
-                            <Link to={`capacitacao/playlist/${p.id}`} className="playlist-card">
+                            <Link to={`/capacitacao/playlist/${p.id}`} className="playlist-card">
                                 <img src={p.image ?? ""} alt="Logo da playlist de capacitação" />
                                 <span className="playlist-title">{p.name}</span>
                             </Link>
