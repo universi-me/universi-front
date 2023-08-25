@@ -27,8 +27,8 @@ export const About = () => {
           <div className='text'>
             <span>UMA EQUIPE DE OUTRO UNIVERSO!</span>
             <p>
-              Lorem ipsum dolor sit amet. Et accusantium quia ut iste quasi et
-              galisum voluptas non accusantium dolore sit culpa unde eum.
+            Essa é a equipe responsável por desenvolver e manter o Universi.me atualmente!
+            Venha nos conhecer:
             </p>
           </div>
 
