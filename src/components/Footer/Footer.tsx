@@ -1,4 +1,6 @@
 import React from 'react';
+import GithubBlack from "@/assets/icons/github-black.svg"
+import InstagramBlack from "@/assets/icons/instagram-black.svg"
 import './Footer.css';
 
 const Footer: React.FC = () => {
@@ -10,15 +12,8 @@ const Footer: React.FC = () => {
     <div className="footer-container">
       <div className="line"></div>
       <div className="buttons-container">
-        <a href="" className="circular-button">
-          <img src="/assets/icons/github-black.svg" alt="Icon Rede Social 1" />
-        </a>
-        <a href="" className="circular-button">
-          <img src="/assets/icons/instagram-black.svg" alt="Icon Rede Social 2" />
-        </a>
-        <a href="" className="circular-button">
-          <img src="/assets/icons/facebook-black.svg" alt="Icon Rede Social 3" />
-        </a>
+        <FooterLink owner="Universi.me" href="https://github.com/universi-me" imgSrc={GithubBlack} social="GitHub" />
+        <FooterLink owner="AYTY" href="https://www.instagram.com/ayty.ufpb/" imgSrc={InstagramBlack} social="Instagram" />
       </div>
       <button className="scroll-to-top-button" onClick={handleScrollToTop}>
         <img src="/assets/icons/chevron-up-black.svg" alt="Scroll to Top" />
@@ -29,3 +24,18 @@ const Footer: React.FC = () => {
 };
 
 export default Footer;
+
+type FooterLinkProps = {
+    owner:  string;
+    href:   string;
+    imgSrc: string;
+    social: string;
+};
+
+function FooterLink(props: FooterLinkProps) {
+    return (
+        <a href={props.href} target="_blank" title={`${props.social} - ${props.owner}`} className="circular-button">
+          <img src={props.imgSrc} alt={props.social} />
+        </a>
+    );
+}
