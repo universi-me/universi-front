@@ -25,7 +25,7 @@ export default function SinginForm() {
     if (email && password) {
       const isLogged = await auth.signin(email, password);
       if (isLogged.status) {
-        navigate(`/profile/${isLogged.user?.name}`);
+        navigate(`/capacitacao`);
       }
       else {
         setIsOpen(true)
