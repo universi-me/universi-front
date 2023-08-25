@@ -7,14 +7,7 @@ import InfoButton from './Components/InfoButton/InfoButton';
 import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
 import { Playlist } from '@/types/Capacity';
-
-interface Video {
-  id: number;
-  title: string;
-  url: string;
-  rating: number;
-  playlist: string;
-}
+import { Video } from '@/types/Capacity';
 
 const PlaylistPage: React.FC = () => {
   const { playlist: playlistId } = useParams<{ playlist: string }>();

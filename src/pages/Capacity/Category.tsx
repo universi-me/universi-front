@@ -7,14 +7,7 @@ import NotFoundVideo from './Components/NotFoundVideo/NotFoundVideo';
 import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
 import { Category } from '@/types/Capacity';
-
-interface Video {
-  id: number;
-  title: string;
-  url: string;
-  rating: number;
-  category: string;
-}
+import { Video } from '@/types/Capacity';
 
 const CategoryPage: React.FC = () => {
   const { category: categoryId } = useParams<{ category: string }>();

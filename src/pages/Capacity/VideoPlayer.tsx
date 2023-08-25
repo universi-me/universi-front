@@ -5,15 +5,7 @@ import './VideoPlayer.css'
 import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
 import VideoAnimationPlayer from './Components/Animation/VideoAnimationPlayer';
-
-interface Video {
-  id: number;
-  title: string;
-  url: string;
-  description: string;
-  rating: number;
-  category: string;
-}
+import { Video } from '@/types/Capacity';
 
 const VideoPage: React.FC = () => {
   const { videoId } = useParams<{ videoId: string }>();
@@ -28,7 +20,7 @@ const VideoPage: React.FC = () => {
             throw new Error("ID do vídeo não foi informado");
 
         const response = await UniversimeApi.Capacity.getVideo({id: videoId});
-        setVideo(response.video);
+        setVideo(response.body.video);
       } catch (error) {
         console.error('Erro ao buscar o vídeo:', error);
       }
