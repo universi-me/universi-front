@@ -31,11 +31,12 @@
 }
 
 .painel-info{
-    width: 388px;
-    height: 195px;
+    width: fit-content;
+    height: fit-content;
     border-radius: 15px;
     background: #1D1D1B;
     margin-top: 50px;
+    padding: 20px;
 }
 
 .title-playlist{
@@ -44,7 +45,6 @@
     font-weight: 700;
     line-height: normal;
     text-align: center;
-    padding-top: 15px;
 }
 
 #subtitle-playlist{

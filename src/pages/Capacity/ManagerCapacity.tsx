@@ -1,16 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react';
+import UniversimeApi from '@/services/UniversimeApi';
+import { Video } from '@/types/Capacity';
 import './ManagerCapacity.css'
-
-interface Video {
-  id: number;
-  title: string;
-  description: string;
-  url: string;
-  rating: number;
-  category: string;
-  playlist: string;
-}
+import { AuthContext } from '@/contexts/Auth';
 
 const CrudTela: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -42,8 +34,8 @@ const CrudTela: React.FC = () => {
 
   const fetchVideos = async () => {
     try {
-      const response = await axios.get<Video[]>('http://localhost:8080/api/capacitacao/gerenciador');
-      setVideos(response.data);
+      const response = await UniversimeApi.Capacity.videoList();
+      setVideos(response.body.videos);
     } catch (error) {
       console.error('Erro ao buscar os vídeos:', error);
     }
@@ -56,7 +48,10 @@ const CrudTela: React.FC = () => {
 
   const handleDeleteVideo = async () => {
     try {
-      await axios.delete(`http://localhost:8080/api/capacitacao/delete/${selectedVideo!.id}`);
+      if (selectedVideo === null)
+        throw new Error("Nenhum vídeo selecionado");
+
+      await UniversimeApi.Capacity.removeVideo({id: selectedVideo.id});
       setShowConfirmation(false);
       setSelectedVideo(null);
       fetchVideos();
@@ -68,18 +63,23 @@ const CrudTela: React.FC = () => {
   const handleEditClick = (video: Video) => {
     setEditedVideo(video);
     setEditedTitle(video.title);
-    setEditedDescription(video.description);
+    setEditedDescription(video.description ?? "");
     setEditedUrl(video.url);
     setEditedRating(video.rating);
-    setEditedCategory(video.category);
-    setEditedPlaylist(video.playlist);
+    setEditedCategory(video.category?.id ?? "");
+    setEditedPlaylist("");
     setShowEditModal(true);
     setIsEditing(true);
   };
 
   const handleEditVideo = async () => {
     try {
-      await axios.put(`http://localhost:8080/api/capacitacao/edit/${editedVideo!.id}`, {
+      if (editedVideo === null)
+        throw new Error("Nenhum vídeo selecionado");
+
+    await UniversimeApi.Capacity.editVideo({
+        id: editedVideo.id,
+
         title: editedTitle,
         description: editedDescription,
         url: editedUrl,
@@ -87,6 +87,7 @@ const CrudTela: React.FC = () => {
         category: editedCategory,
         playlist: editedPlaylist,
       });
+
       setShowEditModal(false);
       setIsEditing(false);
       setEditedVideo(null);
@@ -104,16 +105,13 @@ const CrudTela: React.FC = () => {
 
   const handleAddVideo = async () => {
     try {
-      const newVideo: Video = {
-        id: videos.length + 1,
+      await UniversimeApi.Capacity.createVideo({
         title: newTitle,
         description: newDescription,
         url: newUrl,
         rating: newRating,
         category: newCategory,
-        playlist: newPlaylist,
-      };
-      await axios.post('http://localhost:8080/api/capacitacao/add', newVideo);
+      });
 
       setShowAddModal(false);
       setNewTitle('');
@@ -128,7 +126,10 @@ const CrudTela: React.FC = () => {
     }
   };
 
+  const auth = useContext(AuthContext);
+
   return (
+    !auth.user ? null :
     <div>
         <h1 className="title-page">Gerenciador de Vídeos</h1>
         <button className='button-adicionar' type="button" onClick={() => setShowAddModal(true)}>Adicionar Vídeo</button>
@@ -151,8 +152,8 @@ const CrudTela: React.FC = () => {
                         <td>{video.title}</td>
                         <td>{video.url}</td>
                         <td>{video.rating}</td>
-                        <td>{video.category}</td>
-                        <td>{video.playlist}</td>
+                        <td>{video.category?.name}</td>
+                        <td>{"video.playlist"}</td>
                         <td>
                             <button className='button-edit' onClick={() => handleEditClick(video)}>Editar</button>
                             <button className='button-delete' type="button" onClick={() => handleDeleteClick(video)}>Deletar</button>
@@ -164,7 +165,7 @@ const CrudTela: React.FC = () => {
             {showConfirmation && (
             <div className="confirmation-container">
                 <div className="confirmation-box-delete">
-                    <h2 style={{marginTop:'20px'}} className="titulo-box">Confirmar exclusão</h2>
+                    <h2 className="titulo-box">Confirmar exclusão</h2>
                     <p>Deseja deletar o vídeo "{selectedVideo?.title}" ?</p>
                     <div className="confirmation-buttons">
                     <button className="button-boxCancel" onClick={() => setShowConfirmation(false)}>Cancelar</button>
@@ -176,14 +177,14 @@ const CrudTela: React.FC = () => {
             {showEditModal && (
         <div className="confirmation-container">
           <div className="confirmation-box-edit">
-            <h2 style={{marginTop:'20px'}} className="titulo-box">Editar vídeo</h2>
+            <h2 className="titulo-box">Editar vídeo</h2>
             <div className="space-text">
               <label>Título:</label>
               <input className='input-text' style={{width: '300px'}} type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
             </div>
             <div className="space-text">
               <label>Descrição:</label>
-              <input className='input-text' style={{width: '263px'}} type="text" value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} />
+              <textarea className='input-text' style={{width: '263px', resize: "vertical"}} rows={5} value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} />
             </div>
             <div className="space-text">
               <label>URL:</label>
@@ -215,14 +216,14 @@ const CrudTela: React.FC = () => {
       {showAddModal && (
         <div className="confirmation-container">
           <div className="confirmation-box-edit">
-            <h2 style={{ marginTop: '20px' }} className="titulo-box">Adicionar vídeo</h2>
+            <h2 className="titulo-box">Adicionar vídeo</h2>
             <div className="space-text">
               <label>Título:</label>
               <input className='input-text' style={{ width: '300px'}} type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
             </div>
             <div className="space-text">
               <label>Descrição:</label>
-              <input className='input-text' style={{ width: '263px'}} type="text" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
+              <textarea className='input-text' style={{ width: '263px', resize: "vertical"}} rows={5} value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
             </div>
             <div className="space-text">
               <label>URL:</label>

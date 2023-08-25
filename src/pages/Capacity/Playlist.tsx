@@ -1,39 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
+import UniversimeApi from '@/services/UniversimeApi';
 import './Playlist.css';
 import NotFoundVideo from './Components/NotFoundVideo/NotFoundVideo';
 import InfoButton from './Components/InfoButton/InfoButton';
 import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
-
-interface Video {
-  id: number;
-  title: string;
-  url: string;
-  rating: number;
-  playlist: string;
-}
+import { Playlist } from '@/types/Capacity';
+import { Video } from '@/types/Capacity';
 
 const PlaylistPage: React.FC = () => {
-  const { playlist } = useParams<{ playlist: string }>();
+  const { playlist: playlistId } = useParams<{ playlist: string }>();
   const [videos, setVideos] = useState<Video[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
+  const [playlistData, setPlaylistData] = useState<Playlist|null>(null);
 
   useEffect(() => {
     const fetchVideosByPlaylist = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/capacitacao/playlist/${playlist}`);
-        setVideos(response.data);
-        if (response.data.length === 0) {
+        if (playlistId === undefined)
+            throw new Error("Playlist não informada");
+
+        const response = await UniversimeApi.Capacity.videosInPlaylist({id: playlistId});
+        setVideos(response.body.videos);
+        if (response.body.videos.length === 0) {
           setHasError(true);
         }
+        UniversimeApi.Capacity.getPlaylist({id: playlistId})
+            .then(res => setPlaylistData(res.body.playlist));
+
       } catch (error) {
         console.error('Erro ao buscar os vídeos:', error);
       }
     };
     fetchVideosByPlaylist();
-  }, [playlist]);
+  }, [playlistId]);
 
   useEffect(() => {
     const extractVideoId = (url: string) => {
@@ -82,7 +83,7 @@ const PlaylistPage: React.FC = () => {
       <div id="playlist">
         <div id="info-playlist">
             <div className="painel-info">
-              <h2 className="title-playlist">{formatPlaylistName(playlist)}</h2>
+              <h2 className="title-playlist">{formatPlaylistName(playlistData?.name ?? "")}</h2>
               <div className="quant-videos">
                 <h2 className="title-quantVideos">Tamanho:</h2>
                 <h2 className="number-quantVideos">{videos.length} vídeos</h2>
