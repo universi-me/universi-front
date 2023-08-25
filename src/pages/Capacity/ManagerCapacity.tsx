@@ -35,7 +35,7 @@ const CrudTela: React.FC = () => {
   const fetchVideos = async () => {
     try {
       const response = await UniversimeApi.Capacity.videoList();
-      setVideos(response.videos);
+      setVideos(response.body.videos);
     } catch (error) {
       console.error('Erro ao buscar os vídeos:', error);
     }
@@ -63,11 +63,11 @@ const CrudTela: React.FC = () => {
   const handleEditClick = (video: Video) => {
     setEditedVideo(video);
     setEditedTitle(video.title);
-    setEditedDescription(video.description);
+    setEditedDescription(video.description ?? "");
     setEditedUrl(video.url);
     setEditedRating(video.rating);
-    setEditedCategory(video.category);
-    setEditedPlaylist(video.playlist);
+    setEditedCategory(video.category?.id ?? "");
+    setEditedPlaylist("");
     setShowEditModal(true);
     setIsEditing(true);
   };
@@ -152,8 +152,8 @@ const CrudTela: React.FC = () => {
                         <td>{video.title}</td>
                         <td>{video.url}</td>
                         <td>{video.rating}</td>
-                        <td>{video.category}</td>
-                        <td>{video.playlist}</td>
+                        <td>{video.category?.name}</td>
+                        <td>{"video.playlist"}</td>
                         <td>
                             <button className='button-edit' onClick={() => handleEditClick(video)}>Editar</button>
                             <button className='button-delete' type="button" onClick={() => handleDeleteClick(video)}>Deletar</button>
