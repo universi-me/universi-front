@@ -4,7 +4,7 @@ import { Category } from '@/types/Capacity';
 import { Link } from 'react-router-dom';
 import UniversimeApi from '@/services/UniversimeApi';
 
-const RecommendedCategories: React.FC = () => {
+const AllCategories: React.FC = () => {
   const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const RecommendedCategories: React.FC = () => {
 
   return (
     <div>
-      <h1 id="title" style={{ marginBottom: '20px', marginTop: '35px' }}>Categorias recomendadas para você</h1>
+      <h1 id="title" style={{ marginBottom: '20px', marginTop: '35px' }}>Categorias disponíveis</h1>
       <div className="button-container">
         {
           availableCategories.length === 0
@@ -28,4 +28,4 @@ const RecommendedCategories: React.FC = () => {
   );
 };
 
-export default RecommendedCategories;
+export default AllCategories;
