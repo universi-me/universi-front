@@ -1,21 +1,21 @@
 .container {
-    width: 569px !important;
-    height: 450px;
+    width: fit-content;
+    height: fit-content;
     background-color: #202024;
     display: flex;
     align-items: center;
     flex-direction: column;
     border-radius: 10px;
     margin-top: 40px;
+    padding: 50px;
 }
 
 .form-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 60px;
-    width: 250px;
-    height: 120px;
+    width: fit-content;
+    height: fit-content;
     gap: 10px;
 }
 
