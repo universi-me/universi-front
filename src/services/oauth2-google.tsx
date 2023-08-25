@@ -41,7 +41,7 @@ export function OAuth2Element() {
                 auth.signin_google(res)
                 .then(success => {
                     if (success)
-                        navigate(`/profile/${res.body.user.name}`);
+                        navigate(`/capacitacao`);
 
                     else
                         navigate("/login")

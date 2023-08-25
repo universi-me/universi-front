@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import "./signinForm.css";
 import { AuthContext } from "../../contexts/Auth/AuthContext";
 import { redirect, useNavigate } from "react-router-dom";
@@ -19,11 +19,13 @@ export default function SinginForm() {
     window.location.href = oauthSignIn().toString();
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: FormEvent) => {
+    e.preventDefault();
+
     if (email && password) {
       const isLogged = await auth.signin(email, password);
       if (isLogged.status) {
-        navigate(`/profile/${isLogged.user?.name}`);
+        navigate(`/capacitacao`);
       }
       else {
         setIsOpen(true)
@@ -40,6 +42,8 @@ export default function SinginForm() {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const ENABLE_GOOGLE_LOGIN = import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1";
 
   return (
   <>
@@ -81,32 +85,37 @@ export default function SinginForm() {
             </span>
           </span>
         </div>
+        <button
+            type="submit"
+            value="Entrar"
+            className="btn_form"
+            disabled={isButtonDisable}
+            onClick={handleLogin}
+        >
+            ENTRAR
+        </button>
       </form>
 
-      <button
-        type="submit"
-        value="Entrar"
-        className="btn_form"
-        disabled={isButtonDisable}
-        onClick={handleLogin}
-      >
-        ENTRAR
-      </button>
 
-      <div className="container-line-form">
-        <div className="line-form"></div>
-        <div>ou entre com</div>
-        <div className="line-form"></div>
-      </div>
+      {
+        !ENABLE_GOOGLE_LOGIN ? null :
+        <>
+            <div className="container-line-form">
+                <div className="line-form"></div>
+                <div>ou entre com</div>
+                <div className="line-form"></div>
+            </div>
 
-      <button
-        className="btn_form_dcx"
-        type="button"
-        onClick={handleAuthLoginGoogle}
-      >
-        <img src="../../../public/assets/imgs/dcx-png 1.png" />
-        EMAIL DCX
-      </button>
+            <button
+                className="btn_form_dcx"
+                type="button"
+                onClick={handleAuthLoginGoogle}
+            >
+                <img src="../../../public/assets/imgs/dcx-png 1.png" />
+                EMAIL DCX
+            </button>
+        </>
+      }
     </div>
   </>
   
