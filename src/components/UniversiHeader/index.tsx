@@ -13,12 +13,14 @@ export function Header() {
       </Link>
       <nav>
         <Link to="/">Início</Link>
-        <Link to="/sobre">Sobre</Link>
+        {/* <Link to="/sobre">Sobre</Link> */}
         <Link to="/capacitacao">Capacitação</Link>
       </nav>
-      <SearchInput />
-      <WelcomeUser />
-      <LoginButton />
+      <div className="right-items">
+        {/* <SearchInput /> */}
+        <WelcomeUser />
+        <LoginButton />
+      </div>
     </header>
   );
 }
