@@ -1,6 +1,6 @@
 #profile-page #discard-changes {
     border-radius: 1.125rem;
-    background-color: #D6D6D6;
+    background-color: var(--card-background-color);
 
     display: flex;
     flex-direction: column;
@@ -62,16 +62,18 @@
 }
 
 #profile-page #discard-changes .buttons .discard-button:hover {
-    background-color: #39375D;
-    border-color: #39375D;
+    background-color: var(--button-hover-color);
+    border-color: var(--button-hover-color);
 }
 
 #profile-page #discard-changes .buttons .cancel-button {
     background-color: transparent;
-    color: var(--primary-color);
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
 }
 
 #profile-page #discard-changes .buttons .cancel-button:hover {
-    background-color: var(--primary-color);
+    background-color: var(--button-hover-color);
+    border-color: var(--button-hover-color);
     color: var(--font-color-v1);
 }

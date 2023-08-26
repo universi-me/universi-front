@@ -1,0 +1,35 @@
+#title {
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFF;
+}
+
+
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+  
+.theme-button {
+    width: calc(20% - 10px);
+    height: 56px;
+    margin-bottom: 10px;
+    padding: 13px;
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    border: 2px solid #cfcfcf;
+    text-decoration: none;
+    text-align: center;
+    color: #000000;
+}
+  
+.theme-button:hover {
+    background-color: #e7e7e7;
+    color: #53569b;
+}

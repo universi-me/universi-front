@@ -1,0 +1,116 @@
+* { margin: 0; padding: 0; }
+
+:root{
+    --rating-number: #ac7000;
+    --rating-star: #ffa500;
+}
+
+.category-tela{
+    background-color: var(--background-tela);
+}
+
+#category {
+    max-width: 100%;
+}
+
+#conteudo-category{
+    position: relative;
+    max-width: 100%;
+    padding: 38px 40px 0px 40px;
+}
+
+/* Estilo de texto */
+#title-category{
+    padding: 16px 40px 24px 16px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: normal;
+    color: var(--color-font-titulo);
+}
+
+#subtitle-category{
+    font-size: 18px;
+    font-weight: 700;
+    line-height: normal;
+    color: var(--color-font-titulo);
+}
+
+
+.video-list-all {
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1vw;
+    justify-content: center;
+}
+
+.video-item {
+    width: 252px;
+    height: 230px;
+    margin: 8px;
+    display: flex;
+    flex-direction:column;
+    display: flex;
+}
+
+.video-image {
+    width: 252px;
+    height: 140px;
+    position: relative;
+}
+
+.video-thumbnail {
+    width: 252px;
+    height: 140px;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff"%3E%3Cpath d="M8 5v14l11-7z"/%3E%3C/svg%3E');
+    background-size: cover;
+}
+
+
+.video-title{
+    padding-top: 5px;
+    float: left;
+    word-wrap: break-word;
+    max-width: 250px;
+    font-weight: 500;
+    color: var(--color-font-titulo);
+    font-size: 15px;
+}
+
+.video-rating {
+    float: left;
+    margin-top: -5px;
+}
+
+.star-rating {
+    color: var(--rating-star);
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.rating-count{
+    color: var(--rating-number);
+    font-weight: bold;
+}
+
+svg {
+    vertical-align: baseline;
+    margin-right: 1px;
+}
+
+.content-rating{
+    display: flex;
+}

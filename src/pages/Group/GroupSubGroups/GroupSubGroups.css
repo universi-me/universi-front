@@ -1,0 +1,19 @@
+#group-page .content .group-infos #subgroups .section {
+    padding: 0 1.4rem;
+    padding-top: 1.75rem;
+    padding-bottom: 2rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#group-page .content .group-infos #subgroups .card-heading {
+    font-size: 1.5rem;
+    color: var(--font-color-v2);
+    font-weight: var(--font-weight-bold);
+}
+
+#group-page .content .group-infos #subgroups .card-heading.counter {
+    color: var(--skills-1-color);
+}

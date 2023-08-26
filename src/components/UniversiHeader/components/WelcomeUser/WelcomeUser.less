@@ -1,0 +1,27 @@
+@import url("src/layouts/colors.less");
+@import url("src/layouts/fonts.less");
+
+header.header {
+    .welcome-wrapper {
+        margin-left: 1.5rem;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        text-decoration: none;
+
+        .welcome-message {
+            margin-right: .75rem;
+
+            color: @tertiary-color;
+            font-size: 1.25rem;
+            font-weight: @font-weight-default;
+        }
+
+        .logged-user-image {
+            height: 3rem;
+            width: auto;
+        }
+    }
+}
