@@ -20,7 +20,7 @@ export const About = () => {
     const extendedTeamMembers = teamMembers.concat(teamMembers.slice(0, slidesToShow - 1));
 
     return (
-      <div className='container'>
+      <div id='about-page'>
 
         <div className='highPartOne'>
 
