@@ -203,6 +203,21 @@ const CrudTela: React.FC = () => {
     }
   };
 
+  const handleCreateVideo = async () => {
+    setShowAddModal(true);
+
+    setCategoriesToRemoveIds([]);
+    setCategoriesToRemove([]);
+    setCategoriesToAddIds([]);
+    setCategoriesStateSelected([]);
+
+    setPlaylistsToRemoveIds([]);
+    setPlaylistsToAddIds([]);
+    setPlaylistsToRemove([]);
+    setPlaylistsStateSelected([]);
+
+  };
+
   const handleCategoriesOnChange = (value: any) => {
     let difference = categoriesStateSelected.filter((x: any) => !value.includes(x))
     setCategoriesStateSelected(value)
@@ -260,7 +275,7 @@ const CrudTela: React.FC = () => {
     !auth.user ? null :
     <div>
         <h1 className="title-page">Gerenciador de Vídeos</h1>
-        <button className='button-adicionar' type="button" onClick={() => setShowAddModal(true)}>Adicionar Vídeo</button>
+        <button className='button-adicionar' type="button" onClick={() => handleCreateVideo()}>Adicionar Vídeo</button>
             <table className="videos-table">
                 <thead>
                      <tr>
