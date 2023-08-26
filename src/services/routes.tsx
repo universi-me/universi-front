@@ -2,6 +2,7 @@ import { QuizPage } from "@/pages/Quiz";
 import { App } from "@/src/App";
 import GroupPage from "@/pages/Group";
 import {ProfilePage} from "@/pages/Profile";
+import { About } from "@/pages/About";
 
 import {Navigate, createBrowserRouter} from 'react-router-dom'
 import Singin from "../../src/pages/singin/Singin";
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([{
     {
       path: "/quiz/:id",
       element: <QuizPage />
+    },
+    {
+      path: "/sobre",
+      element: <About />
     },
     { path: "/profile/:id", element: <ProfilePage /> },
     { path: "/group/*", element: <GroupPage /> },
