@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
+import Select from 'react-select';
 import UniversimeApi from '@/services/UniversimeApi';
-import { Video } from '@/types/Capacity';
+import { Playlist, Video } from '@/types/Capacity';
 import './ManagerCapacity.css'
 import { AuthContext } from '@/contexts/Auth';
+import { Category } from '@/types/Capacity';
+import { MultiValue } from 'react-select';
+import { forEach } from 'lodash';
 
 const CrudTela: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -16,20 +20,30 @@ const CrudTela: React.FC = () => {
   const [editedDescription, setEditedDescription] = useState('');
   const [editedUrl, setEditedUrl] = useState('');
   const [editedRating, setEditedRating] = useState(1);
-  const [editedCategory, setEditedCategory] = useState('');
-  const [editedPlaylist, setEditedPlaylist] = useState('');
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [newUrl, setNewUrl] = useState('');
   const [newRating, setNewRating] = useState(1);
-  const [newCategory, setNewCategory] = useState('');
-  const [newPlaylist, setNewPlaylist] = useState('');
 
+  const [categories, setCategories] = useState<any>([]);
+  const [playlists, setPlaylists] = useState<any>([]);
+
+  const [categoriesToRemoveIds, setCategoriesToRemoveIds] = useState<string[]>([]);
+  const [categoriesToAddIds, setCategoriesToAddIds] = useState<string[]>([]);
+  const [categoriesToRemove, setCategoriesToRemove] = useState<any>([]);
+  const [categoriesStateSelected, setCategoriesStateSelected] = useState<any>([]);
+
+  const [playlistsToRemoveIds, setPlaylistsToRemoveIds] = useState<string[]>([]);
+  const [playlistsToAddIds, setPlaylistsToAddIds] = useState<string[]>([]);
+  const [playlistsToRemove, setPlaylistsToRemove] = useState<any>([]);
+  const [playlistsStateSelected, setPlaylistsStateSelected] = useState<any>([]);
 
   useEffect(() => { 
     fetchVideos();
+    fetchCategories();
+    fetchPlaylists();
     }, []);
 
   const fetchVideos = async () => {
@@ -38,6 +52,34 @@ const CrudTela: React.FC = () => {
       setVideos(response.body.videos);
     } catch (error) {
       console.error('Erro ao buscar os vídeos:', error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const arr: { value: string; label: string; }[] = [];
+      const response = await UniversimeApi.Capacity.categoryList();
+      let categoriesArr = response.body.categories;
+      categoriesArr.map((category: Category) => {
+        return arr.push({value: category.id, label: category.name});
+      });
+      setCategories(arr)
+    } catch (error) {
+      console.error('Erro ao obter categorias:', error);
+    }
+  };
+
+  const fetchPlaylists = async () => {
+    try {
+      const arr: { value: string; label: string; }[] = [];
+      const response = await UniversimeApi.Capacity.playlistList()
+      let playlistsArr = response.body.playlists;
+      playlistsArr.map((playlist: Playlist) => {
+        return arr.push({value: playlist.id, label: playlist.name});
+      });
+      setPlaylists(arr)
+    } catch (error) {
+      console.error('Erro ao obter playlists:', error);
     }
   };
 
@@ -66,8 +108,23 @@ const CrudTela: React.FC = () => {
     setEditedDescription(video.description ?? "");
     setEditedUrl(video.url);
     setEditedRating(video.rating);
-    setEditedCategory(video.category?.id ?? "");
-    setEditedPlaylist("");
+    //setEditedCategory(video.category?.id ?? "");
+    
+    const videoCategoriesIds = video.categories;
+    const arrCategories: { value: string; label: string; }[] = [];
+    videoCategoriesIds?.forEach(function (category: Category) {
+      return arrCategories.push({value: category.id, label: category.name});
+    });
+    setCategoriesStateSelected(arrCategories);
+
+    const videoPlaylistsIds = video.playlists;
+    const arrPlaylists: { value: string; label: string; }[] = [];
+    videoPlaylistsIds?.forEach(function (playlist: Playlist) {
+      return arrPlaylists.push({value: playlist.id, label: playlist.name});
+    });
+    setPlaylistsStateSelected(arrPlaylists);
+
+    
     setShowEditModal(true);
     setIsEditing(true);
   };
@@ -84,8 +141,11 @@ const CrudTela: React.FC = () => {
         description: editedDescription,
         url: editedUrl,
         rating: editedRating,
-        category: editedCategory,
-        playlist: editedPlaylist,
+
+        addCategoriesByIds: categoriesToAddIds,
+        removeCategoriesByIds: categoriesToRemoveIds,
+        addPlaylistsByIds: playlistsToAddIds,
+        removePlaylistsByIds: playlistsToRemoveIds,
       });
 
       setShowEditModal(false);
@@ -95,8 +155,17 @@ const CrudTela: React.FC = () => {
       setEditedDescription('');
       setEditedUrl('');
       setEditedRating(1);
-      setEditedCategory('');
-      setEditedPlaylist('');
+
+      setCategoriesToRemoveIds([]);
+      setCategoriesToRemove([]);
+      setCategoriesToAddIds([]);
+      setCategoriesStateSelected([]);
+
+      setPlaylistsToRemoveIds([]);
+      setPlaylistsToAddIds([]);
+      setPlaylistsToRemove([]);
+      setPlaylistsStateSelected([]);
+      
       fetchVideos();
     } catch (error) {
       console.error('Erro ao editar vídeo:', error);
@@ -110,7 +179,8 @@ const CrudTela: React.FC = () => {
         description: newDescription,
         url: newUrl,
         rating: newRating,
-        category: newCategory,
+        addCategoriesByIds: categoriesToAddIds,
+        addPlaylistsByIds: playlistsToAddIds,
       });
 
       setShowAddModal(false);
@@ -118,12 +188,72 @@ const CrudTela: React.FC = () => {
       setNewDescription('');
       setNewUrl('');
       setNewRating(1);
-      setNewCategory('');
-      setNewPlaylist('');
+
+      setCategoriesToRemoveIds([]);
+      setCategoriesToRemove([]);
+      setCategoriesToAddIds([]);
+      setCategoriesStateSelected([]);
+
+      setPlaylistsToRemoveIds([]);
+      setPlaylistsToAddIds([]);
+      setPlaylistsToRemove([]);
+      setPlaylistsStateSelected([]);
+
       fetchVideos();
     } catch (error) {
       console.error('Erro ao adicionar vídeo:', error);
     }
+  };
+
+  const handleCategoriesOnChange = (value: any) => {
+    let difference = categoriesStateSelected.filter((x: any) => !value.includes(x))
+    setCategoriesStateSelected(value)
+    let categoriesToRem = categoriesToRemove
+    categoriesToRem = [...categoriesToRem, ...difference]
+    categoriesToRem = categoriesToRem.reduce(function (acc: any, curr: any) {
+      if (!acc.includes(curr) && !value.includes(curr))
+          acc.push(curr);
+          return acc;
+    }, []);
+    setCategoriesToRemove(categoriesToRem)
+    
+    const categoriesRemoveArr: string[] = [];
+    categoriesToRem.map((category: any) => {
+      return categoriesRemoveArr.push(category.value);
+    });
+    setCategoriesToRemoveIds(categoriesRemoveArr)
+    
+    const categoriesAddArr: string[] = [];
+    value.map((category: any) => {
+      return categoriesAddArr.push(category.value);
+    });
+    setCategoriesToAddIds(categoriesAddArr)
+  };
+
+  const handlePlaylistsOnChange = (value: any) => {
+    let difference = playlistsStateSelected.filter((x: any) => !value.includes(x))
+    setPlaylistsStateSelected(value)
+
+    let playlistsToRem = playlistsToRemove
+    playlistsToRem = [...playlistsToRem, ...difference]
+    playlistsToRem = playlistsToRem.reduce(function (acc: any, curr: any) {
+      if (!acc.includes(curr) && !value.includes(curr))
+          acc.push(curr);
+          return acc;
+    }, []);
+    setPlaylistsToRemove(playlistsToRem)
+
+    const playlistsRemoveArr: string[] = [];
+    playlistsToRem.map((playlist: any) => {
+      return playlistsRemoveArr.push(playlist.value);
+    });
+    setPlaylistsToRemoveIds(playlistsRemoveArr)
+    
+    const playlistsAddArr: string[] = [];
+    value.map((playlist: any) => {
+      return playlistsAddArr.push(playlist.value);
+    });
+    setPlaylistsToAddIds(playlistsAddArr)
   };
 
   const auth = useContext(AuthContext);
@@ -140,8 +270,8 @@ const CrudTela: React.FC = () => {
                         <th>Título</th>
                         <th>URL</th>
                         <th>Classificação</th>
-                        <th>Categoria</th>
-                        <th>Playlist</th>
+                        <th>Categorias</th>
+                        <th>Playlists</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -152,8 +282,8 @@ const CrudTela: React.FC = () => {
                         <td>{video.title}</td>
                         <td>{video.url}</td>
                         <td>{video.rating}</td>
-                        <td>{video.category?.name}</td>
-                        <td>{"video.playlist"}</td>
+                        <td>{video.categories?.map(function(elem){ return elem.name; }).join(", ")}</td>
+                        <td>{video.playlists?.map(function(elem){ return elem.name; }).join(", ")}</td>
                         <td>
                             <button className='button-edit' onClick={() => handleEditClick(video)}>Editar</button>
                             <button className='button-delete' type="button" onClick={() => handleDeleteClick(video)}>Deletar</button>
@@ -190,9 +320,7 @@ const CrudTela: React.FC = () => {
               <label>URL:</label>
               <input className='input-text' style={{width: '315px'}} type="text" value={editedUrl} onChange={(e) => setEditedUrl(e.target.value)} />
             </div>
-            <div  style={{display: 'flex', justifyContent: 'center'}}>
-              <label >Categoria:</label>
-              <input  className='input-text' style={{width: '120px', marginRight: '42px'}} type="text" value={editedCategory} onChange={(e) => setEditedCategory(e.target.value)} />
+            <div className="space-text">
               <label>Rating:</label>
               <select style={{marginLeft: '8px'}} value={editedRating} onChange={(e) => setEditedRating(Number(e.target.value))}>
                 <option value={1}>1</option>
@@ -203,8 +331,38 @@ const CrudTela: React.FC = () => {
               </select>
             </div>
             <div style={{marginTop: '15px'}}>
-              <label>Playlist:</label>
-              <input className='input-text' style={{width: '285px'}} type="text" value={editedPlaylist} onChange={(e) => setEditedPlaylist(e.target.value)} />
+              <label >Categorias:</label>
+              <Select placeholder= "Selecionar Categorias..."  isMulti name="categories" options={categories} className="basic-multi-select" theme={(theme) => ({
+                ...theme,
+                borderRadius: 10,
+                color: 'black',
+                colors: {
+                  ...theme.colors,
+                  primary25: 'red',
+                  primary: 'blue',
+                  neutral10: 'green',
+                  neutral5:  'black',
+                  neutral0: '#c2c2c2'
+                },
+              })}
+              onChange={handleCategoriesOnChange} value={categoriesStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Categoria Não Encontrada"} />
+            </div>
+            <div style={{marginTop: '15px'}}>
+              <label>Playlists:</label>
+              <Select placeholder= "Selecionar Playlists..."  isMulti name="playlists" options={playlists} className="basic-multi-select" theme={(theme) => ({
+                ...theme,
+                borderRadius: 10,
+                color: 'black',
+                colors: {
+                  ...theme.colors,
+                  primary25: 'red',
+                  primary: 'blue',
+                  neutral10: 'green',
+                  neutral5:  'black',
+                  neutral0: '#c2c2c2'
+                },
+              })}
+              onChange={handlePlaylistsOnChange} value={playlistsStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Playlist Não Encontrada"} />
             </div>
             <div style={{marginTop: '35px'}} className="confirmation-buttons">
               <button className='button-boxCancel' onClick={() => setShowEditModal(false)}>Cancelar</button>
@@ -229,9 +387,7 @@ const CrudTela: React.FC = () => {
               <label>URL:</label>
               <input className='input-text' style={{ width: '315px'}} type="text" value={newUrl} onChange={(e) => setNewUrl(e.target.value)} />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <label >Categoria:</label>
-              <input className='input-text' style={{width: '120px', marginRight: '42px'}} type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} />
+            <div className="space-text">
               <label>Rating:</label>
               <select style={{ marginLeft: '8px' }} value={newRating} onChange={(e) => setNewRating(Number(e.target.value))}>
                 <option value={1}>1</option>
@@ -241,9 +397,39 @@ const CrudTela: React.FC = () => {
                 <option value={5}>5</option>
               </select>
             </div>
+            <div style={{marginTop: '15px'}}>
+              <label >Categorias:</label>
+              <Select placeholder= "Selecionar Categorias..."  isMulti name="categories" options={categories} className="basic-multi-select" theme={(theme) => ({
+                ...theme,
+                borderRadius: 10,
+                color: 'black',
+                colors: {
+                  ...theme.colors,
+                  primary25: 'red',
+                  primary: 'blue',
+                  neutral10: 'green',
+                  neutral5:  'black',
+                  neutral0: '#c2c2c2'
+                },
+              })}
+              onChange={handleCategoriesOnChange} value={categoriesStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Categoria Não Encontrada"} />
+            </div>
             <div style={{ marginTop: '15px' }}>
-              <label>Playlist:</label>
-              <input className='input-text' style={{width: '285px'}} type="text" value={newPlaylist} onChange={(e) => setNewPlaylist(e.target.value)} />
+              <label>Playlists:</label>
+              <Select placeholder= "Selecionar Playlists..."  isMulti name="playlists" options={playlists} className="basic-multi-select" theme={(theme) => ({
+                ...theme,
+                borderRadius: 10,
+                color: 'black',
+                colors: {
+                  ...theme.colors,
+                  primary25: 'red',
+                  primary: 'blue',
+                  neutral10: 'green',
+                  neutral5:  'black',
+                  neutral0: '#c2c2c2'
+                },
+              })}
+              onChange={handlePlaylistsOnChange} value={playlistsStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Playlist Não Encontrada"} />
             </div>
             <div style={{ marginTop: '35px' }} className="confirmation-buttons">
               <button className='button-boxCancel' onClick={() => setShowAddModal(false)}>Cancelar</button>
