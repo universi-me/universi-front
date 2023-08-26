@@ -7,7 +7,7 @@ export type Video = {
     image:       string | null;
     description: string | null;
     categories:  Category[] | null;
-    playlists:   Playlist[];
+    playlists:   Playlist[] | null;
     rating:      number;
     createdAt:   string;
     author:      Profile;

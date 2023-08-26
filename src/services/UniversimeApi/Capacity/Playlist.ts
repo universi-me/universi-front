@@ -14,7 +14,7 @@ export type PlaylistCreateDTO = {
     image?:              string;
     description?:        string;
     rating?:             number;
-    addCategoriesByIds?: string | Array<string>;
+    addCategoriesByIds?: string | string[];
 };
 
 export type PlaylistEditDTO = {
@@ -23,13 +23,13 @@ export type PlaylistEditDTO = {
     image?:                 string;
     description?:           string;
     rating?:                number;
-    removeCategoriesByIds?: string | Array<string>;
-    addCategoriesByIds?:    string | Array<string>;
+    removeCategoriesByIds?: string | string[];
+    addCategoriesByIds?:    string | string[];
 };
 
 export type VideoAndPlaylistDTO = {
     playlistId: string;
-    videoIds:   string | Array<string>;
+    videoIds:   string | string[];
 };
 
 export async function getPlaylist(body: PlaylistIdDTO) {

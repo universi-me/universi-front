@@ -13,8 +13,8 @@ export type VideoCreateDTO = {
     url:                 string;
     title:               string;
     description?:        string;
-    addCategoriesByIds?: string | Array<string>;
-    addPlaylistsByIds?:  string | Array<string>;
+    addCategoriesByIds?: string | string[];
+    addPlaylistsByIds?:  string | string[];
     rating?:             number;
     image?:              string;
 };
@@ -24,10 +24,10 @@ export type VideoEditDTO = {
     url?:                   string;
     title?:                 string;
     description?:           string;
-    addCategoriesByIds?:    string | Array<string>;
-    removeCategoriesByIds?: string | Array<string>;
-    addPlaylistsByIds?:     string | Array<string>;
-    removePlaylistsByIds?:  string | Array<string>;
+    addCategoriesByIds?:    string | string[];
+    removeCategoriesByIds?: string | string[];
+    addPlaylistsByIds?:     string | string[];
+    removePlaylistsByIds?:  string | string[];
     rating?:                number;
     image?:                 string;
 };

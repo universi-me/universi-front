@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import Select from 'react-select';
-import { MultiValue } from 'react-select';
+import Select, { MultiValue } from 'react-select';
 import UniversimeApi from '@/services/UniversimeApi';
-import { Playlist, Video } from '@/types/Capacity';
+import { Playlist, Video , Category} from '@/types/Capacity';
 import './ManagerCapacity.css'
 import { AuthContext } from '@/contexts/Auth';
-import { Category } from '@/types/Capacity';
 
 const CrudTela: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -154,20 +152,24 @@ const CrudTela: React.FC = () => {
       setEditedUrl('');
       setEditedRating(1);
 
-      setCategoriesToRemoveIds([]);
-      setCategoriesToRemove([]);
-      setCategoriesToAddIds([]);
-      setCategoriesStateSelected([]);
-
-      setPlaylistsToRemoveIds([]);
-      setPlaylistsToAddIds([]);
-      setPlaylistsToRemove([]);
-      setPlaylistsStateSelected([]);
+      cleanCategoriesAndPlaylists()
       
       fetchVideos();
     } catch (error) {
       console.error('Erro ao editar vídeo:', error);
     }
+  };
+
+  const cleanCategoriesAndPlaylists = () => {
+    setCategoriesToRemoveIds([]);
+    setCategoriesToRemove([]);
+    setCategoriesToAddIds([]);
+    setCategoriesStateSelected([]);
+
+    setPlaylistsToRemoveIds([]);
+    setPlaylistsToAddIds([]);
+    setPlaylistsToRemove([]);
+    setPlaylistsStateSelected([]);
   };
 
   const handleAddVideo = async () => {
@@ -187,15 +189,7 @@ const CrudTela: React.FC = () => {
       setNewUrl('');
       setNewRating(1);
 
-      setCategoriesToRemoveIds([]);
-      setCategoriesToRemove([]);
-      setCategoriesToAddIds([]);
-      setCategoriesStateSelected([]);
-
-      setPlaylistsToRemoveIds([]);
-      setPlaylistsToAddIds([]);
-      setPlaylistsToRemove([]);
-      setPlaylistsStateSelected([]);
+      cleanCategoriesAndPlaylists()
 
       fetchVideos();
     } catch (error) {
@@ -206,15 +200,7 @@ const CrudTela: React.FC = () => {
   const handleCreateVideo = async () => {
     setShowAddModal(true);
 
-    setCategoriesToRemoveIds([]);
-    setCategoriesToRemove([]);
-    setCategoriesToAddIds([]);
-    setCategoriesStateSelected([]);
-
-    setPlaylistsToRemoveIds([]);
-    setPlaylistsToAddIds([]);
-    setPlaylistsToRemove([]);
-    setPlaylistsStateSelected([]);
+    cleanCategoriesAndPlaylists()
 
   };
 
