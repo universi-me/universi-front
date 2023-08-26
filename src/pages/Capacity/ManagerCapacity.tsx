@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Select from 'react-select';
+import { MultiValue } from 'react-select';
 import UniversimeApi from '@/services/UniversimeApi';
 import { Playlist, Video } from '@/types/Capacity';
 import './ManagerCapacity.css'
 import { AuthContext } from '@/contexts/Auth';
 import { Category } from '@/types/Capacity';
-import { MultiValue } from 'react-select';
-import { forEach } from 'lodash';
 
 const CrudTela: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -108,7 +107,6 @@ const CrudTela: React.FC = () => {
     setEditedDescription(video.description ?? "");
     setEditedUrl(video.url);
     setEditedRating(video.rating);
-    //setEditedCategory(video.category?.id ?? "");
     
     const videoCategoriesIds = video.categories;
     const arrCategories: { value: string; label: string; }[] = [];
