@@ -56,11 +56,14 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
       return setLoggedUser(data.body.user, data.token, profile.body.profile);
     };
 
-  function signout() {
+  async function signout() {
     setUser(null);
     setProfile(null);
     setToken("");
-    window.location.href = location.origin + "/login";
+    const data = await UniversimeApi.Auth.logout();
+    if(data) {
+      window.location.href = location.origin + "/login";
+    }
   };
 
   function setToken(token: string) {

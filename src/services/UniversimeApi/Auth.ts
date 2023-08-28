@@ -16,7 +16,8 @@ export async function signin(username: string, password: string) {
 }
 
 export async function logout() {
-    return { status: true };
+    const response = await api.get('/logout');
+    return response.data;
 }
 
 export async function login_google(access_token: string) {
