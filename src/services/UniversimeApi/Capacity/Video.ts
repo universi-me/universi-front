@@ -10,23 +10,26 @@ export type VideoIdDTO = {
 };
 
 export type VideoCreateDTO = {
-    url:          string;
-    title:        string;
-    description?: string;
-    category?:    string;
-    rating?:      number;
-    image?:       string;
+    url:                 string;
+    title:               string;
+    description?:        string;
+    addCategoriesByIds?: string | string[];
+    addPlaylistsByIds?:  string | string[];
+    rating?:             number;
+    image?:              string;
 };
 
 export type VideoEditDTO = {
-    id:           string;
-    url?:         string;
-    title?:       string;
-    description?: string;
-    category?:    string;
-    playlist?:    string;
-    rating?:      number;
-    image?:       string;
+    id:                     string;
+    url?:                   string;
+    title?:                 string;
+    description?:           string;
+    addCategoriesByIds?:    string | string[];
+    removeCategoriesByIds?: string | string[];
+    addPlaylistsByIds?:     string | string[];
+    removePlaylistsByIds?:  string | string[];
+    rating?:                number;
+    image?:                 string;
 };
 
 export async function getVideo(body: VideoIdDTO) {
@@ -37,24 +40,28 @@ export async function getVideo(body: VideoIdDTO) {
 
 export async function createVideo(body: VideoCreateDTO) {
     return (await videoApi.post("/create", {
-        url:         body.url,
-        title:       body.title,
-        image:       body.image,
-        description: body.description,
-        rating:      body.rating,
-        category:    body.category,
+        url:                body.url,
+        title:              body.title,
+        image:              body.image,
+        description:        body.description,
+        rating:             body.rating,
+        addCategoriesByIds: body.addCategoriesByIds,
+        addPlaylistsByIds:  body.addPlaylistsByIds,
     })).data;
 }
 
 export async function editVideo(body: VideoEditDTO) {
     return (await videoApi.post("/edit", {
-        id:          body.id,
-        url:         body.url,
-        title:       body.title,
-        image:       body.image,
-        description: body.description,
-        rating:      body.rating,
-        category:    body.category,
+        id:                    body.id,
+        url:                   body.url,
+        title:                 body.title,
+        image:                 body.image,
+        description:           body.description,
+        rating:                body.rating,
+        addCategoriesByIds:    body.addCategoriesByIds,
+        removeCategoriesByIds: body.removeCategoriesByIds,
+        addPlaylistsByIds:     body.addPlaylistsByIds,
+        removePlaylistsByIds:  body.removePlaylistsByIds,
     })).data;
 }
 

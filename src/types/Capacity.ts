@@ -6,8 +6,8 @@ export type Video = {
     title:       string;
     image:       string | null;
     description: string | null;
-    category:    Category | null;
-    playlists:   Playlist[];
+    categories:  Category[] | null;
+    playlists:   Playlist[] | null;
     rating:      number;
     createdAt:   string;
     author:      Profile;
@@ -17,8 +17,6 @@ export type Category = {
     id:        string;
     name:      string;
     image:     string | null;
-    createdAt: string;
-    author:    Profile;
 };
 
 export type Playlist = {
@@ -27,7 +25,7 @@ export type Playlist = {
     image:       string | null;
     description: string | null;
     rating:      number | null;
-    category:    Category;
+    categories:  Category[] | null;
     createdAt:   string;
     author:      Profile;
 };
