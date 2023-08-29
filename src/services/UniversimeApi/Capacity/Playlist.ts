@@ -35,12 +35,12 @@ export type VideoAndPlaylist_RequestDTO = {
 };
 
 export type PlaylistGet_ResponseDTO =             ApiResponse<{ playlist: Playlist }>;
-export type PlaylistCreate_ResponseDTO =          ApiResponse<undefined>;
-export type PlaylistEdit_ResponseDTO =            ApiResponse<undefined>;
-export type PlaylistRemove_ResponseDTO =          ApiResponse<undefined>;
+export type PlaylistCreate_ResponseDTO =          ApiResponse;
+export type PlaylistEdit_ResponseDTO =            ApiResponse;
+export type PlaylistRemove_ResponseDTO =          ApiResponse;
 export type ListVideosInPlaylist_ResponseDTO =    ApiResponse<{ videos: Video[] }>;
-export type AddVideoToPlaylist_ResponseDTO =      ApiResponse<undefined>;
-export type RemoveVideoFromPlaylist_ResponseDTO = ApiResponse<undefined>;
+export type AddVideoToPlaylist_ResponseDTO =      ApiResponse;
+export type RemoveVideoFromPlaylist_ResponseDTO = ApiResponse;
 
 export async function getPlaylist(body: PlaylistId_RequestDTO) {
     return (await playlistApi.post<PlaylistGet_ResponseDTO>("/get", {

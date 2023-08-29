@@ -35,9 +35,9 @@ export type VideoEdit_RequestDTO = {
 };
 
 export type VideoGet_ResponseDTO =    ApiResponse<{video: Video}>;
-export type VideoCreate_ResponseDTO = ApiResponse<undefined>;
-export type VideoEdit_ResponseDTO =   ApiResponse<undefined>;
-export type VideoRemove_ResponseDTO = ApiResponse<undefined>;
+export type VideoCreate_ResponseDTO = ApiResponse;
+export type VideoEdit_ResponseDTO =   ApiResponse;
+export type VideoRemove_ResponseDTO = ApiResponse;
 
 export async function getVideo(body: VideoId_RequestDTO) {
     return (await videoApi.post<VideoGet_ResponseDTO>("/get", {

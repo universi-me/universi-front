@@ -25,7 +25,7 @@ export type ProfileIdAndUsername_RequestDTO = {
 };
 
 export type ProfileGet_ResponseDTO =             ApiResponse<{ profile: Profile }>;
-export type ProfileEdit_ResponseDTO =            ApiResponse<undefined>;
+export type ProfileEdit_ResponseDTO =            ApiResponse;
 export type ProfileGroups_ResponseDTO =          ApiResponse<{ groups: Group[] }>;
 export type ProfileCompetences_ResponseDTO =     ApiResponse<{ competences: Competence[] }>;
 export type ProfileLinks_ResponseDTO =           ApiResponse<{ links: Link[] }>;

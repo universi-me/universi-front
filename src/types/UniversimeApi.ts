@@ -1,4 +1,4 @@
-export type ApiResponse<ResponseBody> = {
+export type ApiResponse<ResponseBody = undefined> = {
     success:     boolean;
     message?:    string;
     redirectTo?: string;

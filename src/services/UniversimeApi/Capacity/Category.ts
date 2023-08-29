@@ -23,9 +23,9 @@ export type CategoryEdit_RequestDTO = {
 };
 
 export type CategoryGet_ResponseDTO =          ApiResponse<{ category: Category }>;
-export type CategoryCreate_ResponseDTO =       ApiResponse<undefined>;
-export type CategoryEdit_ResponseDTO =         ApiResponse<undefined>;
-export type CategoryRemove_ResponseDTO =       ApiResponse<undefined>;
+export type CategoryCreate_ResponseDTO =       ApiResponse;
+export type CategoryEdit_ResponseDTO =         ApiResponse;
+export type CategoryRemove_ResponseDTO =       ApiResponse;
 export type ListVideosInCategory_ResponseDTO = ApiResponse<{ videos: Video[] }>;
 
 export async function getCategory(body: CategoryId_RequestDTO) {
