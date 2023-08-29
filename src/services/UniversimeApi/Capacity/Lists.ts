@@ -1,3 +1,5 @@
+import { Category, Playlist, Video } from "@/types/Capacity";
+import { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
 const capacityApi = axios.create({
@@ -5,14 +7,18 @@ const capacityApi = axios.create({
     withCredentials: true,
 });
 
+export type VideoList_ResponseDTO =    ApiResponse<{ videos: Video[] }>;
+export type CategoryList_ResponseDTO = ApiResponse<{ categories: Category[] }>;
+export type PlaylistList_ResponseDTO = ApiResponse<{ playlists: Playlist[] }>;
+
 export async function videoList() {
-    return (await capacityApi.get("/videos")).data;
+    return (await capacityApi.get<VideoList_ResponseDTO>("/videos")).data;
 }
 
 export async function categoryList() {
-    return (await capacityApi.get("/categories")).data;
+    return (await capacityApi.get<CategoryList_ResponseDTO>("/categories")).data;
 }
 
 export async function playlistList() {
-    return (await capacityApi.get("/playlists")).data;
+    return (await capacityApi.get<PlaylistList_ResponseDTO>("/playlists")).data;
 }
