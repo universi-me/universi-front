@@ -1,3 +1,5 @@
+import { Video } from "@/types/Capacity";
+import { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
 const videoApi = axios.create({
@@ -5,11 +7,11 @@ const videoApi = axios.create({
     withCredentials: true,
 });
 
-export type VideoIdDTO = {
+export type VideoId_RequestDTO = {
     id: string;
 };
 
-export type VideoCreateDTO = {
+export type VideoCreate_RequestDTO = {
     url:                 string;
     title:               string;
     description?:        string;
@@ -19,7 +21,7 @@ export type VideoCreateDTO = {
     image?:              string;
 };
 
-export type VideoEditDTO = {
+export type VideoEdit_RequestDTO = {
     id:                     string;
     url?:                   string;
     title?:                 string;
@@ -32,14 +34,19 @@ export type VideoEditDTO = {
     image?:                 string;
 };
 
-export async function getVideo(body: VideoIdDTO) {
-    return (await videoApi.post("/get", {
+export type VideoGet_ResponseDTO =    ApiResponse<{video: Video}>;
+export type VideoCreate_ResponseDTO = ApiResponse<undefined>;
+export type VideoEdit_ResponseDTO =   ApiResponse<undefined>;
+export type VideoRemove_ResponseDTO = ApiResponse<undefined>;
+
+export async function getVideo(body: VideoId_RequestDTO) {
+    return (await videoApi.post<VideoGet_ResponseDTO>("/get", {
         id: body.id,
     })).data;
 }
 
-export async function createVideo(body: VideoCreateDTO) {
-    return (await videoApi.post("/create", {
+export async function createVideo(body: VideoCreate_RequestDTO) {
+    return (await videoApi.post<VideoCreate_ResponseDTO>("/create", {
         url:                body.url,
         title:              body.title,
         image:              body.image,
@@ -50,8 +57,8 @@ export async function createVideo(body: VideoCreateDTO) {
     })).data;
 }
 
-export async function editVideo(body: VideoEditDTO) {
-    return (await videoApi.post("/edit", {
+export async function editVideo(body: VideoEdit_RequestDTO) {
+    return (await videoApi.post<VideoEdit_ResponseDTO>("/edit", {
         id:                    body.id,
         url:                   body.url,
         title:                 body.title,
@@ -65,8 +72,8 @@ export async function editVideo(body: VideoEditDTO) {
     })).data;
 }
 
-export async function removeVideo(body: VideoIdDTO) {
-    return (await videoApi.post("/delete", {
+export async function removeVideo(body: VideoId_RequestDTO) {
+    return (await videoApi.post<VideoRemove_ResponseDTO>("/delete", {
         id: body.id,
     })).data;
 }
