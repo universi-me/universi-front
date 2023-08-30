@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   }
 
   async function signin(email: string, password: string) {
-      const data = await UniversimeApi.Auth.signin(email, password);
+      const data = await UniversimeApi.Auth.signin({ username: email, password });
       const profile = await UniversimeApi.Profile.profile();
       return new Promise<{status : boolean, user : User}>((resolve, reject) => {
 
@@ -61,6 +61,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     setProfile(null);
     setToken("");
     const data = await UniversimeApi.Auth.logout();
+    console.dir(data);
     if(data) {
       window.location.href = location.origin + "/login";
     }
