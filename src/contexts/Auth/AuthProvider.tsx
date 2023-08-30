@@ -61,7 +61,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     setProfile(null);
     setToken("");
     const data = await UniversimeApi.Auth.logout();
-    console.dir(data);
     if(data) {
       window.location.href = location.origin + "/login";
     }
