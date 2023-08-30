@@ -1,5 +1,5 @@
-import { Video } from "@/types/Capacity";
-import { ApiResponse } from "@/types/UniversimeApi";
+import type { Video } from "@/types/Capacity";
+import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
 const videoApi = axios.create({

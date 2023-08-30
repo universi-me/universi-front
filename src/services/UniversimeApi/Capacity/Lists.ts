@@ -1,5 +1,5 @@
-import { Category, Playlist, Video } from "@/types/Capacity";
-import { ApiResponse } from "@/types/UniversimeApi";
+import type { Category, Playlist, Video } from "@/types/Capacity";
+import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
 const capacityApi = axios.create({
