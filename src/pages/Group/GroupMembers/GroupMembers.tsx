@@ -27,7 +27,7 @@ export function GroupMembers() {
                     groupContext.participants.map(member => {
                         return (
                             <Link to={`/profile/${member.user.name}`} className="member-item" key={member.user.name}>
-                                <ProfileImage className="image" imageUrl={member.image} noImageColor="#F3F3F3" />
+                                <ProfileImage className="image" imageUrl={member.image} noImageColor="var(--card-item-color)" />
                                 <div className="info">
                                     <h2 className="name">{getFullName(member)}</h2>
                                     {/* <h4 className="function">{"(Função)"}</h4> */}

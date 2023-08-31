@@ -1,24 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './ButtonCategory.css'
+import { Category } from '@/types/Capacity';
+import { Link } from 'react-router-dom';
+import UniversimeApi from '@/services/UniversimeApi';
 
-const RecommendedCategories: React.FC = () => {
+const AllCategories: React.FC = () => {
+  const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    UniversimeApi.Capacity.categoryList()
+        .then(res => setAvailableCategories(res.body.categories));
+  }, [])
+
   return (
     <div>
-      <h1 id="title" style={{ marginBottom: '20px', marginTop: '35px' }}>Categorias recomendadas para você</h1>
+      <h1 id="title" style={{ marginBottom: '20px', marginTop: '35px' }}>Categorias disponíveis</h1>
       <div className="button-container">
-        <a href="/capacitacao/categoria/java" className="theme-button">Java</a>
-        <a href="/capacitacao/categoria/html-css" className="theme-button">HTML/CSS</a>
-        <a href="/capacitacao/categoria/python" className="theme-button">Python</a>
-        <a href="/capacitacao/categoria/golang" className="theme-button">Golang</a>
-        <a href="/capacitacao/categoria/javascript" className="theme-button">Java Script</a>
-        <a href="/capacitacao/categoria/react" className="theme-button">React</a>
-        <a href="/capacitacao/categoria/angular" className="theme-button">Angular</a>
-        <a href="/capacitacao/categoria/soft-Skills" className="theme-button">Soft Skills</a>
-        <a href="/capacitacao/categoria/banco-de-Dados" className="theme-button">Banco de Dados</a>
-        <a href="/capacitacao/categoria/git" className="theme-button">Git</a>
+        {
+          availableCategories.length === 0
+            ? <div className="empty-list">Nenhuma categoria cadastrada.</div>
+            : availableCategories.map(c =>
+            <Link to={`/capacitacao/categoria/${c.id}`} key={c.id} className="theme-button">{c.name}</Link>
+          )
+        }
       </div>
     </div>
   );
 };
 
-export default RecommendedCategories;
+export default AllCategories;

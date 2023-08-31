@@ -1,3 +1,5 @@
+import type { Link } from "@/types/Link";
+import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
 const linkApi = axios.create({
@@ -5,42 +7,53 @@ const linkApi = axios.create({
     withCredentials: true,
 });
 
-export type LinkCreateDTO = {
+export type LinkCreate_RequestDTO = {
     url:      string;
     linkType: string;
     name:     string;
 };
 
-export type LinkUpdateDTO = {
-    linkId:   number;
+export type LinkUpdate_RequestDTO = {
+    linkId:   string;
     url:      string;
     linkType: string;
     name:     string;
 };
 
-export type LinkIdDTO = {
-    linkId: number;
+export type LinkId_RequestDTO = {
+    linkId: string;
 }
 
-export async function create(body: LinkCreateDTO) {
-    return (await linkApi.post("/criar", {
+export type LinkGet_ResponseDTO =    ApiResponse<{ link: Link }>;
+export type LinkCreate_ResponseDTO = ApiResponse;
+export type LinkUpdate_ResponseDTO = ApiResponse;
+export type LinkRemove_ResponseDTO = ApiResponse;
+
+export async function get(body: LinkId_RequestDTO) {
+    return (await linkApi.post<LinkGet_ResponseDTO>("/obter", {
+        linkId: body.linkId,
+    })).data;
+}
+
+export async function create(body: LinkCreate_RequestDTO) {
+    return (await linkApi.post<LinkCreate_ResponseDTO>("/criar", {
         url:  body.url,
         tipo: body.linkType,
         nome: body.name,
     })).data;
 }
 
-export async function update(body: LinkUpdateDTO) {
-    return (await linkApi.post("/atualizar", {
-        linkId: body.linkId.toString(),
+export async function update(body: LinkUpdate_RequestDTO) {
+    return (await linkApi.post<LinkUpdate_ResponseDTO>("/atualizar", {
+        linkId: body.linkId,
         url:    body.url,
         tipo:   body.linkType,
         nome:   body.name,
     })).data;
 }
 
-export async function remove(body: LinkIdDTO) {
-    return (await linkApi.post("/remover", {
-        linkId: body.linkId.toString(),
+export async function remove(body: LinkId_RequestDTO) {
+    return (await linkApi.post<LinkRemove_ResponseDTO>("/remover", {
+        linkId: body.linkId,
     })).data;
 }

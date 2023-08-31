@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
+import UniversimeApi from '@/services/UniversimeApi';
 import '../../Category.css';
 import './VideoStar.css';
 import StarRating from '../StarRating/StarRating';
-
-interface Video {
-  id: number;
-  title: string;
-  url: string;
-  rating: number;
-  category: string;
-}
+import { Video } from "@/types/Capacity"
 
 const VideoStar: React.FC = () => {
   const { category } = useParams<{ category: string }>();
@@ -20,8 +13,11 @@ const VideoStar: React.FC = () => {
   useEffect(() => {
     const fetchVideosByCategory = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/capacitacao/categoria/${category}`);
-        setVideos(response.data);
+        if (category === undefined)
+          throw new Error("Categoria não informada");
+
+        const response = await UniversimeApi.Capacity.videosInCategory({id: category});
+        setVideos(response.body.videos);
       } catch (error) {
         console.error('Erro ao buscar os vídeos:', error);
       }

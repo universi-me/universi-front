@@ -19,8 +19,8 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
             <div className="settings-form">
                 <div className="section competence-type">
                     <h2 className="section-heading">Tipo de Competência</h2>
-                    <select name="competence-type" defaultValue={editCompetence?.competenceType.id ?? -1}>
-                        <option disabled value={-1}>Selecione o tipo da competência</option>
+                    <select name="competence-type" defaultValue={editCompetence?.competenceType.id ?? ""}>
+                        <option disabled value={""}>Selecione o tipo da competência</option>
                         {
                             profileContext.allCompetenceTypes.map(competenceType => {
                                 return (
@@ -69,7 +69,6 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
 
     function saveCompetence() {
         const typeElement = document.querySelector('[name="competence-type"]') as HTMLSelectElement;
-        const competenceTypeId = parseInt(typeElement.value);
 
         const descriptionElement = document.querySelector('[name="description"]') as HTMLTextAreaElement;
         const description = descriptionElement.value;
@@ -81,14 +80,14 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
 
         const apiOperation = competenceId === null
             ? UniversimeApi.Competence.create({
-                competenceTypeId,
+                competenceTypeId: typeElement.value,
                 description,
                 level,
             })
 
             : UniversimeApi.Competence.update({
                 competenceId,
-                competenceTypeId,
+                competenceTypeId: typeElement.value,
                 description,
                 level,
             });
@@ -99,7 +98,10 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
     }
 
     function removeCompetence() {
-        UniversimeApi.Competence.remove({competenceId: profileContext?.editCompetence?.id ?? -1})
+        if (!profileContext || !profileContext.editCompetence)
+            return;
+
+        UniversimeApi.Competence.remove({competenceId: profileContext.editCompetence.id})
             .then((r) => profileContext?.reloadPage());
     }
 }

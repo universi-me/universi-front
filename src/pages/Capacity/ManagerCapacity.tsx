@@ -1,16 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react';
+import Select, { MultiValue } from 'react-select';
+import UniversimeApi from '@/services/UniversimeApi';
+import { Playlist, Video , Category} from '@/types/Capacity';
 import './ManagerCapacity.css'
-
-interface Video {
-  id: number;
-  title: string;
-  description: string;
-  url: string;
-  rating: number;
-  category: string;
-  playlist: string;
-}
+import { AuthContext } from '@/contexts/Auth';
 
 const CrudTela: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -24,28 +17,66 @@ const CrudTela: React.FC = () => {
   const [editedDescription, setEditedDescription] = useState('');
   const [editedUrl, setEditedUrl] = useState('');
   const [editedRating, setEditedRating] = useState(1);
-  const [editedCategory, setEditedCategory] = useState('');
-  const [editedPlaylist, setEditedPlaylist] = useState('');
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [newUrl, setNewUrl] = useState('');
   const [newRating, setNewRating] = useState(1);
-  const [newCategory, setNewCategory] = useState('');
-  const [newPlaylist, setNewPlaylist] = useState('');
 
+  const [categories, setCategories] = useState<any>([]);
+  const [playlists, setPlaylists] = useState<any>([]);
+
+  const [categoriesToRemoveIds, setCategoriesToRemoveIds] = useState<string[]>([]);
+  const [categoriesToAddIds, setCategoriesToAddIds] = useState<string[]>([]);
+  const [categoriesToRemove, setCategoriesToRemove] = useState<any>([]);
+  const [categoriesStateSelected, setCategoriesStateSelected] = useState<any>([]);
+
+  const [playlistsToRemoveIds, setPlaylistsToRemoveIds] = useState<string[]>([]);
+  const [playlistsToAddIds, setPlaylistsToAddIds] = useState<string[]>([]);
+  const [playlistsToRemove, setPlaylistsToRemove] = useState<any>([]);
+  const [playlistsStateSelected, setPlaylistsStateSelected] = useState<any>([]);
 
   useEffect(() => { 
     fetchVideos();
+    fetchCategories();
+    fetchPlaylists();
     }, []);
 
   const fetchVideos = async () => {
     try {
-      const response = await axios.get<Video[]>('http://localhost:8080/api/capacitacao/gerenciador');
-      setVideos(response.data);
+      const response = await UniversimeApi.Capacity.videoList();
+      setVideos(response.body.videos);
     } catch (error) {
       console.error('Erro ao buscar os vídeos:', error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const arr: { value: string; label: string; }[] = [];
+      const response = await UniversimeApi.Capacity.categoryList();
+      let categoriesArr = response.body.categories;
+      categoriesArr.map((category: Category) => {
+        return arr.push({value: category.id, label: category.name});
+      });
+      setCategories(arr)
+    } catch (error) {
+      console.error('Erro ao obter categorias:', error);
+    }
+  };
+
+  const fetchPlaylists = async () => {
+    try {
+      const arr: { value: string; label: string; }[] = [];
+      const response = await UniversimeApi.Capacity.playlistList()
+      let playlistsArr = response.body.playlists;
+      playlistsArr.map((playlist: Playlist) => {
+        return arr.push({value: playlist.id, label: playlist.name});
+      });
+      setPlaylists(arr)
+    } catch (error) {
+      console.error('Erro ao obter playlists:', error);
     }
   };
 
@@ -56,7 +87,10 @@ const CrudTela: React.FC = () => {
 
   const handleDeleteVideo = async () => {
     try {
-      await axios.delete(`http://localhost:8080/api/capacitacao/delete/${selectedVideo!.id}`);
+      if (selectedVideo === null)
+        throw new Error("Nenhum vídeo selecionado");
+
+      await UniversimeApi.Capacity.removeVideo({id: selectedVideo.id});
       setShowConfirmation(false);
       setSelectedVideo(null);
       fetchVideos();
@@ -68,25 +102,48 @@ const CrudTela: React.FC = () => {
   const handleEditClick = (video: Video) => {
     setEditedVideo(video);
     setEditedTitle(video.title);
-    setEditedDescription(video.description);
+    setEditedDescription(video.description ?? "");
     setEditedUrl(video.url);
     setEditedRating(video.rating);
-    setEditedCategory(video.category);
-    setEditedPlaylist(video.playlist);
+    
+    const videoCategoriesIds = video.categories;
+    const arrCategories: { value: string; label: string; }[] = [];
+    videoCategoriesIds?.forEach(function (category: Category) {
+      return arrCategories.push({value: category.id, label: category.name});
+    });
+    setCategoriesStateSelected(arrCategories);
+
+    const videoPlaylistsIds = video.playlists;
+    const arrPlaylists: { value: string; label: string; }[] = [];
+    videoPlaylistsIds?.forEach(function (playlist: Playlist) {
+      return arrPlaylists.push({value: playlist.id, label: playlist.name});
+    });
+    setPlaylistsStateSelected(arrPlaylists);
+
+    
     setShowEditModal(true);
     setIsEditing(true);
   };
 
   const handleEditVideo = async () => {
     try {
-      await axios.put(`http://localhost:8080/api/capacitacao/edit/${editedVideo!.id}`, {
+      if (editedVideo === null)
+        throw new Error("Nenhum vídeo selecionado");
+
+    await UniversimeApi.Capacity.editVideo({
+        id: editedVideo.id,
+
         title: editedTitle,
         description: editedDescription,
         url: editedUrl,
         rating: editedRating,
-        category: editedCategory,
-        playlist: editedPlaylist,
+
+        addCategoriesByIds: categoriesToAddIds,
+        removeCategoriesByIds: categoriesToRemoveIds,
+        addPlaylistsByIds: playlistsToAddIds,
+        removePlaylistsByIds: playlistsToRemoveIds,
       });
+
       setShowEditModal(false);
       setIsEditing(false);
       setEditedVideo(null);
@@ -94,44 +151,117 @@ const CrudTela: React.FC = () => {
       setEditedDescription('');
       setEditedUrl('');
       setEditedRating(1);
-      setEditedCategory('');
-      setEditedPlaylist('');
+
+      cleanCategoriesAndPlaylists()
+      
       fetchVideos();
     } catch (error) {
       console.error('Erro ao editar vídeo:', error);
     }
   };
 
+  const cleanCategoriesAndPlaylists = () => {
+    setCategoriesToRemoveIds([]);
+    setCategoriesToRemove([]);
+    setCategoriesToAddIds([]);
+    setCategoriesStateSelected([]);
+
+    setPlaylistsToRemoveIds([]);
+    setPlaylistsToAddIds([]);
+    setPlaylistsToRemove([]);
+    setPlaylistsStateSelected([]);
+  };
+
   const handleAddVideo = async () => {
     try {
-      const newVideo: Video = {
-        id: videos.length + 1,
+      await UniversimeApi.Capacity.createVideo({
         title: newTitle,
         description: newDescription,
         url: newUrl,
         rating: newRating,
-        category: newCategory,
-        playlist: newPlaylist,
-      };
-      await axios.post('http://localhost:8080/api/capacitacao/add', newVideo);
+        addCategoriesByIds: categoriesToAddIds,
+        addPlaylistsByIds: playlistsToAddIds,
+      });
 
       setShowAddModal(false);
       setNewTitle('');
       setNewDescription('');
       setNewUrl('');
       setNewRating(1);
-      setNewCategory('');
-      setNewPlaylist('');
+
+      cleanCategoriesAndPlaylists()
+
       fetchVideos();
     } catch (error) {
       console.error('Erro ao adicionar vídeo:', error);
     }
   };
 
+  const handleCreateVideo = async () => {
+    setShowAddModal(true);
+
+    cleanCategoriesAndPlaylists()
+
+  };
+
+  const handleCategoriesOnChange = (value: any) => {
+    let difference = categoriesStateSelected.filter((x: any) => !value.includes(x))
+    setCategoriesStateSelected(value)
+    let categoriesToRem = categoriesToRemove
+    categoriesToRem = [...categoriesToRem, ...difference]
+    categoriesToRem = categoriesToRem.reduce(function (acc: any, curr: any) {
+      if (!acc.includes(curr) && !value.includes(curr))
+          acc.push(curr);
+          return acc;
+    }, []);
+    setCategoriesToRemove(categoriesToRem)
+    
+    const categoriesRemoveArr: string[] = [];
+    categoriesToRem.map((category: any) => {
+      return categoriesRemoveArr.push(category.value);
+    });
+    setCategoriesToRemoveIds(categoriesRemoveArr)
+    
+    const categoriesAddArr: string[] = [];
+    value.map((category: any) => {
+      return categoriesAddArr.push(category.value);
+    });
+    setCategoriesToAddIds(categoriesAddArr)
+  };
+
+  const handlePlaylistsOnChange = (value: any) => {
+    let difference = playlistsStateSelected.filter((x: any) => !value.includes(x))
+    setPlaylistsStateSelected(value)
+
+    let playlistsToRem = playlistsToRemove
+    playlistsToRem = [...playlistsToRem, ...difference]
+    playlistsToRem = playlistsToRem.reduce(function (acc: any, curr: any) {
+      if (!acc.includes(curr) && !value.includes(curr))
+          acc.push(curr);
+          return acc;
+    }, []);
+    setPlaylistsToRemove(playlistsToRem)
+
+    const playlistsRemoveArr: string[] = [];
+    playlistsToRem.map((playlist: any) => {
+      return playlistsRemoveArr.push(playlist.value);
+    });
+    setPlaylistsToRemoveIds(playlistsRemoveArr)
+    
+    const playlistsAddArr: string[] = [];
+    value.map((playlist: any) => {
+      return playlistsAddArr.push(playlist.value);
+    });
+    setPlaylistsToAddIds(playlistsAddArr)
+  };
+
+  const auth = useContext(AuthContext);
+
   return (
+    !auth.user ? null :
     <div>
         <h1 className="title-page">Gerenciador de Vídeos</h1>
-        <button className='button-adicionar' type="button" onClick={() => setShowAddModal(true)}>Adicionar Vídeo</button>
+        <button className='button-adicionar' type="button" onClick={() => handleCreateVideo()}>Adicionar Vídeo</button>
             <table className="videos-table">
                 <thead>
                      <tr>
@@ -139,8 +269,8 @@ const CrudTela: React.FC = () => {
                         <th>Título</th>
                         <th>URL</th>
                         <th>Classificação</th>
-                        <th>Categoria</th>
-                        <th>Playlist</th>
+                        <th>Categorias</th>
+                        <th>Playlists</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -151,8 +281,8 @@ const CrudTela: React.FC = () => {
                         <td>{video.title}</td>
                         <td>{video.url}</td>
                         <td>{video.rating}</td>
-                        <td>{video.category}</td>
-                        <td>{video.playlist}</td>
+                        <td>{video.categories?.map(function(elem){ return elem.name; }).join(", ")}</td>
+                        <td>{video.playlists?.map(function(elem){ return elem.name; }).join(", ")}</td>
                         <td>
                             <button className='button-edit' onClick={() => handleEditClick(video)}>Editar</button>
                             <button className='button-delete' type="button" onClick={() => handleDeleteClick(video)}>Deletar</button>
@@ -164,7 +294,7 @@ const CrudTela: React.FC = () => {
             {showConfirmation && (
             <div className="confirmation-container">
                 <div className="confirmation-box-delete">
-                    <h2 style={{marginTop:'20px'}} className="titulo-box">Confirmar exclusão</h2>
+                    <h2 className="titulo-box">Confirmar exclusão</h2>
                     <p>Deseja deletar o vídeo "{selectedVideo?.title}" ?</p>
                     <div className="confirmation-buttons">
                     <button className="button-boxCancel" onClick={() => setShowConfirmation(false)}>Cancelar</button>
@@ -176,22 +306,20 @@ const CrudTela: React.FC = () => {
             {showEditModal && (
         <div className="confirmation-container">
           <div className="confirmation-box-edit">
-            <h2 style={{marginTop:'20px'}} className="titulo-box">Editar vídeo</h2>
+            <h2 className="titulo-box">Editar vídeo</h2>
             <div className="space-text">
               <label>Título:</label>
               <input className='input-text' style={{width: '300px'}} type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
             </div>
             <div className="space-text">
               <label>Descrição:</label>
-              <input className='input-text' style={{width: '263px'}} type="text" value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} />
+              <textarea className='input-text' style={{width: '263px', resize: "vertical"}} rows={5} value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} />
             </div>
             <div className="space-text">
               <label>URL:</label>
               <input className='input-text' style={{width: '315px'}} type="text" value={editedUrl} onChange={(e) => setEditedUrl(e.target.value)} />
             </div>
-            <div  style={{display: 'flex', justifyContent: 'center'}}>
-              <label >Categoria:</label>
-              <input  className='input-text' style={{width: '120px', marginRight: '42px'}} type="text" value={editedCategory} onChange={(e) => setEditedCategory(e.target.value)} />
+            <div className="space-text">
               <label>Rating:</label>
               <select style={{marginLeft: '8px'}} value={editedRating} onChange={(e) => setEditedRating(Number(e.target.value))}>
                 <option value={1}>1</option>
@@ -202,8 +330,38 @@ const CrudTela: React.FC = () => {
               </select>
             </div>
             <div style={{marginTop: '15px'}}>
-              <label>Playlist:</label>
-              <input className='input-text' style={{width: '285px'}} type="text" value={editedPlaylist} onChange={(e) => setEditedPlaylist(e.target.value)} />
+              <label >Categorias:</label>
+              <Select placeholder= "Selecionar Categorias..."  isMulti name="categories" options={categories} className="basic-multi-select" theme={(theme) => ({
+                ...theme,
+                borderRadius: 10,
+                color: 'black',
+                colors: {
+                  ...theme.colors,
+                  primary25: 'red',
+                  primary: 'blue',
+                  neutral10: 'green',
+                  neutral5:  'black',
+                  neutral0: '#c2c2c2'
+                },
+              })}
+              onChange={handleCategoriesOnChange} value={categoriesStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Categoria Não Encontrada"} />
+            </div>
+            <div style={{marginTop: '15px'}}>
+              <label>Playlists:</label>
+              <Select placeholder= "Selecionar Playlists..."  isMulti name="playlists" options={playlists} className="basic-multi-select" theme={(theme) => ({
+                ...theme,
+                borderRadius: 10,
+                color: 'black',
+                colors: {
+                  ...theme.colors,
+                  primary25: 'red',
+                  primary: 'blue',
+                  neutral10: 'green',
+                  neutral5:  'black',
+                  neutral0: '#c2c2c2'
+                },
+              })}
+              onChange={handlePlaylistsOnChange} value={playlistsStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Playlist Não Encontrada"} />
             </div>
             <div style={{marginTop: '35px'}} className="confirmation-buttons">
               <button className='button-boxCancel' onClick={() => setShowEditModal(false)}>Cancelar</button>
@@ -215,22 +373,20 @@ const CrudTela: React.FC = () => {
       {showAddModal && (
         <div className="confirmation-container">
           <div className="confirmation-box-edit">
-            <h2 style={{ marginTop: '20px' }} className="titulo-box">Adicionar vídeo</h2>
+            <h2 className="titulo-box">Adicionar vídeo</h2>
             <div className="space-text">
               <label>Título:</label>
               <input className='input-text' style={{ width: '300px'}} type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
             </div>
             <div className="space-text">
               <label>Descrição:</label>
-              <input className='input-text' style={{ width: '263px'}} type="text" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
+              <textarea className='input-text' style={{ width: '263px', resize: "vertical"}} rows={5} value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
             </div>
             <div className="space-text">
               <label>URL:</label>
               <input className='input-text' style={{ width: '315px'}} type="text" value={newUrl} onChange={(e) => setNewUrl(e.target.value)} />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <label >Categoria:</label>
-              <input className='input-text' style={{width: '120px', marginRight: '42px'}} type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} />
+            <div className="space-text">
               <label>Rating:</label>
               <select style={{ marginLeft: '8px' }} value={newRating} onChange={(e) => setNewRating(Number(e.target.value))}>
                 <option value={1}>1</option>
@@ -240,9 +396,39 @@ const CrudTela: React.FC = () => {
                 <option value={5}>5</option>
               </select>
             </div>
+            <div style={{marginTop: '15px'}}>
+              <label >Categorias:</label>
+              <Select placeholder= "Selecionar Categorias..."  isMulti name="categories" options={categories} className="basic-multi-select" theme={(theme) => ({
+                ...theme,
+                borderRadius: 10,
+                color: 'black',
+                colors: {
+                  ...theme.colors,
+                  primary25: 'red',
+                  primary: 'blue',
+                  neutral10: 'green',
+                  neutral5:  'black',
+                  neutral0: '#c2c2c2'
+                },
+              })}
+              onChange={handleCategoriesOnChange} value={categoriesStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Categoria Não Encontrada"} />
+            </div>
             <div style={{ marginTop: '15px' }}>
-              <label>Playlist:</label>
-              <input className='input-text' style={{width: '285px'}} type="text" value={newPlaylist} onChange={(e) => setNewPlaylist(e.target.value)} />
+              <label>Playlists:</label>
+              <Select placeholder= "Selecionar Playlists..."  isMulti name="playlists" options={playlists} className="basic-multi-select" theme={(theme) => ({
+                ...theme,
+                borderRadius: 10,
+                color: 'black',
+                colors: {
+                  ...theme.colors,
+                  primary25: 'red',
+                  primary: 'blue',
+                  neutral10: 'green',
+                  neutral5:  'black',
+                  neutral0: '#c2c2c2'
+                },
+              })}
+              onChange={handlePlaylistsOnChange} value={playlistsStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Playlist Não Encontrada"} />
             </div>
             <div style={{ marginTop: '35px' }} className="confirmation-buttons">
               <button className='button-boxCancel' onClick={() => setShowAddModal(false)}>Cancelar</button>

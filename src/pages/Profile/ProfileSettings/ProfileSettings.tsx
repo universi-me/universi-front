@@ -45,7 +45,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
 
                 <div className="section gender">
                     <h2>Gênero</h2>
-                    <select name="gender" id="gender" className="dropdown-trigger" onChange={onChangeSelect} defaultValue={profileContext.profile.gender ?? ''} style={{color: profileContext.profile.gender ? 'black' : '#6F6F6F'}} >
+                    <select name="gender" id="gender" className="dropdown-trigger" onChange={onChangeSelect} defaultValue={profileContext.profile.gender ?? ''} style={{color: profileContext.profile.gender ? 'black' : 'var(--font-disabled-color)'}} >
                         <option disabled value={''}>Selecione o seu gênero</option>
                         {
                             Object.entries(GENDER_OPTIONS).map(([apiValue, name]) => {
@@ -140,7 +140,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
             return;
 
         setProfileLinks([...profileLinks, {
-            id: NEW_LINK_ID--,
+            id: (NEW_LINK_ID--).toString(),
             name: "",
             perfil: profileContext.profile,
             typeLink: "LINK",
@@ -165,6 +165,9 @@ export function ProfileSettings(props: ProfileSettingsProps) {
     }
 
     function saveChanges() {
+        if (profileContext === null)
+            return;
+
         const nameElement = document.getElementById("name");
         const fullname = nameElement !== null
             ? (nameElement as HTMLInputElement).value
@@ -183,13 +186,13 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         const [name, lastname] = separateFullName(fullname);
 
         UniversimeApi.Profile.edit({
-            profileId: profileContext?.profile.id ?? -1,
+            profileId: profileContext.profile.id,
             name,
             lastname,
             bio,
             gender,
         }).then(r => {
-            profileContext?.reloadPage();
+            profileContext.reloadPage();
         });
 
         const links = classifyLinks();
@@ -202,7 +205,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         });
 
         links?.toDelete.forEach(id => {
-            UniversimeApi.Link.remove({linkId: parseInt(id)})
+            UniversimeApi.Link.remove({linkId: id})
         });
 
         links?.toUpdate.forEach(link => {
@@ -222,7 +225,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
             return;
 
         const toCreate = profileLinks
-            .filter(l => l.id < 0)
+            .filter(l => isNewLink(l.id))
             .map(l => {
                 const itemBox = document.querySelector(`#profile-settings .section.social .box .item[data-link-id="${l.id}"]`) as HTMLElement;
 
@@ -248,11 +251,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         const toUpdate = Array.from(document.querySelectorAll("#profile-settings .section.social .box .item"))
             .map(linkItem => {
                 const nameAttr = linkItem.getAttribute("data-link-id");
-                if (nameAttr === null)
-                    return null;
-
-                const linkId = parseInt(nameAttr);
-                if (linkId < 0)
+                if (nameAttr === null || isNewLink(nameAttr))
                     return null;
 
                 const typeLinkElement = linkItem
@@ -267,7 +266,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                 console.log("update-name", nameElement);
 
                 return {
-                    id: linkId,
+                    id: nameAttr,
                     name: nameElement.value,
                     url: urlElement.value,
                     typeLink: typeLinkElement.value,
@@ -284,5 +283,10 @@ export function ProfileSettings(props: ProfileSettingsProps) {
             toDelete: competencesToDelete,
             toCreate,
         };
+    }
+
+    function isNewLink(linkId: string) {
+        const num = parseInt(linkId);
+        return !isNaN(num) && num < 0;
     }
 }

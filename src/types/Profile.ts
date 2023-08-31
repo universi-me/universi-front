@@ -3,7 +3,7 @@ import type { User } from "@/types/User";
 export type Gender = "M" | "F" | "O";
 
 export type Profile = {
-    id:           number;
+    id:           string;
     user:         User;
     firstname:    string | null;
     gender:       Gender | null;

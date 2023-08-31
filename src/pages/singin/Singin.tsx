@@ -8,7 +8,7 @@ export default function Singin() {
         <div className="logo">
           {/* <UniversiLogo /> */}
 
-          <h1>Faça seu login na rede social</h1>
+          <h1>Bem-vindo ao Universi.me</h1>
         </div>
 
         <div className="signin">

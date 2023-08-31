@@ -1,25 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import UniversimeApi from '@/services/UniversimeApi';
+import { Category} from '@/types/Capacity';
 import './NavbarCategory.css'
 
 const CategoryNavbar: React.FC = () => {
+
+  const [categories, setCategories] = useState<any>([]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const arr: { value: string; label: string; }[] = [];
+      const response = await UniversimeApi.Capacity.categoryList();
+      let categoriesArr = response.body.categories;
+      setCategories(categoriesArr)
+    } catch (error) {
+      console.error('Erro ao obter categorias:', error);
+    }
+  };
+
   return (
     <nav id="navbar-category">
       <h3 style={{ fontSize: '22px', fontWeight: 'bold' }}>CATEGORIAS</h3>
       <ul>
-        <li><a href="/capacitacao/categoria/java"> - Java</a></li>
-        <li><a href="/capacitacao/categoria/html-css"> - HTML/CSS</a></li>
-        <li><a href="/capacitacao/categoria/python"> - Python</a></li>
-        <li><a href="/capacitacao/categoria/golang"> - Golang</a></li>
-        <li><a href="/capacitacao/categoria/javascript"> - Java Script</a></li>
-        <li><a href="/capacitacao/categoria/react"> - React</a></li>
-        <li><a href="/capacitacao/categoria/vue"> - Vue.js</a></li>
-        <li><a href="/capacitacao/categoria/node"> - Node</a></li>
-        <li><a href="/capacitacao/categoria/angular"> - Angular</a></li>
-        <li><a href="/capacitacao/categoria/git"> - Git</a></li>
-        <li><a href="/capacitacao/categoria/soft-Skills"> - Soft Skills</a></li>
-        <li><a href="/capacitacao/categoria/banco-de-Dados"> - Banco de Dados</a></li>
-        <li><a href="/capacitacao/categoria/figma"> - Figma</a></li>
-        <li><a href="/capacitacao/categoria/linkedln"> - Linkedln</a></li>
+      {categories.map((category : Category) => (
+         <li><a href={`/capacitacao/categoria/${category.id}`}>{`- ${category.name}`}</a></li>
+      ))}
       </ul>
       <div id="expand-navbar"></div>
     </nav>

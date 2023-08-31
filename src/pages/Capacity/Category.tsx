@@ -1,39 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
+import UniversimeApi from '@/services/UniversimeApi';
 import './Category.css';
 import VideoStar from './Components/Video/VideoStar';
 import NotFoundVideo from './Components/NotFoundVideo/NotFoundVideo';
 import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
-
-interface Video {
-  id: number;
-  title: string;
-  url: string;
-  rating: number;
-  category: string;
-}
+import { Category } from '@/types/Capacity';
+import { Video } from '@/types/Capacity';
 
 const CategoryPage: React.FC = () => {
-  const { category } = useParams<{ category: string }>();
+  const { category: categoryId } = useParams<{ category: string }>();
   const [videos, setVideos] = useState<Video[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
+  const [categoryData, setCategoryData] = useState<Category|null>(null);
 
   useEffect(() => {
     const fetchVideosByCategory = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/capacitacao/categoria/${category}`);
-        setVideos(response.data);
-        if (response.data.length === 0) {
+        if (categoryId === undefined)
+          throw new Error("Categoria não informada");
+
+        const response = await UniversimeApi.Capacity.videosInCategory({id: categoryId});
+        setVideos(response.body.videos);
+        if (response.body.videos.length === 0) {
           setHasError(true);
         }
+
+        UniversimeApi.Capacity.getCategory({id: categoryId})
+          .then(res => setCategoryData(res.body.category));
+
       } catch (error) {
         console.error('Erro ao buscar os vídeos:', error);
       }
     };
     fetchVideosByCategory();
-  }, [category]);
+  }, [categoryId]);
 
   useEffect(() => {
     const extractVideoId = (url: string) => {
@@ -66,10 +68,10 @@ const CategoryPage: React.FC = () => {
   return (
     <div className="category-tela">
       <div id="category">
-        <h1 id="title-category">Capacitação em {category}</h1>
+        <h1 id="title-category">Capacitação em {categoryData?.name ?? ""}</h1>
         <VideoStar />
         <div id="conteudo-category">
-          <h1 id="subtitle-category">Todos os vídeos de {category}</h1>
+          <h1 id="subtitle-category">Todos os vídeos de {categoryData?.name ?? ""}</h1>
           <div className="video-list-all">
             {videos.map((video) => (
               <div key={video.id} className="video-item">

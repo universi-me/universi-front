@@ -26,7 +26,7 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
                 {
                     profileContext.accessingLoggedUser ?
                         <button className="edit-button" onClick={addCompetence}>
-                            <i className="bi bi-plus-circle-fill" style={{color: "#FFF", fontSize: "1.5rem"}} />
+                            <i className="bi bi-plus-circle-fill" />
                         </button>
                     : null
                 }
@@ -89,7 +89,7 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
         if (profileContext === null)
             return;
 
-        const competenceId = parseInt(e.currentTarget.getAttribute("data-competence-edit-id") as string);
+        const competenceId = e.currentTarget.getAttribute("data-competence-edit-id");
         const competence = profileContext.profileListData.competences.find(c => c.id === competenceId) ?? null;
         props.updateProfileContext({
             ...profileContext,

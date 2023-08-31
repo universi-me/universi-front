@@ -2,9 +2,10 @@ import { QuizPage } from "@/pages/Quiz";
 import { App } from "@/src/App";
 import GroupPage from "@/pages/Group";
 import {ProfilePage} from "@/pages/Profile";
+import { About } from "@/pages/About";
 import CreateGroupPage from "@/pages/CreateGroup";
 
-import {createBrowserRouter} from 'react-router-dom'
+import {Navigate, createBrowserRouter} from 'react-router-dom'
 import Singin from "../../src/pages/singin/Singin";
 
 import { OAuth2Element }  from './oauth2-google';
@@ -24,8 +25,8 @@ export const router = createBrowserRouter([{
   //todo: errorElement: Erro404page,
   children: [
     {
-      // todo: path: "/",
-      // todo: element: Homepage
+      path: "/",
+      element: <Navigate to="/login" />
     },
     {
       path: "/capacitacao/",
@@ -50,6 +51,10 @@ export const router = createBrowserRouter([{
     {
       path: "/quiz/:id",
       element: <QuizPage />
+    },
+    {
+      path: "/sobre",
+      element: <About />
     },
     { path: "/profile/:id", element: <ProfilePage /> },
     { path: "/group/*", element: <GroupPage /> },

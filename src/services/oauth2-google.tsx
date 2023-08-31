@@ -32,7 +32,7 @@ export function OAuth2Element() {
     const params = new URLSearchParams(window.location.hash.substring(1));
     const id_token = params.get("id_token") as string;
 
-    UniversimeApi.Auth.login_google(`${id_token}`)
+    UniversimeApi.Auth.login_google({ token: id_token })
         .then((res) => {
             if (!res.success)
                 navigate("/login")
@@ -41,7 +41,7 @@ export function OAuth2Element() {
                 auth.signin_google(res)
                 .then(success => {
                     if (success)
-                        navigate(`/profile/${res.body.user.name}`);
+                        navigate(`/capacitacao`);
 
                     else
                         navigate("/login")
