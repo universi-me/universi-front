@@ -4,11 +4,11 @@ import { useLoaderData } from "react-router-dom";
 
 import UniversimeApi from "@/services/UniversimeApi";
 import { GroupType, GroupTypeToLabel } from "@/types/Group";
-import { EDIT_GROUP_PARAMETER, ManageGroupLoaderResponse } from "@/pages/CreateGroup";
+import { EDIT_GROUP_PARAMETER, ManageGroupLoaderResponse } from "@/pages/ManageGroup";
 
-import "./CreateGroup.less"
+import "./ManageGroup.less"
 
-export function CreateGroupPage() {
+export function ManageGroupPage() {
     const { availableGroupTypes, availableParents, editedGroup } = useLoaderData() as ManageGroupLoaderResponse;
 
     return <div id="create-group-page">
