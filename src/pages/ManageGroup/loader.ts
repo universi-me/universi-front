@@ -17,10 +17,10 @@ export const EDIT_GROUP_PARAMETER = "edit-group";
 
 export async function ManageGroupLoader(args: LoaderFunctionArgs): Promise<ManageGroupLoaderResponse> {
     const url = new URL(args.request.url);
-    const editedGroupId = url.searchParams.get(EDIT_GROUP_PARAMETER)
+    const editedGroupPath = url.searchParams.get(EDIT_GROUP_PARAMETER)
 
     return {
-        editedGroup: await getEditedGroup(editedGroupId),
+        editedGroup: await getEditedGroup(editedGroupPath),
         availableParents: await getAvailableParents(),
         availableGroupTypes: getGroupTypes(),
     };
@@ -49,11 +49,11 @@ function getGroupTypes() {
     });
 }
 
-async function getEditedGroup(groupId: string | null): Promise<Group | null> {
-    if (groupId === null)
+async function getEditedGroup(groupPath: string | null): Promise<Group | null> {
+    if (groupPath === null)
         return null;
 
-    const response = await UniversimeApi.Group.get({ groupId });
+    const response = await UniversimeApi.Group.get({ groupPath });
     if (!response.success || !response.body)
         return null;
 
