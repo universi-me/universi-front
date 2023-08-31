@@ -1,8 +1,31 @@
 import UniversimeApi from "@/services/UniversimeApi";
 import { GroupType, GroupTypeToLabel } from "@/types/Group";
+import { useEffect, useState } from "react";
+import Select, { OptionsOrGroups } from "react-select";
 import "./CreateGroup.less"
 
+type ReactSelectOption = {
+    label: string;
+    value: string;
+};
+
 export function CreateGroupPage() {
+    const [availableParents, setAvailableParents] = useState<OptionsOrGroups<ReactSelectOption, never>>([]);
+    useEffect(() => {
+        UniversimeApi.Group.availableParents()
+            .then(res => {
+                if (res.success && res.body !== undefined) {
+                    const options = res.body.groups.map((g): ReactSelectOption => {
+                        return {
+                            label: g.name,
+                            value: g.id,
+                        };
+                    });
+
+                    setAvailableParents(options);
+                }
+            })
+    }, []);
 
     // todo: Change defaultValues if updating existing group
     return <div id="create-group-page">
@@ -61,8 +84,14 @@ export function CreateGroupPage() {
 
             <fieldset className="groupId">
                 <legend>Grupo pai</legend>
-                <input type="checkbox" name="groupRoot" />
-                {/* todo: select parent group */}
+                <Select
+                    placeholder="Selecionar grupo pai"
+                    name="parentGroupId"
+                    options={availableParents}
+                    className="react-select"
+                    classNamePrefix="react-select-option"
+                    isClearable={true}
+                />
             </fieldset>
 
             <button type="button" onClick={createGroup}>Criar grupo</button>
@@ -82,7 +111,9 @@ function getValuesFromPage() {
     const canCreateGroupElement = pageElement.querySelector('input[name="canCreateGroup"]') as HTMLInputElement;
     const publicGroupElement = pageElement.querySelector('input[name="publicGroup"]') as HTMLInputElement;
     const canEnterElement = pageElement.querySelector('input[name="canEnter"]') as HTMLInputElement;
-    const groupRootElement = pageElement.querySelector('input[name="groupRoot"]') as HTMLInputElement;
+    const parentGroupId = pageElement.querySelector('input[name="parentGroupId"]') as HTMLInputElement;
+
+    const hasParentGroup = parentGroupId.value !== "";
 
     return {
         name: nameElement.value,
@@ -93,7 +124,8 @@ function getValuesFromPage() {
         canCreateGroup: canCreateGroupElement.checked,
         publicGroup: publicGroupElement.checked,
         canEnter: canEnterElement.checked,
-        groupRoot: groupRootElement.checked,
+        groupRoot: !hasParentGroup,
+        parentGroupId: hasParentGroup ? parentGroupId.value : undefined,
     };
 }
 
@@ -109,6 +141,7 @@ function createGroup() {
         canJoin:         values.canEnter,
         imageUrl:        values.imageUrl,
         isRootGroup:     values.groupRoot,
+        parentGroupId:   values.parentGroupId,
     })
         .then(r => {
             console.dir(r)

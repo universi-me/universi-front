@@ -30,12 +30,13 @@ export type GroupIdOrPath_RequestDTO = {
     groupPath?: string;
 };
 
-export type GroupGet_ResponseDTO =          ApiResponse<{ group: Group }>;
-export type GroupCreate_ResponseDTO =       ApiResponse;
-export type GroupSubgroups_ResponseDTO =    ApiResponse<{ subgroups: Group[] }>;
-export type GroupParticipants_ResponseDTO = ApiResponse<{ participants: Profile[] }>;
-export type GroupJoin_ResponseDTO =         ApiResponse;
-export type GroupExit_ResponseDTO =         ApiResponse;
+export type GroupGet_ResponseDTO =              ApiResponse<{ group: Group }>;
+export type GroupCreate_ResponseDTO =           ApiResponse;
+export type GroupAvailableParents_ResponseDTO = ApiResponse<{ groups: Group[] }>;
+export type GroupSubgroups_ResponseDTO =        ApiResponse<{ subgroups: Group[] }>;
+export type GroupParticipants_ResponseDTO =     ApiResponse<{ participants: Profile[] }>;
+export type GroupJoin_ResponseDTO =             ApiResponse;
+export type GroupExit_ResponseDTO =             ApiResponse;
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
     return (await groupApi.post<GroupGet_ResponseDTO>('/get', {
@@ -57,6 +58,10 @@ export async function create(body: GroupCreate_RequestDTO) {
         publicGroup:    body.isPublic,
         canEnter:       body.canJoin,
     })).data;
+}
+
+export async function availableParents() {
+    return (await groupApi.post<GroupAvailableParents_ResponseDTO>("/parents", {})).data;
 }
 
 export async function subgroups(body: GroupId_RequestDTO) {
