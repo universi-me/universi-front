@@ -4,15 +4,6 @@ import type { Profile } from "@/types/Profile";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
-export type GroupIdDTO = {
-    groupId: number;
-};
-
-export type GroupIdOrPathDTO = {
-    groupId?:   number;
-    groupPath?: string;
-};
-
 export type GroupCreateDTO = {
     name:            string;
     description:     string;
