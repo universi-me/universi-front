@@ -54,6 +54,26 @@ export function ManageGroupPage() {
                 <input type="url" name="image" placeholder="Insira a URL para a imagem do grupo" defaultValue={editedGroup?.image ?? ""} />
             </fieldset>
 
+            <fieldset className="groupId">
+                <legend>Grupo pai</legend>
+                <Select
+                    placeholder="Selecionar grupo pai"
+                    name="parentGroupId"
+                    options={availableParents}
+                    className="react-select"
+                    classNamePrefix="react-select-option"
+                    isClearable={true}
+                    isSearchable={true}
+
+                    isDisabled={ !!editedGroup }
+                    defaultValue={
+                        !editedGroup
+                            ? undefined 
+                            : { label: "Você não pode mudar o grupo pai de um grupo já existente", value: "" }
+                    }
+                />
+            </fieldset>
+
             <fieldset className="canCreateGroup one-line-fieldset">
                 <div className="fieldset-legend">Pode ter subgrupos</div>
                 <Switch.Root name="canCreateGroup" className="radix-switch-root" defaultChecked={editedGroup?.canCreateGroup ?? false} >
@@ -73,26 +93,6 @@ export function ManageGroupPage() {
                 <Switch.Root name="canEnter" className="radix-switch-root" defaultChecked={editedGroup?.canEnter ?? false} >
                     <Switch.Thumb className="radix-switch-thumb" />
                 </Switch.Root>
-            </fieldset>
-
-            <fieldset className="groupId">
-                <legend>Grupo pai</legend>
-                <Select
-                    placeholder="Selecionar grupo pai"
-                    name="parentGroupId"
-                    options={availableParents}
-                    className="react-select"
-                    classNamePrefix="react-select-option"
-                    isClearable={true}
-                    isSearchable={true}
-
-                    isDisabled={ !!editedGroup }
-                    defaultValue={
-                        !editedGroup
-                            ? undefined 
-                            : { label: "Você não pode mudar o grupo pai de um grupo já existente", value: "" }
-                    }
-                />
             </fieldset>
 
             <button className="save-group" type="button" onClick={!editedGroup ? createGroup : editGroup}>
