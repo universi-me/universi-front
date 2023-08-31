@@ -3,7 +3,7 @@ import { App } from "@/src/App";
 import GroupPage from "@/pages/Group";
 import {ProfilePage} from "@/pages/Profile";
 import { About } from "@/pages/About";
-import CreateGroupPage from "@/pages/CreateGroup";
+import CreateGroupPage, { ManageGroupLoader } from "@/pages/CreateGroup";
 
 import {Navigate, createBrowserRouter} from 'react-router-dom'
 import Singin from "../../src/pages/singin/Singin";
@@ -78,7 +78,8 @@ export const router = createBrowserRouter([{
     },
     {
         path: "/manage-group",
-        element: <CreateGroupPage />
+        element: <CreateGroupPage />,
+        loader: ManageGroupLoader,
     },
   ]
 },
