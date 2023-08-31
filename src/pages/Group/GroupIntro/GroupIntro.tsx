@@ -1,7 +1,14 @@
 import { useContext } from "react";
+import { Link } from "react-router-dom";
+
 import { GroupContext } from "@/pages/Group";
+import { EDIT_GROUP_PARAMETER } from "@/pages/ManageGroup";
+import { AuthContext } from "@/contexts/Auth";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { GroupTypeToLabel } from "@/types/Group";
+
+import EditButton from "@/assets/icons/edit-2.svg"
+
 import "./GroupIntro.css"
 
 export type GroupIntroProps = {
@@ -13,6 +20,7 @@ export type GroupIntroProps = {
 
 export function GroupIntro(props: GroupIntroProps) {
     const groupContext = useContext(GroupContext);
+    const authContext = useContext(AuthContext);
 
     return (
         groupContext === null ? null :
@@ -24,6 +32,13 @@ export function GroupIntro(props: GroupIntroProps) {
                 {
                     props.verified ?
                         <img src="/assets/icons/icon-verificated.svg" className="verified-icon" />
+                    : null
+                }
+                {
+                    groupContext.group.admin.user.id === authContext?.user?.id
+                    ? <Link title="Editar dados grupo" className="edit-group-button" to={`/manage-group?${EDIT_GROUP_PARAMETER}=${groupContext.group.path}`}>
+                        <img src={EditButton} />
+                      </Link>
                     : null
                 }
             </div>
