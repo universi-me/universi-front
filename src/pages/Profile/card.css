@@ -12,7 +12,6 @@
 
 #profile-page #left-side .card-heading {
     color: var(--font-color-v2);
-    font-size: 1.5em;
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
 }
@@ -25,7 +24,9 @@
 #profile-page #left-side .card .counter-wrapper {
     display: flex;
     flex-direction: row;
+    align-items: center;
     margin-bottom: .5em;
+    font-size: 1.5em;
 }
 
 #profile-page #left-side .card .items-wrapper {
