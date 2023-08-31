@@ -104,6 +104,7 @@ export function CreateGroupPage() {
                     className="react-select"
                     classNamePrefix="react-select-option"
                     isClearable={true}
+                    isSearchable={true}
                 />
             </fieldset>
 
