@@ -72,7 +72,7 @@ export const router = createBrowserRouter([{
         element: <OAuth2Element/>
     },
     {
-        path: "/create-group",
+        path: "/manage-group",
         element: <CreateGroupPage />
     },
   ]
