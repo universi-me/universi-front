@@ -25,6 +25,19 @@ export type GroupCreate_RequestDTO = {
     parentGroupId?:  string;
 };
 
+export type GroupUpdate_RequestDTO = {
+    groupId?:   string;
+    groupPath?: string;
+
+    name?:            string;
+    description?:     string;
+    groupType?:       GroupType;
+    imageUrl?:        string;
+    canHaveSubgroup?: boolean;
+    isPublic?:        boolean;
+    canJoin?:         boolean;
+};
+
 export type GroupIdOrPath_RequestDTO = {
     groupId?:   string;
     groupPath?: string;
@@ -54,6 +67,20 @@ export async function create(body: GroupCreate_RequestDTO) {
         description:    body.description,
         imageUrl:       body.imageUrl,
         type:           body.groupType,
+        canCreateGroup: body.canHaveSubgroup,
+        publicGroup:    body.isPublic,
+        canEnter:       body.canJoin,
+    })).data;
+}
+
+export async function update(body: GroupUpdate_RequestDTO) {
+    return (await groupApi.post("/update", {
+        groupId:        body.groupId,
+        groupPath:      body.groupPath,
+        name:           body.name,
+        description:    body.description,
+        type:           body.groupType,
+        imageUrl:       body.imageUrl,
         canCreateGroup: body.canHaveSubgroup,
         publicGroup:    body.isPublic,
         canEnter:       body.canJoin,
