@@ -2,6 +2,7 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { GroupType, GroupTypeToLabel } from "@/types/Group";
 import { useEffect, useState } from "react";
 import Select, { OptionsOrGroups } from "react-select";
+import * as Switch from "@radix-ui/react-switch"
 import "./CreateGroup.less"
 
 type ReactSelectOption = {
@@ -11,6 +12,13 @@ type ReactSelectOption = {
 
 export function CreateGroupPage() {
     const [availableParents, setAvailableParents] = useState<OptionsOrGroups<ReactSelectOption, never>>([]);
+    const availableGroupTypes: ReactSelectOption[] = Object.entries(GroupTypeToLabel).map(([groupType, label]) => {
+        return {
+            label,
+            value: groupType,
+        };
+    });
+
     useEffect(() => {
         UniversimeApi.Group.availableParents()
             .then(res => {
@@ -50,15 +58,14 @@ export function CreateGroupPage() {
 
             <fieldset className="type">
                 <legend>Tipo do grupo</legend>
-                <select defaultValue={""} name="type">
-                    <option disabled value="">Selecione o tipo do grupo</option>
-                    {
-                        Object.entries(GroupTypeToLabel)
-                            .map(([groupType, groupTypeLabel]) => {
-                                return <option value={groupType} key={groupType}>{groupTypeLabel}</option>
-                            })
-                    }
-                </select>
+                <Select
+                    placeholder="Selecionar tipo de grupo"
+                    name="type"
+                    options={availableGroupTypes}
+                    className="react-select"
+                    classNamePrefix="react-select-option"
+                    isClearable={false}
+                />
             </fieldset>
 
             <fieldset className="image">
@@ -67,19 +74,25 @@ export function CreateGroupPage() {
                 <input type="url" name="image" placeholder="Insira a URL para a imagem do grupo" />
             </fieldset>
 
-            <fieldset className="canCreateGroup">
-                <legend>Pode ter subgrupos?</legend>
-                <input type="checkbox" name="canCreateGroup" />
+            <fieldset className="canCreateGroup one-line-fieldset">
+                <div className="fieldset-legend">Pode ter subgrupos</div>
+                <Switch.Root name="canCreateGroup" className="radix-switch-root">
+                    <Switch.Thumb className="radix-switch-thumb" />
+                </Switch.Root>
             </fieldset>
 
-            <fieldset className="publicGroup">
-                <legend>É um grupo público?</legend>
-                <input type="checkbox" name="publicGroup" />
+            <fieldset className="publicGroup one-line-fieldset">
+                <div className="fieldset-legend">É um grupo público?</div>
+                <Switch.Root name="publicGroup" className="radix-switch-root">
+                    <Switch.Thumb className="radix-switch-thumb" />
+                </Switch.Root>
             </fieldset>
 
-            <fieldset className="canEnter">
-                <legend>Qualquer pessoa pode entrar?</legend>
-                <input type="checkbox" name="canEnter" />
+            <fieldset className="canEnter one-line-fieldset">
+                <div className="fieldset-legend">Qualquer pessoa pode entrar?</div>
+                <Switch.Root name="canEnter" className="radix-switch-root">
+                    <Switch.Thumb className="radix-switch-thumb" />
+                </Switch.Root>
             </fieldset>
 
             <fieldset className="groupId">

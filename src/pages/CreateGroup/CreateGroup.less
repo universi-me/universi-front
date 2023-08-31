@@ -28,42 +28,100 @@
         padding-bottom: 2em;
     
         max-height: @form-height;
-        width: 50vw;
+        width: 40vw;
         overflow: auto;
-    }
 
-    fieldset {
-        width: 100%;
-        & + fieldset {
-            margin-top: 1rem;
-        }
+        fieldset {
+            width: 100%;
+            & + fieldset {
+                margin-top: 1rem;
+            }
 
-        legend {
-            font-size: 1.25rem;
-            text-transform: uppercase;
-        }
+            &.one-line-fieldset {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
 
-        border: none;
+            legend {
+                text-transform: uppercase;
+            }
 
-        // One line inputs
-        input[type="text"], input[type="url"], textarea {
-            padding: .5rem 1.5rem;
-            border-radius: 0.5em;
+            legend, .fieldset-legend {
+                font-size: 1.25rem;
+            }
+
             border: none;
 
-            width: 100%;
+            // One line inputs
+            input[type="text"], input[type="url"], textarea {
+                padding: .5rem 1.5rem;
+                border-radius: 0.5em;
+                border: none;
 
-            background: #FFF;
+                width: 100%;
 
-            &:focus {
-                outline: 2px solid @secondary-color;
+                background: #FFF;
+
+                &:focus {
+                    outline: 2px solid @secondary-color;
+                }
             }
-        }
 
-        textarea {
-            resize: vertical;
-            min-height: 5rem;
-            max-height: 10rem;
+            textarea {
+                resize: vertical;
+                min-height: 5rem;
+                max-height: 10rem;
+            }
+
+            button.radix-switch {
+                all: unset;
+            }
+
+            .radix-switch-root {
+                @radix-switch-width: 2.5rem;
+                @radix-switch-height: 1.5rem;
+                @radix-thumb-diameter: @radix-switch-height;
+
+                width: @radix-switch-width;
+                height: @radix-switch-height;
+
+                border-radius: 9999px;
+                border: none;
+                outline: 2px solid @primary-color;
+
+                box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+
+                &:focus {
+                    outline: 2px solid @secondary-color;
+                }
+
+                & .radix-switch-thumb {
+                    display: block;
+                    width: @radix-thumb-diameter;
+                    height: @radix-thumb-diameter;
+                    background-color: #FFF;
+                    border-radius: 50%;
+                    outline: 2px solid @primary-color;
+
+                    transition: transform 100ms;
+                    will-change: transform;
+                }
+
+                &:not([data-state='checked']) {
+                    background-color: @card-background-color;
+                }
+
+                &[data-state='checked'] {
+                    background-color: @card-item-color;
+
+                    .radix-switch-thumb {
+                        transform: translateX(calc(@radix-switch-width - @radix-thumb-diameter));
+                        background-color: @primary-color;
+                    }
+                }
+            }
         }
     }
 }
