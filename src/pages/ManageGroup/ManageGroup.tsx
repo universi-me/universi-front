@@ -139,15 +139,15 @@ function getCreateOnlyValuesFromPage() {
 }
 
 function editGroup() {
-    const groupId = new URL(document.URL).searchParams.get(EDIT_GROUP_PARAMETER);
-    if (groupId === null) {
+    const groupPath = new URL(document.URL).searchParams.get(EDIT_GROUP_PARAMETER);
+    if (groupPath === null) {
         createGroup();
         return;
     }
 
     const values = getValuesFromPage();
     UniversimeApi.Group.update({
-        groupId,
+        groupPath,
 
         name:            values.name,
         description:     values.description,
