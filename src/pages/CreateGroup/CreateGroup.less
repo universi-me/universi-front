@@ -123,5 +123,31 @@
                 }
             }
         }
+
+        .save-group {
+            min-width: 17.5em;
+            max-width: max-content;
+            height: 2.5em;
+
+            border: 2px solid @secondary-color;
+            border-radius: 0.625em;
+            margin-top: 1rem;
+
+            font-size: 0.875em;
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+
+            cursor: pointer;
+            transition: var(--hover-transition-duration) background-color, border-color, color;
+
+            color: @secondary-color;
+            background-color: transparent;
+
+            &:hover {
+                color: @font-color-v1;
+                background-color: @secondary-color;
+                border-color: @secondary-color;
+            }
+        }
     }
 }

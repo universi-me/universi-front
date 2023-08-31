@@ -107,7 +107,7 @@ export function CreateGroupPage() {
                 />
             </fieldset>
 
-            <button type="button" onClick={createGroup}>Criar grupo</button>
+            <button className="save-group" type="button" onClick={createGroup}>Criar grupo</button>
             {/* todo: change to "Atualizar grupo" if updating existing group */}
         </form>
     </div>;
