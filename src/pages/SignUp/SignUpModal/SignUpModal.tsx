@@ -1,5 +1,8 @@
 import { MouseEvent } from "react";
+
 import { UniversiModal } from "@/components/UniversiModal";
+import UniversimeApi from "@/services/UniversimeApi";
+
 import "./SignUpModal.less"
 
 export type SignUpModalProps = {
@@ -72,5 +75,13 @@ function createAccount(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
 
     const values = getValuesFromPage();
-    console.dir(values);
+
+    UniversimeApi.User.signUp({
+        email:    values.email,
+        password: values.password,
+        // todo: change input to username
+        username: values.name,
+    }).then(res => {
+        console.dir(res);
+    })
 }
