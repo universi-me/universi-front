@@ -1,7 +1,7 @@
 import { FormEvent, useContext, useState } from "react";
 import "./signinForm.css";
 import { AuthContext } from "../../contexts/Auth/AuthContext";
-import { redirect, useNavigate } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import { oauthSignIn } from "../../services/oauth2-google";
 import Modal from "./modal/Modal";
 
@@ -100,7 +100,7 @@ export default function SinginForm() {
       {
         !ENABLE_GOOGLE_LOGIN ? null :
         <>
-            <div className="container-line-form">
+            <div className="container-line-form" style={{margin: "20px 0"}}>
                 <div className="line-form"></div>
                 <div>ou entre com</div>
                 <div className="line-form"></div>
@@ -116,6 +116,12 @@ export default function SinginForm() {
             </button>
         </>
       }
+
+        <div className="container-line-form" style={{marginTop: "20px"}}>
+            <div className="line-form"></div>
+            <div>Não possui uma conta? <Link to="/signup">Cadastre-se!</Link></div>
+            <div className="line-form"></div>
+        </div>
     </div>
   </>
   
