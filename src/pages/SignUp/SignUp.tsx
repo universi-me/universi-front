@@ -7,6 +7,8 @@ import "./SignUp.less"
 export default function SignUpPage() {
     const googleUrl = oauthSignIn();
 
+    const ENABLE_GOOGLE_LOGIN = import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1";
+
     return (
         <div id="sign-up-page">
             <div className="welcome-wrapper">
@@ -15,16 +17,21 @@ export default function SignUpPage() {
 
             <div className="signup-container">
                 <div className="signup-box">
-                    <a href={googleUrl.href} className="google-login">
-                        <img src={dcxImage} alt="DCX" />
-                        Entrar com DCX
-                    </a>
+                    {
+                        !ENABLE_GOOGLE_LOGIN ? null
+                        : <>
+                            <a href={googleUrl.href} className="google-login">
+                                <img src={dcxImage} alt="DCX" />
+                                Entrar com DCX
+                            </a>
 
-                    <div className="signup-line-container">
-                        <div className="signup-line" />
-                        <div className="other-email">ou com outro email</div>
-                        <div className="signup-line" />
-                    </div>
+                            <div className="signup-line-container">
+                                <div className="signup-line" />
+                                <div className="other-email">ou com outro email</div>
+                                <div className="signup-line" />
+                            </div>
+                          </>
+                    }
 
                     <button className="create-account-button">Criar conta</button>
                 </div>
