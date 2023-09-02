@@ -18,14 +18,6 @@ export function SignUpModal(props: SignUpModalProps) {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
-    const validPassword = minimumLength(password, MINIMUM_PASSWORD_LENGTH)
-        && upperAndLowerCase(password)
-        && numberOrSpecialChar(password);
-
-    const validEmail = isEmail(email);
-
-    const enableSignUp = validPassword && !!username && validEmail;
-
     const closeModal = () => props.toggleModal(false);
 
     return (
@@ -72,7 +64,8 @@ export function SignUpModal(props: SignUpModalProps) {
                     </section>
 
                     <div className="submit">
-                        <button type="submit" className="create-account" onClick={createAccount} disabled={!enableSignUp}>
+                        <button type="submit" className="create-account" onClick={createAccount}
+                            disabled={!enableSignUp(username, email, password)}>
                             Criar conta
                         </button>
                     </div>
@@ -143,4 +136,14 @@ function passwordValidationClass(validPassword: NullableBoolean): string {
 
     else
         return FAIL_VALIDATION_CLASS;
+}
+
+function enableSignUp(username: string, email: string, password: string): boolean {
+    const validPassword = minimumLength(password, MINIMUM_PASSWORD_LENGTH)
+                          && upperAndLowerCase(password)
+                          && numberOrSpecialChar(password);
+
+    const validEmail = isEmail(email);
+
+    return !!validPassword && !!username && validEmail;
 }
