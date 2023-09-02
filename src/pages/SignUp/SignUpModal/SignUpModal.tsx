@@ -2,8 +2,9 @@ import { MouseEvent, useState } from "react";
 
 import { UniversiModal } from "@/components/UniversiModal";
 import UniversimeApi from "@/services/UniversimeApi";
-import type { NullableBoolean } from "@/types/utils";
-import { isEmail } from "@/utils/regexUtils";
+
+import { enableSignUp, minimumLength, numberOrSpecialChar, passwordValidationClass,
+         upperAndLowerCase } from "./helperFunctions";
 
 import "./SignUpModal.less"
 
@@ -11,7 +12,6 @@ export type SignUpModalProps = {
     toggleModal: (state: boolean) => any;
 };
 
-const MINIMUM_PASSWORD_LENGTH = 8;
 
 export function SignUpModal(props: SignUpModalProps) {
     const [username, setUsername] = useState<string>("");
@@ -58,7 +58,7 @@ export function SignUpModal(props: SignUpModalProps) {
 
                     <section className="password-requirements">
                         <h3>Sua senha precisa conter:</h3>
-                        <p className={`min-length ${passwordValidationClass(minimumLength(password, MINIMUM_PASSWORD_LENGTH))}`}>Tamanho mínimo de oito caracteres</p>
+                        <p className={`min-length ${passwordValidationClass(minimumLength(password))}`}>Tamanho mínimo de oito caracteres</p>
                         <p className={`upper-lower-case ${passwordValidationClass(upperAndLowerCase(password))}`}>Letras minúsculas e maiúsculas</p>
                         <p className={`number-special-char ${passwordValidationClass(numberOrSpecialChar(password))}`}>Números ou caracteres especiais</p>
                     </section>
@@ -101,49 +101,4 @@ function createAccount(e: MouseEvent<HTMLButtonElement>) {
     }).then(res => {
         console.dir(res);
     })
-}
-
-const FAIL_VALIDATION_CLASS =    "failed-validation";
-const SUCCESS_VALIDATION_CLASS = "success-validation";
-
-function minimumLength(password: string, length: number): NullableBoolean {
-    if (!password)
-        return null;
-
-    return password.length >= length;
-}
-
-function upperAndLowerCase(password: string): NullableBoolean {
-    if (!password)
-        return null;
-
-    return RegExp(/[A-Z]/).exec(password) !== null && RegExp(/[a-z]/).exec(password) !== null;
-}
-
-function numberOrSpecialChar(password: string): NullableBoolean {
-    if (!password)
-        return null;
-
-    return RegExp(/[^A-Za-zçÇ]/).exec(password) !== null;
-}
-
-function passwordValidationClass(validPassword: NullableBoolean): string {
-    if (validPassword === null)
-        return "";
-
-    else if (validPassword)
-        return SUCCESS_VALIDATION_CLASS;
-
-    else
-        return FAIL_VALIDATION_CLASS;
-}
-
-function enableSignUp(username: string, email: string, password: string): boolean {
-    const validPassword = minimumLength(password, MINIMUM_PASSWORD_LENGTH)
-                          && upperAndLowerCase(password)
-                          && numberOrSpecialChar(password);
-
-    const validEmail = isEmail(email);
-
-    return !!validPassword && !!username && validEmail;
 }
