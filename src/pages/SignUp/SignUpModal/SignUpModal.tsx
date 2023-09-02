@@ -3,6 +3,7 @@ import { MouseEvent, useState } from "react";
 import { UniversiModal } from "@/components/UniversiModal";
 import UniversimeApi from "@/services/UniversimeApi";
 import type { NullableBoolean } from "@/types/utils";
+import { isEmail } from "@/utils/regexUtils";
 
 import "./SignUpModal.less"
 
@@ -13,13 +14,17 @@ export type SignUpModalProps = {
 const MINIMUM_PASSWORD_LENGTH = 8;
 
 export function SignUpModal(props: SignUpModalProps) {
+    const [username, setUsername] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
     const validPassword = minimumLength(password, MINIMUM_PASSWORD_LENGTH)
         && upperAndLowerCase(password)
         && numberOrSpecialChar(password);
 
-    const enableSignUp = validPassword;
+    const validEmail = isEmail(email);
+
+    const enableSignUp = validPassword && !!username && validEmail;
 
     const closeModal = () => props.toggleModal(false);
 
@@ -37,12 +42,18 @@ export function SignUpModal(props: SignUpModalProps) {
                 <form>
                     <fieldset>
                         <legend>Nome de usuário</legend>
-                        <input type="text" name="username" placeholder="Insira seu nome e sobrenome" required />
+                        <input type="text" name="username"
+                            placeholder="nome.sobrenome" required
+                            onChange={e => setUsername(e.currentTarget.value)}
+                        />
                     </fieldset>
 
                     <fieldset>
                         <legend>Email</legend>
-                        <input type="text" name="email" placeholder="novousuario@email.com" required />
+                        <input type="text" name="email"
+                            placeholder="novousuario@email.com" required
+                            onChange={e => setEmail(e.currentTarget.value)}
+                        />
                     </fieldset>
 
                     <fieldset>
