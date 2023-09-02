@@ -2,9 +2,9 @@ import { MouseEvent, useState } from "react";
 
 import { UniversiModal } from "@/components/UniversiModal";
 import UniversimeApi from "@/services/UniversimeApi";
+import type { NullableBoolean } from "@/types/utils";
 
 import "./SignUpModal.less"
-import { NullableBoolean } from "@/types/utils";
 
 export type SignUpModalProps = {
     toggleModal: (state: boolean) => any;
