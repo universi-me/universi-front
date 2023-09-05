@@ -1,7 +1,8 @@
-import { MouseEvent, useState } from "react";
+import { MouseEvent, FocusEvent, useState } from "react";
 
 import { UniversiModal } from "@/components/UniversiModal";
 import UniversimeApi from "@/services/UniversimeApi";
+import { isEmail } from "@/utils/regexUtils";
 
 import { enableSignUp, minimumLength, numberOrSpecialChar, passwordValidationClass,
          upperAndLowerCase } from "./helperFunctions";
@@ -17,6 +18,8 @@ export function SignUpModal(props: SignUpModalProps) {
     const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+
+    const canSignUp = enableSignUp(username, email, password);
 
     const closeModal = () => props.toggleModal(false);
 
@@ -40,11 +43,15 @@ export function SignUpModal(props: SignUpModalProps) {
                         />
                     </fieldset>
 
-                    <fieldset>
+                    <fieldset id="email-fieldset">
                         <legend>Email</legend>
                         <input type="text" name="email"
                             placeholder="novousuario@email.com" required
-                            onChange={e => setEmail(e.currentTarget.value)}
+                            onBlur={onBlurEmail} onChange={e => {
+                                document.querySelector("#email-fieldset")
+                                    ?.classList.remove(INVALID_EMAIL_CLASS);
+                                setEmail(e.currentTarget.value)
+                            }}
                         />
                     </fieldset>
 
@@ -65,7 +72,7 @@ export function SignUpModal(props: SignUpModalProps) {
 
                     <div className="submit">
                         <button type="submit" className="create-account" onClick={createAccount}
-                            disabled={!enableSignUp(username, email, password)}>
+                            disabled={!canSignUp} title={!canSignUp ? "Preencha todos os campos corretamente para poder se cadastrar" : undefined}>
                             Criar conta
                         </button>
                     </div>
@@ -101,4 +108,17 @@ function createAccount(e: MouseEvent<HTMLButtonElement>) {
     }).then(res => {
         console.dir(res);
     })
+}
+
+const INVALID_EMAIL_CLASS = "invalid-email";
+function onBlurEmail(e: FocusEvent<HTMLInputElement>) {
+    const fieldsetElement = document.querySelector("#email-fieldset");
+
+    const email = e.currentTarget.value;
+
+    if (!!email && !isEmail(email))
+        fieldsetElement?.classList.add(INVALID_EMAIL_CLASS);
+
+    else
+        fieldsetElement?.classList.remove(INVALID_EMAIL_CLASS);
 }

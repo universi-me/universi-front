@@ -72,6 +72,22 @@
                     outline: solid 2px @secondary-color;
                 }
             }
+
+            &.invalid-email {
+                input[name="email"] {
+                    background-color: #F5E0E0;
+                    outline: @wrong-invalid-color solid 2px;
+                }
+
+                &::after {
+                    content: "Insira um email válido!";
+
+                    margin-top: .5rem;
+
+                    color: @wrong-invalid-color;
+                    font-size: .875rem;
+                }
+            }
         }
     }
 
