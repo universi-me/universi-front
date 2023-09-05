@@ -37,7 +37,7 @@ export function SignUpModal(props: SignUpModalProps) {
                 <form>
                     <fieldset>
                         <legend>Nome de usuário</legend>
-                        <input type="text" name="username"
+                        <input type="text" name="username" maxLength={255}
                             placeholder="nome.sobrenome" required
                             onChange={e => setUsername(e.currentTarget.value)}
                         />
@@ -45,7 +45,7 @@ export function SignUpModal(props: SignUpModalProps) {
 
                     <fieldset id="email-fieldset">
                         <legend>Email</legend>
-                        <input type="text" name="email"
+                        <input type="text" name="email" maxLength={255}
                             placeholder="novousuario@email.com" required
                             onBlur={onBlurEmail} onChange={e => {
                                 document.querySelector("#email-fieldset")
