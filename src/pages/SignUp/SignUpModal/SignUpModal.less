@@ -1,5 +1,6 @@
 @import url(/src/layouts/colors.less);
 @import url(/src/layouts/fonts.less);
+@import url(/src/layouts/transitions.less);
 
 #sign-up-modal {
     width: 50vw;
@@ -45,7 +46,47 @@
         }
     }
 
+    form {
+        padding: 1.5rem 5rem;
+
+        fieldset {
+            border: none;
+            margin-bottom: 1.5rem;
+
+            legend {
+                margin-bottom: .5rem;
+                text-transform: uppercase;
+                font-weight: @font-weight-light;
+                
+            }
+
+            input {
+                width: 100%;
+                padding: .5rem 1.5rem;
+
+                background-color: #FFF;
+                border: none;
+                border-radius: 0.625rem;
+
+                &:focus {
+                    outline: solid 2px @secondary-color;
+                }
+            }
+        }
+    }
+
     .password-requirements {
+        color: @font-color-v2;
+        font-size: 0.875rem;
+
+        h3 {
+            font-weight: @font-weight-semibold;
+        }
+
+        p {
+            font-weight: @font-weight-default;
+        }
+
         .failed-validation, .success-validation {
             font-weight: @font-weight-semibold;
         }
@@ -56,6 +97,40 @@
 
         .success-validation {
             color: @success-color;
+        }
+    }
+
+    .submit {
+        width: fit-content;
+        margin-left: auto;
+
+        .create-account {
+            background: @secondary-color;
+            border-radius: .625rem;
+            border: none;
+
+            min-width: 15rem;
+            padding: .5rem;
+
+            font-size: .875rem;
+            color: @font-color-v1;
+            text-transform: uppercase;
+            font-weight: @font-weight-semibold;
+
+            transition: @hover-transition-duration background-color;
+            will-change: background-color;
+
+            &:disabled {
+                background-color: @font-disabled-color;
+            }
+
+            &:enabled {
+                cursor: pointer;
+
+                &:hover {
+                    background-color: @button-hover-color;
+                }
+            }
         }
     }
 }
