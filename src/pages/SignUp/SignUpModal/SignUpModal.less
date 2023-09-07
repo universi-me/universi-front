@@ -47,7 +47,8 @@
     }
 
     form {
-        padding: 1.5rem 5rem;
+        @form-horizontal-padding: 5rem;
+        padding: 1.5rem @form-horizontal-padding;
 
         fieldset {
             border: none;
@@ -86,6 +87,26 @@
 
                     color: @wrong-invalid-color;
                     font-size: .875rem;
+                }
+            }
+
+            &#password-fieldset {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+
+                #toggle-password-visibility {
+                    color: @secondary-color;
+                    font-size: inherit;
+
+                    background-color: transparent;
+                    border: none;
+
+                    cursor: pointer;
+
+                    position: absolute;
+                    right: calc(@form-horizontal-padding + .75em);
                 }
             }
         }

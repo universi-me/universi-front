@@ -19,9 +19,12 @@ export function SignUpModal(props: SignUpModalProps) {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+
     const canSignUp = enableSignUp(username, email, password);
 
     const closeModal = () => props.toggleModal(false);
+    const togglePassword = () => setShowPassword(!showPassword);
 
     return (
         <UniversiModal>
@@ -38,7 +41,7 @@ export function SignUpModal(props: SignUpModalProps) {
                     <fieldset>
                         <legend>Nome de usuário</legend>
                         <input type="text" name="username" maxLength={255}
-                            placeholder="nome.sobrenome" required
+                            placeholder="nome_sobrenome" required
                             onChange={e => setUsername(e.currentTarget.value)}
                         />
                     </fieldset>
@@ -55,12 +58,15 @@ export function SignUpModal(props: SignUpModalProps) {
                         />
                     </fieldset>
 
-                    <fieldset>
+                    <fieldset id="password-fieldset">
                         <legend>Senha</legend>
-                        <input type="password" name="password"
+                        <input type={showPassword ? "text" : "password"} name="password"
                             placeholder="Insira sua senha" required
                             onChange={e => setPassword(e.currentTarget.value)}
                         />
+                        <button type="button" onClick={togglePassword} id="toggle-password-visibility" title="Alterar visibilidade da senha">
+                            <span className={`bi ${showPassword ? "bi-eye-fill" : "bi-eye-slash-fill"}`} />
+                        </button>
                     </fieldset>
 
                     <section className="password-requirements">
