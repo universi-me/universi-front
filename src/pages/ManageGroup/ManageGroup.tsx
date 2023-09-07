@@ -4,7 +4,7 @@ import { useLoaderData } from "react-router-dom";
 
 import UniversimeApi from "@/services/UniversimeApi";
 import { GroupType, GroupTypeToLabel } from "@/types/Group";
-import { EDIT_GROUP_PARAMETER, ManageGroupLoaderResponse } from "@/pages/ManageGroup";
+import { EDIT_GROUP_PARAMETER, ManageGroupLoaderResponse, formatParentGroupLabel } from "@/pages/ManageGroup";
 
 import "./ManageGroup.less"
 
@@ -57,20 +57,18 @@ export function ManageGroupPage() {
             <fieldset className="groupId">
                 <legend>Grupo pai</legend>
                 <Select
-                    placeholder="Selecionar grupo pai"
+                    placeholder={!!editedGroup ? "Você não pode mudar o grupo pai de um grupo já existente" : "Selecionar grupo pai"}
                     name="parentGroupId"
                     options={availableParents}
                     className="react-select"
                     classNamePrefix="react-select-option"
                     isClearable={true}
                     isSearchable={true}
+                    formatOptionLabel={formatParentGroupLabel}
+                    getOptionValue={o => o?.id ?? ""}
 
                     isDisabled={ !!editedGroup }
-                    defaultValue={
-                        !editedGroup
-                            ? undefined 
-                            : { label: "Você não pode mudar o grupo pai de um grupo já existente", value: "" }
-                    }
+                    defaultValue={ !editedGroup ? undefined : null }
                 />
             </fieldset>
 

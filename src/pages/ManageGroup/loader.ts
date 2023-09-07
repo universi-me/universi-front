@@ -1,16 +1,11 @@
 import { LoaderFunctionArgs } from "react-router-dom";
 import UniversimeApi from "@/services/UniversimeApi";
-import { Group, GroupTypeToLabel } from "@/types/Group";
-
-type ReactSelectOption = {
-    label: string;
-    value: string;
-};
+import { Group, GroupType, GroupTypeToLabel } from "@/types/Group";
 
 export type ManageGroupLoaderResponse = {
     editedGroup:         Group | null;
-    availableParents:    ReactSelectOption[];
-    availableGroupTypes: ReactSelectOption[];
+    availableParents:    Group[];
+    availableGroupTypes: {label: string, value: GroupType}[];
 };
 
 export const EDIT_GROUP_PARAMETER = "edit-group";
@@ -29,12 +24,7 @@ export async function ManageGroupLoader(args: LoaderFunctionArgs): Promise<Manag
 async function getAvailableParents() {
     const response = await UniversimeApi.Group.availableParents();
     if (response.success && response.body)
-        return response.body.groups.map((g): ReactSelectOption => {
-            return {
-                label: g.name,
-                value: g.id,
-            }
-        });
+        return response.body.groups;
 
     else
         return [];
@@ -44,7 +34,7 @@ function getGroupTypes() {
     return Object.entries(GroupTypeToLabel).map(([groupType, label]) => {
         return {
             label,
-            value: groupType,
+            value: groupType as GroupType,
         };
     });
 }
