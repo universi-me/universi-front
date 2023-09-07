@@ -14,6 +14,7 @@ import CategoryPage from "@/pages/Capacity/Category";
 import VideoPage from "@/pages/Capacity/VideoPlayer";
 import PlaylistPage from "@/pages/Capacity/Playlist";
 import ManagerCapacity from "@/pages/Capacity/ManagerCapacity";
+import SignUpPage from "@/pages/SignUp";
 
 
 
@@ -70,6 +71,10 @@ export const router = createBrowserRouter([{
     {
       path: "/login",
       element: <Singin/>
+    },
+    {
+      path: "/signup",
+      element: <SignUpPage/>
     },
     {
         path: "/google-oauth-redirect",
