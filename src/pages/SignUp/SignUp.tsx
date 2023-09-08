@@ -6,9 +6,13 @@ import { SignUpModal } from "@/pages/SignUp";
 import dcxImage from "@/assets/imgs/dcx-png 1.png"
 
 import "./SignUp.less"
+import UniversiWarning from "@/components/UniversiWarning/UniversiWarning";
 
 export default function SignUpPage() {
     const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false);
+
+    const [warningMessage, setWarningMessage] = useState<string>("");
+    const showWarningModal = warningMessage.length > 0;
 
     const googleUrl = oauthSignIn();
 
@@ -46,7 +50,15 @@ export default function SignUpPage() {
             </div>
 
             {
-                showSignUpModal ? <SignUpModal toggleModal={setShowSignUpModal} /> : null
+                showSignUpModal ? <SignUpModal toggleModal={setShowSignUpModal} setWarningMessage={setWarningMessage} /> : null
+            }
+
+            {
+                showWarningModal
+                    ? <UniversiWarning message={warningMessage}
+                        onClickClose={() => setWarningMessage("")}
+                      />
+                    : null
             }
         </div>
     );
