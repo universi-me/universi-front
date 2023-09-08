@@ -8,6 +8,8 @@ import { EDIT_GROUP_PARAMETER, ManageGroupLoaderResponse, formatParentGroupLabel
 
 import "./ManageGroup.less"
 
+const NICKNAME_REGEX = /[a-z0-9_-]/
+
 export function ManageGroupPage() {
     const { availableGroupTypes, availableParents, editedGroup } = useLoaderData() as ManageGroupLoaderResponse;
 
@@ -23,7 +25,13 @@ export function ManageGroupPage() {
                 <legend>Nickname do grupo</legend>
                 <input type="text" name="nickname" placeholder="Insira o nickname do grupo"
                     disabled={!!editedGroup} defaultValue={editedGroup?.nickname ?? ""}
-                    title={!editedGroup ? undefined : "Você não pode mudar o nickname de um grupo que já existe"} />
+                    title={!editedGroup ? undefined : "Você não pode mudar o nickname de um grupo que já existe"}
+                    onChange={ e => {
+                        e.currentTarget.value = Array.from(e.currentTarget.value)
+                            .filter(c => NICKNAME_REGEX.exec(c) !== null)
+                            .join("");
+                    }} />
+                <p className="field-info">Você só pode usar letras minúsculas, números, hífen (-) e underscore (_).</p>
             </fieldset>
 
             <fieldset className="description">

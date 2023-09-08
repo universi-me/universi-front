@@ -33,6 +33,8 @@
 
         fieldset {
             width: 100%;
+            border: none;
+
             & + fieldset {
                 margin-top: 1rem;
             }
@@ -51,8 +53,6 @@
             legend, .fieldset-legend {
                 font-size: 1.25rem;
             }
-
-            border: none;
 
             // One line inputs
             input[type="text"], input[type="url"], textarea {
@@ -121,6 +121,11 @@
                         background-color: @primary-color;
                     }
                 }
+            }
+
+            .field-info {
+                margin-top: 0.5rem;
+                font-size: 0.875rem;
             }
         }
 
