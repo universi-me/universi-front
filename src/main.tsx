@@ -13,5 +13,6 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <RouterProvider router={router}/>
     </AuthProvider>
 
+    <div id="modal-container" />
   </React.StrictMode>
 );
