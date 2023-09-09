@@ -74,6 +74,11 @@
                 }
             }
 
+            &::after, & .fieldset-info {
+                margin-top: .5rem;
+                font-size: .875rem;
+            }
+
             &.invalid-email {
                 input[name="email"] {
                     background-color: #F5E0E0;
@@ -83,10 +88,7 @@
                 &::after {
                     content: "Insira um email válido!";
 
-                    margin-top: .5rem;
-
                     color: @wrong-invalid-color;
-                    font-size: .875rem;
                 }
             }
 
