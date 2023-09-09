@@ -12,21 +12,6 @@
   width: 180px;
 }
 
-.header nav {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-
-  margin-left: 2rem;
-}
-
-.header nav a {
-  color: var(--tertiary-color);
-  /* color: var(--font-color-v1); */
-  text-decoration: none;
-  font-size: 1.25rem;
-}
-
 .header .right-items {
     display: flex;
     flex-direction: row;

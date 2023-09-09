@@ -22,13 +22,13 @@ const CategoryPage: React.FC = () => {
           throw new Error("Categoria não informada");
 
         const response = await UniversimeApi.Capacity.videosInCategory({id: categoryId});
-        setVideos(response.body.videos);
-        if (response.body.videos.length === 0) {
+        setVideos(response.body?.videos ?? []);
+        if (!response.body?.videos.length) {
           setHasError(true);
         }
 
         UniversimeApi.Capacity.getCategory({id: categoryId})
-          .then(res => setCategoryData(res.body.category));
+          .then(res => setCategoryData(res.body?.category ?? null));
 
       } catch (error) {
         console.error('Erro ao buscar os vídeos:', error);
@@ -61,10 +61,6 @@ const CategoryPage: React.FC = () => {
     videoThumbnails.forEach(updateThumbnailImage);
   }, [videos]);
 
-  if (hasError) {
-    return <NotFoundVideo />;
-  }
-
   return (
     <div className="category-tela">
       <div id="category">
@@ -73,7 +69,10 @@ const CategoryPage: React.FC = () => {
         <div id="conteudo-category">
           <h1 id="subtitle-category">Todos os vídeos de {categoryData?.name ?? ""}</h1>
           <div className="video-list-all">
-            {videos.map((video) => (
+            {
+            videos.length === 0 ? <p className="empty">Nenhum vídeo nessa categoria</p> :
+
+            videos.map((video) => (
               <div key={video.id} className="video-item">
                 <div className="video-thumbnail">
                   <Link to={`/capacitacao/play/${video.id}`}>

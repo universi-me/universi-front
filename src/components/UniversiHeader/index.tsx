@@ -3,6 +3,7 @@ import UniversiLogo from "../../../public/assets/imgs/universi-me2.png";
 import { SearchInput } from "./components/SearchInput";
 import { WelcomeUser } from "./components/WelcomeUser/WelcomeUser";
 import { LoginButton } from "./components/LoginButton/LoginButton";
+import Navbar from "./components/Navbar/Navbar";
 import "./styles.css";
 
 export function Header() {
@@ -11,11 +12,7 @@ export function Header() {
       <Link to="/">
         <img src={UniversiLogo} alt="Logo universi.me" />
       </Link>
-      <nav>
-        <Link to="/">Início</Link>
-        <Link to="/sobre">Sobre</Link>
-        <Link to="/capacitacao">Capacitação</Link>
-      </nav>
+      <Navbar />
       <div className="right-items">
         {/* <SearchInput /> */}
         <WelcomeUser />
