@@ -6,7 +6,7 @@ export type AuthContextType = {
     user : User | null;
     profile: Profile | null;
 
-    signin: (email : string, password: string) => Promise<{status : boolean, user : User}>;
+    signin: (email : string, password: string) => Promise<{status : boolean, user : User | undefined}>;
     signin_google: (user: any) => Promise<boolean>;
     signout: () => void;
 }

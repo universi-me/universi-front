@@ -1,4 +1,6 @@
 import { MouseEventHandler, ReactNode } from "react";
+import { Portal } from "react-portal"
+
 import './UniversiModal.less'
 
 export type UniversiModalProps = {
@@ -23,11 +25,13 @@ export function UniversiModal(props: UniversiModalProps) {
         return null;
 
     return (
-        <div className="universi-modal" >
-            <div className="universi-modal-overlay" onClick={props.onClickOutside} />
-            <div className="universi-modal-content">
-                { props.children }
+        <Portal node={document.getElementById("modal-container")}>
+            <div className="universi-modal" >
+                <div className="universi-modal-overlay" onClick={props.onClickOutside} />
+                <div className="universi-modal-content">
+                    { props.children }
+                </div>
             </div>
-        </div>
+        </Portal>
     );
 }

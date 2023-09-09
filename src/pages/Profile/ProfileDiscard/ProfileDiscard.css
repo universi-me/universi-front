@@ -1,4 +1,4 @@
-#profile-page #discard-changes {
+#discard-changes {
     border-radius: 1.125rem;
     background-color: var(--card-background-color);
 
@@ -15,14 +15,14 @@
     max-width: 25vw;
 }
 
-#profile-page #discard-changes h2 {
+#discard-changes h2 {
     text-align: center;
     color: #000;
     font-size: 1.25rem;
     font-weight: var(--font-weight-bold);
 }
 
-#profile-page #discard-changes p {
+#discard-changes p {
     font-size: 0.875rem;
     font-weight: var(--font-weight-default);
     text-align: center;
@@ -31,13 +31,13 @@
     margin-bottom: 1.75rem;
 }
 
-#profile-page #discard-changes .buttons {
+#discard-changes .buttons {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
-#profile-page #discard-changes .buttons button {
+#discard-changes .buttons button {
     width: 100%;
     height: 2.5em;
 
@@ -52,27 +52,27 @@
     transition: var(--hover-transition-duration) background-color, border-color, color;
 }
 
-#profile-page #discard-changes .buttons button:not(:last-of-type) {
+#discard-changes .buttons button:not(:last-of-type) {
     margin-bottom: .75rem;
 }
 
-#profile-page #discard-changes .buttons .discard-button {
+#discard-changes .buttons .discard-button {
     color: var(--font-color-v1);
     background-color: var(--primary-color);
 }
 
-#profile-page #discard-changes .buttons .discard-button:hover {
+#discard-changes .buttons .discard-button:hover {
     background-color: var(--button-hover-color);
     border-color: var(--button-hover-color);
 }
 
-#profile-page #discard-changes .buttons .cancel-button {
+#discard-changes .buttons .cancel-button {
     background-color: transparent;
     border-color: var(--secondary-color);
     color: var(--secondary-color);
 }
 
-#profile-page #discard-changes .buttons .cancel-button:hover {
+#discard-changes .buttons .cancel-button:hover {
     background-color: var(--button-hover-color);
     border-color: var(--button-hover-color);
     color: var(--font-color-v1);

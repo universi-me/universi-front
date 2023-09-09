@@ -8,13 +8,17 @@ import { enableSignUp, minimumLength, numberOrSpecialChar, passwordValidationCla
          upperAndLowerCase } from "./helperFunctions";
 
 import "./SignUpModal.less"
+import { useNavigate } from "react-router";
 
 export type SignUpModalProps = {
     toggleModal: (state: boolean) => any;
+    setWarningMessage: (message: string) => any;
 };
 
 
 export function SignUpModal(props: SignUpModalProps) {
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -86,6 +90,18 @@ export function SignUpModal(props: SignUpModalProps) {
             </div>
         </UniversiModal>
     );
+
+    function createAccount(e: MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+        UniversimeApi.User.signUp({ username, email, password })
+            .then(res => {
+                if (!res.success)
+                    props.setWarningMessage(res.message ?? "Houve algo de errado em nosso sistema.")
+
+                else
+                    navigate("/login");
+            })
+    }
 }
 
 function getValuesFromPage() {
@@ -102,9 +118,7 @@ function getValuesFromPage() {
     };
 }
 
-function createAccount(e: MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-
+function sendCreateAccountRequest(e: MouseEvent<HTMLButtonElement>) {
     const values = getValuesFromPage();
 
     UniversimeApi.User.signUp({
