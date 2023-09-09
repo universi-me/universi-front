@@ -1,4 +1,5 @@
 import { MouseEvent, FocusEvent, useState } from "react";
+import { useNavigate } from "react-router";
 
 import { UniversiModal } from "@/components/UniversiModal";
 import UniversimeApi from "@/services/UniversimeApi";
@@ -8,13 +9,14 @@ import { enableSignUp, minimumLength, numberOrSpecialChar, passwordValidationCla
          upperAndLowerCase } from "./helperFunctions";
 
 import "./SignUpModal.less"
-import { useNavigate } from "react-router";
 
 export type SignUpModalProps = {
     toggleModal: (state: boolean) => any;
     setWarningMessage: (message: string) => any;
 };
 
+
+const USERNAME_CHAR_REGEX = /[a-z0-9_.-]/
 
 export function SignUpModal(props: SignUpModalProps) {
     const navigate = useNavigate();
@@ -46,8 +48,16 @@ export function SignUpModal(props: SignUpModalProps) {
                         <legend>Nome de usuário</legend>
                         <input type="text" name="username" maxLength={255}
                             placeholder="nome_sobrenome" required
-                            onChange={e => setUsername(e.currentTarget.value)}
+                            onChange={e => {
+                                const filteredValue = Array.from(e.currentTarget.value)
+                                    .filter(c => USERNAME_CHAR_REGEX.exec(c) !== null)
+                                    .join("");
+
+                                e.currentTarget.value = filteredValue;
+                                setUsername(filteredValue);
+                            }}
                         />
+                        <p className="fieldset-info">Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).</p>
                     </fieldset>
 
                     <fieldset id="email-fieldset">
@@ -75,9 +85,9 @@ export function SignUpModal(props: SignUpModalProps) {
 
                     <section className="password-requirements">
                         <h3>Sua senha precisa conter:</h3>
-                        <p className={`min-length ${passwordValidationClass(minimumLength(password))}`}>Tamanho mínimo de oito caracteres</p>
-                        <p className={`upper-lower-case ${passwordValidationClass(upperAndLowerCase(password))}`}>Letras minúsculas e maiúsculas</p>
-                        <p className={`number-special-char ${passwordValidationClass(numberOrSpecialChar(password))}`}>Números ou caracteres especiais</p>
+                        <p className={`bi min-length ${passwordValidationClass(minimumLength(password))}`}>Tamanho mínimo de oito caracteres</p>
+                        <p className={`bi upper-lower-case ${passwordValidationClass(upperAndLowerCase(password))}`}>Letras minúsculas e maiúsculas</p>
+                        <p className={`bi number-special-char ${passwordValidationClass(numberOrSpecialChar(password))}`}>Números ou caracteres especiais</p>
                     </section>
 
                     <div className="submit">
@@ -102,32 +112,6 @@ export function SignUpModal(props: SignUpModalProps) {
                     navigate("/login");
             })
     }
-}
-
-function getValuesFromPage() {
-    const modalElement = document.querySelector("#sign-up-page #sign-up-modal") as HTMLDivElement;
-
-    const usernameElement = modalElement.querySelector('input[name="username"]') as HTMLInputElement;
-    const emailElement = modalElement.querySelector('input[name="email"]') as HTMLInputElement;
-    const passwordElement = modalElement.querySelector('input[name="password"]') as HTMLInputElement;
-
-    return {
-        username: usernameElement.value,
-        email: emailElement.value,
-        password: passwordElement.value,
-    };
-}
-
-function sendCreateAccountRequest(e: MouseEvent<HTMLButtonElement>) {
-    const values = getValuesFromPage();
-
-    UniversimeApi.User.signUp({
-        email:    values.email,
-        password: values.password,
-        username: values.username,
-    }).then(res => {
-        console.dir(res);
-    })
 }
 
 const INVALID_EMAIL_CLASS = "invalid-email";

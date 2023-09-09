@@ -70,8 +70,13 @@
                 border-radius: 0.625rem;
 
                 &:focus {
-                    outline: solid 2px @secondary-color;
+                    outline: solid 2px @tertiary-color;
                 }
+            }
+
+            &::after, & .fieldset-info {
+                margin-top: .5rem;
+                font-size: .875rem;
             }
 
             &.invalid-email {
@@ -83,10 +88,7 @@
                 &::after {
                     content: "Insira um email válido!";
 
-                    margin-top: .5rem;
-
                     color: @wrong-invalid-color;
-                    font-size: .875rem;
                 }
             }
 
@@ -126,14 +128,26 @@
 
         .failed-validation, .success-validation {
             font-weight: @font-weight-semibold;
-        }
 
-        .failed-validation {
-            color: @alert-color;
-        }
+            &.bi::before {
+                margin-right: .25em;
+            }
 
-        .success-validation {
-            color: @success-color;
+            &.failed-validation {
+                color: @alert-color;
+
+                &.bi::before {
+                    content: "\F659";
+                }
+            }
+
+            &.success-validation {
+                color: @success-color;
+    
+                &.bi::before {
+                    content: "\F633";
+                }
+            }
         }
     }
 
