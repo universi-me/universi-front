@@ -1,4 +1,5 @@
 import { MouseEvent, FocusEvent, useState } from "react";
+import { useNavigate } from "react-router";
 
 import { UniversiModal } from "@/components/UniversiModal";
 import UniversimeApi from "@/services/UniversimeApi";
@@ -8,7 +9,6 @@ import { enableSignUp, minimumLength, numberOrSpecialChar, passwordValidationCla
          upperAndLowerCase } from "./helperFunctions";
 
 import "./SignUpModal.less"
-import { useNavigate } from "react-router";
 
 export type SignUpModalProps = {
     toggleModal: (state: boolean) => any;
@@ -85,9 +85,9 @@ export function SignUpModal(props: SignUpModalProps) {
 
                     <section className="password-requirements">
                         <h3>Sua senha precisa conter:</h3>
-                        <p className={`min-length ${passwordValidationClass(minimumLength(password))}`}>Tamanho mínimo de oito caracteres</p>
-                        <p className={`upper-lower-case ${passwordValidationClass(upperAndLowerCase(password))}`}>Letras minúsculas e maiúsculas</p>
-                        <p className={`number-special-char ${passwordValidationClass(numberOrSpecialChar(password))}`}>Números ou caracteres especiais</p>
+                        <p className={`bi min-length ${passwordValidationClass(minimumLength(password))}`}>Tamanho mínimo de oito caracteres</p>
+                        <p className={`bi upper-lower-case ${passwordValidationClass(upperAndLowerCase(password))}`}>Letras minúsculas e maiúsculas</p>
+                        <p className={`bi number-special-char ${passwordValidationClass(numberOrSpecialChar(password))}`}>Números ou caracteres especiais</p>
                     </section>
 
                     <div className="submit">

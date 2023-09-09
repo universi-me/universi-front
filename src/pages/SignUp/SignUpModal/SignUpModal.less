@@ -128,14 +128,26 @@
 
         .failed-validation, .success-validation {
             font-weight: @font-weight-semibold;
-        }
 
-        .failed-validation {
-            color: @alert-color;
-        }
+            &.bi::before {
+                margin-right: .25em;
+            }
 
-        .success-validation {
-            color: @success-color;
+            &.failed-validation {
+                color: @alert-color;
+
+                &.bi::before {
+                    content: "\F659";
+                }
+            }
+
+            &.success-validation {
+                color: @success-color;
+    
+                &.bi::before {
+                    content: "\F633";
+                }
+            }
         }
     }
 
