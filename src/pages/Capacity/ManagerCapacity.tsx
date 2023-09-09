@@ -321,13 +321,17 @@ const CrudTela: React.FC = () => {
             </div>
             <div className="space-text">
               <label>Rating:</label>
-              <select style={{marginLeft: '8px'}} value={editedRating} onChange={(e) => setEditedRating(Number(e.target.value))}>
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-                <option value={4}>4</option>
-                <option value={5}>5</option>
-              </select>
+              <div className="rating-star-container">
+                {[1, 2, 3, 4, 5].map(rating => {
+                    return (
+                        <button type="button" className="star-button" value={rating}
+                            onClick={e => setNewRating(Number(e.currentTarget.value))}
+                        >
+                            <span className={`bi bi-star${rating <= newRating ? "-fill" : ""}`} />
+                        </button>
+                    )
+                })}
+              </div>
             </div>
             <div style={{marginTop: '15px'}}>
               <label >Categorias:</label>
@@ -388,13 +392,19 @@ const CrudTela: React.FC = () => {
             </div>
             <div className="space-text">
               <label>Rating:</label>
-              <select style={{ marginLeft: '8px' }} value={newRating} onChange={(e) => setNewRating(Number(e.target.value))}>
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-                <option value={4}>4</option>
-                <option value={5}>5</option>
-              </select>
+              <div className="rating-star-container">
+                {
+                    [1, 2, 3, 4, 5].map(rating => {
+                        return (
+                            <button key={rating} type="button" className="star-button" value={rating}
+                                onClick={e => setNewRating(Number(e.currentTarget.value))}
+                            >
+                                <span className={`bi bi-star${rating <= newRating ? "-fill" : ""}`} />
+                            </button>
+                        )
+                    })
+                }
+              </div>
             </div>
             <div style={{marginTop: '15px'}}>
               <label >Categorias:</label>
