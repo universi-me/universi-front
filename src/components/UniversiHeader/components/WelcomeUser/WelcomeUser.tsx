@@ -9,11 +9,13 @@ export function WelcomeUser() {
 
     const isLogged = useMemo(() => {
         return auth?.user !== null;
-    }, [auth, auth?.user]);
+    }, [auth?.user]);
+
+    const welcomeMessage = auth.profile?.firstname ? `, ${auth.profile.firstname}` : "";
 
     return !isLogged ? null
     : <Link className="welcome-wrapper" to={`/profile/${auth.user?.name}`}>
-        <div className="welcome-message">{`Olá, ${auth.profile?.firstname}`}</div>
+        <div className="welcome-message">Olá{welcomeMessage}!</div>
         <ProfileImage className="logged-user-image" imageUrl={auth.profile?.image} noImageColor="var(--card-background-color)" />
       </Link>
 }
