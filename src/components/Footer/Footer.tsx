@@ -1,6 +1,5 @@
 import React from 'react';
-import GithubBlack from "@/assets/icons/github-black.svg"
-import InstagramBlack from "@/assets/icons/instagram-black.svg"
+import { ICON_GITHUB_BLACK, ICON_INSTAGRAM_BLACK } from '@/utils/assets';
 import './Footer.css';
 
 const Footer: React.FC = () => {
@@ -12,8 +11,8 @@ const Footer: React.FC = () => {
     <div className="footer-container">
       <div className="line"></div>
       <div className="buttons-container">
-        <FooterLink owner="Universi.me" href="https://github.com/universi-me" imgSrc={GithubBlack} social="GitHub" />
-        <FooterLink owner="AYTY" href="https://www.instagram.com/ayty.ufpb/" imgSrc={InstagramBlack} social="Instagram" />
+        <FooterLink owner="Universi.me" href="https://github.com/universi-me" imgSrc={ICON_GITHUB_BLACK} social="GitHub" />
+        <FooterLink owner="AYTY" href="https://www.instagram.com/ayty.ufpb/" imgSrc={ICON_INSTAGRAM_BLACK} social="Instagram" />
       </div>
       <button className="scroll-to-top-button" onClick={handleScrollToTop}>
         <img src="/assets/icons/chevron-up-black.svg" alt="Scroll to Top" />

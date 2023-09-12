@@ -1,7 +1,7 @@
 import { MouseEventHandler, MouseEvent, useContext, useMemo } from 'react';
 import { ProfileContext, ProfileContextType } from '@/pages/Profile'
 import { LevelToLabel, LevelToNumber } from '@/types/Competence';
-import EditIcon from "@/assets/icons/edit-2.svg"
+import { ICON_EDIT_BLACK } from '@/utils/assets';
 import './ProfileCompetences.css'
 
 export type ProfileCompetencesProps = {
@@ -40,7 +40,7 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
                                 {
                                     !profileContext.accessingLoggedUser ? null :
                                     <button className="edit-competence" data-competence-edit-id={competence.id} onClick={editCompetence} title="Editar competência">
-                                            <img src={EditIcon} />
+                                            <img src={ICON_EDIT_BLACK} />
                                         </button>
                                 }
                                 {/* todo: fix competence icon */}

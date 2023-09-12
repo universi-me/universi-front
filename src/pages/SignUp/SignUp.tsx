@@ -2,8 +2,7 @@ import { useState } from "react";
 
 import { oauthSignIn } from "@/services/oauth2-google";
 import { SignUpModal } from "@/pages/SignUp";
-
-import dcxImage from "@/assets/imgs/dcx-png 1.png"
+import { IMG_DCX_LOGO } from "@/utils/assets";
 
 import "./SignUp.less"
 import UniversiWarning from "@/components/UniversiWarning/UniversiWarning";
@@ -30,7 +29,7 @@ export default function SignUpPage() {
                         !ENABLE_GOOGLE_LOGIN ? null
                         : <>
                             <a href={googleUrl.href} className="google-login">
-                                <img src={dcxImage} alt="DCX" />
+                                <img src={IMG_DCX_LOGO} alt="DCX" />
                                 Entrar com DCX
                             </a>
 
