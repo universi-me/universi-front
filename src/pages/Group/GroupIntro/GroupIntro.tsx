@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { GroupContext } from "@/pages/Group";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { GroupTypeToLabel } from "@/types/Group";
+import { ICON_VERIFIED } from "@/utils/assets";
 import "./GroupIntro.css"
 
 export type GroupIntroProps = {
@@ -23,7 +24,7 @@ export function GroupIntro(props: GroupIntroProps) {
                 <h2 >{groupContext.group.name}</h2>
                 {
                     props.verified ?
-                        <img src="/assets/icons/icon-verificated.svg" className="verified-icon" />
+                        <img src={ICON_VERIFIED} className="verified-icon" />
                     : null
                 }
             </div>

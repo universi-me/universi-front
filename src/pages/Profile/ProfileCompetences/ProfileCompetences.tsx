@@ -44,7 +44,6 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
                                         </button>
                                 }
                                 {/* todo: fix competence icon */}
-                                {/* <img src={`/assets/icons/${competence.competenceType.name}.svg`} alt={""} className="icon" title={competence.competenceType.name} /> */}
                                 <h4 className="competence-type">{competence.competenceType.name}</h4>
                                 <h4 className="learning">{competence.description}</h4>
                                 <div className="level-container">

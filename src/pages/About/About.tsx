@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { ICON_CHEVRON_DOWN } from '@/utils/assets';
+import { ICON_CHEVRON_DOWN, ICON_GITHUB_WHITE, ICON_INSTAGRAM_BLACK, ICON_LINKEDIN_BLACK } from '@/utils/assets';
 import './About.css';
 import teamMembers from './teamMember';
 
@@ -65,13 +65,13 @@ export const About = () => {
 
                     <div className='socialMedia'>
                         <a id = 'github' href={member.socialMedia.github} target="_blank">
-                            <img src={"assets/icons/githubwhite.svg"} alt="github" />
+                            <img src={ICON_GITHUB_WHITE} alt="github" />
                         </a>
                         <a id='instagram' href={member.socialMedia.instagram} target="_blank">
-                            <img src="assets/icons/instagram.svg" alt="instagram" />
+                            <img src={ICON_INSTAGRAM_BLACK} alt="instagram" />
                         </a>
                         <a id= 'linkedin' href={member.socialMedia.linkedin} target="_blank">
-                            <img src="assets/icons/linkedin.svg" alt="linkedin" />
+                            <img src={ICON_LINKEDIN_BLACK} alt="linkedin" />
                         </a>
                     </div>
 
