@@ -4,6 +4,7 @@ import { AuthContext } from "../../contexts/Auth/AuthContext";
 import { Link, redirect, useNavigate } from "react-router-dom";
 import { oauthSignIn } from "../../services/oauth2-google";
 import Modal from "./modal/Modal";
+import { IMG_DCX_LOGO } from "@/utils/assets";
 
 export default function SinginForm() {
   const auth = useContext(AuthContext);
@@ -111,7 +112,7 @@ export default function SinginForm() {
                 type="button"
                 onClick={handleAuthLoginGoogle}
             >
-                <img src="../../../public/assets/imgs/dcx-png 1.png" />
+                <img src={IMG_DCX_LOGO} />
                 EMAIL DCX
             </button>
         </>

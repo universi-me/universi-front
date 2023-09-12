@@ -40,7 +40,7 @@ const VideoStar: React.FC = () => {
       const videoUrl = thumbnail.querySelector('img').getAttribute('src');
       const videoId = extractVideoId(videoUrl);
       if (videoId) {
-        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
         thumbnail.querySelector('img').setAttribute('src', thumbnailUrl);
       }
     };

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import UniversiLogo from "../../../public/assets/imgs/universi-me2.png";
+import { IMG_UNIVERSI_LOGO } from "@/utils/assets";
 import { SearchInput } from "./components/SearchInput";
 import { WelcomeUser } from "./components/WelcomeUser/WelcomeUser";
 import { LoginButton } from "./components/LoginButton/LoginButton";
@@ -10,7 +10,7 @@ export function Header() {
   return (
     <header className="header">
       <Link to="/">
-        <img src={UniversiLogo} alt="Logo universi.me" />
+        <img src={IMG_UNIVERSI_LOGO} alt="Logo universi.me" />
       </Link>
       <Navbar />
       <div className="right-items">

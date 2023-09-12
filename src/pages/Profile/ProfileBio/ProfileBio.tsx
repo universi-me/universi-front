@@ -4,6 +4,7 @@ import { getGenderName } from '@/utils/profileUtils';
 import { TypeLinkToBootstrapIcon } from '@/types/Link';
 import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
 import { Link } from 'react-router-dom';
+import { ICON_EDIT_BLACK } from '@/utils/assets';
 import './ProfileBio.css'
 
 export type ProfileBioProps = {
@@ -20,7 +21,7 @@ export function ProfileBio(props: ProfileBioProps) {
             {
                 profileContext.accessingLoggedUser ?
                     <Link className="edit-button" to="/manage-profile">
-                        <img src="/assets/icons/edit-2.svg" alt="Editar" />
+                        <img src={ICON_EDIT_BLACK} alt="Editar" />
                     </Link>
                 : null
             }

@@ -1,6 +1,6 @@
 import SinginForm from "./SinginForm";
 import "./signin.css";
-// import UniversiLogo from "../../../public/assets/imgs/universi-me.png";
+
 export default function Singin() {
   return (
     <div>
