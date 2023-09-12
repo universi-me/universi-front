@@ -3,6 +3,7 @@ import { ProfileContext } from '@/pages/Profile';
 import { getGenderName } from '@/utils/profileUtils';
 import { TypeLinkToBootstrapIcon } from '@/types/Link';
 import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
+import { ICON_EDIT_BLACK } from '@/utils/assets';
 import './ProfileBio.css'
 
 export type ProfileBioProps = {
@@ -19,7 +20,7 @@ export function ProfileBio(props: ProfileBioProps) {
             {
                 profileContext.accessingLoggedUser ?
                     <button className="edit-button" onClick={props.onClickEdit}>
-                        <img src="/assets/icons/edit-2.svg" alt="Editar" />
+                        <img src={ICON_EDIT_BLACK} alt="Editar" />
                     </button>
                 : null
             }

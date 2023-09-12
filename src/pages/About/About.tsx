@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { ICON_CHEVRON_DOWN, ICON_GITHUB_WHITE, ICON_INSTAGRAM_BLACK, ICON_LINKEDIN_BLACK } from '@/utils/assets';
 import './About.css';
 import teamMembers from './teamMember';
 
@@ -35,13 +36,13 @@ export const About = () => {
         </div>
 
         <div className='highPartTwo'>
-            <img src='public/assets/imgs/New_team_members.svg' alt='equipe' />
+            <img src='/assets/imgs/New_team_members.svg' alt='equipe' />
         </div>
 
         <div className='carousel'>
             <div className='buttons'>
                 <button id='left' onClick={goPreviousSlide}>
-                    <img src=".\public\assets\icons\chevron-down-1.svg" alt="esquerda" />
+                    <img src={ICON_CHEVRON_DOWN} alt="esquerda" />
                 </button>
             </div>
             <div className='profile-container'>
@@ -64,13 +65,13 @@ export const About = () => {
 
                     <div className='socialMedia'>
                         <a id = 'github' href={member.socialMedia.github} target="_blank">
-                            <img src={"public/assets/icons/githubwhite.svg"} alt="github" />
+                            <img src={ICON_GITHUB_WHITE} alt="github" />
                         </a>
                         <a id='instagram' href={member.socialMedia.instagram} target="_blank">
-                            <img src="public/assets/icons/instagram.svg" alt="instagram" />
+                            <img src={ICON_INSTAGRAM_BLACK} alt="instagram" />
                         </a>
                         <a id= 'linkedin' href={member.socialMedia.linkedin} target="_blank">
-                            <img src="public/assets/icons/linkedin.svg" alt="linkedin" />
+                            <img src={ICON_LINKEDIN_BLACK} alt="linkedin" />
                         </a>
                     </div>
 
@@ -89,7 +90,7 @@ export const About = () => {
         </div>
         <div className='buttons'>
             <button id='right' onClick={goNextSlide}>
-                <img src=".\public\assets\icons\chevron-down-1.svg" alt="direita" />
+                <img src={ICON_CHEVRON_DOWN} alt="direita" />
             </button>
         </div>
 
