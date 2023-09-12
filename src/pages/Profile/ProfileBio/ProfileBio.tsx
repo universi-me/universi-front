@@ -3,6 +3,7 @@ import { ProfileContext } from '@/pages/Profile';
 import { getGenderName } from '@/utils/profileUtils';
 import { TypeLinkToBootstrapIcon } from '@/types/Link';
 import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
+import { Link } from 'react-router-dom';
 import './ProfileBio.css'
 
 export type ProfileBioProps = {
@@ -18,9 +19,9 @@ export function ProfileBio(props: ProfileBioProps) {
         <div className="bio card">
             {
                 profileContext.accessingLoggedUser ?
-                    <button className="edit-button" onClick={props.onClickEdit}>
+                    <Link className="edit-button" to="/manage-profile">
                         <img src="/assets/icons/edit-2.svg" alt="Editar" />
-                    </button>
+                    </Link>
                 : null
             }
 
