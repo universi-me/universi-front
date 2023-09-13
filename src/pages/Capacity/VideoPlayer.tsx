@@ -35,17 +35,19 @@ const VideoPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const loadYouTubeScript = () => {
-      const scriptTag = document.createElement('script');
-      scriptTag.src = 'https://www.youtube.com/iframe_api';
-      document.head.appendChild(scriptTag);
-    };
+    if(!window.YT) { // only add the script if it doesn't exist
+      const loadYouTubeScript = () => {
+        const scriptTag = document.createElement('script');
+        scriptTag.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(scriptTag);
+      };
 
-    (window as any).onYouTubeIframeAPIReady = () => {
-      setVideoReady(true);
-    };
+      (window as any).onYouTubeIframeAPIReady = () => {
+        setVideoReady(true);
+      };
 
-    loadYouTubeScript();
+      loadYouTubeScript();
+    }
   }, []);
 
   useEffect(() => {
