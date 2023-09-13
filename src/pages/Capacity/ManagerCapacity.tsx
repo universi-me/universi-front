@@ -325,9 +325,9 @@ const CrudTela: React.FC = () => {
                 {[1, 2, 3, 4, 5].map(rating => {
                     return (
                         <button type="button" className="star-button" value={rating}
-                            onClick={e => setNewRating(Number(e.currentTarget.value))}
+                            onClick={e => setEditedRating(Number(e.currentTarget.value))}
                         >
-                            <span className={`bi bi-star${rating <= newRating ? "-fill" : ""}`} />
+                            <span className={`bi bi-star${rating <= editedRating ? "-fill" : ""}`} />
                         </button>
                     )
                 })}
