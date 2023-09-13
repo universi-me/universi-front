@@ -49,7 +49,7 @@ const VideoPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (isVideoReady && video && video.url && !playerRef.current) {
+    if (window.YT && video && video.url) {
       playerRef.current = new YT.Player('player', {
         height: '500',
         width: '1000',
