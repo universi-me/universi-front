@@ -10,7 +10,8 @@ import { Video } from '@/types/Capacity';
 const VideoPage: React.FC = () => {
   const { videoId } = useParams<{ videoId: string }>();
   const [video, setVideo] = useState<Video | null>(null);
-  const [isVideoReady, setVideoReady] = useState(false);
+  const [isYouTubeIframeAPIReady, setYouTubeIframeAPIReady] = useState(false);
+  const [isPlayerReady, setPlayerReady] = useState(false);
   const playerRef = useRef<YT.Player | null>(null);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const VideoPage: React.FC = () => {
       };
 
       (window as any).onYouTubeIframeAPIReady = () => {
-        setVideoReady(true);
+        setYouTubeIframeAPIReady(true);
       };
 
       loadYouTubeScript();
@@ -51,14 +52,26 @@ const VideoPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (window.YT && video && video.url) {
-      playerRef.current = new YT.Player('player', {
+    if(window.YT) {
+      (window.YT as any).ready(function() {
+        setPlayerReady(true);
+      });
+    }
+  }, [isYouTubeIframeAPIReady]);
+
+  const loadVideo = () => {
+    if(isPlayerReady && video && video.url && playerRef) {
+      playerRef.current = new window.YT.Player('player', {
         height: '500',
         width: '1000',
         videoId: getVideoId(video.url),
       });
     }
-  }, [isVideoReady, video]);
+  };
+
+  useEffect(() => {
+    loadVideo();
+  }, [isPlayerReady, video]);
 
   return (
     <div>
