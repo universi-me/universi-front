@@ -15,10 +15,7 @@ import VideoPage from "@/pages/Capacity/VideoPlayer";
 import PlaylistPage from "@/pages/Capacity/Playlist";
 import ManagerCapacity from "@/pages/Capacity/ManagerCapacity";
 import SignUpPage from "@/pages/SignUp";
-import CurriculumPage from '@/pages/curriculum/pages/CurriculumPage';
-
-
-
+import CurriculumPage from "@/pages/Curriculum";
 
 export const router = createBrowserRouter([{
   path: "/",

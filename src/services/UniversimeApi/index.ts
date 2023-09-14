@@ -4,8 +4,10 @@ import * as CompetenceType from "./CompetenceType";
 import * as Group from "./Group";
 import * as Link from "./Link";
 import * as Profile from "./Profile";
-import * as Capacity from "./Capacity"
-import * as User from "./User"
+import * as Capacity from "./Capacity";
+import * as User from "./User";
+import * as CurriculumComp from "./CurriculumComp";
+import * as CurriculumCompType from "./CurriculumType";
 
 export const UniversimeApi = {
     Auth,
@@ -16,6 +18,8 @@ export const UniversimeApi = {
     Link,
     Profile,
     User,
+    CurriculumComp,
+    CurriculumCompType,
 };
 
 export default UniversimeApi;
