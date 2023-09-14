@@ -1,7 +1,7 @@
 import { MouseEvent, useState } from "react";
 import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 
-import { ManageProfileLinks, ManageProfileLoaderResponse, ManageProfilePassword, getManageLinks } from "@/pages/ManageProfile";
+import { ManageProfileLinks, ManageProfileLoaderResponse, ManageProfilePassword, ManageProfileImage, getManageLinks, getProfileImage } from "@/pages/ManageProfile";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import UniversimeApi from "@/services/UniversimeApi";
 
@@ -26,11 +26,16 @@ export function ManageProfilePage() {
         <h1 className="heading">Editar meu perfil</h1>
 
         <form id="edit-profile-form">
-            <fieldset id="fieldset-name">
-                <legend>Nome</legend>
-                <input type="text" name="firstname" id="firstname" defaultValue={firstname} onChange={setStateAsValue(setFirstname)} />
-                <input type="text" name="lastname" id="lastname" defaultValue={lastname} onChange={setStateAsValue(setLastname)} />
-            </fieldset>
+            <div className="image-name-container">
+                <ManageProfileImage currentImage={profile.image} />
+
+                <fieldset id="fieldset-name">
+                    <legend>Nome</legend>
+                    <input type="text" name="firstname" id="firstname" defaultValue={firstname} onChange={setStateAsValue(setFirstname)} />
+                    <input type="text" name="lastname" id="lastname" defaultValue={lastname} onChange={setStateAsValue(setLastname)} />
+                </fieldset>
+            </div>
+
 
             <fieldset id="fieldset-bio">
                 <legend>Biografia</legend>
@@ -59,11 +64,20 @@ export function ManageProfilePage() {
         <ManageProfilePassword />
     </div>;
 
-    function submitChanges(e: MouseEvent<HTMLButtonElement>) {
+    async function submitChanges(e: MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
 
         if (!profile)
             return;
+
+        let newImageUrl = undefined;
+        const image = getProfileImage();
+        if (image) {
+            const res = await UniversimeApi.Image.upload({image});
+            if (res.success && res.body) {
+                newImageUrl = res.body.link;
+            }
+        }
 
         const profileEdit = UniversimeApi.Profile.edit({
             profileId: profile.id,
@@ -71,6 +85,7 @@ export function ManageProfilePage() {
             lastname,
             bio,
             gender: gender || undefined,
+            imageUrl: newImageUrl,
         });
 
         const manageLinks = getManageLinks();
