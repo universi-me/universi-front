@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ProfileContext } from '@/pages/Profile';
-import { getFullName } from '@/utils/profileUtils';
+import { getFullName, getProfileImageUrl } from '@/utils/profileUtils';
 import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
 import './ProfileLastRecommendations.css'
 
@@ -26,7 +26,7 @@ export function ProfileLastRecommendations() {
                             return (
                                 <div className="recommendation" key={recommendation.id}>
                                     <Link to={originUrl} target='_blank'>
-                                    <ProfileImage className="image" imageUrl={recommendation.origin.image} noImageColor='#8A8A8A' />
+                                    <ProfileImage className="image" imageUrl={getProfileImageUrl(recommendation.origin)} noImageColor='#8A8A8A' />
                                     </Link>
 
                                     <div className="box">

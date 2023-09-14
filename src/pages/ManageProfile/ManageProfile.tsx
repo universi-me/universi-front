@@ -6,6 +6,7 @@ import { setStateAsValue } from "@/utils/tsxUtils";
 import UniversimeApi from "@/services/UniversimeApi";
 
 import "./ManageProfile.less";
+import { getProfileImageUrl } from "@/utils/profileUtils";
 
 const BIO_MAX_LENGTH = 140;
 export function ManageProfilePage() {
@@ -27,7 +28,7 @@ export function ManageProfilePage() {
 
         <form id="edit-profile-form">
             <div className="image-name-container">
-                <ManageProfileImage currentImage={profile.image} />
+                <ManageProfileImage currentImage={getProfileImageUrl(profile)} />
 
                 <fieldset id="fieldset-name">
                     <legend>Nome</legend>

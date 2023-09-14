@@ -1,6 +1,6 @@
 import { MouseEventHandler, useContext } from 'react';
 import { ProfileContext } from '@/pages/Profile';
-import { getGenderName } from '@/utils/profileUtils';
+import { getGenderName, getProfileImageUrl } from '@/utils/profileUtils';
 import { TypeLinkToBootstrapIcon } from '@/types/Link';
 import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
 import { Link } from 'react-router-dom';
@@ -27,7 +27,7 @@ export function ProfileBio(props: ProfileBioProps) {
             }
 
             <div className="intro section">
-                <ProfileImage className="image" imageUrl={profileContext.profile.image} noImageColor="#505050" />
+                <ProfileImage className="image" imageUrl={getProfileImageUrl(profileContext.profile)} noImageColor="#505050" />
                 <h2 className="card-heading name">{ `${profileContext.profile.firstname} ${profileContext.profile.lastname}` }</h2>
                 <div className="function-pronoun">{ getFunctionGender() }</div>
             </div>
