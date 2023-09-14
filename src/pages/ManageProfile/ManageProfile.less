@@ -1,3 +1,185 @@
-#manage-profile-page {
+@import url(/src/layouts/fonts.less);
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/transitions.less);
 
+#manage-profile-page {
+    margin-top: 1rem;
+
+    .heading {
+        text-align: center;
+        text-transform: uppercase;
+        background-color: @primary-color;
+        font-weight: @font-weight-bold;
+        color: @font-color-v1;
+
+        padding: .5rem;
+    }
+
+    #edit-profile-form {
+        padding: 1rem;
+        display: grid;
+        column-gap: 2rem;
+        grid-template-columns: 45% auto;
+
+        #left-side, #right-side {
+            width: 100%;
+            background-color: @card-background-color;
+
+            padding: 25px;
+            border: 1px solid @tertiary-color;
+            border-radius: .625rem;
+        }
+
+        #left-side {
+            fieldset {
+                width: 100%;
+            }
+        }
+    }
+
+    #submit-profile {
+        width: fit-content;
+
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 1rem;
+
+        button {
+            cursor: pointer;
+
+            color: @font-color-v2;
+            text-transform: uppercase;
+            font-weight: @font-weight-semibold;
+
+            border-radius: .625rem;
+            border: none;
+
+            background-color: @primary-color;
+            will-change: background-color, color;
+            transition-duration: 100ms;
+
+            padding: .5rem .75rem;
+
+            &:hover {
+                background-color: @button-yellow-hover-color;
+                color: @font-color-v1;
+            }
+        }
+    }
+
+
+    fieldset {
+        border: none;
+        width: fit-content;
+
+        legend, .legend {
+            width: 100%;
+            font-variant: small-caps;
+            font-size: 1.25rem;
+        }
+
+        &#fieldset-image {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            legend {
+                text-align: center;
+            }
+
+            #image {
+                display: none;
+            }
+
+            label[for="image"] {
+                cursor: pointer;
+
+                img {
+                    width: 10rem;
+                    aspect-ratio: 1;
+
+                    &:hover {
+                        outline: 5px solid @tertiary-color;
+                        filter: contrast(80%);
+                    }
+                }
+            }
+        }
+
+        &#fieldset-name {
+            display: flex;
+            flex-direction: column;
+            margin-left: 2rem;
+
+            legend {
+                display: none;
+            }
+
+            label {
+                display: flex;
+                flex-direction: column;
+
+                &:not(:last-of-type) {
+                    margin-bottom: 1rem;
+                }
+
+                input {
+                    width: 100%;
+                }
+            }
+        }
+
+        &#fieldset-bio {
+            legend {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+
+                .info-text {
+                    font-size: .75em;
+
+                    &.full-bio {
+                        color: @wrong-invalid-color;
+                        font-weight: @font-weight-semibold;
+                    }
+                }
+            }
+
+            textarea {
+                width: 100%;
+                resize: none;
+            }
+        }
+
+        &#fieldset-gender {
+            select {
+                width: 100%;
+            }
+        }
+    }
+
+    .image-name-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        width: 100%;
+    }
+
+    input[type="text"], input[type="url"], input[type="password"], textarea, select {
+        padding: .5rem 1rem;
+        border-radius: .625rem;
+        border: none;
+        outline: 1px solid @tertiary-color;
+        margin: 2px;
+
+        &:focus {
+            outline: 2px solid @tertiary-color;
+        }
+    }
+
+    select {
+        font-size: .9rem;
+    }
 }

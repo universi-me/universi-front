@@ -14,9 +14,9 @@ export function ManageProfilePage() {
     const { genderOptions, links, profile, typeLinks } = useLoaderData() as ManageProfileLoaderResponse;
 
     const [firstname, setFirstname] = useState(profile?.firstname ?? "");
-    const [lastname, setLastname] =  useState(profile?.lastname ?? "");
-    const [bio, setBio] =  useState(profile?.bio ?? "");
-    const [gender, setGender] =  useState(profile?.gender ?? "");
+    const [lastname, setLastname] = useState(profile?.lastname ?? "");
+    const [bio, setBio] = useState(profile?.bio ?? "");
+    const [gender, setGender] = useState(profile?.gender ?? "");
 
     if (!profile)
         return <Navigate to="/login" />
@@ -27,47 +27,58 @@ export function ManageProfilePage() {
         <h1 className="heading">Editar meu perfil</h1>
 
         <form id="edit-profile-form">
-            <div className="image-name-container">
-                <ManageProfileImage currentImage={getProfileImageUrl(profile)} />
+            <div id="left-side">
+                <div className="image-name-container">
+                    <ManageProfileImage currentImage={getProfileImageUrl(profile)} />
 
-                <fieldset id="fieldset-name">
-                    <legend>Nome</legend>
-                    <input type="text" name="firstname" id="firstname" defaultValue={firstname} onChange={setStateAsValue(setFirstname)} />
-                    <input type="text" name="lastname" id="lastname" defaultValue={lastname} onChange={setStateAsValue(setLastname)} />
+                    <fieldset id="fieldset-name">
+                        <legend>Altere seu nome</legend>
+                        <label className="legend" htmlFor="firstname">
+                            Nome
+                            <input type="text" name="firstname" id="firstname" defaultValue={firstname} onChange={setStateAsValue(setFirstname)} />
+                        </label>
+
+                        <label className="legend" htmlFor="lastname">
+                            Sobrenome
+                            <input type="text" name="lastname" id="lastname" defaultValue={lastname} onChange={setStateAsValue(setLastname)} />
+                        </label>
+                    </fieldset>
+                </div>
+
+
+                <fieldset id="fieldset-bio">
+                    <legend>
+                        Biografia
+                        <span className={`info-text ${isBioFull ? 'full-bio' : ''}`}>{bio?.length ?? 0} / {BIO_MAX_LENGTH}</span>
+                    </legend>
+                    <textarea name="bio" id="bio" maxLength={BIO_MAX_LENGTH} defaultValue={bio} rows={6} onChange={setStateAsValue(setBio)} />
                 </fieldset>
+
+                <fieldset id="fieldset-gender">
+                    <legend>Gênero</legend>
+                    <select name="gender" id="gender" defaultValue={gender} onChange={setStateAsValue(setGender)} >
+                        { genderOptions.map(g => {
+                            return <option key={g.value} value={g.value}>{g.label}</option>
+                        }) }
+                    </select>
+                </fieldset>
+
+                <section id="submit-profile">
+                    <button type="button" onClick={submitProfileChanges}>
+                        Salvar alterações do perfil
+                    </button>
+                </section>
             </div>
-
-
-            <fieldset id="fieldset-bio">
-                <legend>Biografia</legend>
-                <textarea name="bio" id="bio" maxLength={BIO_MAX_LENGTH} defaultValue={bio} onChange={setStateAsValue(setBio)} />
-                <p className={`info-text ${isBioFull ? 'full-bio' : ''}`}>{bio?.length ?? 0} / {BIO_MAX_LENGTH}</p>
-            </fieldset>
-
-            <fieldset id="fieldset-gender">
-                <legend>Gênero</legend>
-                <select name="gender" id="gender" defaultValue={gender} onChange={setStateAsValue(setGender)} >
-                    { genderOptions.map(g => {
-                        return <option key={g.value} value={g.value}>{g.label}</option>
-                    }) }
-                </select>
-            </fieldset>
-
-            <ManageProfileLinks profileLinks={links} typeLinks={typeLinks} />
-
-            <section id="submit">
-                <button type="button" onClick={submitChanges}>
-                    Alterar perfil
-                </button>
-            </section>
+            <div id="right-side">
+                <ManageProfileLinks profileLinks={links} typeLinks={typeLinks} />
+            </div>
         </form>
 
         <ManageProfilePassword />
     </div>;
 
-    async function submitChanges(e: MouseEvent<HTMLButtonElement>) {
+    async function submitProfileChanges(e: MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-
         if (!profile)
             return;
 
@@ -80,14 +91,24 @@ export function ManageProfilePage() {
             }
         }
 
-        const profileEdit = UniversimeApi.Profile.edit({
+        UniversimeApi.Profile.edit({
             profileId: profile.id,
             name: firstname,
             lastname,
             bio,
             gender: gender || undefined,
             imageUrl: newImageUrl,
-        });
+        }).then(res => {
+            // todo: warn on error
+            navigate(`/profile/${profile.user.name}`);
+        })
+    }
+
+    async function submitChanges(e: MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+
+        if (!profile)
+            return;
 
         const manageLinks = getManageLinks();
 
@@ -110,7 +131,6 @@ export function ManageProfilePage() {
             .map(l => UniversimeApi.Link.update(l));
 
         Promise.all([
-            profileEdit,
             Promise.all(linksCreated),
             Promise.all(linksRemoved),
             Promise.all(linksUpdated),
