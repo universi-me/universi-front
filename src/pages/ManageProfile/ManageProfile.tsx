@@ -1,8 +1,7 @@
-import { MouseEvent, useContext, useState } from "react";
+import { MouseEvent, useState } from "react";
 import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 
-import { ManageProfileLoaderResponse } from "@/pages/ManageProfile";
-import { AuthContext } from "@/contexts/Auth";
+import { ManageProfileLinks, ManageProfileLoaderResponse, getManageLinks } from "@/pages/ManageProfile";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import UniversimeApi from "@/services/UniversimeApi";
 
@@ -10,16 +9,15 @@ import "./ManageProfile.less";
 
 const BIO_MAX_LENGTH = 140;
 export function ManageProfilePage() {
-    const auth = useContext(AuthContext);
     const navigate = useNavigate();
-    const { genderOptions } = useLoaderData() as ManageProfileLoaderResponse;
+    const { genderOptions, links, profile, typeLinks } = useLoaderData() as ManageProfileLoaderResponse;
 
-    const [firstname, setFirstname] = useState(auth.profile?.firstname ?? "");
-    const [lastname, setLastname] =  useState(auth.profile?.lastname ?? "");
-    const [bio, setBio] =  useState(auth.profile?.bio ?? "");
-    const [gender, setGender] =  useState(auth.profile?.gender ?? "");
+    const [firstname, setFirstname] = useState(profile?.firstname ?? "");
+    const [lastname, setLastname] =  useState(profile?.lastname ?? "");
+    const [bio, setBio] =  useState(profile?.bio ?? "");
+    const [gender, setGender] =  useState(profile?.gender ?? "");
 
-    if (!auth.user)
+    if (!profile)
         return <Navigate to="/login" />
 
     const isBioFull = (bio?.length ?? 0) >= BIO_MAX_LENGTH;
@@ -49,6 +47,8 @@ export function ManageProfilePage() {
                 </select>
             </fieldset>
 
+            <ManageProfileLinks profileLinks={links} typeLinks={typeLinks} />
+
             <section id="submit">
                 <button type="button" onClick={submitChanges}>
                     Alterar perfil
@@ -60,22 +60,46 @@ export function ManageProfilePage() {
     function submitChanges(e: MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
 
-        const profile = auth.profile;
         if (!profile)
             return;
 
-        UniversimeApi.Profile.edit({
+        const profileEdit = UniversimeApi.Profile.edit({
             profileId: profile.id,
             name: firstname,
             lastname,
             bio,
-            gender: !!gender ? gender : undefined,
-        }).then(response => {
-            if (response.success) {
-                // todo: update auth.profile
-                navigate(`/profile/${profile.user.name}`);
-            }
-            // todo: warn error
-        })
+            gender: gender || undefined,
+        });
+
+        const manageLinks = getManageLinks();
+
+        const linksCreated = manageLinks
+            .filter(l => {
+                const idNum = Number(l.id);
+                return !isNaN(idNum) && idNum < 0;
+            })
+            .map(l => UniversimeApi.Link.create(l));
+
+        const linksRemoved = links
+            .filter(l => undefined === manageLinks.find(ml => ml.id === l.id))
+            .map(l => UniversimeApi.Link.remove(l));
+
+        const linksUpdated = manageLinks
+            .filter(l => {
+                const oldLink = links.find(ol => ol.id === l.id);
+                return !!oldLink && (oldLink.name !== l.name || oldLink.typeLink !== l.typeLink || oldLink.url !== l.url);
+            })
+            .map(l => UniversimeApi.Link.update(l));
+
+        Promise.all([
+            profileEdit,
+            Promise.all(linksCreated),
+            Promise.all(linksRemoved),
+            Promise.all(linksUpdated),
+        ])
+            .then(res => {
+                // todo: add warning on error
+                navigate(`/profile/${profile.user.name}`)
+            })
     }
 }
