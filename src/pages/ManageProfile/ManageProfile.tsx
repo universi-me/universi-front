@@ -1,7 +1,7 @@
 import { MouseEvent, useState } from "react";
 import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 
-import { ManageProfileLinks, ManageProfileLoaderResponse, getManageLinks } from "@/pages/ManageProfile";
+import { ManageProfileLinks, ManageProfileLoaderResponse, ManageProfilePassword, getManageLinks } from "@/pages/ManageProfile";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import UniversimeApi from "@/services/UniversimeApi";
 
@@ -55,6 +55,8 @@ export function ManageProfilePage() {
                 </button>
             </section>
         </form>
+
+        <ManageProfilePassword />
     </div>;
 
     function submitChanges(e: MouseEvent<HTMLButtonElement>) {
