@@ -3,4 +3,5 @@ export type User = {
     name:           string;
     email?:         string;
     ownerOfSession: boolean;
+    needProfile:    boolean;
 }

@@ -26,12 +26,14 @@ export function ProfilePage() {
 
     const [profileContext, setProfileContext] = useState<ProfileContextType>(null);
 
-    if (auth.user === null) {
-        navigate('/login');
-    }
+    
+    useEffect(() => {
+        loadAccessedUser();
 
-    useEffect(() => { loadAccessedUser() }, [id]);
-    console.dir(profileContext)
+        if (auth.user === null) {
+            navigate('/login');
+        }
+    }, [id, auth.user]);
 
     return (
         !profileContext ? null :
@@ -111,10 +113,9 @@ export function ProfilePage() {
         ]);
 
         const profileListData = await loadProfileListData(profileRes.body.profile.id);
-        console.log(id, "==", auth.user?.name);
 
         setProfileContext({
-            accessingLoggedUser: id == auth.user?.name,
+            accessingLoggedUser: profileRes.body?.profile.user.ownerOfSession ?? false,
             profile: profileRes.body.profile,
             allCompetenceTypes: competenceTypeRes.body.list,
             profileListData: profileListData,
