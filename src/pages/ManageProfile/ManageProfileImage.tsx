@@ -17,7 +17,7 @@ export function ManageProfileImage(props: ManageProfileImageProps) {
         <fieldset id="fieldset-image">
             <legend>Alterar imagem do perfil</legend>
             <input id="image" name="image" accept="image/*" type="file" onChange={changeImage} />
-            <label htmlFor="image"><ProfileImage imageUrl={image} /></label>
+            <label htmlFor="image"><ProfileImage imageUrl={image} id="profile-image-view" /></label>
         </fieldset>
     );
 
