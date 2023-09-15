@@ -15,34 +15,36 @@ export function ManageProfilePassword() {
     const enableChangePassword = !!oldPassword && !!newPassword;
 
     return (
-        <section id="fieldset-password" className="card">
-            <legend>Alterar minha senha</legend>
+        <section id="card-password" className="card">
+            <fieldset id="fieldset-password">
+                <legend>Alterar minha senha</legend>
 
-            <div className="password-container">
-                <input name="old-password" id="old-password" onChange={setStateAsValue(setOldPassword)}
-                    type={showOldPassword ? "text" : "password"} placeholder="Insira sua senha atual"
-                />
-                <button type="button" onClick={toggleOldPassword} id="toggle-password-visibility" title="Alterar visibilidade da senha">
-                    <span className={`bi ${showOldPassword ? "bi-eye-fill" : "bi-eye-slash-fill"}`} />
-                </button>
-            </div>
+                <div className="password-container">
+                    <input name="old-password" id="old-password" onChange={setStateAsValue(setOldPassword)}
+                        type={showOldPassword ? "text" : "password"} placeholder="Insira sua senha atual"
+                    />
+                    <button type="button" onClick={toggleOldPassword} className="toggle-password-visibility" title="Alterar visibilidade da senha">
+                        <span className={`bi ${showOldPassword ? "bi-eye-fill" : "bi-eye-slash-fill"}`} />
+                    </button>
+                </div>
 
-            <div className="password-container">
-                <input name="new-password" id="new-password" onChange={setStateAsValue(setNewPassword)}
-                    type={showNewPassword ? "text" : "password"} placeholder="Insira sua nova senha"
-                />
-                <button type="button" onClick={toggleNewPassword} id="toggle-password-visibility" title="Alterar visibilidade da senha">
-                    <span className={`bi ${showNewPassword ? "bi-eye-fill" : "bi-eye-slash-fill"}`} />
-                </button>
-            </div>
+                <div className="password-container">
+                    <input name="new-password" id="new-password" onChange={setStateAsValue(setNewPassword)}
+                        type={showNewPassword ? "text" : "password"} placeholder="Insira sua nova senha"
+                    />
+                    <button type="button" onClick={toggleNewPassword} className="toggle-password-visibility" title="Alterar visibilidade da senha">
+                        <span className={`bi ${showNewPassword ? "bi-eye-fill" : "bi-eye-slash-fill"}`} />
+                    </button>
+                </div>
 
-            <section className="submit">
-                <button type="button" onClick={changePassword}
-                    disabled={ !enableChangePassword } title={ !enableChangePassword ? "Preencha os campos de senha" : undefined}
-                >
-                    Alterar senha
-                </button>
-            </section>
+                <section className="submit">
+                    <button type="button" onClick={changePassword}
+                        disabled={ !enableChangePassword } title={ !enableChangePassword ? "Preencha os campos de senha" : undefined}
+                    >
+                        Alterar senha
+                    </button>
+                </section>
+            </fieldset>
         </section>
     );
 
