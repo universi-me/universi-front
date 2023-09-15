@@ -1,4 +1,4 @@
-import { useState, MouseEvent, ChangeEvent } from "react";
+import { useState, MouseEvent, ChangeEvent, EventHandler } from "react";
 import { Link, TypeLink, TypeLinkToBootstrapIcon } from "@/types/Link";
 import { Profile } from "@/types/Profile";
 
@@ -8,6 +8,8 @@ export type ManageProfileLinksProps = {
         value: TypeLink;
         label: string;
     }[];
+
+    submitLinks: EventHandler<MouseEvent>;
 };
 
 // Decreases by 1 each time a link is added
@@ -18,10 +20,12 @@ export function ManageProfileLinks(props: ManageProfileLinksProps) {
 
     return (
         <fieldset id="fieldset-links">
-            <h2 className="legend">Gerenciar seus links</h2>
-            <button id="new-link" type="button" title="Adicionar novo link" onClick={newLink}>
-                <i className="bi bi-plus-circle-fill" />
-            </button>
+            <div className="heading">
+                <h2 className="legend">Gerenciar seus links</h2>
+                <button id="new-link" type="button" title="Adicionar novo link" onClick={newLink}>
+                    <i className="bi bi-plus-circle-fill" />
+                </button>
+            </div>
 
             <div className="links-container">
                 {profileLinks.map(link => 
@@ -52,6 +56,12 @@ export function ManageProfileLinks(props: ManageProfileLinksProps) {
                     </div>
                 )}
             </div>
+
+            <section id="submit-links" className="submit">
+                <button type="button" onClick={props.submitLinks}>
+                    Salvar alterações de links
+                </button>
+            </section>
         </fieldset>
     );
 

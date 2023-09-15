@@ -63,14 +63,14 @@ export function ManageProfilePage() {
                     </select>
                 </fieldset>
 
-                <section id="submit-profile">
+                <section id="submit-profile" className="submit">
                     <button type="button" onClick={submitProfileChanges}>
                         Salvar alterações do perfil
                     </button>
                 </section>
             </div>
             <div id="right-side">
-                <ManageProfileLinks profileLinks={links} typeLinks={typeLinks} />
+                <ManageProfileLinks profileLinks={links} typeLinks={typeLinks} submitLinks={submitLinkChanges} />
             </div>
         </form>
 
@@ -104,9 +104,8 @@ export function ManageProfilePage() {
         })
     }
 
-    async function submitChanges(e: MouseEvent<HTMLButtonElement>) {
+    function submitLinkChanges(e: MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-
         if (!profile)
             return;
 
@@ -134,10 +133,9 @@ export function ManageProfilePage() {
             Promise.all(linksCreated),
             Promise.all(linksRemoved),
             Promise.all(linksUpdated),
-        ])
-            .then(res => {
-                // todo: add warning on error
-                navigate(`/profile/${profile.user.name}`)
-            })
+        ]).then(res => {
+            // todo: add warning on error
+            navigate(`/profile/${profile.user.name}`)
+        })
     }
 }

@@ -37,7 +37,7 @@
         }
     }
 
-    #submit-profile {
+    .submit {
         width: fit-content;
 
         margin-left: auto;
@@ -70,7 +70,7 @@
 
     fieldset {
         border: none;
-        width: fit-content;
+        width: 100%;
 
         legend, .legend {
             width: 100%;
@@ -155,6 +155,105 @@
         &#fieldset-gender {
             select {
                 width: 100%;
+            }
+        }
+
+        &#fieldset-links {
+            .heading {
+                all: inherit;
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+
+                margin-bottom: .5rem;
+
+                .legend {
+                    font-weight: @font-weight-default;
+                }
+
+                #new-link {
+                    cursor: pointer;
+
+                    border: none;
+                    background-color: transparent;
+
+                    font-size: 1.5em;
+
+                    &:hover {
+                        filter: opacity(75%);
+                    }
+                }
+            }
+
+            .links-container {
+                width: 100%;
+                height: fit-content;
+
+                .link-item {
+                    .name-type-container {
+                        @select-type-width: 10em;
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: space-between;
+
+                        [data-link-field="type"] {
+                            width: @select-type-width;
+                        }
+
+                        [data-link-field="name"] {
+                            width: calc(100% - @select-type-width - 1.5em);
+                        }
+                    }
+
+                    .url-remove-container {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: space-between;
+
+                        margin-top: .25em;
+
+                        .type-icon {
+                            background-color: @card-item-color;
+                            border-radius: .625rem;
+
+                            font-size: 2em;
+                            width: 1.5em;
+                            aspect-ratio: 1;
+
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+
+                        .remove-link {
+                            border: none;
+                            background: transparent;
+                            font-size: 1.5em;
+                            color: @secondary-color;
+                            cursor: pointer;
+                        }
+
+                        [data-link-field="url"] {
+                            width: 100%;
+
+                            margin: 0 .5rem;
+
+                        }
+                    }
+
+                    &:not(:last-of-type) {
+                        @gap: 2rem;
+
+                        padding-bottom: calc(@gap / 2);
+                        margin-bottom: calc(@gap / 2);
+
+                        border-bottom: 1px solid black;
+                    }
+                }
             }
         }
     }
