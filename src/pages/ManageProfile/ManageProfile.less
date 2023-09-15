@@ -323,4 +323,13 @@
     select {
         font-size: .9rem;
     }
+
+    .required-input::after {
+        content: "*";
+        display: inline;
+        margin-left: .15em;
+
+        position: relative;
+        top: .1em;
+    }
 }

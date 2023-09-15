@@ -22,6 +22,7 @@ export function ManageProfilePage() {
         return <Navigate to="/login" />
 
     const isBioFull = (bio?.length ?? 0) >= BIO_MAX_LENGTH;
+    const canSaveProfile = !!firstname && !!lastname;
 
     return <div id="manage-profile-page">
         <h1 className="heading">Editar meu perfil</h1>
@@ -35,13 +36,13 @@ export function ManageProfilePage() {
                         <fieldset id="fieldset-name">
                             <legend>Altere seu nome</legend>
                             <label className="legend" htmlFor="firstname">
-                                Nome
-                                <input type="text" name="firstname" id="firstname" defaultValue={firstname} onChange={setStateAsValue(setFirstname)} />
+                                <span className="required-input">Nome</span>
+                                <input type="text" name="firstname" id="firstname" defaultValue={firstname} onChange={setStateAsValue(setFirstname)} required />
                             </label>
 
                             <label className="legend" htmlFor="lastname">
-                                Sobrenome
-                                <input type="text" name="lastname" id="lastname" defaultValue={lastname} onChange={setStateAsValue(setLastname)} />
+                                <span className="required-input">Sobrenome</span>
+                                <input type="text" name="lastname" id="lastname" defaultValue={lastname} onChange={setStateAsValue(setLastname)} required />
                             </label>
                         </fieldset>
                     </div>
@@ -65,7 +66,9 @@ export function ManageProfilePage() {
                     </fieldset>
 
                     <section id="submit-profile" className="submit">
-                        <button type="button" onClick={submitProfileChanges}>
+                        <button type="button" onClick={submitProfileChanges}
+                            disabled={!canSaveProfile} title={canSaveProfile ? undefined : "Preencha os campos obrigatórios marcados com *"}
+                        >
                             Salvar alterações do perfil
                         </button>
                     </section>
