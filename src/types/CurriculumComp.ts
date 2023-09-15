@@ -5,7 +5,7 @@ export type Component = {
     id:             string;
     title:          string;
     description:    string;
-    componentType:  ComponentType;
+    curriculumItemType:  ComponentType;
     profile:        Profile;
     startDate:      Date;
     endDate:        Date | null;

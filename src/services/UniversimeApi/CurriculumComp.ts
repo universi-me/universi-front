@@ -3,7 +3,7 @@ import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
 const ComponentApi = axios.create({
-    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/curriculo`,
+    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/curriculum`,
     withCredentials: true,
 });
 
@@ -78,5 +78,5 @@ export async function remove(body: ComponentId_RequestDTO) {
 
 // Certificar se nesse caso seria um post e se existe esse endpoint
 export async function list() {
-    return (await ComponentApi.post('/componentes/listar', {})).data
+    return (await ComponentApi.get<ComponentGet_ResponseDTO, Component>('/profile'));
 }

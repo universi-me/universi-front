@@ -3,7 +3,7 @@ import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
 const ComponentTypeApi = axios.create({
-    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/ComponentType`,
+    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/componentType`,
     withCredentials: true,
 });
 
@@ -23,5 +23,5 @@ export async function get(param: ComponentTypeGet_ResponseDTO) {
 }
 
 export async function list() {
-    return (await ComponentTypeApi.post("/list", {})).data;
+    return (await ComponentTypeApi.get<ComponentTypeList_ResponseDTO, ComponentType>(''));
 }

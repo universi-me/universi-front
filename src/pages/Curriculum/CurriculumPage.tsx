@@ -5,7 +5,6 @@ import { AuthContext } from "@/contexts/Auth";
 import { UniversimeApi } from "@/services/UniversimeApi";
 
 import { Component, ComponentType } from "@/types/CurriculumComp";
-import { TextAlignCenter } from "phosphor-react";
 
 export function CurriculumPage() {
     const auth = useContext(AuthContext);
@@ -39,23 +38,23 @@ export function CurriculumPage() {
             {
                 listTypes.map((types) => {
                     return (
-                        <div>
-                            <h2 style={TextAlignCenter}>
-                                {types.name}
+                        <div key={types.name}>
+                            <h2 style={{ textAlign: 'center' }}>
+                                Num foi {types.name}
                             </h2>
                             <hr />
                             {
                                 listComponents.map((component) => {
-                                    if (component.componentType.name.match(types.name)) {
-                                        return (
-                                            <div>
-                                                <h3 style={TextAlignCenter}>
-                                                    {component.title}
-                                                </h3>
-                                                {/* outras informações */}
-                                            </div>
-                                        )
-                                    }
+                                    //if(component.curriculumItemType == types) {
+                                    return (
+                                        <div key={component.title}>
+                                            <h3 style={{ textAlign: 'center' }}>
+                                                {component.title}
+                                            </h3>
+                                            {/* outras informações */}
+                                        </div>
+                                    )
+                                    //}
                                 })
                             }
                         </div>
