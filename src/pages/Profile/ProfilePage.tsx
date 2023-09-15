@@ -35,6 +35,13 @@ export function ProfilePage() {
         }
     }, [id, auth.user]);
 
+    useEffect(() => {
+        const user = profileContext?.profile.user;
+        if (user?.needProfile && user.ownerOfSession) {
+            navigate("/manage-profile");
+        }
+    }, [profileContext?.profile.user])
+
     return (
         !profileContext ? null :
 
