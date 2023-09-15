@@ -21,19 +21,13 @@
         column-gap: 2rem;
         grid-template-columns: 45% auto;
 
-        #left-side, #right-side {
+        .card {
             width: 100%;
             background-color: @card-background-color;
 
             padding: 25px;
             border: 1px solid @tertiary-color;
             border-radius: .625rem;
-        }
-
-        #left-side {
-            fieldset {
-                width: 100%;
-            }
         }
     }
 
@@ -160,7 +154,7 @@
 
         &#fieldset-links {
             .heading {
-                all: inherit;
+                all: initial;
 
                 display: flex;
                 flex-direction: row;

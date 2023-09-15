@@ -26,55 +26,57 @@ export function ManageProfilePage() {
     return <div id="manage-profile-page">
         <h1 className="heading">Editar meu perfil</h1>
 
-        <form id="edit-profile-form">
+        <div id="edit-profile-form">
             <div id="left-side">
-                <div className="image-name-container">
-                    <ManageProfileImage currentImage={getProfileImageUrl(profile)} />
+                <form id="profile-edit" className="card">
+                    <div className="image-name-container">
+                        <ManageProfileImage currentImage={getProfileImageUrl(profile)} />
 
-                    <fieldset id="fieldset-name">
-                        <legend>Altere seu nome</legend>
-                        <label className="legend" htmlFor="firstname">
-                            Nome
-                            <input type="text" name="firstname" id="firstname" defaultValue={firstname} onChange={setStateAsValue(setFirstname)} />
-                        </label>
+                        <fieldset id="fieldset-name">
+                            <legend>Altere seu nome</legend>
+                            <label className="legend" htmlFor="firstname">
+                                Nome
+                                <input type="text" name="firstname" id="firstname" defaultValue={firstname} onChange={setStateAsValue(setFirstname)} />
+                            </label>
 
-                        <label className="legend" htmlFor="lastname">
-                            Sobrenome
-                            <input type="text" name="lastname" id="lastname" defaultValue={lastname} onChange={setStateAsValue(setLastname)} />
-                        </label>
+                            <label className="legend" htmlFor="lastname">
+                                Sobrenome
+                                <input type="text" name="lastname" id="lastname" defaultValue={lastname} onChange={setStateAsValue(setLastname)} />
+                            </label>
+                        </fieldset>
+                    </div>
+
+
+                    <fieldset id="fieldset-bio">
+                        <legend>
+                            Biografia
+                            <span className={`info-text ${isBioFull ? 'full-bio' : ''}`}>{bio?.length ?? 0} / {BIO_MAX_LENGTH}</span>
+                        </legend>
+                        <textarea name="bio" id="bio" maxLength={BIO_MAX_LENGTH} defaultValue={bio} rows={6} onChange={setStateAsValue(setBio)} />
                     </fieldset>
-                </div>
 
+                    <fieldset id="fieldset-gender">
+                        <legend>Gênero</legend>
+                        <select name="gender" id="gender" defaultValue={gender} onChange={setStateAsValue(setGender)} >
+                            { genderOptions.map(g => {
+                                return <option key={g.value} value={g.value}>{g.label}</option>
+                            }) }
+                        </select>
+                    </fieldset>
 
-                <fieldset id="fieldset-bio">
-                    <legend>
-                        Biografia
-                        <span className={`info-text ${isBioFull ? 'full-bio' : ''}`}>{bio?.length ?? 0} / {BIO_MAX_LENGTH}</span>
-                    </legend>
-                    <textarea name="bio" id="bio" maxLength={BIO_MAX_LENGTH} defaultValue={bio} rows={6} onChange={setStateAsValue(setBio)} />
-                </fieldset>
+                    <section id="submit-profile" className="submit">
+                        <button type="button" onClick={submitProfileChanges}>
+                            Salvar alterações do perfil
+                        </button>
+                    </section>
+                </form>
 
-                <fieldset id="fieldset-gender">
-                    <legend>Gênero</legend>
-                    <select name="gender" id="gender" defaultValue={gender} onChange={setStateAsValue(setGender)} >
-                        { genderOptions.map(g => {
-                            return <option key={g.value} value={g.value}>{g.label}</option>
-                        }) }
-                    </select>
-                </fieldset>
-
-                <section id="submit-profile" className="submit">
-                    <button type="button" onClick={submitProfileChanges}>
-                        Salvar alterações do perfil
-                    </button>
-                </section>
+                <ManageProfilePassword />
             </div>
             <div id="right-side">
                 <ManageProfileLinks profileLinks={links} typeLinks={typeLinks} submitLinks={submitLinkChanges} />
             </div>
-        </form>
-
-        <ManageProfilePassword />
+        </div>
     </div>;
 
     async function submitProfileChanges(e: MouseEvent<HTMLButtonElement>) {

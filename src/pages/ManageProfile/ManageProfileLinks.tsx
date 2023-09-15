@@ -19,7 +19,7 @@ export function ManageProfileLinks(props: ManageProfileLinksProps) {
     const [profileLinks, setProfileLinks] = useState(props.profileLinks);
 
     return (
-        <fieldset id="fieldset-links">
+        <fieldset id="fieldset-links" className="card">
             <div className="heading">
                 <h2 className="legend">Gerenciar seus links</h2>
                 <button id="new-link" type="button" title="Adicionar novo link" onClick={newLink}>

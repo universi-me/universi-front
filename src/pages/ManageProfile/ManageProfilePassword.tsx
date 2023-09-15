@@ -15,7 +15,7 @@ export function ManageProfilePassword() {
     const enableChangePassword = !!oldPassword && !!newPassword;
 
     return (
-        <section id="fieldset-password">
+        <section id="fieldset-password" className="card">
             <legend>Alterar minha senha</legend>
 
             <div className="password-container">
@@ -36,11 +36,13 @@ export function ManageProfilePassword() {
                 </button>
             </div>
 
-            <button type="button" onClick={changePassword}
-                disabled={ !enableChangePassword } title={ !enableChangePassword ? "Preencha os campos de senha" : undefined}
-            >
-                Alterar senha
-            </button>
+            <section className="submit">
+                <button type="button" onClick={changePassword}
+                    disabled={ !enableChangePassword } title={ !enableChangePassword ? "Preencha os campos de senha" : undefined}
+                >
+                    Alterar senha
+                </button>
+            </section>
         </section>
     );
 
