@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
-import { User } from "@/types/User";
 import { Profile } from "@/types/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi";
 
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
-  const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const user = profile?.user ?? null;
 
   useEffect(() => {
     validateToken();
@@ -22,16 +21,14 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
       const data = await UniversimeApi.Profile.profile();
 
       if (data.body.profile) {
-        setUser(data.body.profile.user);
         setProfile(data.body.profile);
       }
   }
 
-  function setLoggedUser(user: User, profile: Profile): boolean {
-    if (!user || !profile)
+  function setLoggedUser(profile: Profile): boolean {
+    if (!profile)
       return false;
 
-    setUser(user);
     setProfile(profile);
     return true;
   }
@@ -43,7 +40,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
         const profile = await UniversimeApi.Profile.profile();
 
         return {
-            status: setLoggedUser(data.body.user, profile.body?.profile!),
+            status: setLoggedUser(profile.body?.profile!),
             user: data.body.user,
         };
       }
@@ -57,13 +54,11 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   }
 
   async function signin_google(user: any) {
-      const data = user;
       const profile = await UniversimeApi.Profile.profile();
-      return setLoggedUser(data.body.user, profile.body.profile);
+      return setLoggedUser(profile.body.profile);
     };
 
   async function signout() {
-    setUser(null);
     setProfile(null);
     const data = await UniversimeApi.Auth.logout();
     if(data) {
