@@ -7,6 +7,7 @@ import {
     CompetencesSettings, ProfileDiscardChanges, ProfileContext
 } from '@/pages/Profile'
 import { UniversiModal } from "@/components/UniversiModal";
+import { UniversiWarning } from "@/components/UniversiWarning";
 import { AuthContext } from "@/contexts/Auth";
 import { UniversimeApi } from "@/services/UniversimeApi";
 import type { ProfileContextType } from '@/pages/Profile'
@@ -26,7 +27,6 @@ export function ProfilePage() {
 
     const [profileContext, setProfileContext] = useState<ProfileContextType>(null);
 
-    
     useEffect(() => {
         loadAccessedUser();
 
@@ -42,9 +42,13 @@ export function ProfilePage() {
         }
     }, [profileContext?.profile.user])
 
-    return (
-        !profileContext ? null :
+    if (!profileContext)
+        return null;
 
+    if (profileContext.profile.user.needProfile && profileContext.profile.user.ownerOfSession)
+        return <UniversiWarning message="Esse usuário não criou seu perfil ainda" onClickClose={() => navigate(-1)} />;
+
+    return (
         <ProfileContext.Provider value={profileContext} >
         <div id="profile-page">
             {/* todo: color from API */}

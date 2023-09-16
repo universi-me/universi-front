@@ -3,9 +3,9 @@ import { useState } from "react";
 import { oauthSignIn } from "@/services/oauth2-google";
 import { SignUpModal } from "@/pages/SignUp";
 import { IMG_DCX_LOGO } from "@/utils/assets";
+import { UniversiWarning } from "@/components/UniversiWarning/UniversiWarning";
 
 import "./SignUp.less"
-import UniversiWarning from "@/components/UniversiWarning/UniversiWarning";
 
 export default function SignUpPage() {
     const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false);
