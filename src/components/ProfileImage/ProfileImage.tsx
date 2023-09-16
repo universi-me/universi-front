@@ -10,11 +10,12 @@ const DEFAULT_NO_IMAGE_COLOR = "#8A8A8A";
 
 export function ProfileImage(props: ProfileImageProps) {
     const {imageUrl, noImageColor, ...genericElementProps} = props;
-    const className = `profile-image-component ${genericElementProps.className}`
+    const className = ["profile-image-component", genericElementProps.className ?? ""]
+        .join(' ')
 
     return (
         imageUrl
             ? <img {...genericElementProps} className={className} src={imageUrl} />
-            : <div {...genericElementProps} className={className} style={{backgroundColor: DEFAULT_NO_IMAGE_COLOR}} />
+            : <div {...genericElementProps} className={className} style={{...genericElementProps.style, backgroundColor: DEFAULT_NO_IMAGE_COLOR}} />
     );
 }

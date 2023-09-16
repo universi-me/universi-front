@@ -51,3 +51,9 @@
     /* todo: figure out why the button is bigger than the image */
     padding-bottom: calc(.5em - 6px);
 }
+
+#profile-page .groups.card .create-group-button {
+    margin-left: auto;
+    text-decoration: none;
+    color: var(--secondary-color);
+}

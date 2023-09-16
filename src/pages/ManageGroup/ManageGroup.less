@@ -1,0 +1,158 @@
+@import url("/src/layouts/colors.less");
+
+#create-group-page {
+    @form-height: 70vh;
+
+    overflow: hidden;
+    background-color: var(--card-background-color);
+    border-radius: 20px;
+    width: fit-content;
+    margin: auto;
+    margin-top: calc((100vh - @form-height) / 4);
+
+    .heading {
+        padding: .7rem 0;
+        background-color: var(--primary-color);
+
+        color: #FFF;
+        font-size: 1.875rem;
+        font-weight: var(--font-weight-bold);
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .manage-group-form {
+        padding-left: 4.5em;
+        padding-right: 4.5em;
+        padding-top: 1.75em;
+        padding-bottom: 2em;
+    
+        max-height: @form-height;
+        width: 40vw;
+        overflow: auto;
+
+        fieldset {
+            width: 100%;
+            border: none;
+
+            & + fieldset {
+                margin-top: 1rem;
+            }
+
+            &.one-line-fieldset {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            legend {
+                text-transform: uppercase;
+            }
+
+            legend, .fieldset-legend {
+                font-size: 1.25rem;
+            }
+
+            // One line inputs
+            input[type="text"], input[type="url"], textarea {
+                padding: .5rem 1.5rem;
+                border-radius: 0.5em;
+                border: none;
+
+                width: 100%;
+
+                background: #FFF;
+
+                &:focus {
+                    outline: 2px solid @secondary-color;
+                }
+            }
+
+            textarea {
+                resize: vertical;
+                min-height: 5rem;
+                max-height: 10rem;
+            }
+
+            button.radix-switch {
+                all: unset;
+            }
+
+            .radix-switch-root {
+                @radix-switch-width: 2.5rem;
+                @radix-switch-height: 1.5rem;
+                @radix-thumb-diameter: @radix-switch-height;
+
+                width: @radix-switch-width;
+                height: @radix-switch-height;
+
+                border-radius: 9999px;
+                border: none;
+                outline: 2px solid @primary-color;
+
+                box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+
+                &:focus {
+                    outline: 2px solid @secondary-color;
+                }
+
+                & .radix-switch-thumb {
+                    display: block;
+                    width: @radix-thumb-diameter;
+                    height: @radix-thumb-diameter;
+                    background-color: #FFF;
+                    border-radius: 50%;
+                    outline: 2px solid @primary-color;
+
+                    transition: transform 100ms;
+                    will-change: transform;
+                }
+
+                &:not([data-state='checked']) {
+                    background-color: @card-background-color;
+                }
+
+                &[data-state='checked'] {
+                    background-color: @card-item-color;
+
+                    .radix-switch-thumb {
+                        transform: translateX(calc(@radix-switch-width - @radix-thumb-diameter));
+                        background-color: @primary-color;
+                    }
+                }
+            }
+
+            .field-info {
+                margin-top: 0.5rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        .save-group {
+            min-width: 17.5em;
+            max-width: max-content;
+            height: 2.5em;
+
+            border: 2px solid @secondary-color;
+            border-radius: 0.625em;
+            margin-top: 1rem;
+
+            font-size: 0.875em;
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+
+            cursor: pointer;
+            transition: var(--hover-transition-duration) background-color, border-color, color;
+
+            color: @secondary-color;
+            background-color: transparent;
+
+            &:hover {
+                color: @font-color-v1;
+                background-color: @secondary-color;
+                border-color: @secondary-color;
+            }
+        }
+    }
+}

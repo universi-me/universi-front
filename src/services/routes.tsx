@@ -3,6 +3,7 @@ import { App } from "@/src/App";
 import GroupPage from "@/pages/Group";
 import {ProfilePage} from "@/pages/Profile";
 import { About } from "@/pages/About";
+import ManageGroupPage, { ManageGroupLoader } from "@/pages/ManageGroup";
 
 import {Navigate, createBrowserRouter} from 'react-router-dom'
 import Singin from "../../src/pages/singin/Singin";
@@ -82,7 +83,11 @@ export const router = createBrowserRouter([{
         path: "/google-oauth-redirect",
         element: <OAuth2Element/>
     },
-  
+    {
+        path: "/manage-group",
+        element: <ManageGroupPage />,
+        loader: ManageGroupLoader,
+    },
   ]
 },
 ])
