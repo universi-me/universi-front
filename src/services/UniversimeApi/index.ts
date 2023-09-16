@@ -6,6 +6,7 @@ import * as Link from "./Link";
 import * as Profile from "./Profile";
 import * as Capacity from "./Capacity"
 import * as User from "./User"
+import * as Image from "./Image"
 
 export const UniversimeApi = {
     Auth,
@@ -16,6 +17,7 @@ export const UniversimeApi = {
     Link,
     Profile,
     User,
+    Image,
 };
 
 export default UniversimeApi;

@@ -25,15 +25,19 @@ export default function SinginForm() {
 
     if (email && password) {
       const isLogged = await auth.signin(email, password);
-      if (isLogged.status) {
-        navigate(`/capacitacao`);
-      }
-      else {
+      if (!isLogged.status) {
         setIsOpen(true)
         setTimeout(()=>{
           setIsOpen(false)
         },3000)
-       
+      }
+
+      else if (isLogged.user!.needProfile) {
+        navigate("/manage-profile");
+      }
+
+      else {
+        navigate(`/capacitacao`);
       }
     }
   };

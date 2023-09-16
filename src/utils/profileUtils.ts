@@ -28,3 +28,9 @@ export function separateFullName(fullname: string): [string, string] {
 export function getGenderName(gender: Gender | null | undefined): string {
     return gender ? GENDER_OPTIONS[gender] : 'Não informado';
 }
+
+export function getProfileImageUrl(profile: Profile): string | null {
+    return profile.image && profile.image.startsWith("/")
+        ? `${import.meta.env.VITE_UNIVERSIME_API}${profile.image}`
+        : profile.image;
+}

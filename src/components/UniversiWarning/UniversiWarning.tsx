@@ -13,7 +13,7 @@ export type UniversiWarningProps = {
     onClickClose?: (event: MouseEvent<HTMLButtonElement>) => any;
 };
 
-export default function UniversiWarning(props: UniversiWarningProps) {
+export function UniversiWarning(props: UniversiWarningProps) {
     const canClose = props.onClickClose !== undefined;
     const headingMessage = props.heading ?? "Aviso";
 

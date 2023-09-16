@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { AuthContext } from "@/contexts/Auth";
 import "./WelcomeUser.less"
+import { getProfileImageUrl } from "@/utils/profileUtils";
 
 export function WelcomeUser() {
     const auth = useContext(AuthContext);
@@ -16,6 +17,6 @@ export function WelcomeUser() {
     return !isLogged ? null
     : <Link className="welcome-wrapper" to={`/profile/${auth.user?.name}`}>
         <div className="welcome-message">Olá{welcomeMessage}!</div>
-        <ProfileImage className="logged-user-image" imageUrl={auth.profile?.image} noImageColor="var(--card-background-color)" />
+        <ProfileImage className="logged-user-image" imageUrl={auth.profile ? getProfileImageUrl(auth.profile) : undefined} noImageColor="var(--card-background-color)" />
       </Link>
 }

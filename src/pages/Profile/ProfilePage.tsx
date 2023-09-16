@@ -7,6 +7,7 @@ import {
     CompetencesSettings, ProfileDiscardChanges, ProfileContext
 } from '@/pages/Profile'
 import { UniversiModal } from "@/components/UniversiModal";
+import { UniversiWarning } from "@/components/UniversiWarning";
 import { AuthContext } from "@/contexts/Auth";
 import { UniversimeApi } from "@/services/UniversimeApi";
 import type { ProfileContextType } from '@/pages/Profile'
@@ -26,16 +27,28 @@ export function ProfilePage() {
 
     const [profileContext, setProfileContext] = useState<ProfileContextType>(null);
 
-    if (auth.user === null) {
-        navigate('/login');
-    }
+    useEffect(() => {
+        loadAccessedUser();
 
-    useEffect(() => { loadAccessedUser() }, [id]);
-    console.dir(profileContext)
+        if (auth.user === null) {
+            navigate('/login');
+        }
+    }, [id, auth.user]);
+
+    useEffect(() => {
+        const user = profileContext?.profile.user;
+        if (user?.needProfile && user.ownerOfSession) {
+            navigate("/manage-profile");
+        }
+    }, [profileContext?.profile.user])
+
+    if (!profileContext)
+        return null;
+
+    if (profileContext.profile.user.needProfile && profileContext.profile.user.ownerOfSession)
+        return <UniversiWarning message="Esse usuário não criou seu perfil ainda" onClickClose={() => navigate(-1)} />;
 
     return (
-        !profileContext ? null :
-
         <ProfileContext.Provider value={profileContext} >
         <div id="profile-page">
             {/* todo: color from API */}
@@ -111,10 +124,9 @@ export function ProfilePage() {
         ]);
 
         const profileListData = await loadProfileListData(profileRes.body.profile.id);
-        console.log(id, "==", auth.user?.name);
 
         setProfileContext({
-            accessingLoggedUser: id == auth.user?.name,
+            accessingLoggedUser: profileRes.body?.profile.user.ownerOfSession ?? false,
             profile: profileRes.body.profile,
             allCompetenceTypes: competenceTypeRes.body.list,
             profileListData: profileListData,

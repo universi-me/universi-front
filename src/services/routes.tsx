@@ -15,6 +15,7 @@ import VideoPage from "@/pages/Capacity/VideoPlayer";
 import PlaylistPage from "@/pages/Capacity/Playlist";
 import ManagerCapacity from "@/pages/Capacity/ManagerCapacity";
 import SignUpPage from "@/pages/SignUp";
+import ManageProfilePage, { ManageProfileLoader } from "@/pages/ManageProfile";
 
 
 
@@ -57,6 +58,7 @@ export const router = createBrowserRouter([{
       element: <About />
     },
     { path: "/profile/:id", element: <ProfilePage /> },
+    { path: "/manage-profile", element: <ManageProfilePage />, loader: ManageProfileLoader },
     { path: "/group/*", element: <GroupPage /> },
     {//identificador unico - dynamic routes
       //path: "perfil/:id",

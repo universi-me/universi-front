@@ -40,11 +40,13 @@ export function OAuth2Element() {
             else {
                 auth.signin_google(res)
                 .then(success => {
-                    if (success)
-                        navigate(`/capacitacao`);
+                    if (!success)
+                        navigate("/login");
 
-                    else
-                        navigate("/login")
+                    else {
+                        const auth = useContext(AuthContext);
+                        navigate(auth.user!.needProfile ? "/manage-profile" : "/capacitacao")
+                    }
                 })
             }
         })
