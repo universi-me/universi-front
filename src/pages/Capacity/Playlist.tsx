@@ -22,12 +22,12 @@ const PlaylistPage: React.FC = () => {
             throw new Error("Playlist não informada");
 
         const response = await UniversimeApi.Capacity.videosInPlaylist({id: playlistId});
-        setVideos(response.body.videos);
-        if (response.body.videos.length === 0) {
+        setVideos(response.body?.videos ?? []);
+        if (!response.body?.videos.length) {
           setHasError(true);
         }
         UniversimeApi.Capacity.getPlaylist({id: playlistId})
-            .then(res => setPlaylistData(res.body.playlist));
+            .then(res => setPlaylistData(res.body?.playlist ?? null));
 
       } catch (error) {
         console.error('Erro ao buscar os vídeos:', error);
@@ -51,7 +51,7 @@ const PlaylistPage: React.FC = () => {
       const videoUrl = thumbnail.querySelector('img').getAttribute('src');
       const videoId = extractVideoId(videoUrl);
       if (videoId) {
-        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
         thumbnail.querySelector('img').setAttribute('src', thumbnailUrl);
       }
     };
@@ -59,10 +59,6 @@ const PlaylistPage: React.FC = () => {
     const videoThumbnails = document.querySelectorAll('.video-thumbnail');
     videoThumbnails.forEach(updateThumbnailImage);
   }, [videos]);
-
-  if (hasError) {
-    return <NotFoundVideo />;
-  }
 
   const formatPlaylistName = (playlist: string | undefined) => {
     if (!playlist) return '';
@@ -98,7 +94,10 @@ const PlaylistPage: React.FC = () => {
         <div id="conteudo-playlist">
           <h1 id="subtitle-playlist">Videos da Playlist:</h1>
           <div className="video-list-all">
-            {videos.map((video) => (
+            {
+            videos.length === 0 ? <p className="empty">Nenhum vídeo nessa playlist</p> :
+
+            videos.map((video) => (
               <div key={video.id} className="video-item">
                 <div className="video-thumbnail">
                   <Link to={`/capacitacao/play/${video.id}`}>

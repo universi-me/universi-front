@@ -1,9 +1,10 @@
 import { FormEvent, useContext, useState } from "react";
 import "./signinForm.css";
 import { AuthContext } from "../../contexts/Auth/AuthContext";
-import { redirect, useNavigate } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import { oauthSignIn } from "../../services/oauth2-google";
 import Modal from "./modal/Modal";
+import { IMG_DCX_LOGO } from "@/utils/assets";
 
 export default function SinginForm() {
   const auth = useContext(AuthContext);
@@ -24,15 +25,19 @@ export default function SinginForm() {
 
     if (email && password) {
       const isLogged = await auth.signin(email, password);
-      if (isLogged.status) {
-        navigate(`/capacitacao`);
-      }
-      else {
+      if (!isLogged.status) {
         setIsOpen(true)
         setTimeout(()=>{
           setIsOpen(false)
         },3000)
-       
+      }
+
+      else if (isLogged.user!.needProfile) {
+        navigate("/manage-profile");
+      }
+
+      else {
+        navigate(`/capacitacao`);
       }
     }
   };
@@ -100,7 +105,7 @@ export default function SinginForm() {
       {
         !ENABLE_GOOGLE_LOGIN ? null :
         <>
-            <div className="container-line-form">
+            <div className="container-line-form" style={{margin: "20px 0"}}>
                 <div className="line-form"></div>
                 <div>ou entre com</div>
                 <div className="line-form"></div>
@@ -111,11 +116,17 @@ export default function SinginForm() {
                 type="button"
                 onClick={handleAuthLoginGoogle}
             >
-                <img src="../../../public/assets/imgs/dcx-png 1.png" />
+                <img src={IMG_DCX_LOGO} />
                 EMAIL DCX
             </button>
         </>
       }
+
+        <div className="container-line-form" style={{marginTop: "20px"}}>
+            <div className="line-form"></div>
+            <div>Não possui uma conta? <Link to="/signup">Cadastre-se!</Link></div>
+            <div className="line-form"></div>
+        </div>
     </div>
   </>
   

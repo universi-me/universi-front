@@ -125,4 +125,24 @@
 }
 
 
+.confirmation-box-edit .rating-star-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: fit-content;
+    margin: auto;
+}
 
+.confirmation-box-edit .rating-star-container .star-button {
+    background-color: transparent;
+    border: none;
+    
+    color: var(--primary-color);
+    font-size: 2rem;
+
+    cursor: pointer;
+}
+
+.confirmation-box-edit .rating-star-container .star-button:not(:last-child) {
+    margin-right: .25em;
+}

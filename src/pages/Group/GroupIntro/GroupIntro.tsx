@@ -9,6 +9,7 @@ import { GroupTypeToLabel } from "@/types/Group";
 
 import EditButton from "@/assets/icons/edit-2.svg"
 
+import { ICON_VERIFIED } from "@/utils/assets";
 import "./GroupIntro.css"
 
 export type GroupIntroProps = {
@@ -31,7 +32,14 @@ export function GroupIntro(props: GroupIntroProps) {
                 <h2 >{groupContext.group.name}</h2>
                 {
                     props.verified ?
-                        <img src="/assets/icons/icon-verificated.svg" className="verified-icon" />
+                        <img src={ICON_VERIFIED} className="verified-icon" />
+                    : null
+                }
+                {
+                    groupContext.group.admin.user.id === authContext?.user?.id
+                    ? <Link title="Editar dados grupo" className="edit-group-button" to={`/manage-group?${EDIT_GROUP_PARAMETER}=${groupContext.group.path}`}>
+                        <img src={EditButton} />
+                      </Link>
                     : null
                 }
                 {

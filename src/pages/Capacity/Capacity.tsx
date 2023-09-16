@@ -26,8 +26,6 @@ const CapacityPage: React.FC = () => {
             <div id="conteudo-playlist">
                 <AllCategories />
                 <AllPlaylists />
-                <AnimationHome/>
-                <NavbarCategory />
                 <Footer />
             </div>
       </div>

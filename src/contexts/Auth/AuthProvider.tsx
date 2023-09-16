@@ -42,12 +42,22 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 
   async function signin(email: string, password: string) {
       const data = await UniversimeApi.Auth.signin({ username: email, password });
-      const profile = await UniversimeApi.Profile.profile();
-      return new Promise<{status : boolean, user : User}>((resolve, reject) => {
 
-        resolve ({status : setLoggedUser(data.body.user, data.token, profile.body.profile), user:data.body.user});
+      if (data.success && data.body !== undefined) {
+        const profile = await UniversimeApi.Profile.profile();
 
-      })   
+        return {
+            status: setLoggedUser(data.body.user, data.token!, profile.body?.profile!),
+            user: data.body.user,
+        };
+      }
+
+      else {
+        return {
+            status: false,
+            user: undefined,
+        };
+      }
   }
 
   async function signin_google(user: any) {

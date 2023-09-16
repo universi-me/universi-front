@@ -10,7 +10,8 @@ import { Video } from '@/types/Capacity';
 const VideoPage: React.FC = () => {
   const { videoId } = useParams<{ videoId: string }>();
   const [video, setVideo] = useState<Video | null>(null);
-  const [isVideoReady, setVideoReady] = useState(false);
+  const [isYouTubeIframeAPIReady, setYouTubeIframeAPIReady] = useState(false);
+  const [isPlayerReady, setPlayerReady] = useState(false);
   const playerRef = useRef<YT.Player | null>(null);
 
   useEffect(() => {
@@ -35,28 +36,42 @@ const VideoPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const loadYouTubeScript = () => {
-      const scriptTag = document.createElement('script');
-      scriptTag.src = 'https://www.youtube.com/iframe_api';
-      document.head.appendChild(scriptTag);
-    };
+    if(!window.YT) { // only add the script if it doesn't exist
+      const loadYouTubeScript = () => {
+        const scriptTag = document.createElement('script');
+        scriptTag.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(scriptTag);
+      };
 
-    (window as any).onYouTubeIframeAPIReady = () => {
-      setVideoReady(true);
-    };
+      (window as any).onYouTubeIframeAPIReady = () => {
+        setYouTubeIframeAPIReady(true);
+      };
 
-    loadYouTubeScript();
+      loadYouTubeScript();
+    }
   }, []);
 
   useEffect(() => {
-    if (isVideoReady && video && video.url && !playerRef.current) {
-      playerRef.current = new YT.Player('player', {
+    if(window.YT) {
+      (window.YT as any).ready(function() {
+        setPlayerReady(true);
+      });
+    }
+  }, [isYouTubeIframeAPIReady]);
+
+  const loadVideo = () => {
+    if(isPlayerReady && video && video.url && playerRef) {
+      playerRef.current = new window.YT.Player('player', {
         height: '500',
         width: '1000',
         videoId: getVideoId(video.url),
       });
     }
-  }, [isVideoReady, video]);
+  };
+
+  useEffect(() => {
+    loadVideo();
+  }, [isPlayerReady, video]);
 
   return (
     <div>
