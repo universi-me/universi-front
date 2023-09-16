@@ -30,7 +30,7 @@ export function OAuth2Element() {
     const navigate = useNavigate()
 
     const params = new URLSearchParams(window.location.hash.substring(1));
-    const id_token = params.get("id_token") as string;
+    const id_token = params.get("id_token")!;
 
     UniversimeApi.Auth.login_google({ token: id_token })
         .then((res) => {
@@ -38,20 +38,12 @@ export function OAuth2Element() {
                 navigate("/login")
             
             else {
-                auth.signin_google(res)
-                .then(success => {
-                    if (!success)
-                        navigate("/login");
-
-                    else {
-                        const auth = useContext(AuthContext);
-                        navigate(auth.user!.needProfile ? "/manage-profile" : "/capacitacao")
-                    }
-                })
+                auth.signinGoogle();
             }
         })
         .catch((err) => {
             console.log("Error ao logar com conta google");
+            navigate("/");
         })
 
     return <></>

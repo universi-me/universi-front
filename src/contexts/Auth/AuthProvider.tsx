@@ -8,61 +8,67 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const user = profile?.user ?? null;
 
   useEffect(() => {
-    validateToken();
-  }, [UniversimeApi]);
+    updateLoggedUser()
+  }, []);
 
-  return (
-    <AuthContext.Provider value={{ user, signin, signout, signin_google, profile }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    return (
+        <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser }}>
+        {children}
+        </AuthContext.Provider>
+    );
 
-  async function validateToken() {
-      const data = await UniversimeApi.Profile.profile();
+    async function signin(email: string, password: string) {
+        const response = await UniversimeApi.Auth.signin({ username: email, password });
 
-      if (data.body.profile) {
-        setProfile(data.body.profile);
-      }
-  }
+        if (!response.success || response.body === undefined) {
+            goTo("/login");
+            return null;
+        }
 
-  function setLoggedUser(profile: Profile): boolean {
-    if (!profile)
-      return false;
+        const logged = (await getLoggedProfile())!;
+        setProfile(logged);
 
-    setProfile(profile);
-    return true;
-  }
+        redirectAfterSignIn(logged.user.needProfile);
+        return logged;
+    }
 
-  async function signin(email: string, password: string) {
-      const data = await UniversimeApi.Auth.signin({ username: email, password });
+    async function signinGoogle() {
+        const profile = await updateLoggedUser();
 
-      if (data.success && data.body !== undefined) {
-        const profile = await UniversimeApi.Profile.profile();
+        if (profile === null) {
+            goTo("/login");
+        }
 
-        return {
-            status: setLoggedUser(profile.body?.profile!),
-            user: data.body.user,
-        };
-      }
+        else {
+            redirectAfterSignIn(profile.user.needProfile);
+        }
 
-      else {
-        return {
-            status: false,
-            user: undefined,
-        };
-      }
-  }
-
-  async function signin_google(user: any) {
-      const profile = await UniversimeApi.Profile.profile();
-      return setLoggedUser(profile.body.profile);
+        return profile;
     };
 
-  async function signout() {
-    setProfile(null);
-    const data = await UniversimeApi.Auth.logout();
-    if(data) {
-      window.location.href = location.origin + "/login";
+    async function signout() {
+        await UniversimeApi.Auth.logout();
+        setProfile(null);
+        goTo("/");
+    };
+
+    async function updateLoggedUser() {
+        const profile = await getLoggedProfile();
+        setProfile(profile);
+
+        return profile;
     }
-  };
 };
+
+async function getLoggedProfile() {
+    return (await UniversimeApi.Profile.profile()).body?.profile ?? null;
+}
+
+function goTo(pathname: string) {
+    if (window)
+        window.location.href = `${window.location.origin}/${pathname}`;
+}
+
+function redirectAfterSignIn(needProfile: boolean) {
+    goTo(needProfile ? "/manage-profile" : "/capacitacao");
+}
