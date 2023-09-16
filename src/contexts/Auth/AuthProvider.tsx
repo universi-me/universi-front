@@ -19,24 +19,20 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   );
 
   async function validateToken() {
-    const storageData = localStorage.getItem("AuthToken");
-    if (storageData) {
       const data = await UniversimeApi.Profile.profile();
 
       if (data.body.profile) {
         setUser(data.body.profile.user);
         setProfile(data.body.profile);
       }
-    }
   }
 
-  function setLoggedUser(user: User, token: string, profile: Profile): boolean {
-    if (!user || !token || !profile)
+  function setLoggedUser(user: User, profile: Profile): boolean {
+    if (!user || !profile)
       return false;
 
     setUser(user);
     setProfile(profile);
-    setToken(token);
     return true;
   }
 
@@ -47,7 +43,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
         const profile = await UniversimeApi.Profile.profile();
 
         return {
-            status: setLoggedUser(data.body.user, data.token!, profile.body?.profile!),
+            status: setLoggedUser(data.body.user, profile.body?.profile!),
             user: data.body.user,
         };
       }
@@ -63,20 +59,15 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   async function signin_google(user: any) {
       const data = user;
       const profile = await UniversimeApi.Profile.profile();
-      return setLoggedUser(data.body.user, data.token, profile.body.profile);
+      return setLoggedUser(data.body.user, profile.body.profile);
     };
 
   async function signout() {
     setUser(null);
     setProfile(null);
-    setToken("");
     const data = await UniversimeApi.Auth.logout();
     if(data) {
       window.location.href = location.origin + "/login";
     }
-  };
-
-  function setToken(token: string) {
-    localStorage.setItem("AuthToken", token);
   };
 };
