@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const response = await UniversimeApi.Auth.signin({ username: email, password });
 
         if (!response.success || response.body === undefined) {
-            goTo("/login");
+            goTo("login");
             setFinishedLogin(true);
             return null;
         }
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const profile = await updateLoggedUser();
 
         if (profile === null) {
-            goTo("/login");
+            goTo("login");
         }
 
         else {
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         await UniversimeApi.Auth.logout();
         setProfile(null);
-        goTo("/");
+        goTo("");
 
         setFinishedLogin(true);
     };
@@ -83,5 +83,5 @@ function goTo(pathname: string) {
 }
 
 function redirectAfterSignIn(needProfile: boolean) {
-    goTo(needProfile ? "/manage-profile" : "/capacitacao");
+    goTo(needProfile ? "manage-profile" : "capacitacao");
 }
