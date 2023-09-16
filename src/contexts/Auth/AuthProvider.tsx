@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { Profile } from "@/types/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi";
 
-export const AuthProvider = ({ children }: { children: JSX.Element }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
   const user = profile?.user ?? null;
 
   useEffect(() => {
@@ -13,15 +14,17 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 
     return (
         <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser }}>
-        {children}
+        { finishedLogin ? children : null }
         </AuthContext.Provider>
     );
 
     async function signin(email: string, password: string) {
+        setFinishedLogin(false);
         const response = await UniversimeApi.Auth.signin({ username: email, password });
 
         if (!response.success || response.body === undefined) {
             goTo("/login");
+            setFinishedLogin(true);
             return null;
         }
 
@@ -29,10 +32,13 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
         setProfile(logged);
 
         redirectAfterSignIn(logged.user.needProfile);
+        setFinishedLogin(true);
         return logged;
     }
 
     async function signinGoogle() {
+        setFinishedLogin(false);
+
         const profile = await updateLoggedUser();
 
         if (profile === null) {
@@ -43,19 +49,26 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
             redirectAfterSignIn(profile.user.needProfile);
         }
 
+        setFinishedLogin(true);
         return profile;
     };
 
     async function signout() {
+        setFinishedLogin(false);
+
         await UniversimeApi.Auth.logout();
         setProfile(null);
         goTo("/");
+
+        setFinishedLogin(true);
     };
 
     async function updateLoggedUser() {
+        setFinishedLogin(false);
         const profile = await getLoggedProfile();
         setProfile(profile);
 
+        setFinishedLogin(true);
         return profile;
     }
 };
