@@ -6,10 +6,7 @@ import { EDIT_GROUP_PARAMETER } from "@/pages/ManageGroup";
 import { AuthContext } from "@/contexts/Auth";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { GroupTypeToLabel } from "@/types/Group";
-
-import EditButton from "@/assets/icons/edit-2.svg"
-
-import { ICON_VERIFIED } from "@/utils/assets";
+import { ICON_VERIFIED, ICON_EDIT_BLACK } from "@/utils/assets";
 import "./GroupIntro.css"
 
 export type GroupIntroProps = {
@@ -38,14 +35,7 @@ export function GroupIntro(props: GroupIntroProps) {
                 {
                     groupContext.group.admin.user.id === authContext?.user?.id
                     ? <Link title="Editar dados grupo" className="edit-group-button" to={`/manage-group?${EDIT_GROUP_PARAMETER}=${groupContext.group.path}`}>
-                        <img src={EditButton} />
-                      </Link>
-                    : null
-                }
-                {
-                    groupContext.group.admin.user.id === authContext?.user?.id
-                    ? <Link title="Editar dados grupo" className="edit-group-button" to={`/manage-group?${EDIT_GROUP_PARAMETER}=${groupContext.group.path}`}>
-                        <img src={EditButton} />
+                        <img src={ICON_EDIT_BLACK} />
                       </Link>
                     : null
                 }
