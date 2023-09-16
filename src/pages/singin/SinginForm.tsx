@@ -1,15 +1,13 @@
 import { FormEvent, useContext, useState } from "react";
 import "./signinForm.css";
-import { AuthContext } from "../../contexts/Auth/AuthContext";
-import { Link, redirect, useNavigate } from "react-router-dom";
-import { oauthSignIn } from "../../services/oauth2-google";
+import { AuthContext } from "@/contexts/Auth/AuthContext";
+import { Link } from "react-router-dom";
+import { oauthSignIn } from "@/services/oauth2-google";
 import Modal from "./modal/Modal";
 import { IMG_DCX_LOGO } from "@/utils/assets";
 
 export default function SinginForm() {
   const auth = useContext(AuthContext);
-
-  const navigate = useNavigate();
 
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -22,23 +20,13 @@ export default function SinginForm() {
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
+    const logged = await auth.signin(email, password);
 
-    if (email && password) {
-      const isLogged = await auth.signin(email, password);
-      if (!isLogged.status) {
+    if (logged === null) {
         setIsOpen(true)
         setTimeout(()=>{
           setIsOpen(false)
         },3000)
-      }
-
-      else if (isLogged.user!.needProfile) {
-        navigate("/manage-profile");
-      }
-
-      else {
-        navigate(`/capacitacao`);
-      }
     }
   };
 

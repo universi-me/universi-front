@@ -1,82 +1,87 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
-import { User } from "@/types/User";
 import { Profile } from "@/types/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi";
 
-export const AuthProvider = ({ children }: { children: JSX.Element }) => {
-  const [user, setUser] = useState<User | null>(null);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
+  const user = profile?.user ?? null;
 
   useEffect(() => {
-    validateToken();
-  }, [UniversimeApi]);
+    updateLoggedUser()
+  }, []);
 
-  return (
-    <AuthContext.Provider value={{ user, signin, signout, signin_google, profile }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    return (
+        <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser }}>
+        { finishedLogin ? children : null }
+        </AuthContext.Provider>
+    );
 
-  async function validateToken() {
-    const storageData = localStorage.getItem("AuthToken");
-    if (storageData) {
-      const data = await UniversimeApi.Profile.profile();
+    async function signin(email: string, password: string) {
+        setFinishedLogin(false);
+        const response = await UniversimeApi.Auth.signin({ username: email, password });
 
-      if (data.body.profile) {
-        setUser(data.body.profile.user);
-        setProfile(data.body.profile);
-      }
+        if (!response.success || response.body === undefined) {
+            goTo("login");
+            setFinishedLogin(true);
+            return null;
+        }
+
+        const logged = (await getLoggedProfile())!;
+        setProfile(logged);
+
+        redirectAfterSignIn(logged.user.needProfile);
+        setFinishedLogin(true);
+        return logged;
     }
-  }
 
-  function setLoggedUser(user: User, token: string, profile: Profile): boolean {
-    if (!user || !token || !profile)
-      return false;
+    async function signinGoogle() {
+        setFinishedLogin(false);
 
-    setUser(user);
-    setProfile(profile);
-    setToken(token);
-    return true;
-  }
+        const profile = await updateLoggedUser();
 
-  async function signin(email: string, password: string) {
-      const data = await UniversimeApi.Auth.signin({ username: email, password });
+        if (profile === null) {
+            goTo("login");
+        }
 
-      if (data.success && data.body !== undefined) {
-        const profile = await UniversimeApi.Profile.profile();
+        else {
+            redirectAfterSignIn(profile.user.needProfile);
+        }
 
-        return {
-            status: setLoggedUser(data.body.user, data.token!, profile.body?.profile!),
-            user: data.body.user,
-        };
-      }
-
-      else {
-        return {
-            status: false,
-            user: undefined,
-        };
-      }
-  }
-
-  async function signin_google(user: any) {
-      const data = user;
-      const profile = await UniversimeApi.Profile.profile();
-      return setLoggedUser(data.body.user, data.token, profile.body.profile);
+        setFinishedLogin(true);
+        return profile;
     };
 
-  async function signout() {
-    setUser(null);
-    setProfile(null);
-    setToken("");
-    const data = await UniversimeApi.Auth.logout();
-    if(data) {
-      window.location.href = location.origin + "/login";
-    }
-  };
+    async function signout() {
+        setFinishedLogin(false);
 
-  function setToken(token: string) {
-    localStorage.setItem("AuthToken", token);
-  };
+        await UniversimeApi.Auth.logout();
+        setProfile(null);
+        goTo("");
+
+        setFinishedLogin(true);
+    };
+
+    async function updateLoggedUser() {
+        setFinishedLogin(false);
+        const profile = await getLoggedProfile();
+        setProfile(profile);
+
+        setFinishedLogin(true);
+        return profile;
+    }
 };
+
+async function getLoggedProfile() {
+    return (await UniversimeApi.Profile.profile()).body?.profile ?? null;
+}
+
+function goTo(pathname: string) {
+    if (window)
+        window.location.href = `${window.location.origin}/${pathname}`;
+}
+
+function redirectAfterSignIn(needProfile: boolean) {
+    goTo(needProfile ? "manage-profile" : "capacitacao");
+}
