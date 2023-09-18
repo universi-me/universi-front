@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Select, { MultiValue } from 'react-select';
 import UniversimeApi from '@/services/UniversimeApi';
-import { Playlist, Video , Category} from '@/types/Capacity';
+import { Playlist, Video , Category, Types} from '@/types/Capacity';
 import './ManagerCapacity.css'
 import { AuthContext } from '@/contexts/Auth';
 
@@ -10,6 +10,8 @@ const CrudTela: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const contentTypes = Types;
+  
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [editedVideo, setEditedVideo] = useState<Video | null>(null);
@@ -23,10 +25,12 @@ const CrudTela: React.FC = () => {
   const [newDescription, setNewDescription] = useState('');
   const [newUrl, setNewUrl] = useState('');
   const [newRating, setNewRating] = useState(1);
+  const [newType, setNewType] = useState<string>(contentTypes[0])
 
   const [categories, setCategories] = useState<any>([]);
   const [playlists, setPlaylists] = useState<any>([]);
-
+  const [types, setTypes] = useState<any>([]);
+  
   const [categoriesToRemoveIds, setCategoriesToRemoveIds] = useState<string[]>([]);
   const [categoriesToAddIds, setCategoriesToAddIds] = useState<string[]>([]);
   const [categoriesToRemove, setCategoriesToRemove] = useState<any>([]);
@@ -179,6 +183,7 @@ const CrudTela: React.FC = () => {
         description: newDescription,
         url: newUrl,
         rating: newRating,
+        type: newType,
         addCategoriesByIds: categoriesToAddIds,
         addPlaylistsByIds: playlistsToAddIds,
       });
@@ -255,6 +260,11 @@ const CrudTela: React.FC = () => {
     setPlaylistsToAddIds(playlistsAddArr)
   };
 
+
+  const handleTypeOnChange = (value: any) => {
+    setNewType(value.value)
+  }
+
   const auth = useContext(AuthContext);
 
   return (
@@ -270,6 +280,7 @@ const CrudTela: React.FC = () => {
                         <th>URL</th>
                         <th>Classificação</th>
                         <th>Categorias</th>
+                        <th>Tipo</th>
                         <th>Playlists</th>
                         <th>Ações</th>
                     </tr>
@@ -282,6 +293,7 @@ const CrudTela: React.FC = () => {
                         <td>{video.url}</td>
                         <td>{video.rating}</td>
                         <td>{video.categories?.map(function(elem){ return elem.name; }).join(", ")}</td>
+                        <td>{video.type}</td>
                         <td>{video.playlists?.map(function(elem){ return elem.name; }).join(", ")}</td>
                         <td>
                             <button className='button-edit' onClick={() => handleEditClick(video)}>Editar</button>
@@ -405,6 +417,24 @@ const CrudTela: React.FC = () => {
                     })
                 }
               </div>
+            </div>
+             <div style={{marginTop: '15px'}}>
+              <label >Tipo:</label>
+              <Select placeholder= "Selecionar Tipo..." name="tipos" options={contentTypes.map((label) => ({value: label, label: label}))} className="basic-multi-select" theme={(theme) => ({
+                ...theme,
+                borderRadius: 10,
+                color: 'black',
+                colors: {
+                  ...theme.colors,
+                  primary25: 'red',
+                  primary: 'blue',
+                  neutral10: 'green',
+                  neutral5:  'black',
+                  neutral0: '#c2c2c2'
+                },
+              })}
+              onChange={handleTypeOnChange} value={{value: newType, label: newType}} classNamePrefix="select" noOptionsMessage={()=>"Tipo Não Encontrado"} />
+              
             </div>
             <div style={{marginTop: '15px'}}>
               <label >Categorias:</label>

@@ -15,6 +15,7 @@ export type VideoCreate_RequestDTO = {
     url:                 string;
     title:               string;
     description?:        string;
+    type?:               string;
     addCategoriesByIds?: string | string[];
     addPlaylistsByIds?:  string | string[];
     rating?:             number;
@@ -52,6 +53,7 @@ export async function createVideo(body: VideoCreate_RequestDTO) {
         image:              body.image,
         description:        body.description,
         rating:             body.rating,
+        type:               body.type,
         addCategoriesByIds: body.addCategoriesByIds,
         addPlaylistsByIds:  body.addPlaylistsByIds,
     })).data;
