@@ -1,10 +1,15 @@
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, useContext } from "react";
 
 import UniversimeApi from "@/services/UniversimeApi";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
+import { AuthContext } from "@/contexts/Auth";
+import { useNavigate } from "react-router-dom";
 
 export function ManageProfilePassword() {
+    const authContext = useContext(AuthContext);
+    const navigate = useNavigate();
+
     const [oldPassword, setOldPassword] = useState<string>("");
     const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
 
@@ -64,6 +69,9 @@ export function ManageProfilePassword() {
         UniversimeApi.User.edit({
             currentPassword: oldPassword,
             newPassword,
+        }).then(res => {
+            // todo: warn on error
+            navigate(`/profile/${authContext.profile!.user.name}`);
         });
     }
 }

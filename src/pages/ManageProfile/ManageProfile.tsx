@@ -1,17 +1,19 @@
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useContext, useState } from "react";
 import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 
+import UniversimeApi from "@/services/UniversimeApi";
 import { ManageProfileLinks, ManageProfileLoaderResponse, ManageProfilePassword, ManageProfileImage, getManageLinks, getProfileImage } from "@/pages/ManageProfile";
 import { setStateAsValue } from "@/utils/tsxUtils";
-import UniversimeApi from "@/services/UniversimeApi";
+import { getProfileImageUrl } from "@/utils/profileUtils";
+import { AuthContext } from "@/contexts/Auth";
 
 import "./ManageProfile.less";
-import { getProfileImageUrl } from "@/utils/profileUtils";
 
 const BIO_MAX_LENGTH = 140;
 export function ManageProfilePage() {
     const navigate = useNavigate();
     const { genderOptions, links, profile, typeLinks } = useLoaderData() as ManageProfileLoaderResponse;
+    const authContext = useContext(AuthContext);
 
     const [firstname, setFirstname] = useState(profile?.firstname ?? "");
     const [lastname, setLastname] = useState(profile?.lastname ?? "");
@@ -103,8 +105,10 @@ export function ManageProfilePage() {
             bio,
             gender: gender || undefined,
             imageUrl: newImageUrl,
-        }).then(res => {
+        }).then(async res => {
             // todo: warn on error
+            await authContext.updateLoggedUser();
+        }).then(res => {
             navigate(`/profile/${profile.user.name}`);
         })
     }
