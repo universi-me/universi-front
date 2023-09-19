@@ -1,5 +1,7 @@
 import { Profile } from "@/types/Profile";
 
+export var Types = ["Vídeo", "Documento", "Pasta"];
+
 export type Video = {
     id:          string;
     url:         string;
@@ -11,7 +13,9 @@ export type Video = {
     rating:      number;
     createdAt:   string;
     author:      Profile;
+    type: typeof Types[number];
 };
+
 
 export type Category = {
     id:        string;
