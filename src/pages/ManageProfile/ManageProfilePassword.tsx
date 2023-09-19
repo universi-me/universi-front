@@ -1,6 +1,8 @@
+import { useState, MouseEvent } from "react";
+
 import UniversimeApi from "@/services/UniversimeApi";
 import { setStateAsValue } from "@/utils/tsxUtils";
-import { useState, MouseEvent } from "react";
+import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
 
 export function ManageProfilePassword() {
     const [oldPassword, setOldPassword] = useState<string>("");
@@ -12,7 +14,11 @@ export function ManageProfilePassword() {
     const toggleOldPassword = () => setShowOldPassword(!showOldPassword);
     const toggleNewPassword = () => setShowNewPassword(!showNewPassword);
 
-    const enableChangePassword = !!oldPassword && !!newPassword;
+    const isMinLength = minimumLength(newPassword);
+    const isCase = upperAndLowerCase(newPassword);
+    const isSpecial = numberOrSpecialChar(newPassword);
+    const validNewPassword = isMinLength && isCase && isSpecial;
+    const enableChangePassword = !!oldPassword && validNewPassword;
 
     return (
         <section id="card-password" className="card">
@@ -45,6 +51,12 @@ export function ManageProfilePassword() {
                     </button>
                 </section>
             </fieldset>
+            <section id="password-requirements">
+                <h3>Sua nova senha precisa conter:</h3>
+                    <p className={`bi min-length ${passwordValidationClass(minimumLength(newPassword))}`}>No mínimo oito caracteres</p>
+                    <p className={`bi upper-lower-case ${passwordValidationClass(upperAndLowerCase(newPassword))}`}>Letras minúsculas e maiúsculas</p>
+                    <p className={`bi number-special-char ${passwordValidationClass(numberOrSpecialChar(newPassword))}`}>Números ou caracteres especiais</p>
+            </section>
         </section>
     );
 

@@ -39,8 +39,46 @@
             width: fit-content;
     
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: row;
+
+            #password-requirements {
+                margin-left: 2rem;
+
+                color: @font-color-v2;
+                font-size: 0.875rem;
+        
+                h3 {
+                    font-weight: @font-weight-semibold;
+                }
+        
+                p {
+                    font-weight: @font-weight-default;
+                }
+        
+                .failed-validation, .success-validation {
+                    font-weight: @font-weight-semibold;
+        
+                    &.bi::before {
+                        margin-right: .25em;
+                    }
+        
+                    &.failed-validation {
+                        color: @alert-color;
+        
+                        &.bi::before {
+                            content: "\F659";
+                        }
+                    }
+        
+                    &.success-validation {
+                        color: @success-color;
+            
+                        &.bi::before {
+                            content: "\F633";
+                        }
+                    }
+                }
+            }
         }
     }
 

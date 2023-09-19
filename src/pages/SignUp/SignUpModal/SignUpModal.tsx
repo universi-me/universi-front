@@ -4,9 +4,9 @@ import { useNavigate } from "react-router";
 import { UniversiModal } from "@/components/UniversiModal";
 import UniversimeApi from "@/services/UniversimeApi";
 import { isEmail } from "@/utils/regexUtils";
+import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
+import { enableSignUp } from "./helperFunctions";
 
-import { enableSignUp, minimumLength, numberOrSpecialChar, passwordValidationClass,
-         upperAndLowerCase } from "./helperFunctions";
 
 import "./SignUpModal.less"
 
