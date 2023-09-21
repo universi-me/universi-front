@@ -45,6 +45,7 @@ export type GroupIdOrPath_RequestDTO = {
 
 export type GroupGet_ResponseDTO =              ApiResponse<{ group: Group }>;
 export type GroupCreate_ResponseDTO =           ApiResponse;
+export type GroupUpdate_ResponseDTO =           ApiResponse;
 export type GroupAvailableParents_ResponseDTO = ApiResponse<{ groups: Group[] }>;
 export type GroupSubgroups_ResponseDTO =        ApiResponse<{ subgroups: Group[] }>;
 export type GroupParticipants_ResponseDTO =     ApiResponse<{ participants: Profile[] }>;
@@ -74,7 +75,7 @@ export async function create(body: GroupCreate_RequestDTO) {
 }
 
 export async function update(body: GroupUpdate_RequestDTO) {
-    return (await groupApi.post("/update", {
+    return (await groupApi.post<GroupUpdate_ResponseDTO>("/update", {
         groupId:        body.groupId,
         groupPath:      body.groupPath,
         name:           body.name,
