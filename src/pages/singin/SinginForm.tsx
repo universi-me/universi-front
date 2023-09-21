@@ -1,10 +1,12 @@
 import { FormEvent, useContext, useState } from "react";
-import "./signinForm.css";
-import { AuthContext } from "@/contexts/Auth/AuthContext";
 import { Link } from "react-router-dom";
+
+import { AuthContext } from "@/contexts/Auth/AuthContext";
 import { oauthSignIn } from "@/services/oauth2-google";
-import Modal from "./modal/Modal";
 import { IMG_DCX_LOGO } from "@/utils/assets";
+import * as SwalUtils from "@/utils/sweetalertUtils"
+
+import "./signinForm.css";
 
 export default function SinginForm() {
   const auth = useContext(AuthContext);
@@ -12,7 +14,6 @@ export default function SinginForm() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
-  const [isOpen, setIsOpen] = useState(Boolean);
 
   const handleAuthLoginGoogle = async () => {
     window.location.href = oauthSignIn().toString();
@@ -23,10 +24,12 @@ export default function SinginForm() {
     const logged = await auth.signin(email, password);
 
     if (logged === null) {
-        setIsOpen(true)
-        setTimeout(()=>{
-          setIsOpen(false)
-        },3000)
+        SwalUtils.fireToasty({
+            text: "Credenciais inválidas",
+            icon: 'error',
+            timer: 3000,
+            timerProgressBar: true,
+        });
     }
   };
 
@@ -42,7 +45,6 @@ export default function SinginForm() {
   <>
   
   <div className="container">
-  <Modal isOpen={isOpen}/>
       <form action="/login" method="post" className="form-container">
         <div className="form-group">
           <div className="label-form">
