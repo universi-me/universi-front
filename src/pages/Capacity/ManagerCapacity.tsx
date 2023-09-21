@@ -53,7 +53,7 @@ const CrudTela: React.FC = () => {
   const fetchContents = async () => {
     try {
       const response = await UniversimeApi.Capacity.contentList();
-      setContents(response.body.videos);
+      setContents(response.body.contents);
     } catch (error) {
       console.error('Erro ao buscar os conteúdos:', error);
     }
@@ -77,7 +77,7 @@ const CrudTela: React.FC = () => {
     try {
       const arr: { value: string; label: string; }[] = [];
       const response = await UniversimeApi.Capacity.folderList()
-      let foldersArr = response.body.playlists;
+      let foldersArr = response.body.folders;
       foldersArr.map((folder: Folder) => {
         return arr.push({value: folder.id, label: folder.name});
       });
@@ -132,7 +132,7 @@ const CrudTela: React.FC = () => {
     });
     setCategoriesStateSelected(arrCategories);
 
-    const contentFoldersIds = content.playlists;
+    const contentFoldersIds = content.folders;
     const arrFolders: { value: string; label: string; }[] = [];
     contentFoldersIds?.forEach(function (folder: Folder) {
       return arrFolders.push({value: folder.id, label: folder.name});
@@ -323,7 +323,7 @@ const CrudTela: React.FC = () => {
                         <td>{content.rating}</td>
                         <td>{content.categories?.map(function(elem){ return elem.name; }).join(", ")}</td>
                         <td>{content.type}</td>
-                        <td>{content.playlists?.map(function(elem){ return elem.name; }).join(", ")}</td>
+                        <td>{content.folders?.map(function(elem){ return elem.name; }).join(", ")}</td>
                         <td>
                             <button className='button-edit' onClick={() => handleEditClick(content)}>Editar</button>
                             <button className='button-delete' type="button" onClick={() => handleDeleteClick(content)}>Deletar</button>

@@ -10,7 +10,7 @@ export default function AllFolders() {
 
     useEffect(() => {
         UniversimeApi.Capacity.folderList()
-            .then(res => setAvailableFolders(res.body.playlists));
+            .then(res => setAvailableFolders(res.body.folders));
     }, []);
 
     return (

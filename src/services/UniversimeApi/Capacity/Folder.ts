@@ -34,11 +34,11 @@ export type ContentAndFolder_RequestDTO = {
     contentIds: string | string[];
 };
 
-export type FolderGet_ResponseDTO =               ApiResponse<{ playlist: Folder }>;
+export type FolderGet_ResponseDTO =               ApiResponse<{ folder: Folder }>;
 export type FolderCreate_ResponseDTO =            ApiResponse;
 export type FolderEdit_ResponseDTO =              ApiResponse;
 export type FolderRemove_ResponseDTO =            ApiResponse;
-export type ListContentsInFolder_ResponseDTO =    ApiResponse<{ videos: Content[] }>;
+export type ListContentsInFolder_ResponseDTO =    ApiResponse<{ contents: Content[] }>;
 export type AddContentToFolder_ResponseDTO =      ApiResponse;
 export type RemoveContentFromFolder_ResponseDTO = ApiResponse;
 

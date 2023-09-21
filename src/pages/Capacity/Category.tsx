@@ -20,8 +20,8 @@ const CategoryPage: React.FC = () => {
           throw new Error("Categoria não informada");
 
         const response = await UniversimeApi.Capacity.contentsInCategory({id: categoryId});
-        setContents(response.body?.videos ?? []);
-        if (!response.body?.videos.length) {
+        setContents(response.body?.contents ?? []);
+        if (!response.body?.contents.length) {
           setHasError(true);
         }
 

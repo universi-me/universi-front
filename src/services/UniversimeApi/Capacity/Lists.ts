@@ -7,9 +7,9 @@ const capacityApi = axios.create({
     withCredentials: true,
 });
 
-export type ContentList_ResponseDTO =  ApiResponse<{ videos: Content[] }>;
+export type ContentList_ResponseDTO =  ApiResponse<{ contents: Content[] }>;
 export type CategoryList_ResponseDTO = ApiResponse<{ categories: Category[] }>;
-export type FolderList_ResponseDTO =   ApiResponse<{ playlists: Folder[] }>;
+export type FolderList_ResponseDTO =   ApiResponse<{ folders: Folder[] }>;
 export type ContentType_ResponseDTO =  ApiResponse<{ tipos: string[] }>;
 
 export async function contentList() {

@@ -11,7 +11,7 @@ export type Content = {
     image:       string | null;
     description: string | null;
     categories:  Category[];
-    playlists:   Folder[];
+    folders:     Folder[];
     rating:      number;
     createdAt:   string;
     author:      Profile;

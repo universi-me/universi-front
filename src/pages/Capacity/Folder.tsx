@@ -20,12 +20,12 @@ const FolderPage: React.FC = () => {
             throw new Error("Pasta não informada");
 
         const response = await UniversimeApi.Capacity.contentsInFolder({id: folderId});
-        setContents(response.body?.videos ?? []);
-        if (!response.body?.videos.length) {
+        setContents(response.body?.contents ?? []);
+        if (!response.body?.contents.length) {
           setHasError(true);
         }
         UniversimeApi.Capacity.getFolder({id: folderId})
-            .then(res => setFolderData(res.body?.playlist ?? null));
+            .then(res => setFolderData(res.body?.folder ?? null));
 
       } catch (error) {
         console.error('Erro ao buscar os conteúdos:', error);

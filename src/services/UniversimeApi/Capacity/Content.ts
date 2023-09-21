@@ -35,7 +35,7 @@ export type ContentEdit_RequestDTO = {
     image?:                 string;
 };
 
-export type ContentGet_ResponseDTO =    ApiResponse<{video: Content}>;
+export type ContentGet_ResponseDTO =    ApiResponse<{content: Content}>;
 export type ContentCreate_ResponseDTO = ApiResponse;
 export type ContentEdit_ResponseDTO =   ApiResponse;
 export type ContentRemove_ResponseDTO = ApiResponse;
