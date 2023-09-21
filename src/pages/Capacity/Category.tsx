@@ -6,12 +6,11 @@ import VideoStar from './Components/Video/VideoStar';
 import NotFoundVideo from './Components/NotFoundVideo/NotFoundVideo';
 import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
-import { Category } from '@/types/Capacity';
-import { Video } from '@/types/Capacity';
+import { Category, Content } from '@/types/Capacity';
 
 const CategoryPage: React.FC = () => {
   const { category: categoryId } = useParams<{ category: string }>();
-  const [videos, setVideos] = useState<Video[]>([]);
+  const [videos, setVideos] = useState<Content[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
   const [categoryData, setCategoryData] = useState<Category|null>(null);
 

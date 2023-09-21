@@ -1,22 +1,22 @@
 import { Group } from "@/types/Group";
 import { Profile } from "@/types/Profile";
 
-export var Types = ["Vídeo", "Documento", "Pasta"];
+export type ContentType = "Vídeo" | "Documento" | "Pasta";
+export const Types: ContentType[] = ["Vídeo", "Documento", "Pasta"];
 
-export type Video = {
+export type Content = {
     id:          string;
     url:         string;
     title:       string;
     image:       string | null;
     description: string | null;
-    categories:  Category[] | null;
-    playlists:   Folder[] | null;
+    categories:  Category[];
+    playlists:   Folder[];
     rating:      number;
     createdAt:   string;
     author:      Profile;
-    type: typeof Types[number];
+    type:        ContentType | null;
 };
-
 
 export type Category = {
     id:        string;

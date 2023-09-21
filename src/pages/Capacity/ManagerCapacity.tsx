@@ -2,22 +2,22 @@ import React, { useState, useEffect, useContext } from 'react';
 import Select, { MultiValue } from 'react-select';
 
 import UniversimeApi from '@/services/UniversimeApi';
-import { Folder, Video , Category, Types} from '@/types/Capacity';
+import { Folder, Content , Category, Types} from '@/types/Capacity';
 import { AuthContext } from '@/contexts/Auth';
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import './ManagerCapacity.css'
 
 const CrudTela: React.FC = () => {
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+  const [videos, setVideos] = useState<Content[]>([]);
+  const [selectedVideo, setSelectedVideo] = useState<Content | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const contentTypes = Types;
   
 
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editedVideo, setEditedVideo] = useState<Video | null>(null);
+  const [editedVideo, setEditedVideo] = useState<Content | null>(null);
   const [editedTitle, setEditedTitle] = useState('');
   const [editedDescription, setEditedDescription] = useState('');
   const [editedUrl, setEditedUrl] = useState('');
@@ -87,7 +87,7 @@ const CrudTela: React.FC = () => {
     }
   };
 
-  const handleDeleteClick = (video: Video) => {
+  const handleDeleteClick = (video: Content) => {
     setSelectedVideo(video);
     setShowConfirmation(true);
   };
@@ -118,7 +118,7 @@ const CrudTela: React.FC = () => {
     }
   };
 
-  const handleEditClick = (video: Video) => {
+  const handleEditClick = (video: Content) => {
     setEditedVideo(video);
     setEditedTitle(video.title);
     setEditedDescription(video.description ?? "");

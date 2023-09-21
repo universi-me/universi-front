@@ -1,4 +1,4 @@
-import type { Video } from "@/types/Capacity";
+import type { Content } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
@@ -35,7 +35,7 @@ export type VideoEdit_RequestDTO = {
     image?:                 string;
 };
 
-export type VideoGet_ResponseDTO =    ApiResponse<{video: Video}>;
+export type VideoGet_ResponseDTO =    ApiResponse<{video: Content}>;
 export type VideoCreate_ResponseDTO = ApiResponse;
 export type VideoEdit_ResponseDTO =   ApiResponse;
 export type VideoRemove_ResponseDTO = ApiResponse;

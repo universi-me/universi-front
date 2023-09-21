@@ -4,11 +4,11 @@ import UniversimeApi from '@/services/UniversimeApi';
 import '../../Category.css';
 import './VideoStar.css';
 import StarRating from '../StarRating/StarRating';
-import { Video } from "@/types/Capacity"
+import { Content } from "@/types/Capacity"
 
 const VideoStar: React.FC = () => {
   const { category } = useParams<{ category: string }>();
-  const [videos, setVideos] = useState<Video[]>([]);
+  const [videos, setVideos] = useState<Content[]>([]);
 
   useEffect(() => {
     const fetchVideosByCategory = async () => {
@@ -49,7 +49,7 @@ const VideoStar: React.FC = () => {
     videoThumbnails.forEach(updateThumbnailImage);
   }, [videos]);
 
-  const filterTopVideos = (videos: Video[]): Video[] => {
+  const filterTopVideos = (videos: Content[]): Content[] => {
     const topRatedVideos = videos.filter((video) => video.rating === 5);
     return topRatedVideos.length > 10
       ? shuffleArray(topRatedVideos).slice(0, 10)

@@ -1,4 +1,4 @@
-import type { Category, Folder, Video } from "@/types/Capacity";
+import type { Category, Folder, Content } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
@@ -7,7 +7,7 @@ const capacityApi = axios.create({
     withCredentials: true,
 });
 
-export type VideoList_ResponseDTO =    ApiResponse<{ videos: Video[] }>;
+export type VideoList_ResponseDTO =    ApiResponse<{ videos: Content[] }>;
 export type CategoryList_ResponseDTO = ApiResponse<{ categories: Category[] }>;
 export type PlaylistList_ResponseDTO = ApiResponse<{ playlists: Folder[] }>;
 export type ContentType_ResponseDTO =  ApiResponse<{ tipos: string[] }>;

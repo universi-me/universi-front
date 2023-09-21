@@ -1,4 +1,4 @@
-import type { Category, Video } from "@/types/Capacity";
+import type { Category, Content } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
@@ -26,7 +26,7 @@ export type CategoryGet_ResponseDTO =          ApiResponse<{ category: Category 
 export type CategoryCreate_ResponseDTO =       ApiResponse;
 export type CategoryEdit_ResponseDTO =         ApiResponse;
 export type CategoryRemove_ResponseDTO =       ApiResponse;
-export type ListVideosInCategory_ResponseDTO = ApiResponse<{ videos: Video[] }>;
+export type ListVideosInCategory_ResponseDTO = ApiResponse<{ videos: Content[] }>;
 
 export async function getCategory(body: CategoryId_RequestDTO) {
     return (await categoryApi.post<CategoryGet_ResponseDTO>("/get", {
