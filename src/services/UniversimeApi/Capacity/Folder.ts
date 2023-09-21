@@ -29,18 +29,18 @@ export type FolderEdit_RequestDTO = {
     addCategoriesByIds?:    string | string[];
 };
 
-export type VideoAndFolder_RequestDTO = {
-    folderId: string;
-    videoIds: string | string[];
+export type ContentAndFolder_RequestDTO = {
+    folderId:   string;
+    contentIds: string | string[];
 };
 
-export type FolderGet_ResponseDTO =             ApiResponse<{ playlist: Folder }>;
-export type FolderCreate_ResponseDTO =          ApiResponse;
-export type FolderEdit_ResponseDTO =            ApiResponse;
-export type FolderRemove_ResponseDTO =          ApiResponse;
-export type ListVideosInFolder_ResponseDTO =    ApiResponse<{ videos: Content[] }>;
-export type AddVideoToFolder_ResponseDTO =      ApiResponse;
-export type RemoveVideoFromFolder_ResponseDTO = ApiResponse;
+export type FolderGet_ResponseDTO =               ApiResponse<{ playlist: Folder }>;
+export type FolderCreate_ResponseDTO =            ApiResponse;
+export type FolderEdit_ResponseDTO =              ApiResponse;
+export type FolderRemove_ResponseDTO =            ApiResponse;
+export type ListContentsInFolder_ResponseDTO =    ApiResponse<{ videos: Content[] }>;
+export type AddContentToFolder_ResponseDTO =      ApiResponse;
+export type RemoveContentFromFolder_ResponseDTO = ApiResponse;
 
 export async function getFolder(body: FolderId_RequestDTO) {
     return (await folderApi.post<FolderGet_ResponseDTO>("/get", {
@@ -76,22 +76,22 @@ export async function removeFolder(body: FolderId_RequestDTO) {
     })).data;
 }
 
-export async function videosInFolder(body: FolderId_RequestDTO) {
-    return (await folderApi.post<ListVideosInFolder_ResponseDTO>("/videos", {
+export async function contentsInFolder(body: FolderId_RequestDTO) {
+    return (await folderApi.post<ListContentsInFolder_ResponseDTO>("/videos", {
         id: body.id,
     })).data;
 }
 
-export async function addVideoToFolder(body: VideoAndFolder_RequestDTO) {
-    return (await folderApi.post<AddVideoToFolder_ResponseDTO>("/video/add", {
+export async function addContentToFolder(body: ContentAndFolder_RequestDTO) {
+    return (await folderApi.post<AddContentToFolder_ResponseDTO>("/video/add", {
         id:       body.folderId,
-        videoIds: body.videoIds,
+        videoIds: body.contentIds,
     })).data;
 }
 
-export async function removeVideoFromFolder(body: VideoAndFolder_RequestDTO) {
-    return (await folderApi.post<RemoveVideoFromFolder_ResponseDTO>("/video/remove", {
+export async function removeContentFromFolder(body: ContentAndFolder_RequestDTO) {
+    return (await folderApi.post<RemoveContentFromFolder_ResponseDTO>("/video/remove", {
         id:       body.folderId,
-        videoIds: body.videoIds,
+        videoIds: body.contentIds,
     })).data;
 }
