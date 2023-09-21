@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import UniversimeApi from '@/services/UniversimeApi';
 import '../../Category.css';
-import './VideoStar.css';
+import './ContentStar.css';
 import StarRating from '../StarRating/StarRating';
 import { Content } from "@/types/Capacity"
 
@@ -78,7 +78,7 @@ const ContentStar: React.FC = () => {
                     <img
                       className="content-image"
                       src={content.url}
-                      alt="Thumbnail do vídeo"
+                      alt="Thumbnail do conteúdo"
                     />
                   </Link>
                 </div>
