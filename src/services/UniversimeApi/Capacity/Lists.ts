@@ -10,6 +10,7 @@ const capacityApi = axios.create({
 export type VideoList_ResponseDTO =    ApiResponse<{ videos: Video[] }>;
 export type CategoryList_ResponseDTO = ApiResponse<{ categories: Category[] }>;
 export type PlaylistList_ResponseDTO = ApiResponse<{ playlists: Playlist[] }>;
+export type ContentType_ResponseDTO =  ApiResponse<{ tipos: string[] }>;
 
 export async function videoList() {
     return (await capacityApi.get<VideoList_ResponseDTO>("/videos")).data;
@@ -21,4 +22,8 @@ export async function categoryList() {
 
 export async function playlistList() {
     return (await capacityApi.get<PlaylistList_ResponseDTO>("/playlists")).data;
+}
+
+export async function typeList(){
+    return (await capacityApi.get<ContentType_ResponseDTO>("/contentTypes")).data
 }
