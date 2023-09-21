@@ -97,7 +97,7 @@ const CrudTela: React.FC = () => {
       if (selectedVideo === null)
         throw new Error("Nenhum vídeo selecionado");
 
-      await UniversimeApi.Capacity.removeVideo({id: selectedVideo.id})
+      await UniversimeApi.Capacity.removeContent({id: selectedVideo.id})
         .then(res => {
             if (!res.success)
                 throw new Error(res.message);
@@ -149,7 +149,7 @@ const CrudTela: React.FC = () => {
       if (editedVideo === null)
         throw new Error("Nenhum vídeo selecionado");
 
-    await UniversimeApi.Capacity.editVideo({
+    await UniversimeApi.Capacity.editContent({
         id: editedVideo.id,
 
         title: editedTitle,
@@ -159,8 +159,8 @@ const CrudTela: React.FC = () => {
 
         addCategoriesByIds: categoriesToAddIds,
         removeCategoriesByIds: categoriesToRemoveIds,
-        addPlaylistsByIds: playlistsToAddIds,
-        removePlaylistsByIds: playlistsToRemoveIds,
+        addFoldersByIds: playlistsToAddIds,
+        removeFoldersByIds: playlistsToRemoveIds,
       }).then(res => {
         if (!res.success)
           throw new Error(res.message);
@@ -200,14 +200,14 @@ const CrudTela: React.FC = () => {
 
   const handleAddVideo = async () => {
     try {
-      await UniversimeApi.Capacity.createVideo({
+      await UniversimeApi.Capacity.createContent({
         title: newTitle,
         description: newDescription,
         url: newUrl,
         rating: newRating,
         type: newType,
         addCategoriesByIds: categoriesToAddIds,
-        addPlaylistsByIds: playlistsToAddIds,
+        addFoldersByIds: playlistsToAddIds,
       }).then(res => {
         if (!res.success)
             throw new Error(res.message);

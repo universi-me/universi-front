@@ -2,52 +2,52 @@ import type { Content } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
-const videoApi = axios.create({
+const contentApi = axios.create({
     baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/capacity/video`,
     withCredentials: true,
 });
 
-export type VideoId_RequestDTO = {
+export type ContentId_RequestDTO = {
     id: string;
 };
 
-export type VideoCreate_RequestDTO = {
+export type ContentCreate_RequestDTO = {
     url:                 string;
     title:               string;
     description?:        string;
     type?:               string;
     addCategoriesByIds?: string | string[];
-    addPlaylistsByIds?:  string | string[];
+    addFoldersByIds?:    string | string[];
     rating?:             number;
     image?:              string;
 };
 
-export type VideoEdit_RequestDTO = {
+export type ContentEdit_RequestDTO = {
     id:                     string;
     url?:                   string;
     title?:                 string;
     description?:           string;
     addCategoriesByIds?:    string | string[];
     removeCategoriesByIds?: string | string[];
-    addPlaylistsByIds?:     string | string[];
-    removePlaylistsByIds?:  string | string[];
+    addFoldersByIds?:       string | string[];
+    removeFoldersByIds?:    string | string[];
     rating?:                number;
     image?:                 string;
 };
 
-export type VideoGet_ResponseDTO =    ApiResponse<{video: Content}>;
-export type VideoCreate_ResponseDTO = ApiResponse;
-export type VideoEdit_ResponseDTO =   ApiResponse;
-export type VideoRemove_ResponseDTO = ApiResponse;
+export type ContentGet_ResponseDTO =    ApiResponse<{video: Content}>;
+export type ContentCreate_ResponseDTO = ApiResponse;
+export type ContentEdit_ResponseDTO =   ApiResponse;
+export type ContentRemove_ResponseDTO = ApiResponse;
 
-export async function getVideo(body: VideoId_RequestDTO) {
-    return (await videoApi.post<VideoGet_ResponseDTO>("/get", {
+export async function getContent(body: ContentId_RequestDTO) {
+    return (await contentApi.post<ContentGet_ResponseDTO>("/get", {
         id: body.id,
     })).data;
 }
 
-export async function createVideo(body: VideoCreate_RequestDTO) {
-    return (await videoApi.post<VideoCreate_ResponseDTO>("/create", {
+export async function createContent(body: ContentCreate_RequestDTO) {
+    return (await contentApi.post<ContentCreate_ResponseDTO>("/create", {
         url:                body.url,
         title:              body.title,
         image:              body.image,
@@ -55,12 +55,12 @@ export async function createVideo(body: VideoCreate_RequestDTO) {
         rating:             body.rating,
         type:               body.type,
         addCategoriesByIds: body.addCategoriesByIds,
-        addPlaylistsByIds:  body.addPlaylistsByIds,
+        addPlaylistsByIds:  body.addFoldersByIds,
     })).data;
 }
 
-export async function editVideo(body: VideoEdit_RequestDTO) {
-    return (await videoApi.post<VideoEdit_ResponseDTO>("/edit", {
+export async function editContent(body: ContentEdit_RequestDTO) {
+    return (await contentApi.post<ContentEdit_ResponseDTO>("/edit", {
         id:                    body.id,
         url:                   body.url,
         title:                 body.title,
@@ -69,13 +69,13 @@ export async function editVideo(body: VideoEdit_RequestDTO) {
         rating:                body.rating,
         addCategoriesByIds:    body.addCategoriesByIds,
         removeCategoriesByIds: body.removeCategoriesByIds,
-        addPlaylistsByIds:     body.addPlaylistsByIds,
-        removePlaylistsByIds:  body.removePlaylistsByIds,
+        addPlaylistsByIds:     body.addFoldersByIds,
+        removePlaylistsByIds:  body.removeFoldersByIds,
     })).data;
 }
 
-export async function removeVideo(body: VideoId_RequestDTO) {
-    return (await videoApi.post<VideoRemove_ResponseDTO>("/delete", {
+export async function removeContent(body: ContentId_RequestDTO) {
+    return (await contentApi.post<ContentRemove_ResponseDTO>("/delete", {
         id: body.id,
     })).data;
 }
