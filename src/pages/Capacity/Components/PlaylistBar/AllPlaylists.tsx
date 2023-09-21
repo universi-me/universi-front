@@ -1,12 +1,12 @@
 import UniversimeApi from "@/services/UniversimeApi";
-import { Playlist } from "@/types/Capacity";
+import { Folder } from "@/types/Capacity";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import "./PlaylistBar.css";
 
 export default function AllPlaylists() {
-    const [availablePlaylists, setAvailablePlaylists] = useState<Playlist[]>([]);
+    const [availablePlaylists, setAvailablePlaylists] = useState<Folder[]>([]);
 
     useEffect(() => {
         UniversimeApi.Capacity.playlistList()

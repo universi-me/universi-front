@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import Select, { MultiValue } from 'react-select';
 
 import UniversimeApi from '@/services/UniversimeApi';
-import { Playlist, Video , Category, Types} from '@/types/Capacity';
+import { Folder, Video , Category, Types} from '@/types/Capacity';
 import { AuthContext } from '@/contexts/Auth';
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
@@ -78,7 +78,7 @@ const CrudTela: React.FC = () => {
       const arr: { value: string; label: string; }[] = [];
       const response = await UniversimeApi.Capacity.playlistList()
       let playlistsArr = response.body.playlists;
-      playlistsArr.map((playlist: Playlist) => {
+      playlistsArr.map((playlist: Folder) => {
         return arr.push({value: playlist.id, label: playlist.name});
       });
       setPlaylists(arr)
@@ -134,7 +134,7 @@ const CrudTela: React.FC = () => {
 
     const videoPlaylistsIds = video.playlists;
     const arrPlaylists: { value: string; label: string; }[] = [];
-    videoPlaylistsIds?.forEach(function (playlist: Playlist) {
+    videoPlaylistsIds?.forEach(function (playlist: Folder) {
       return arrPlaylists.push({value: playlist.id, label: playlist.name});
     });
     setPlaylistsStateSelected(arrPlaylists);

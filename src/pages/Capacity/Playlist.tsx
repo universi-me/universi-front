@@ -6,14 +6,14 @@ import NotFoundVideo from './Components/NotFoundVideo/NotFoundVideo';
 import InfoButton from './Components/InfoButton/InfoButton';
 import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
-import { Playlist } from '@/types/Capacity';
+import { Folder } from '@/types/Capacity';
 import { Video } from '@/types/Capacity';
 
 const PlaylistPage: React.FC = () => {
   const { playlist: playlistId } = useParams<{ playlist: string }>();
   const [videos, setVideos] = useState<Video[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
-  const [playlistData, setPlaylistData] = useState<Playlist|null>(null);
+  const [playlistData, setPlaylistData] = useState<Folder|null>(null);
 
   useEffect(() => {
     const fetchVideosByPlaylist = async () => {

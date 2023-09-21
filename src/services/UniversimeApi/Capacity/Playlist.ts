@@ -1,4 +1,4 @@
-import type { Playlist, Video } from "@/types/Capacity";
+import type { Folder, Video } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
@@ -34,7 +34,7 @@ export type VideoAndPlaylist_RequestDTO = {
     videoIds:   string | string[];
 };
 
-export type PlaylistGet_ResponseDTO =             ApiResponse<{ playlist: Playlist }>;
+export type PlaylistGet_ResponseDTO =             ApiResponse<{ playlist: Folder }>;
 export type PlaylistCreate_ResponseDTO =          ApiResponse;
 export type PlaylistEdit_ResponseDTO =            ApiResponse;
 export type PlaylistRemove_ResponseDTO =          ApiResponse;
