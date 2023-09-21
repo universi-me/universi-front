@@ -55,7 +55,7 @@ const PlaylistPage: React.FC = () => {
       }
     };
 
-    const videoThumbnails = document.querySelectorAll('.video-thumbnail');
+    const videoThumbnails = document.querySelectorAll('.content-thumbnail');
     videoThumbnails.forEach(updateThumbnailImage);
   }, [videos]);
 
@@ -92,29 +92,29 @@ const PlaylistPage: React.FC = () => {
         </div>
         <div id="conteudo-playlist">
           <h1 id="subtitle-playlist">Videos da Playlist:</h1>
-          <div className="video-list-all">
+          <div className="content-list-all">
             {
             videos.length === 0 ? <p className="empty">Nenhum vídeo nessa playlist</p> :
 
             videos.map((video) => (
-              <div key={video.id} className="video-item">
-                <div className="video-thumbnail">
+              <div key={video.id} className="content-item">
+                <div className="content-thumbnail">
                   <Link to={`/capacitacao/play/${video.id}`}>
                     <img
-                      className="video-image"
+                      className="content-image"
                       src={video.url}
                       alt="Thumbnail do vídeo"
                     />
                   </Link>
                 </div>
                 <div>
-                  <h3 className="video-title">
+                  <h3 className="content-title">
                     {video.title.length > 48
                       ? `${video.title.substring(0, 48)}...`
                       : video.title}
                   </h3>
                 </div>
-                <div className="video-rating">
+                <div className="content-rating">
                 <p className="content-rating">
                   <span className="rating-count">{video.rating.toFixed(1)}</span>
                   <span className="star-rating">

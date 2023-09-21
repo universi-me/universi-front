@@ -4,25 +4,25 @@
     padding-right: 40px;
 }
 
-.video-top {
+.content-top {
     display: flex;
     overflow-x: auto;
     padding: 1vw;
 }
 
-.video-top::-webkit-scrollbar {
+.content-top::-webkit-scrollbar {
     width: 8px;
     height: 8px;
     margin-bottom: 10px;
 }
 
-.video-top::-webkit-scrollbar-thumb {
+.content-top::-webkit-scrollbar-thumb {
     background-color: #cfcfcf;
     border-radius: 4px;
     
 }
 
-.video-top::-webkit-scrollbar-button {
+.content-top::-webkit-scrollbar-button {
     display: none;
 }
 

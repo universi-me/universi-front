@@ -6,23 +6,23 @@ import './VideoStar.css';
 import StarRating from '../StarRating/StarRating';
 import { Content } from "@/types/Capacity"
 
-const VideoStar: React.FC = () => {
+const ContentStar: React.FC = () => {
   const { category } = useParams<{ category: string }>();
-  const [videos, setVideos] = useState<Content[]>([]);
+  const [contents, setContents] = useState<Content[]>([]);
 
   useEffect(() => {
-    const fetchVideosByCategory = async () => {
+    const fetchContentsByCategory = async () => {
       try {
         if (category === undefined)
           throw new Error("Categoria não informada");
 
         const response = await UniversimeApi.Capacity.contentsInCategory({id: category});
-        setVideos(response.body.videos);
+        setContents(response.body.videos);
       } catch (error) {
         console.error('Erro ao buscar os vídeos:', error);
       }
     };
-    fetchVideosByCategory();
+    fetchContentsByCategory();
   }, [category]);
 
   useEffect(() => {
@@ -45,15 +45,15 @@ const VideoStar: React.FC = () => {
       }
     };
 
-    const videoThumbnails = document.querySelectorAll('.video-thumbnail');
-    videoThumbnails.forEach(updateThumbnailImage);
-  }, [videos]);
+    const contentThumbnails = document.querySelectorAll('.content-thumbnail');
+    contentThumbnails.forEach(updateThumbnailImage);
+  }, [contents]);
 
-  const filterTopVideos = (videos: Content[]): Content[] => {
-    const topRatedVideos = videos.filter((video) => video.rating === 5);
-    return topRatedVideos.length > 10
-      ? shuffleArray(topRatedVideos).slice(0, 10)
-      : topRatedVideos;
+  const filterTopContents = (contents: Content[]): Content[] => {
+    const topRatedContents = contents.filter((content) => content.rating === 5);
+    return topRatedContents.length > 10
+      ? shuffleArray(topRatedContents).slice(0, 10)
+      : topRatedContents;
   };
 
   //Algoritmo Fisher-Yates (Ele embaralha um array de itens)
@@ -66,34 +66,34 @@ const VideoStar: React.FC = () => {
     return newArray;
   };
 
-  const topRatedVideos = filterTopVideos(videos);
+  const topRatedContents = filterTopContents(contents);
   return (
     <div id="conteudo-destaque">
-        <h2 id="subtitle-category">Videos em Destaque</h2>
-        <div className="video-top">
-          {topRatedVideos.map((video) => (
-              <div key={video.id} className="video-item">
-                  <div className="video-thumbnail">
-                  <Link to={`/capacitacao/play/${video.id}`}>
+        <h2 id="subtitle-category">Conteúdos em Destaque</h2>
+        <div className="content-top">
+          {topRatedContents.map((content) => (
+              <div key={content.id} className="content-item">
+                  <div className="content-thumbnail">
+                  <Link to={`/capacitacao/play/${content.id}`}>
                     <img
-                      className="video-image"
-                      src={video.url}
+                      className="content-image"
+                      src={content.url}
                       alt="Thumbnail do vídeo"
                     />
                   </Link>
                 </div>
                   <div>
-                      <h3 className="video-title">
-                          {video.title.length > 48
-                              ? `${video.title.substring(0, 48)}...`
-                              : video.title}
+                      <h3 className="content-title">
+                          {content.title.length > 48
+                              ? `${content.title.substring(0, 48)}...`
+                              : content.title}
                       </h3>
                   </div>
-                  <div className="video-rating">
+                  <div className="content-rating">
                     <p className="content-rating">
-                      <span className="rating-count">{video.rating.toFixed(1)}</span>
+                      <span className="rating-count">{content.rating.toFixed(1)}</span>
                       <span className="star-rating">
-                        <StarRating rating={video.rating} />
+                        <StarRating rating={content.rating} />
                       </span>
                     </p>
                   </div>
@@ -104,4 +104,4 @@ const VideoStar: React.FC = () => {
   );
 };
 
-export default VideoStar;
+export default ContentStar;
