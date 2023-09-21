@@ -1,8 +1,11 @@
 import { useContext } from "react";
+
 import { ProfileContext } from "@/pages/Profile";
 import { LevelToLabel } from "@/types/Competence";
-import './CompetencesSettings.less'
 import { UniversimeApi } from "@/services/UniversimeApi";
+import * as SwalUtils from "@/utils/sweetalertUtils";
+
+import './CompetencesSettings.less'
 
 export type CompetencesSettingsProps = {
     cancelChanges: () => any;
@@ -93,7 +96,16 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
             });
 
         apiOperation.then((r) => {
+            if (!r.success)
+                throw new Error(r.message);
+
             profileContext?.reloadPage();
+        }).catch((reason: Error) => {
+            SwalUtils.fireModal({
+                title: "Erro ao salvar competência",
+                text: reason.message,
+                icon: "error",
+            });
         })
     }
 
@@ -102,6 +114,17 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
             return;
 
         UniversimeApi.Competence.remove({competenceId: profileContext.editCompetence.id})
-            .then((r) => profileContext?.reloadPage());
+            .then((r) => {
+                if (!r.success)
+                    throw new Error(r.message);
+
+                profileContext?.reloadPage();
+            }).catch((reason: Error) => {
+                SwalUtils.fireModal({
+                    title: "Erro ao remover competência",
+                    text: reason.message,
+                    icon: "error",
+                })
+            });
     }
 }
