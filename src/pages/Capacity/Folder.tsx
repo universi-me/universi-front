@@ -9,7 +9,7 @@ import StarRating from './Components/StarRating/StarRating';
 import { Folder, Content } from '@/types/Capacity';
 
 const FolderPage: React.FC = () => {
-  const { playlist: folderId } = useParams<{ playlist: string }>();
+  const { folderId } = useParams<{ folderId: string }>();
   const [contents, setContents] = useState<Content[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
   const [folderData, setFolderData] = useState<Folder|null>(null);

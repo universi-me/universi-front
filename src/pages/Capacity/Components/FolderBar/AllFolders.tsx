@@ -22,7 +22,7 @@ export default function AllFolders() {
                         ? <div className="empty-list">Nenhuma pasta cadastrada.</div>
                         : availableFolders.map(p =>
                         <div className="folder-container" key={p.id}>
-                            <Link to={`/capacitacao/playlist/${p.id}`} className="folder-card">
+                            <Link to={`/capacitacao/folder/${p.id}`} className="folder-card">
                                 <img src={p.image ?? ""} alt="Logo da pasta de capacitação" />
                                 <span className="folder-title">{p.name}</span>
                             </Link>

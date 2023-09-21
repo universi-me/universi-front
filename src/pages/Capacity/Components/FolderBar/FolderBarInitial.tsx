@@ -13,27 +13,27 @@ const PlaylistBar: React.FC = () => {
   return (
     <div className="folder-bar">
       <div className="folder-container">
-        <a href="capacitacao/playlist/jornada-java" className="folder-card">
+        <a href="capacitacao/folder/jornada-java" className="folder-card">
           <img src={jornadaJavaImg} alt="Logo da playlist de capacitação" />
           <span className="folder-title">Jornada Java</span>
         </a>
-        <a href="capacitacao/playlist/golang-iniciante" className="folder-card">
+        <a href="capacitacao/folder/golang-iniciante" className="folder-card">
           <img src={golangInicianteImg} alt="Logo da playlist de capacitação" />
           <span className="folder-title">Golang Iniciante</span>
         </a>
-        <a href="capacitacao/playlist/comunicacao-empresa" className="folder-card">
+        <a href="capacitacao/folder/comunicacao-empresa" className="folder-card">
           <img src={comunicacaoEmpresaImg} alt=" Logo da playlist de capacitação" />
           <span className="folder-title">Comunicação: Como melhorar nas empresas?</span>
         </a>
-        <a href="capacitacao/playlist/habitos-programadores" className="folder-card">
+        <a href="capacitacao/folder/habitos-programadores" className="folder-card">
           <img src={habitosProgramadorImg} alt="Logo da playlist de capacitação" />
           <span className="folder-title">Melhore seus hábitos como programador</span>
         </a>
-        <a href="capacitacao/playlist/springBoot-api" className="folder-card">
+        <a href="capacitacao/folder/springBoot-api" className="folder-card">
           <img src={springbootApiImg} alt="Logo da playlist de capacitação" />
           <span className="folder-title">Spring Boot - Criando API</span>
         </a>
-        <a href="capacitacao/playlist/algoritmos" className="folder-card">
+        <a href="capacitacao/folder/algoritmos" className="folder-card">
           <img src={aprendendoAlgoritmoImg} alt="Logo da playlist de capacitação" />
           <span className="folder-title">Algoritmos</span>
         </a>

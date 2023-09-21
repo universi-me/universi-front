@@ -43,7 +43,7 @@ export const router = createBrowserRouter([{
       element: <VideoPage />
     },
     {
-      path: "/capacitacao/playlist/:playlist",
+      path: "/capacitacao/folder/:folderId",
       element: <FolderPage />
     },
     {
