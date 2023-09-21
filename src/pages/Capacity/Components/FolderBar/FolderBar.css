@@ -1,4 +1,4 @@
-.playlist-bar {
+.folder-bar {
     display: flex;
     align-items: center;
     overflow-x: hidden;
@@ -7,36 +7,36 @@
 }
 
 @media (max-width: 1600px) {
-    .playlist-bar {
+    .folder-bar {
       overflow-x: auto;
     }
 }
 
-.playlist-bar::-webkit-scrollbar {
+.folder-bar::-webkit-scrollbar {
     width: 8px;
     height: 8px;
     background-color: var(--card-background-color);
 }
 
-.playlist-bar::-webkit-scrollbar-thumb {
+.folder-bar::-webkit-scrollbar-thumb {
     background-color: #4e4e4e;
     border-radius: 4px;
 }
   
-.playlist-bar::-webkit-scrollbar-track {
+.folder-bar::-webkit-scrollbar-track {
     background-color:  var(--card-background-color);
 }
   
-.playlist-bar::-webkit-scrollbar-button {
+.folder-bar::-webkit-scrollbar-button {
     display: none;
 }
   
-.playlist-container {
+.folder-container {
     display: flex;
     transition: transform 0.3s ease;
 }
   
-.playlist-card {
+.folder-card {
     width: 250px;
     height: 258px;
     border-radius: 10px;
@@ -51,12 +51,12 @@
     border-top-right-radius: 15px;
 }
   
-.playlist-card:hover {
+.folder-card:hover {
     color: #5c5fa5;
     box-shadow: 0 4px 8px #00000033;
 }
   
-.playlist-card img {
+.folder-card img {
     width: 100%;
     height: 150px;
     object-fit: cover;
@@ -64,7 +64,7 @@
     border-top-right-radius: 10px;
 }
   
-.playlist-title {
+.folder-title {
     display: block;
     padding: 10px;
     font-weight: bold;
@@ -73,7 +73,7 @@
 
 }
 
-.playlist-bar ::-webkit-scrollbar{
+.folder-bar ::-webkit-scrollbar{
     display: none;
 }
 

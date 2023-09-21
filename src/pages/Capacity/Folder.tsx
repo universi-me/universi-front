@@ -1,39 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import UniversimeApi from '@/services/UniversimeApi';
-import './Category.css';
-import ContentStar from './Components/Content/ContentStar';
+import './Folder.css';
+import InfoButton from './Components/InfoButton/InfoButton';
 import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
-import { Category, Content } from '@/types/Capacity';
+import { Folder, Content } from '@/types/Capacity';
 
-const CategoryPage: React.FC = () => {
-  const { category: categoryId } = useParams<{ category: string }>();
+const FolderPage: React.FC = () => {
+  const { folderId } = useParams<{ folderId: string }>();
   const [contents, setContents] = useState<Content[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
-  const [categoryData, setCategoryData] = useState<Category|null>(null);
+  const [folderData, setFolderData] = useState<Folder|null>(null);
 
   useEffect(() => {
-    const fetchContentsByCategory = async () => {
+    const fetchContentsByFolder = async () => {
       try {
-        if (categoryId === undefined)
-          throw new Error("Categoria não informada");
+        if (folderId === undefined)
+            throw new Error("Pasta não informada");
 
-        const response = await UniversimeApi.Capacity.contentsInCategory({id: categoryId});
+        const response = await UniversimeApi.Capacity.contentsInFolder({id: folderId});
         setContents(response.body?.videos ?? []);
         if (!response.body?.videos.length) {
           setHasError(true);
         }
-
-        UniversimeApi.Capacity.getCategory({id: categoryId})
-          .then(res => setCategoryData(res.body?.category ?? null));
+        UniversimeApi.Capacity.getFolder({id: folderId})
+            .then(res => setFolderData(res.body?.playlist ?? null));
 
       } catch (error) {
-        console.error('Erro ao buscar os vídeos:', error);
+        console.error('Erro ao buscar os conteúdos:', error);
       }
     };
-    fetchContentsByCategory();
-  }, [categoryId]);
+    fetchContentsByFolder();
+  }, [folderId]);
 
   useEffect(() => {
     const extractVideoId = (url: string) => {
@@ -59,16 +58,42 @@ const CategoryPage: React.FC = () => {
     contentThumbnails.forEach(updateThumbnailImage);
   }, [contents]);
 
+  const formatFolderName = (folder: string | undefined) => {
+    if (!folder) return '';
+    const formattedName = folder
+      .split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+    return formattedName;
+  };
+
+  const calculateTotalHours = () => {
+    const totalHours = Math.ceil((26 * contents.length)/60);
+    return totalHours;
+  };
+
   return (
-    <div className="category-tela">
-      <div id="category">
-        <h1 id="title-category">Capacitação em {categoryData?.name ?? ""}</h1>
-        <ContentStar />
-        <div id="conteudo-category">
-          <h1 id="subtitle-category">Todos os conteúdos de {categoryData?.name ?? ""}</h1>
+    <div className="folder-tela">
+      <div id="folder">
+        <div id="info-folder">
+            <div className="painel-info">
+              <h2 className="title-folder">{formatFolderName(folderData?.name ?? "")}</h2>
+              <div className="quant-content">
+                <h2 className="title-quantContent">Tamanho:</h2>
+                <h2 className="number-quantContent">{contents.length} conteúdos</h2>
+              </div>
+              <div className="time-content">
+                <h2 className="title-duratContent">Duração: </h2>
+                <h2 className="number-duratContent">{calculateTotalHours()} hora(s)</h2>
+                <InfoButton/>
+              </div>
+            </div>
+        </div>
+        <div id="conteudo-folder">
+          <h1 id="subtitle-folder">Conteúdos da Pasta:</h1>
           <div className="content-list-all">
             {
-            contents.length === 0 ? <p className="empty">Nenhum conteúdo nessa categoria</p> :
+            contents.length === 0 ? <p className="empty">Nenhum conteúdo nessa pasta</p> :
 
             contents.map((content) => (
               <div key={content.id} className="content-item">
@@ -106,4 +131,4 @@ const CategoryPage: React.FC = () => {
   );
 };
 
-export default CategoryPage;
+export default FolderPage;

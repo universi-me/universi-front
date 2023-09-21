@@ -2,22 +2,22 @@ import React, { useState, useEffect, useContext } from 'react';
 import Select, { MultiValue } from 'react-select';
 
 import UniversimeApi from '@/services/UniversimeApi';
-import { Playlist, Video , Category, Types} from '@/types/Capacity';
+import { Folder, Content , Category, Types} from '@/types/Capacity';
 import { AuthContext } from '@/contexts/Auth';
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import './ManagerCapacity.css'
 
 const CrudTela: React.FC = () => {
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+  const [contents, setContents] = useState<Content[]>([]);
+  const [selectedContent, setSelectedContent] = useState<Content | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const contentTypes = Types;
   
 
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editedVideo, setEditedVideo] = useState<Video | null>(null);
+  const [editedContent, setEditedContent] = useState<Content | null>(null);
   const [editedTitle, setEditedTitle] = useState('');
   const [editedDescription, setEditedDescription] = useState('');
   const [editedUrl, setEditedUrl] = useState('');
@@ -31,7 +31,7 @@ const CrudTela: React.FC = () => {
   const [newType, setNewType] = useState<string>(contentTypes[0])
 
   const [categories, setCategories] = useState<any>([]);
-  const [playlists, setPlaylists] = useState<any>([]);
+  const [folders, setFolders] = useState<any>([]);
   const [types, setTypes] = useState<any>([]);
   
   const [categoriesToRemoveIds, setCategoriesToRemoveIds] = useState<string[]>([]);
@@ -39,23 +39,23 @@ const CrudTela: React.FC = () => {
   const [categoriesToRemove, setCategoriesToRemove] = useState<any>([]);
   const [categoriesStateSelected, setCategoriesStateSelected] = useState<any>([]);
 
-  const [playlistsToRemoveIds, setPlaylistsToRemoveIds] = useState<string[]>([]);
-  const [playlistsToAddIds, setPlaylistsToAddIds] = useState<string[]>([]);
-  const [playlistsToRemove, setPlaylistsToRemove] = useState<any>([]);
-  const [playlistsStateSelected, setPlaylistsStateSelected] = useState<any>([]);
+  const [foldersToRemoveIds, setFoldersToRemoveIds] = useState<string[]>([]);
+  const [foldersToAddIds, setFoldersToAddIds] = useState<string[]>([]);
+  const [foldersToRemove, setFoldersToRemove] = useState<any>([]);
+  const [foldersStateSelected, setFoldersStateSelected] = useState<any>([]);
 
   useEffect(() => { 
-    fetchVideos();
+    fetchContents();
     fetchCategories();
-    fetchPlaylists();
+    fetchFolders();
     }, []);
 
-  const fetchVideos = async () => {
+  const fetchContents = async () => {
     try {
-      const response = await UniversimeApi.Capacity.videoList();
-      setVideos(response.body.videos);
+      const response = await UniversimeApi.Capacity.contentList();
+      setContents(response.body.videos);
     } catch (error) {
-      console.error('Erro ao buscar os vídeos:', error);
+      console.error('Erro ao buscar os conteúdos:', error);
     }
   };
 
@@ -73,84 +73,84 @@ const CrudTela: React.FC = () => {
     }
   };
 
-  const fetchPlaylists = async () => {
+  const fetchFolders = async () => {
     try {
       const arr: { value: string; label: string; }[] = [];
-      const response = await UniversimeApi.Capacity.playlistList()
-      let playlistsArr = response.body.playlists;
-      playlistsArr.map((playlist: Playlist) => {
-        return arr.push({value: playlist.id, label: playlist.name});
+      const response = await UniversimeApi.Capacity.folderList()
+      let foldersArr = response.body.playlists;
+      foldersArr.map((folder: Folder) => {
+        return arr.push({value: folder.id, label: folder.name});
       });
-      setPlaylists(arr)
+      setFolders(arr)
     } catch (error) {
-      console.error('Erro ao obter playlists:', error);
+      console.error('Erro ao obter pastas:', error);
     }
   };
 
-  const handleDeleteClick = (video: Video) => {
-    setSelectedVideo(video);
+  const handleDeleteClick = (content: Content) => {
+    setSelectedContent(content);
     setShowConfirmation(true);
   };
 
-  const handleDeleteVideo = async () => {
+  const handleDeleteContent = async () => {
     try {
-      if (selectedVideo === null)
-        throw new Error("Nenhum vídeo selecionado");
+      if (selectedContent === null)
+        throw new Error("Nenhum conteúdo selecionado");
 
-      await UniversimeApi.Capacity.removeVideo({id: selectedVideo.id})
+      await UniversimeApi.Capacity.removeContent({id: selectedContent.id})
         .then(res => {
             if (!res.success)
                 throw new Error(res.message);
         })
         .catch((reason: Error) => {
             SwalUtils.fireModal({
-                title: "Erro ao deletar vídeo",
+                title: "Erro ao deletar conteúdo",
                 text: reason.message,
                 icon: "error",
             });
         });
 
         setShowConfirmation(false);
-        setSelectedVideo(null);
-        fetchVideos();
+        setSelectedContent(null);
+        fetchContents();
     } catch (error) {
-      console.error('Erro ao deletar vídeo:', error);
+      console.error('Erro ao deletar conteúdo:', error);
     }
   };
 
-  const handleEditClick = (video: Video) => {
-    setEditedVideo(video);
-    setEditedTitle(video.title);
-    setEditedDescription(video.description ?? "");
-    setEditedUrl(video.url);
-    setEditedRating(video.rating);
+  const handleEditClick = (content: Content) => {
+    setEditedContent(content);
+    setEditedTitle(content.title);
+    setEditedDescription(content.description ?? "");
+    setEditedUrl(content.url);
+    setEditedRating(content.rating);
     
-    const videoCategoriesIds = video.categories;
+    const contentCategoriesIds = content.categories;
     const arrCategories: { value: string; label: string; }[] = [];
-    videoCategoriesIds?.forEach(function (category: Category) {
+    contentCategoriesIds?.forEach(function (category: Category) {
       return arrCategories.push({value: category.id, label: category.name});
     });
     setCategoriesStateSelected(arrCategories);
 
-    const videoPlaylistsIds = video.playlists;
-    const arrPlaylists: { value: string; label: string; }[] = [];
-    videoPlaylistsIds?.forEach(function (playlist: Playlist) {
-      return arrPlaylists.push({value: playlist.id, label: playlist.name});
+    const contentFoldersIds = content.playlists;
+    const arrFolders: { value: string; label: string; }[] = [];
+    contentFoldersIds?.forEach(function (folder: Folder) {
+      return arrFolders.push({value: folder.id, label: folder.name});
     });
-    setPlaylistsStateSelected(arrPlaylists);
+    setFoldersStateSelected(arrFolders);
 
     
     setShowEditModal(true);
     setIsEditing(true);
   };
 
-  const handleEditVideo = async () => {
+  const handleEditContent = async () => {
     try {
-      if (editedVideo === null)
-        throw new Error("Nenhum vídeo selecionado");
+      if (editedContent === null)
+        throw new Error("Nenhum conteúdo selecionado");
 
-    await UniversimeApi.Capacity.editVideo({
-        id: editedVideo.id,
+    await UniversimeApi.Capacity.editContent({
+        id: editedContent.id,
 
         title: editedTitle,
         description: editedDescription,
@@ -159,17 +159,17 @@ const CrudTela: React.FC = () => {
 
         addCategoriesByIds: categoriesToAddIds,
         removeCategoriesByIds: categoriesToRemoveIds,
-        addPlaylistsByIds: playlistsToAddIds,
-        removePlaylistsByIds: playlistsToRemoveIds,
+        addFoldersByIds: foldersToAddIds,
+        removeFoldersByIds: foldersToRemoveIds,
       }).then(res => {
         if (!res.success)
           throw new Error(res.message);
       });
 
-      fetchVideos();
+      fetchContents();
     } catch (error: any) {
       SwalUtils.fireModal({
-        title: "Erro ao editar vídeo",
+        title: "Erro ao editar conteúdo",
         text: 'message' in error ? error.message : '',
         icon: 'error',
       });
@@ -177,37 +177,37 @@ const CrudTela: React.FC = () => {
 
     setShowEditModal(false);
     setIsEditing(false);
-    setEditedVideo(null);
+    setEditedContent(null);
     setEditedTitle('');
     setEditedDescription('');
     setEditedUrl('');
     setEditedRating(1);
 
-    cleanCategoriesAndPlaylists()
+    cleanCategoriesAndFolders()
   };
 
-  const cleanCategoriesAndPlaylists = () => {
+  const cleanCategoriesAndFolders = () => {
     setCategoriesToRemoveIds([]);
     setCategoriesToRemove([]);
     setCategoriesToAddIds([]);
     setCategoriesStateSelected([]);
 
-    setPlaylistsToRemoveIds([]);
-    setPlaylistsToAddIds([]);
-    setPlaylistsToRemove([]);
-    setPlaylistsStateSelected([]);
+    setFoldersToRemoveIds([]);
+    setFoldersToAddIds([]);
+    setFoldersToRemove([]);
+    setFoldersStateSelected([]);
   };
 
-  const handleAddVideo = async () => {
+  const handleAddContent = async () => {
     try {
-      await UniversimeApi.Capacity.createVideo({
+      await UniversimeApi.Capacity.createContent({
         title: newTitle,
         description: newDescription,
         url: newUrl,
         rating: newRating,
         type: newType,
         addCategoriesByIds: categoriesToAddIds,
-        addPlaylistsByIds: playlistsToAddIds,
+        addFoldersByIds: foldersToAddIds,
       }).then(res => {
         if (!res.success)
             throw new Error(res.message);
@@ -215,7 +215,7 @@ const CrudTela: React.FC = () => {
 
     } catch (error: any) {
         SwalUtils.fireModal({
-            title: "Erro ao criar vídeo",
+            title: "Erro ao criar conteúdo",
             text: 'message' in error ? error.message : '',
             icon: "error",
         });
@@ -227,14 +227,14 @@ const CrudTela: React.FC = () => {
     setNewUrl('');
     setNewRating(1);
 
-    cleanCategoriesAndPlaylists()
-    fetchVideos();
+    cleanCategoriesAndFolders()
+    fetchContents();
   };
 
-  const handleCreateVideo = async () => {
+  const handleCreateContent = async () => {
     setShowAddModal(true);
 
-    cleanCategoriesAndPlaylists()
+    cleanCategoriesAndFolders()
 
   };
 
@@ -263,30 +263,30 @@ const CrudTela: React.FC = () => {
     setCategoriesToAddIds(categoriesAddArr)
   };
 
-  const handlePlaylistsOnChange = (value: any) => {
-    let difference = playlistsStateSelected.filter((x: any) => !value.includes(x))
-    setPlaylistsStateSelected(value)
+  const handleFoldersOnChange = (value: any) => {
+    let difference = foldersStateSelected.filter((x: any) => !value.includes(x))
+    setFoldersStateSelected(value)
 
-    let playlistsToRem = playlistsToRemove
-    playlistsToRem = [...playlistsToRem, ...difference]
-    playlistsToRem = playlistsToRem.reduce(function (acc: any, curr: any) {
+    let foldersToRem = foldersToRemove
+    foldersToRem = [...foldersToRem, ...difference]
+    foldersToRem = foldersToRem.reduce(function (acc: any, curr: any) {
       if (!acc.includes(curr) && !value.includes(curr))
           acc.push(curr);
           return acc;
     }, []);
-    setPlaylistsToRemove(playlistsToRem)
+    setFoldersToRemove(foldersToRem)
 
-    const playlistsRemoveArr: string[] = [];
-    playlistsToRem.map((playlist: any) => {
-      return playlistsRemoveArr.push(playlist.value);
+    const foldersRemoveArr: string[] = [];
+    foldersToRem.map((folder: any) => {
+      return foldersRemoveArr.push(folder.value);
     });
-    setPlaylistsToRemoveIds(playlistsRemoveArr)
+    setFoldersToRemoveIds(foldersRemoveArr)
     
-    const playlistsAddArr: string[] = [];
-    value.map((playlist: any) => {
-      return playlistsAddArr.push(playlist.value);
+    const foldersAddArr: string[] = [];
+    value.map((folder: any) => {
+      return foldersAddArr.push(folder.value);
     });
-    setPlaylistsToAddIds(playlistsAddArr)
+    setFoldersToAddIds(foldersAddArr)
   };
 
 
@@ -299,9 +299,9 @@ const CrudTela: React.FC = () => {
   return (
     !auth.user ? null :
     <div>
-        <h1 className="title-page">Gerenciador de Vídeos</h1>
-        <button className='button-adicionar' type="button" onClick={() => handleCreateVideo()}>Adicionar Vídeo</button>
-            <table className="videos-table">
+        <h1 className="title-page">Gerenciador de Conteúdos</h1>
+        <button className='button-adicionar' type="button" onClick={() => handleCreateContent()}>Adicionar conteúdo</button>
+            <table className="contents-table">
                 <thead>
                      <tr>
                         <th>ID</th>
@@ -310,23 +310,23 @@ const CrudTela: React.FC = () => {
                         <th>Classificação</th>
                         <th>Categorias</th>
                         <th>Tipo</th>
-                        <th>Playlists</th>
+                        <th>Pastas</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {videos.map((video) => (
-                        <tr key={video.id}>
-                        <td>{video.id}</td>
-                        <td>{video.title}</td>
-                        <td>{video.url}</td>
-                        <td>{video.rating}</td>
-                        <td>{video.categories?.map(function(elem){ return elem.name; }).join(", ")}</td>
-                        <td>{video.type}</td>
-                        <td>{video.playlists?.map(function(elem){ return elem.name; }).join(", ")}</td>
+                    {contents.map((content) => (
+                        <tr key={content.id}>
+                        <td>{content.id}</td>
+                        <td>{content.title}</td>
+                        <td>{content.url}</td>
+                        <td>{content.rating}</td>
+                        <td>{content.categories?.map(function(elem){ return elem.name; }).join(", ")}</td>
+                        <td>{content.type}</td>
+                        <td>{content.playlists?.map(function(elem){ return elem.name; }).join(", ")}</td>
                         <td>
-                            <button className='button-edit' onClick={() => handleEditClick(video)}>Editar</button>
-                            <button className='button-delete' type="button" onClick={() => handleDeleteClick(video)}>Deletar</button>
+                            <button className='button-edit' onClick={() => handleEditClick(content)}>Editar</button>
+                            <button className='button-delete' type="button" onClick={() => handleDeleteClick(content)}>Deletar</button>
                         </td>
                         </tr>
                     ))}
@@ -336,10 +336,10 @@ const CrudTela: React.FC = () => {
             <div className="confirmation-container">
                 <div className="confirmation-box-delete">
                     <h2 className="titulo-box">Confirmar exclusão</h2>
-                    <p>Deseja deletar o vídeo "{selectedVideo?.title}" ?</p>
+                    <p>Deseja deletar o conteúdo "{selectedContent?.title}" ?</p>
                     <div className="confirmation-buttons">
                     <button className="button-boxCancel" onClick={() => setShowConfirmation(false)}>Cancelar</button>
-                    <button className="button-boxDelete" onClick={handleDeleteVideo}>Deletar</button>
+                    <button className="button-boxDelete" onClick={handleDeleteContent}>Deletar</button>
                     </div>
                 </div>
             </div>
@@ -347,7 +347,7 @@ const CrudTela: React.FC = () => {
             {showEditModal && (
         <div className="confirmation-container">
           <div className="confirmation-box-edit">
-            <h2 className="titulo-box">Editar vídeo</h2>
+            <h2 className="titulo-box">Editar conteúdo</h2>
             <div className="space-text">
               <label>Título:</label>
               <input className='input-text' style={{width: '300px'}} type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
@@ -392,8 +392,8 @@ const CrudTela: React.FC = () => {
               onChange={handleCategoriesOnChange} value={categoriesStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Categoria Não Encontrada"} />
             </div>
             <div style={{marginTop: '15px'}}>
-              <label>Playlists:</label>
-              <Select placeholder= "Selecionar Playlists..."  isMulti name="playlists" options={playlists} className="basic-multi-select" theme={(theme) => ({
+              <label>Pastas:</label>
+              <Select placeholder= "Selecionar Pastas..."  isMulti name="playlists" options={folders} className="basic-multi-select" theme={(theme) => ({
                 ...theme,
                 borderRadius: 10,
                 color: 'black',
@@ -406,11 +406,11 @@ const CrudTela: React.FC = () => {
                   neutral0: '#c2c2c2'
                 },
               })}
-              onChange={handlePlaylistsOnChange} value={playlistsStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Playlist Não Encontrada"} />
+              onChange={handleFoldersOnChange} value={foldersStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Pasta Não Encontrada"} />
             </div>
             <div style={{marginTop: '35px'}} className="confirmation-buttons">
               <button className='button-boxCancel' onClick={() => setShowEditModal(false)}>Cancelar</button>
-              <button className='button-boxSalve' onClick={handleEditVideo}>Salvar</button>
+              <button className='button-boxSalve' onClick={handleEditContent}>Salvar</button>
             </div>
           </div>
         </div>
@@ -418,7 +418,7 @@ const CrudTela: React.FC = () => {
       {showAddModal && (
         <div className="confirmation-container">
           <div className="confirmation-box-edit">
-            <h2 className="titulo-box">Adicionar vídeo</h2>
+            <h2 className="titulo-box">Adicionar conteúdo</h2>
             <div className="space-text">
               <label>Título:</label>
               <input className='input-text' style={{ width: '300px'}} type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
@@ -483,8 +483,8 @@ const CrudTela: React.FC = () => {
               onChange={handleCategoriesOnChange} value={categoriesStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Categoria Não Encontrada"} />
             </div>
             <div style={{ marginTop: '15px' }}>
-              <label>Playlists:</label>
-              <Select placeholder= "Selecionar Playlists..."  isMulti name="playlists" options={playlists} className="basic-multi-select" theme={(theme) => ({
+              <label>Pastas:</label>
+              <Select placeholder= "Selecionar Pastas..."  isMulti name="playlists" options={folders} className="basic-multi-select" theme={(theme) => ({
                 ...theme,
                 borderRadius: 10,
                 color: 'black',
@@ -497,11 +497,11 @@ const CrudTela: React.FC = () => {
                   neutral0: '#c2c2c2'
                 },
               })}
-              onChange={handlePlaylistsOnChange} value={playlistsStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Playlist Não Encontrada"} />
+              onChange={handleFoldersOnChange} value={foldersStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Pasta Não Encontrada"} />
             </div>
             <div style={{ marginTop: '35px' }} className="confirmation-buttons">
               <button className='button-boxCancel' onClick={() => setShowAddModal(false)}>Cancelar</button>
-              <button className='button-boxSalve' onClick={handleAddVideo}>Salvar</button>
+              <button className='button-boxSalve' onClick={handleAddContent}>Salvar</button>
             </div>
           </div>
         </div>

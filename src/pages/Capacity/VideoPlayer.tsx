@@ -5,11 +5,11 @@ import './VideoPlayer.css'
 import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
 import VideoAnimationPlayer from './Components/Animation/VideoAnimationPlayer';
-import { Video } from '@/types/Capacity';
+import { Content } from '@/types/Capacity';
 
 const VideoPage: React.FC = () => {
   const { videoId } = useParams<{ videoId: string }>();
-  const [video, setVideo] = useState<Video | null>(null);
+  const [video, setVideo] = useState<Content | null>(null);
   const [isYouTubeIframeAPIReady, setYouTubeIframeAPIReady] = useState(false);
   const [isPlayerReady, setPlayerReady] = useState(false);
   const playerRef = useRef<YT.Player | null>(null);
@@ -20,7 +20,7 @@ const VideoPage: React.FC = () => {
         if (videoId === undefined)
             throw new Error("ID do vídeo não foi informado");
 
-        const response = await UniversimeApi.Capacity.getVideo({id: videoId});
+        const response = await UniversimeApi.Capacity.getContent({id: videoId});
         setVideo(response.body.video);
       } catch (error) {
         console.error('Erro ao buscar o vídeo:', error);

@@ -1,21 +1,22 @@
+import { Group } from "@/types/Group";
 import { Profile } from "@/types/Profile";
 
-export var Types = ["Vídeo", "Documento", "Pasta"];
+export type ContentType = "Vídeo" | "Documento" | "Pasta";
+export const Types: ContentType[] = ["Vídeo", "Documento", "Pasta"];
 
-export type Video = {
+export type Content = {
     id:          string;
     url:         string;
     title:       string;
     image:       string | null;
     description: string | null;
-    categories:  Category[] | null;
-    playlists:   Playlist[] | null;
+    categories:  Category[];
+    playlists:   Folder[];
     rating:      number;
     createdAt:   string;
     author:      Profile;
-    type: typeof Types[number];
+    type:        ContentType | null;
 };
-
 
 export type Category = {
     id:        string;
@@ -23,13 +24,15 @@ export type Category = {
     image:     string | null;
 };
 
-export type Playlist = {
-    id:          string;
-    name:        string;
-    image:       string | null;
-    description: string | null;
-    rating:      number | null;
-    categories:  Category[] | null;
-    createdAt:   string;
-    author:      Profile;
+export type Folder = {
+    id:                  string;
+    name:                string;
+    image:               string | null;
+    description:         string | null;
+    rating:              number;
+    categories:          Category[];
+    createdAt:           string;
+    author:              Profile;
+    publicFolder:        boolean;
+    grantedAccessGroups: Group[];
 };
