@@ -3,15 +3,11 @@ import { useState } from "react";
 import { oauthSignIn } from "@/services/oauth2-google";
 import { SignUpModal } from "@/pages/SignUp";
 import { IMG_DCX_LOGO } from "@/utils/assets";
-import { UniversiWarning } from "@/components/UniversiWarning/UniversiWarning";
 
 import "./SignUp.less"
 
 export default function SignUpPage() {
     const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false);
-
-    const [warningMessage, setWarningMessage] = useState<string>("");
-    const showWarningModal = warningMessage.length > 0;
 
     const googleUrl = oauthSignIn();
 
@@ -49,15 +45,7 @@ export default function SignUpPage() {
             </div>
 
             {
-                showSignUpModal ? <SignUpModal toggleModal={setShowSignUpModal} setWarningMessage={setWarningMessage} /> : null
-            }
-
-            {
-                showWarningModal
-                    ? <UniversiWarning message={warningMessage}
-                        onClickClose={() => setWarningMessage("")}
-                      />
-                    : null
+                showSignUpModal ? <SignUpModal toggleModal={setShowSignUpModal} /> : null
             }
         </div>
     );

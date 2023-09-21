@@ -6,13 +6,12 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { isEmail } from "@/utils/regexUtils";
 import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
 import { enableSignUp } from "./helperFunctions";
-
+import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import "./SignUpModal.less"
 
 export type SignUpModalProps = {
     toggleModal: (state: boolean) => any;
-    setWarningMessage: (message: string) => any;
 };
 
 
@@ -106,7 +105,11 @@ export function SignUpModal(props: SignUpModalProps) {
         UniversimeApi.User.signUp({ username, email, password })
             .then(res => {
                 if (!res.success)
-                    props.setWarningMessage(res.message ?? "Houve algo de errado em nosso sistema.")
+                    SwalUtils.fireModal({
+                        title: "Erro ao criar sua conta",
+                        text: res.message ?? "Houve algo de errado em nosso sistema.",
+                        icon: "error",
+                    });
 
                 else
                     navigate("/login");
