@@ -3,7 +3,6 @@ import { Link, useParams } from 'react-router-dom';
 import UniversimeApi from '@/services/UniversimeApi';
 import './Category.css';
 import ContentStar from './Components/Content/ContentStar';
-import NotFoundVideo from './Components/NotFoundVideo/NotFoundVideo';
 import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
 import { Category, Content } from '@/types/Capacity';

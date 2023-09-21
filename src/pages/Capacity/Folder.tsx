@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import UniversimeApi from '@/services/UniversimeApi';
 import './Folder.css';
-import NotFoundVideo from './Components/NotFoundVideo/NotFoundVideo';
 import InfoButton from './Components/InfoButton/InfoButton';
 import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
