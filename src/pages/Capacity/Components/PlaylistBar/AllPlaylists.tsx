@@ -9,7 +9,7 @@ export default function AllPlaylists() {
     const [availablePlaylists, setAvailablePlaylists] = useState<Folder[]>([]);
 
     useEffect(() => {
-        UniversimeApi.Capacity.playlistList()
+        UniversimeApi.Capacity.folderList()
             .then(res => setAvailablePlaylists(res.body.playlists));
     }, []);
 

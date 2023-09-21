@@ -52,7 +52,7 @@ const CrudTela: React.FC = () => {
 
   const fetchVideos = async () => {
     try {
-      const response = await UniversimeApi.Capacity.videoList();
+      const response = await UniversimeApi.Capacity.contentList();
       setVideos(response.body.videos);
     } catch (error) {
       console.error('Erro ao buscar os vídeos:', error);
@@ -76,7 +76,7 @@ const CrudTela: React.FC = () => {
   const fetchPlaylists = async () => {
     try {
       const arr: { value: string; label: string; }[] = [];
-      const response = await UniversimeApi.Capacity.playlistList()
+      const response = await UniversimeApi.Capacity.folderList()
       let playlistsArr = response.body.playlists;
       playlistsArr.map((playlist: Folder) => {
         return arr.push({value: playlist.id, label: playlist.name});
