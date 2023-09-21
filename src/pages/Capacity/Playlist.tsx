@@ -8,32 +8,32 @@ import Footer from '@/components/Footer/Footer';
 import StarRating from './Components/StarRating/StarRating';
 import { Folder, Content } from '@/types/Capacity';
 
-const PlaylistPage: React.FC = () => {
-  const { playlist: playlistId } = useParams<{ playlist: string }>();
-  const [videos, setVideos] = useState<Content[]>([]);
+const FolderPage: React.FC = () => {
+  const { playlist: folderId } = useParams<{ playlist: string }>();
+  const [contents, setContents] = useState<Content[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
-  const [playlistData, setPlaylistData] = useState<Folder|null>(null);
+  const [folderData, setFolderData] = useState<Folder|null>(null);
 
   useEffect(() => {
-    const fetchVideosByPlaylist = async () => {
+    const fetchContentsByFolder = async () => {
       try {
-        if (playlistId === undefined)
-            throw new Error("Playlist não informada");
+        if (folderId === undefined)
+            throw new Error("Pasta não informada");
 
-        const response = await UniversimeApi.Capacity.contentsInFolder({id: playlistId});
-        setVideos(response.body?.videos ?? []);
+        const response = await UniversimeApi.Capacity.contentsInFolder({id: folderId});
+        setContents(response.body?.videos ?? []);
         if (!response.body?.videos.length) {
           setHasError(true);
         }
-        UniversimeApi.Capacity.getFolder({id: playlistId})
-            .then(res => setPlaylistData(res.body?.playlist ?? null));
+        UniversimeApi.Capacity.getFolder({id: folderId})
+            .then(res => setFolderData(res.body?.playlist ?? null));
 
       } catch (error) {
-        console.error('Erro ao buscar os vídeos:', error);
+        console.error('Erro ao buscar os conteúdos:', error);
       }
     };
-    fetchVideosByPlaylist();
-  }, [playlistId]);
+    fetchContentsByFolder();
+  }, [folderId]);
 
   useEffect(() => {
     const extractVideoId = (url: string) => {
@@ -55,13 +55,13 @@ const PlaylistPage: React.FC = () => {
       }
     };
 
-    const videoThumbnails = document.querySelectorAll('.content-thumbnail');
-    videoThumbnails.forEach(updateThumbnailImage);
-  }, [videos]);
+    const contentThumbnails = document.querySelectorAll('.content-thumbnail');
+    contentThumbnails.forEach(updateThumbnailImage);
+  }, [contents]);
 
-  const formatPlaylistName = (playlist: string | undefined) => {
-    if (!playlist) return '';
-    const formattedName = playlist
+  const formatFolderName = (folder: string | undefined) => {
+    if (!folder) return '';
+    const formattedName = folder
       .split('-')
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
@@ -69,56 +69,56 @@ const PlaylistPage: React.FC = () => {
   };
 
   const calculateTotalHours = () => {
-    const totalHours = Math.ceil((26 * videos.length)/60);
+    const totalHours = Math.ceil((26 * contents.length)/60);
     return totalHours;
   };
 
   return (
-    <div className="playlist-tela">
-      <div id="playlist">
-        <div id="info-playlist">
+    <div className="folder-tela">
+      <div id="folder">
+        <div id="info-folder">
             <div className="painel-info">
-              <h2 className="title-playlist">{formatPlaylistName(playlistData?.name ?? "")}</h2>
-              <div className="quant-videos">
-                <h2 className="title-quantVideos">Tamanho:</h2>
-                <h2 className="number-quantVideos">{videos.length} vídeos</h2>
+              <h2 className="title-folder">{formatFolderName(folderData?.name ?? "")}</h2>
+              <div className="quant-content">
+                <h2 className="title-quantContent">Tamanho:</h2>
+                <h2 className="number-quantContent">{contents.length} conteúdos</h2>
               </div>
-              <div className="time-videos">
-                <h2 className="title-duratVideos">Duração: </h2>
-                <h2 className="number-duratVideos">{calculateTotalHours()} hora(s)</h2>
+              <div className="time-content">
+                <h2 className="title-duratContent">Duração: </h2>
+                <h2 className="number-duratContent">{calculateTotalHours()} hora(s)</h2>
                 <InfoButton/>
               </div>
             </div>
         </div>
-        <div id="conteudo-playlist">
-          <h1 id="subtitle-playlist">Videos da Playlist:</h1>
+        <div id="conteudo-folder">
+          <h1 id="subtitle-folder">Conteúdos da Pasta:</h1>
           <div className="content-list-all">
             {
-            videos.length === 0 ? <p className="empty">Nenhum vídeo nessa playlist</p> :
+            contents.length === 0 ? <p className="empty">Nenhum conteúdo nessa pasta</p> :
 
-            videos.map((video) => (
-              <div key={video.id} className="content-item">
+            contents.map((content) => (
+              <div key={content.id} className="content-item">
                 <div className="content-thumbnail">
-                  <Link to={`/capacitacao/play/${video.id}`}>
+                  <Link to={`/capacitacao/play/${content.id}`}>
                     <img
                       className="content-image"
-                      src={video.url}
-                      alt="Thumbnail do vídeo"
+                      src={content.url}
+                      alt="Thumbnail do conteúdo"
                     />
                   </Link>
                 </div>
                 <div>
                   <h3 className="content-title">
-                    {video.title.length > 48
-                      ? `${video.title.substring(0, 48)}...`
-                      : video.title}
+                    {content.title.length > 48
+                      ? `${content.title.substring(0, 48)}...`
+                      : content.title}
                   </h3>
                 </div>
                 <div className="content-rating">
                 <p className="content-rating">
-                  <span className="rating-count">{video.rating.toFixed(1)}</span>
+                  <span className="rating-count">{content.rating.toFixed(1)}</span>
                   <span className="star-rating">
-                    <StarRating rating={video.rating} />
+                    <StarRating rating={content.rating} />
                   </span>
                 </p>
                 </div>
@@ -132,4 +132,4 @@ const PlaylistPage: React.FC = () => {
   );
 };
 
-export default PlaylistPage;
+export default FolderPage;

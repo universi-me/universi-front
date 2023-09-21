@@ -13,7 +13,7 @@ import { OAuth2Element }  from './oauth2-google';
 import CapacityPage from "@/pages/Capacity/Capacity";
 import CategoryPage from "@/pages/Capacity/Category";
 import VideoPage from "@/pages/Capacity/VideoPlayer";
-import PlaylistPage from "@/pages/Capacity/Playlist";
+import FolderPage from "@/pages/Capacity/Playlist";
 import ManagerCapacity from "@/pages/Capacity/ManagerCapacity";
 import SignUpPage from "@/pages/SignUp";
 import ManageProfilePage, { ManageProfileLoader } from "@/pages/ManageProfile";
@@ -44,7 +44,7 @@ export const router = createBrowserRouter([{
     },
     {
       path: "/capacitacao/playlist/:playlist",
-      element: <PlaylistPage />
+      element: <FolderPage />
     },
     {
       path: "/capacitacao/gerenciador", 

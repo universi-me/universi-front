@@ -23,7 +23,7 @@ const CapacityPage: React.FC = () => {
   return (
     <div className="capacity-tela">
       <div id="home">
-            <div id="conteudo-playlist">
+            <div id="conteudo-folder">
                 <AllCategories />
                 <AllFolders />
                 <Footer />
