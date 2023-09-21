@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
 
     async function signin(email: string, password: string) {
-        setFinishedLogin(false);
         const response = await UniversimeApi.Auth.signin({ username: email, password });
 
         if (!response.success || response.body === undefined) {
@@ -28,6 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             return null;
         }
 
+        setFinishedLogin(false);
         const logged = (await getLoggedProfile())!;
         setProfile(logged);
 
@@ -78,7 +78,12 @@ async function getLoggedProfile() {
 }
 
 function goTo(pathname: string) {
-    if (window)
+    if (!window)
+        return;
+
+    const destiny = `${window.location.origin}/${pathname}`;
+    const alreadyThere = window.location.href === destiny;
+    if (!alreadyThere)
         window.location.href = `${window.location.origin}/${pathname}`;
 }
 

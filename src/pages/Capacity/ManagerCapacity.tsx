@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Select, { MultiValue } from 'react-select';
+
 import UniversimeApi from '@/services/UniversimeApi';
 import { Playlist, Video , Category, Types} from '@/types/Capacity';
-import './ManagerCapacity.css'
 import { AuthContext } from '@/contexts/Auth';
+import * as SwalUtils from "@/utils/sweetalertUtils";
+
+import './ManagerCapacity.css'
 
 const CrudTela: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -94,10 +97,22 @@ const CrudTela: React.FC = () => {
       if (selectedVideo === null)
         throw new Error("Nenhum vídeo selecionado");
 
-      await UniversimeApi.Capacity.removeVideo({id: selectedVideo.id});
-      setShowConfirmation(false);
-      setSelectedVideo(null);
-      fetchVideos();
+      await UniversimeApi.Capacity.removeVideo({id: selectedVideo.id})
+        .then(res => {
+            if (!res.success)
+                throw new Error(res.message);
+        })
+        .catch((reason: Error) => {
+            SwalUtils.fireModal({
+                title: "Erro ao deletar vídeo",
+                text: reason.message,
+                icon: "error",
+            });
+        });
+
+        setShowConfirmation(false);
+        setSelectedVideo(null);
+        fetchVideos();
     } catch (error) {
       console.error('Erro ao deletar vídeo:', error);
     }
@@ -146,22 +161,29 @@ const CrudTela: React.FC = () => {
         removeCategoriesByIds: categoriesToRemoveIds,
         addPlaylistsByIds: playlistsToAddIds,
         removePlaylistsByIds: playlistsToRemoveIds,
+      }).then(res => {
+        if (!res.success)
+          throw new Error(res.message);
       });
 
-      setShowEditModal(false);
-      setIsEditing(false);
-      setEditedVideo(null);
-      setEditedTitle('');
-      setEditedDescription('');
-      setEditedUrl('');
-      setEditedRating(1);
-
-      cleanCategoriesAndPlaylists()
-      
       fetchVideos();
-    } catch (error) {
-      console.error('Erro ao editar vídeo:', error);
+    } catch (error: any) {
+      SwalUtils.fireModal({
+        title: "Erro ao editar vídeo",
+        text: 'message' in error ? error.message : '',
+        icon: 'error',
+      });
     }
+
+    setShowEditModal(false);
+    setIsEditing(false);
+    setEditedVideo(null);
+    setEditedTitle('');
+    setEditedDescription('');
+    setEditedUrl('');
+    setEditedRating(1);
+
+    cleanCategoriesAndPlaylists()
   };
 
   const cleanCategoriesAndPlaylists = () => {
@@ -186,20 +208,27 @@ const CrudTela: React.FC = () => {
         type: newType,
         addCategoriesByIds: categoriesToAddIds,
         addPlaylistsByIds: playlistsToAddIds,
+      }).then(res => {
+        if (!res.success)
+            throw new Error(res.message);
       });
 
-      setShowAddModal(false);
-      setNewTitle('');
-      setNewDescription('');
-      setNewUrl('');
-      setNewRating(1);
-
-      cleanCategoriesAndPlaylists()
-
-      fetchVideos();
-    } catch (error) {
-      console.error('Erro ao adicionar vídeo:', error);
+    } catch (error: any) {
+        SwalUtils.fireModal({
+            title: "Erro ao criar vídeo",
+            text: 'message' in error ? error.message : '',
+            icon: "error",
+        });
     }
+
+    setShowAddModal(false);
+    setNewTitle('');
+    setNewDescription('');
+    setNewUrl('');
+    setNewRating(1);
+
+    cleanCategoriesAndPlaylists()
+    fetchVideos();
   };
 
   const handleCreateVideo = async () => {

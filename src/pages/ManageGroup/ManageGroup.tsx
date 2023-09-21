@@ -5,6 +5,7 @@ import { useLoaderData } from "react-router-dom";
 import UniversimeApi from "@/services/UniversimeApi";
 import { GroupType, GroupTypeToLabel } from "@/types/Group";
 import { EDIT_GROUP_PARAMETER, ManageGroupLoaderResponse, formatParentGroupLabel } from "@/pages/ManageGroup";
+import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import "./ManageGroup.less"
 
@@ -162,6 +163,19 @@ function editGroup() {
         isPublic:        values.publicGroup,
         canJoin:         values.canEnter,
         imageUrl:        values.imageUrl,
+    }).then(res => {
+        if (!res.success)
+            throw new Error(res.message);
+
+        // todo: navigate to group page
+        // remove once the page navigates to the group
+        SwalUtils.fireToasty({text: "Grupo atualizado com sucesso", icon: "success"});
+    }).catch((reason: Error) => {
+        SwalUtils.fireModal({
+            title: "Erro ao atualizar grupo",
+            text: reason.message,
+            icon: "error",
+        });
     });
 }
 
@@ -180,8 +194,19 @@ function createGroup() {
         imageUrl:        values.imageUrl,
         isRootGroup:     createValues.groupRoot,
         parentGroupId:   createValues.parentGroupId,
-    })
-        .then(r => {
-            console.dir(r)
+    }).then(r => {
+        if (!r.success)
+            throw new Error(r.message);
+
+        // todo: navigate to group
+
+        // remove once the page navigates to the group
+        SwalUtils.fireToasty({text: "Grupo criado com sucesso", icon: "success"});
+    }).catch((reason: Error) => {
+        SwalUtils.fireModal({
+            title: "Erro ao criar grupo",
+            text: reason.message,
+            icon: "error",
         });
+    });
 }

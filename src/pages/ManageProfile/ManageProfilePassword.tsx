@@ -1,10 +1,11 @@
 import { useState, MouseEvent, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import UniversimeApi from "@/services/UniversimeApi";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
 import { AuthContext } from "@/contexts/Auth";
-import { useNavigate } from "react-router-dom";
+import * as SwalUtils from "@/utils/sweetalertUtils";
 
 export function ManageProfilePassword() {
     const authContext = useContext(AuthContext);
@@ -58,9 +59,9 @@ export function ManageProfilePassword() {
             </fieldset>
             <section id="password-requirements">
                 <h3>Sua nova senha precisa conter:</h3>
-                    <p className={`bi min-length ${passwordValidationClass(minimumLength(newPassword))}`}>No mínimo oito caracteres</p>
-                    <p className={`bi upper-lower-case ${passwordValidationClass(upperAndLowerCase(newPassword))}`}>Letras minúsculas e maiúsculas</p>
-                    <p className={`bi number-special-char ${passwordValidationClass(numberOrSpecialChar(newPassword))}`}>Números ou caracteres especiais</p>
+                    <p className={`bi min-length ${passwordValidationClass(isMinLength)}`}>No mínimo oito caracteres</p>
+                    <p className={`bi upper-lower-case ${passwordValidationClass(isCase)}`}>Letras minúsculas e maiúsculas</p>
+                    <p className={`bi number-special-char ${passwordValidationClass(isSpecial)}`}>Números ou caracteres especiais</p>
             </section>
         </section>
     );
@@ -70,8 +71,16 @@ export function ManageProfilePassword() {
             currentPassword: oldPassword,
             newPassword,
         }).then(res => {
-            // todo: warn on error
+            if (!res.success)
+                throw new Error(res.message);
+
             navigate(`/profile/${authContext.profile!.user.name}`);
+        }).catch((reason: Error) => {
+            SwalUtils.fireModal({
+                title: "Erro ao alterar senha",
+                text: reason.message,
+                icon: "error",
+            })
         });
     }
 }

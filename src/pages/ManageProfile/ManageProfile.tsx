@@ -6,6 +6,7 @@ import { ManageProfileLinks, ManageProfileLoaderResponse, ManageProfilePassword,
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { getProfileImageUrl } from "@/utils/profileUtils";
 import { AuthContext } from "@/contexts/Auth";
+import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import "./ManageProfile.less";
 
@@ -106,11 +107,18 @@ export function ManageProfilePage() {
             gender: gender || undefined,
             imageUrl: newImageUrl,
         }).then(async res => {
-            // todo: warn on error
-            await authContext.updateLoggedUser();
-        }).then(res => {
-            navigate(`/profile/${profile.user.name}`);
-        })
+            if (!res.success)
+                throw new Error(res.message);
+
+            const p = await authContext.updateLoggedUser();
+            navigate(`/profile/${p!.user.name}`);
+        }).catch((reason: Error) => {
+            SwalUtils.fireModal({
+                title: "Erro ao salvar alterações de perfil",
+                text: reason.message,
+                icon: 'error',
+            });
+        }) 
     }
 
     function submitLinkChanges(e: MouseEvent<HTMLButtonElement>) {
@@ -143,8 +151,33 @@ export function ManageProfilePage() {
             Promise.all(linksRemoved),
             Promise.all(linksUpdated),
         ]).then(res => {
-            // todo: add warning on error
-            navigate(`/profile/${profile.user.name}`)
+            const failedCreate = res[0].filter(i => !i.success);
+            const failedRemove = res[1].filter(i => !i.success);
+            const failedUpdate = res[2].filter(i => !i.success);
+
+            const errorBuilder: string[] = [];
+            failedCreate.forEach(c => {
+                errorBuilder.push(`Ao criar link: ${c.message}`);
+            });
+
+            failedRemove.forEach(c => {
+                errorBuilder.push(`Ao remover link: ${c.message}`);
+            });
+
+            failedUpdate.forEach(c => {
+                errorBuilder.push(`Ao atualizar link: ${c.message}`);
+            });
+
+            if (errorBuilder.length > 0)
+                throw new Error(errorBuilder.join("<br/><br/>"));
+
+            navigate(`/profile/${profile.user.name}`);
+        }).catch((reason: Error) => {
+            SwalUtils.fireModal({
+                title: "Erro ao salvar seus links",
+                html: reason.message,
+                icon: "error",
+            })
         })
     }
 }
