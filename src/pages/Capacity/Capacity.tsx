@@ -7,7 +7,7 @@ import PlaylistBarOther from './Components/PlaylistBar/PlaylistBarOther'
 import AllCategories from './Components/ButtonCategory/ButtonCategory'
 import AnimationHome from './Components/Animation/VideoHomeCapacity'
 import NavbarCategory from './Components/NavbarSide/NavbarCategory'
-import AllPlaylists from './Components/PlaylistBar/AllPlaylists';
+import AllFolders from './Components/PlaylistBar/AllPlaylists';
 import Footer from '../../components/Footer/Footer';
 
 import './Capacity.css'
@@ -25,7 +25,7 @@ const CapacityPage: React.FC = () => {
       <div id="home">
             <div id="conteudo-playlist">
                 <AllCategories />
-                <AllPlaylists />
+                <AllFolders />
                 <Footer />
             </div>
       </div>

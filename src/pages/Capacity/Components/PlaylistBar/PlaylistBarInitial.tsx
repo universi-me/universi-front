@@ -11,31 +11,31 @@ import aprendendoAlgoritmoImg from '/assets/imgs/Capacity_img/CardPlaylist/algor
 
 const PlaylistBar: React.FC = () => {
   return (
-    <div className="playlist-bar">
-      <div className="playlist-container">
-        <a href="capacitacao/playlist/jornada-java" className="playlist-card">
+    <div className="folder-bar">
+      <div className="folder-container">
+        <a href="capacitacao/playlist/jornada-java" className="folder-card">
           <img src={jornadaJavaImg} alt="Logo da playlist de capacitação" />
-          <span className="playlist-title">Jornada Java</span>
+          <span className="folder-title">Jornada Java</span>
         </a>
-        <a href="capacitacao/playlist/golang-iniciante" className="playlist-card">
+        <a href="capacitacao/playlist/golang-iniciante" className="folder-card">
           <img src={golangInicianteImg} alt="Logo da playlist de capacitação" />
-          <span className="playlist-title">Golang Iniciante</span>
+          <span className="folder-title">Golang Iniciante</span>
         </a>
-        <a href="capacitacao/playlist/comunicacao-empresa" className="playlist-card">
+        <a href="capacitacao/playlist/comunicacao-empresa" className="folder-card">
           <img src={comunicacaoEmpresaImg} alt=" Logo da playlist de capacitação" />
-          <span className="playlist-title">Comunicação: Como melhorar nas empresas?</span>
+          <span className="folder-title">Comunicação: Como melhorar nas empresas?</span>
         </a>
-        <a href="capacitacao/playlist/habitos-programadores" className="playlist-card">
+        <a href="capacitacao/playlist/habitos-programadores" className="folder-card">
           <img src={habitosProgramadorImg} alt="Logo da playlist de capacitação" />
-          <span className="playlist-title">Melhore seus hábitos como programador</span>
+          <span className="folder-title">Melhore seus hábitos como programador</span>
         </a>
-        <a href="capacitacao/playlist/springBoot-api" className="playlist-card">
+        <a href="capacitacao/playlist/springBoot-api" className="folder-card">
           <img src={springbootApiImg} alt="Logo da playlist de capacitação" />
-          <span className="playlist-title">Spring Boot - Criando API</span>
+          <span className="folder-title">Spring Boot - Criando API</span>
         </a>
-        <a href="capacitacao/playlist/algoritmos" className="playlist-card">
+        <a href="capacitacao/playlist/algoritmos" className="folder-card">
           <img src={aprendendoAlgoritmoImg} alt="Logo da playlist de capacitação" />
-          <span className="playlist-title">Algoritmos</span>
+          <span className="folder-title">Algoritmos</span>
         </a>
       </div>
     </div>
