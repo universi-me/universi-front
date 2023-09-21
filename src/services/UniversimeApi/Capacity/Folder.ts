@@ -84,14 +84,14 @@ export async function contentsInFolder(body: FolderId_RequestDTO) {
 
 export async function addContentToFolder(body: ContentAndFolder_RequestDTO) {
     return (await folderApi.post<AddContentToFolder_ResponseDTO>("/video/add", {
-        id:       body.folderId,
-        videoIds: body.contentIds,
+        id:         body.folderId,
+        contentIds: body.contentIds,
     })).data;
 }
 
 export async function removeContentFromFolder(body: ContentAndFolder_RequestDTO) {
     return (await folderApi.post<RemoveContentFromFolder_ResponseDTO>("/video/remove", {
-        id:       body.folderId,
-        videoIds: body.contentIds,
+        id:         body.folderId,
+        contentIds: body.contentIds,
     })).data;
 }

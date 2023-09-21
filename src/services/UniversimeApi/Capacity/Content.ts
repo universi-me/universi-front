@@ -55,7 +55,7 @@ export async function createContent(body: ContentCreate_RequestDTO) {
         rating:             body.rating,
         type:               body.type,
         addCategoriesByIds: body.addCategoriesByIds,
-        addPlaylistsByIds:  body.addFoldersByIds,
+        addFoldersByIds:    body.addFoldersByIds,
     })).data;
 }
 
@@ -69,8 +69,8 @@ export async function editContent(body: ContentEdit_RequestDTO) {
         rating:                body.rating,
         addCategoriesByIds:    body.addCategoriesByIds,
         removeCategoriesByIds: body.removeCategoriesByIds,
-        addPlaylistsByIds:     body.addFoldersByIds,
-        removePlaylistsByIds:  body.removeFoldersByIds,
+        addFoldersByIds:       body.addFoldersByIds,
+        removeFoldersByIds:    body.removeFoldersByIds,
     })).data;
 }
 
