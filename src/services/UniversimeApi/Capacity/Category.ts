@@ -57,7 +57,7 @@ export async function removeCategory(body: CategoryId_RequestDTO) {
 }
 
 export async function contentsInCategory(body: CategoryId_RequestDTO) {
-    return (await categoryApi.post<ListContentsInCategory_ResponseDTO>("/videos", {
+    return (await categoryApi.post<ListContentsInCategory_ResponseDTO>("/contents", {
         id: body.id,
     })).data;
 }

@@ -13,7 +13,7 @@ export type FolderList_ResponseDTO =   ApiResponse<{ folders: Folder[] }>;
 export type ContentType_ResponseDTO =  ApiResponse<{ tipos: string[] }>;
 
 export async function contentList() {
-    return (await capacityApi.get<ContentList_ResponseDTO>("/videos")).data;
+    return (await capacityApi.get<ContentList_ResponseDTO>("/contents")).data;
 }
 
 export async function categoryList() {
@@ -21,7 +21,7 @@ export async function categoryList() {
 }
 
 export async function folderList() {
-    return (await capacityApi.get<FolderList_ResponseDTO>("/playlists")).data;
+    return (await capacityApi.get<FolderList_ResponseDTO>("/folders")).data;
 }
 
 export async function typeList(){

@@ -3,7 +3,7 @@ import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
 const contentApi = axios.create({
-    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/capacity/video`,
+    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/capacity/content`,
     withCredentials: true,
 });
 

@@ -3,7 +3,7 @@ import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
 const folderApi = axios.create({
-    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/capacity/playlist`,
+    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/capacity/folder`,
     withCredentials: true,
 });
 
@@ -77,20 +77,20 @@ export async function removeFolder(body: FolderId_RequestDTO) {
 }
 
 export async function contentsInFolder(body: FolderId_RequestDTO) {
-    return (await folderApi.post<ListContentsInFolder_ResponseDTO>("/videos", {
+    return (await folderApi.post<ListContentsInFolder_ResponseDTO>("/contents", {
         id: body.id,
     })).data;
 }
 
 export async function addContentToFolder(body: ContentAndFolder_RequestDTO) {
-    return (await folderApi.post<AddContentToFolder_ResponseDTO>("/video/add", {
+    return (await folderApi.post<AddContentToFolder_ResponseDTO>("/content/add", {
         id:         body.folderId,
         contentIds: body.contentIds,
     })).data;
 }
 
 export async function removeContentFromFolder(body: ContentAndFolder_RequestDTO) {
-    return (await folderApi.post<RemoveContentFromFolder_ResponseDTO>("/video/remove", {
+    return (await folderApi.post<RemoveContentFromFolder_ResponseDTO>("/content/remove", {
         id:         body.folderId,
         contentIds: body.contentIds,
     })).data;
