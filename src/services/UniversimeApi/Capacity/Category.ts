@@ -1,4 +1,4 @@
-import type { Category, Content } from "@/types/Capacity";
+import type { Category, Content, Folder } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
@@ -26,7 +26,8 @@ export type CategoryGet_ResponseDTO =            ApiResponse<{ category: Categor
 export type CategoryCreate_ResponseDTO =         ApiResponse;
 export type CategoryEdit_ResponseDTO =           ApiResponse;
 export type CategoryRemove_ResponseDTO =         ApiResponse;
-export type ListContentsInCategory_ResponseDTO = ApiResponse<{ videos: Content[] }>;
+export type ListContentsInCategory_ResponseDTO = ApiResponse<{ contents: Content[] }>;
+export type ListFoldersInCategory_ResponseDTO  = ApiResponse<{ folders: Folder[] }>;
 
 export async function getCategory(body: CategoryId_RequestDTO) {
     return (await categoryApi.post<CategoryGet_ResponseDTO>("/get", {
@@ -56,7 +57,13 @@ export async function removeCategory(body: CategoryId_RequestDTO) {
 }
 
 export async function contentsInCategory(body: CategoryId_RequestDTO) {
-    return (await categoryApi.post<ListContentsInCategory_ResponseDTO>("/videos", {
+    return (await categoryApi.post<ListContentsInCategory_ResponseDTO>("/contents", {
+        id: body.id,
+    })).data;
+}
+
+export async function foldersInCategory(body: CategoryId_RequestDTO) {
+    return (await categoryApi.post<ListFoldersInCategory_ResponseDTO>("/folders", {
         id: body.id,
     })).data;
 }

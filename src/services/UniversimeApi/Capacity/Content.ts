@@ -3,7 +3,7 @@ import type { ApiResponse } from "@/types/UniversimeApi";
 import axios from "axios";
 
 const contentApi = axios.create({
-    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/capacity/video`,
+    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/capacity/content`,
     withCredentials: true,
 });
 
@@ -35,7 +35,7 @@ export type ContentEdit_RequestDTO = {
     image?:                 string;
 };
 
-export type ContentGet_ResponseDTO =    ApiResponse<{video: Content}>;
+export type ContentGet_ResponseDTO =    ApiResponse<{content: Content}>;
 export type ContentCreate_ResponseDTO = ApiResponse;
 export type ContentEdit_ResponseDTO =   ApiResponse;
 export type ContentRemove_ResponseDTO = ApiResponse;
@@ -55,7 +55,7 @@ export async function createContent(body: ContentCreate_RequestDTO) {
         rating:             body.rating,
         type:               body.type,
         addCategoriesByIds: body.addCategoriesByIds,
-        addPlaylistsByIds:  body.addFoldersByIds,
+        addFoldersByIds:    body.addFoldersByIds,
     })).data;
 }
 
@@ -69,8 +69,8 @@ export async function editContent(body: ContentEdit_RequestDTO) {
         rating:                body.rating,
         addCategoriesByIds:    body.addCategoriesByIds,
         removeCategoriesByIds: body.removeCategoriesByIds,
-        addPlaylistsByIds:     body.addFoldersByIds,
-        removePlaylistsByIds:  body.removeFoldersByIds,
+        addFoldersByIds:       body.addFoldersByIds,
+        removeFoldersByIds:    body.removeFoldersByIds,
     })).data;
 }
 
