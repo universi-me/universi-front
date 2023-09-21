@@ -22,11 +22,11 @@ export type CategoryEdit_RequestDTO = {
     image?: string;
 };
 
-export type CategoryGet_ResponseDTO =          ApiResponse<{ category: Category }>;
-export type CategoryCreate_ResponseDTO =       ApiResponse;
-export type CategoryEdit_ResponseDTO =         ApiResponse;
-export type CategoryRemove_ResponseDTO =       ApiResponse;
-export type ListVideosInCategory_ResponseDTO = ApiResponse<{ videos: Content[] }>;
+export type CategoryGet_ResponseDTO =            ApiResponse<{ category: Category }>;
+export type CategoryCreate_ResponseDTO =         ApiResponse;
+export type CategoryEdit_ResponseDTO =           ApiResponse;
+export type CategoryRemove_ResponseDTO =         ApiResponse;
+export type ListContentsInCategory_ResponseDTO = ApiResponse<{ videos: Content[] }>;
 
 export async function getCategory(body: CategoryId_RequestDTO) {
     return (await categoryApi.post<CategoryGet_ResponseDTO>("/get", {
@@ -55,8 +55,8 @@ export async function removeCategory(body: CategoryId_RequestDTO) {
     })).data;
 }
 
-export async function videosInCategory(body: CategoryId_RequestDTO) {
-    return (await categoryApi.post<ListVideosInCategory_ResponseDTO>("/videos", {
+export async function contentsInCategory(body: CategoryId_RequestDTO) {
+    return (await categoryApi.post<ListContentsInCategory_ResponseDTO>("/videos", {
         id: body.id,
     })).data;
 }

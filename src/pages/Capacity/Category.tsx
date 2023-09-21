@@ -20,7 +20,7 @@ const CategoryPage: React.FC = () => {
         if (categoryId === undefined)
           throw new Error("Categoria não informada");
 
-        const response = await UniversimeApi.Capacity.videosInCategory({id: categoryId});
+        const response = await UniversimeApi.Capacity.contentsInCategory({id: categoryId});
         setVideos(response.body?.videos ?? []);
         if (!response.body?.videos.length) {
           setHasError(true);
