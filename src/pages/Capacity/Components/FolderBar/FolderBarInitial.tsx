@@ -1,6 +1,6 @@
 // PlaylistBar.tsx
 import React from 'react';
-import './PlaylistBar.css'
+import './FolderBar.css'
 import jornadaJavaImg from '/assets/imgs/Capacity_img/CardPlaylist/jornada_java.png';
 import golangInicianteImg from '/assets/imgs/Capacity_img/CardPlaylist/golang_iniciante.png';
 import comunicacaoEmpresaImg from '/assets/imgs/Capacity_img/CardPlaylist/comunicacao_empresa.png';

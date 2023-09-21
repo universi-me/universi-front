@@ -1,6 +1,6 @@
 // PlaylistBar.tsx
 import React from 'react';
-import './PlaylistBar.css'
+import './FolderBar.css'
 import jornadaJavaImg from '/assets/imgs/Capacity_img/CardPlaylist/jornada_java.png';
 import javaPraticaImg from '/assets/imgs/Capacity_img/CardPlaylist/java_pratica.png';
 import springbootInicianteImg from '/assets/imgs/Capacity_img/CardPlaylist/springBoot_iniciante.png';

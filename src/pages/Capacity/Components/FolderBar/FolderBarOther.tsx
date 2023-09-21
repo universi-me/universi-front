@@ -1,6 +1,6 @@
 // PlaylistBar.tsx
 import React from 'react';
-import './PlaylistBar.css'
+import './FolderBar.css'
 import conceitoBancodeDadosImg from '/assets/imgs/Capacity_img/CardPlaylist/banco_de_dados.png';
 import habitosProgramadorImg from '/assets/imgs/Capacity_img/CardPlaylist/habitos_programador.png';
 import comunicacaoEmpresaImg from '/assets/imgs/Capacity_img/CardPlaylist/comunicacao_empresa.png';

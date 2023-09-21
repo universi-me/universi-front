@@ -3,7 +3,7 @@ import { Folder } from "@/types/Capacity";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import "./PlaylistBar.css";
+import "./FolderBar.css";
 
 export default function AllFolders() {
     const [availableFolders, setAvailableFolders] = useState<Folder[]>([]);
