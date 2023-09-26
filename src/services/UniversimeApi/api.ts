@@ -40,7 +40,7 @@ export const showAlertForResponseData = (response: ApiResponse<any>, isModalAsDe
             alertOptions[key] = alertOptionsToOverride[key]
         ));
 
-        const alertTypeModal = response.alertType ?? isModalAsDefault;
+        const alertTypeModal = alertOptions.modalAlert ?? isModalAsDefault;
         if(alertTypeModal) {
             SwalUtils.fireModal(alertOptions);
         } else {
