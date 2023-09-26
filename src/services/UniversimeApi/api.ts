@@ -9,21 +9,43 @@ export const api = axios.create({
 
 api.interceptors.response.use(function (response) {
     if(response.data && response.data.message) {
-        SwalUtils.fireToasty({
-            text: response.data.message,
-            icon: 'success',
-            timer: 3000,
-            timerProgressBar: true,
-        });
+        showAlertForResponseData(response.data, false, false)
     }
     return response;
 }, function (error) {
     if(error.response && error.response.data && error.response.data.message) {
-        SwalUtils.fireModal({
-            title: "Ocorreu um Erro",
-            text: error.response.data.message,
-            icon: 'error',
-        });
+        showAlertForResponseData(error.response.data, true, true)
     }
     return error.response;
 });
+
+export const showAlertForResponseData = (response: ApiResponse<any>, isModalAsDefault: boolean, isError: boolean) => {
+    if(response && response.message) {
+        const alertOptions : any = {
+            text: response.message,
+        };
+
+        if(isError) {
+            alertOptions.title = 'Ocorreu um Erro';
+            alertOptions.icon = 'error';
+        } else {
+            alertOptions.icon = 'success';
+            alertOptions.timer = 3000;
+            alertOptions.timerProgressBar = true;
+        }
+        
+        // control of alerts from API
+        const alertOptionsToOverride = response.alertOptions ?? {};
+        Object.keys(alertOptionsToOverride).map((key : any) => (
+            alertOptions[key] = alertOptionsToOverride[key]
+        ));
+
+        const alertTypeModal = response.alertType ?? isModalAsDefault;
+        if(alertTypeModal) {
+            SwalUtils.fireModal(alertOptions);
+        } else {
+            SwalUtils.fireToasty(alertOptions);
+        }
+    }
+}
+

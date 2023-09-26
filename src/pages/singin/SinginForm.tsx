@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import { oauthSignIn } from "@/services/oauth2-google";
 import { IMG_DCX_LOGO } from "@/utils/assets";
-import * as SwalUtils from "@/utils/sweetalertUtils"
 
 import "./signinForm.css";
 
