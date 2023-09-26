@@ -1,11 +1,6 @@
 import type { Content } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
-import axios from "axios";
-
-const contentApi = axios.create({
-    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/capacity/content`,
-    withCredentials: true,
-});
+import { api } from "../api";
 
 export type ContentId_RequestDTO = {
     id: string;
@@ -41,13 +36,13 @@ export type ContentEdit_ResponseDTO =   ApiResponse;
 export type ContentRemove_ResponseDTO = ApiResponse;
 
 export async function getContent(body: ContentId_RequestDTO) {
-    return (await contentApi.post<ContentGet_ResponseDTO>("/get", {
+    return (await api.post<ContentGet_ResponseDTO>("/capacity/content/get", {
         id: body.id,
     })).data;
 }
 
 export async function createContent(body: ContentCreate_RequestDTO) {
-    return (await contentApi.post<ContentCreate_ResponseDTO>("/create", {
+    return (await api.post<ContentCreate_ResponseDTO>("/capacity/content/create", {
         url:                body.url,
         title:              body.title,
         image:              body.image,
@@ -60,7 +55,7 @@ export async function createContent(body: ContentCreate_RequestDTO) {
 }
 
 export async function editContent(body: ContentEdit_RequestDTO) {
-    return (await contentApi.post<ContentEdit_ResponseDTO>("/edit", {
+    return (await api.post<ContentEdit_ResponseDTO>("/capacity/content/edit", {
         id:                    body.id,
         url:                   body.url,
         title:                 body.title,
@@ -75,7 +70,7 @@ export async function editContent(body: ContentEdit_RequestDTO) {
 }
 
 export async function removeContent(body: ContentId_RequestDTO) {
-    return (await contentApi.post<ContentRemove_ResponseDTO>("/delete", {
+    return (await api.post<ContentRemove_ResponseDTO>("/capacity/content/delete", {
         id: body.id,
     })).data;
 }

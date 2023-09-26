@@ -1,11 +1,5 @@
-import axios from "axios";
-
 import { ApiResponse } from "@/types/UniversimeApi";
-
-const userApi = axios.create({
-    baseURL: import.meta.env.VITE_UNIVERSIME_API,
-    withCredentials: true,
-});
+import { api } from "./api";
 
 export type UserSignUp_RequestDTO = {
     username: string;
@@ -22,7 +16,7 @@ export type UserSignUp_ResponseDTO = ApiResponse;
 export type UserEdit_ResponseDTO =   ApiResponse;
 
 export async function signUp(body: UserSignUp_RequestDTO) {
-    return (await userApi.post<UserSignUp_ResponseDTO>("/signup", {
+    return (await api.post<UserSignUp_ResponseDTO>("/signup", {
         username: body.username,
         email:    body.email,
         password: body.password,
@@ -30,7 +24,7 @@ export async function signUp(body: UserSignUp_RequestDTO) {
 }
 
 export async function edit(body: UserEdit_RequestDTO) {
-    return (await userApi.post<UserEdit_ResponseDTO>("/account/edit", {
+    return (await api.post<UserEdit_ResponseDTO>("/account/edit", {
         password: body.currentPassword,
         newPassword: body.newPassword,
     })).data;

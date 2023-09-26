@@ -4,12 +4,7 @@ import type { Link } from "@/types/Link";
 import type { Profile } from "@/types/Profile";
 import type { Recommendation } from "@/types/Recommendation";
 import type { ApiResponse } from "@/types/UniversimeApi";
-import axios from "axios";
-
-const profileApi = axios.create({
-    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/profile`,
-    withCredentials: true,
-});
+import { api } from "./api";
 
 export type ProfileEdit_RequestDTO = {
     profileId: string;
@@ -36,43 +31,43 @@ export type ProfileRecommendations_ResponseDTO = ApiResponse<{
 }>;
 
 export async function profile() {
-    return (await profileApi.get<ProfileGet_ResponseDTO>('', {})).data
+    return (await api.get<ProfileGet_ResponseDTO>('/profile', {})).data
 }
 
 export async function get(body: ProfileIdAndUsername_RequestDTO) {
-    return (await profileApi.post<ProfileGet_ResponseDTO>('/get', {
+    return (await api.post<ProfileGet_ResponseDTO>('/profile/get', {
         profileId: body.profileId,
         username:  body.username,
     })).data
 }
 
 export async function edit(body: ProfileEdit_RequestDTO) {
-    return (await profileApi.post<ProfileEdit_ResponseDTO>('/edit', body)).data
+    return (await api.post<ProfileEdit_ResponseDTO>('/profile/edit', body)).data
 }
 
 export async function groups(body: ProfileIdAndUsername_RequestDTO) {
-    return (await profileApi.post<ProfileGroups_ResponseDTO>('/groups', {
+    return (await api.post<ProfileGroups_ResponseDTO>('/profile/groups', {
         profileId: body.profileId,
         username:  body.username,
     })).data
 }
 
 export async function competences(body: ProfileIdAndUsername_RequestDTO) {
-    return (await profileApi.post<ProfileCompetences_ResponseDTO>('/competences', {
+    return (await api.post<ProfileCompetences_ResponseDTO>('/profile/competences', {
         profileId: body.profileId,
         username:  body.username,
     })).data
 }
 
 export async function links(body: ProfileIdAndUsername_RequestDTO) {
-    return (await profileApi.post<ProfileLinks_ResponseDTO>('/links', {
+    return (await api.post<ProfileLinks_ResponseDTO>('/profile/links', {
         profileId: body.profileId,
         username:  body.username,
     })).data
 }
 
 export async function recommendations(body: ProfileIdAndUsername_RequestDTO) {
-    return (await profileApi.post<ProfileRecommendations_ResponseDTO>('/recomendations', {
+    return (await api.post<ProfileRecommendations_ResponseDTO>('/profile/recomendations', {
         profileId: body.profileId,
         username:  body.username,
     })).data

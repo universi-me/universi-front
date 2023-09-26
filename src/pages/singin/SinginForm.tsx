@@ -22,15 +22,6 @@ export default function SinginForm() {
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     const logged = await auth.signin(email, password);
-
-    if (logged === null) {
-        SwalUtils.fireToasty({
-            text: "Credenciais inválidas",
-            icon: 'error',
-            timer: 3000,
-            timerProgressBar: true,
-        });
-    }
   };
 
   const isButtonDisable = email.length && password.length > 0 ? false : true;

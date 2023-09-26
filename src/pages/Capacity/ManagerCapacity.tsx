@@ -98,17 +98,6 @@ const CrudTela: React.FC = () => {
         throw new Error("Nenhum conteúdo selecionado");
 
       await UniversimeApi.Capacity.removeContent({id: selectedContent.id})
-        .then(res => {
-            if (!res.success)
-                throw new Error(res.message);
-        })
-        .catch((reason: Error) => {
-            SwalUtils.fireModal({
-                title: "Erro ao deletar conteúdo",
-                text: reason.message,
-                icon: "error",
-            });
-        });
 
         setShowConfirmation(false);
         setSelectedContent(null);
@@ -161,10 +150,7 @@ const CrudTela: React.FC = () => {
         removeCategoriesByIds: categoriesToRemoveIds,
         addFoldersByIds: foldersToAddIds,
         removeFoldersByIds: foldersToRemoveIds,
-      }).then(res => {
-        if (!res.success)
-          throw new Error(res.message);
-      });
+      })
 
       fetchContents();
     } catch (error: any) {
@@ -208,10 +194,7 @@ const CrudTela: React.FC = () => {
         type: newType,
         addCategoriesByIds: categoriesToAddIds,
         addFoldersByIds: foldersToAddIds,
-      }).then(res => {
-        if (!res.success)
-            throw new Error(res.message);
-      });
+      })
 
     } catch (error: any) {
         SwalUtils.fireModal({
