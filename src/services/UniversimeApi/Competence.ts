@@ -1,11 +1,6 @@
 import type { Competence } from "@/types/Competence";
 import type { ApiResponse } from "@/types/UniversimeApi";
-import axios from "axios";
-
-const competenceApi = axios.create({
-    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/competencia`,
-    withCredentials: true,
-});
+import { api } from "./api";
 
 export type CompetenceCreate_RequestDTO = {
     competenceTypeId: string;
@@ -31,13 +26,13 @@ export type CompetenceRemove_ResponseDTO = ApiResponse;
 export type CompetenceList_ResponseDTO =   ApiResponse<{ lista: Competence[] }>;
 
 export async function get(body: CompetenceId_RequestDTO) {
-    return (await competenceApi.post<CompetenceGet_ResponseDTO>("/obter", {
+    return (await api.post<CompetenceGet_ResponseDTO>("/competencia/obter", {
         competenciaId: body.competenceId,
     })).data;
 }
 
 export async function create(body: CompetenceCreate_RequestDTO) {
-    return (await competenceApi.post<CompetenceCreate_ResponseDTO>("/criar", {
+    return (await api.post<CompetenceCreate_ResponseDTO>("/competencia/criar", {
         competenciatipoId: body.competenceTypeId,
         descricao:         body.description,
         nivel:             body.level,
@@ -45,7 +40,7 @@ export async function create(body: CompetenceCreate_RequestDTO) {
 }
 
 export async function update(body: CompetenceUpdate_RequestDTO) {
-    return (await competenceApi.post<CompetenceUpdate_ResponseDTO>("/atualizar", {
+    return (await api.post<CompetenceUpdate_ResponseDTO>("/competencia/atualizar", {
         competenciaId:     body.competenceId,
         competenciaTipoId: body.competenceTypeId,
         descricao:         body.description,
@@ -54,11 +49,11 @@ export async function update(body: CompetenceUpdate_RequestDTO) {
 }
 
 export async function remove(body: CompetenceId_RequestDTO) {
-    return (await competenceApi.post<CompetenceRemove_ResponseDTO>("/remover", {
+    return (await api.post<CompetenceRemove_ResponseDTO>("/competencia/remover", {
         competenciaId: body.competenceId,
     })).data;
 }
 
 export async function list() {
-    return (await competenceApi.post<CompetenceList_ResponseDTO>('/listar', {})).data
+    return (await api.post<CompetenceList_ResponseDTO>('/competencia/listar', {})).data
 }

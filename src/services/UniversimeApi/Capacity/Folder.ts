@@ -1,11 +1,6 @@
 import type { Folder, Content } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
-import axios from "axios";
-
-const folderApi = axios.create({
-    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/capacity/folder`,
-    withCredentials: true,
-});
+import { api } from "../api";
 
 export type FolderId_RequestDTO = {
     id: string;
@@ -43,13 +38,13 @@ export type AddContentToFolder_ResponseDTO =      ApiResponse;
 export type RemoveContentFromFolder_ResponseDTO = ApiResponse;
 
 export async function getFolder(body: FolderId_RequestDTO) {
-    return (await folderApi.post<FolderGet_ResponseDTO>("/get", {
+    return (await api.post<FolderGet_ResponseDTO>("/capacity/folder/get", {
         id: body.id,
     })).data;
 }
 
 export async function createFolder(body: FolderCreate_RequestDTO) {
-    return (await folderApi.post<FolderCreate_ResponseDTO>("/create", {
+    return (await api.post<FolderCreate_ResponseDTO>("/capacity/folder/create", {
         name:               body.name,
         image:              body.image,
         description:        body.description,
@@ -59,7 +54,7 @@ export async function createFolder(body: FolderCreate_RequestDTO) {
 }
 
 export async function editFolder(body: FolderEdit_RequestDTO) {
-    return (await folderApi.post<FolderEdit_ResponseDTO>("/edit", {
+    return (await api.post<FolderEdit_ResponseDTO>("/capacity/folder/edit", {
         id:                    body.id,
         name:                  body.name,
         image:                 body.image,
@@ -71,26 +66,26 @@ export async function editFolder(body: FolderEdit_RequestDTO) {
 }
 
 export async function removeFolder(body: FolderId_RequestDTO) {
-    return (await folderApi.post<FolderRemove_ResponseDTO>("/delete", {
+    return (await api.post<FolderRemove_ResponseDTO>("/capacity/folder/delete", {
         id: body.id,
     })).data;
 }
 
 export async function contentsInFolder(body: FolderId_RequestDTO) {
-    return (await folderApi.post<ListContentsInFolder_ResponseDTO>("/contents", {
+    return (await api.post<ListContentsInFolder_ResponseDTO>("/capacity/folder/contents", {
         id: body.id,
     })).data;
 }
 
 export async function addContentToFolder(body: ContentAndFolder_RequestDTO) {
-    return (await folderApi.post<AddContentToFolder_ResponseDTO>("/content/add", {
+    return (await api.post<AddContentToFolder_ResponseDTO>("/capacity/folder/content/add", {
         id:         body.folderId,
         contentIds: body.contentIds,
     })).data;
 }
 
 export async function removeContentFromFolder(body: ContentAndFolder_RequestDTO) {
-    return (await folderApi.post<RemoveContentFromFolder_ResponseDTO>("/content/remove", {
+    return (await api.post<RemoveContentFromFolder_ResponseDTO>("/capacity/folder/content/remove", {
         id:         body.folderId,
         contentIds: body.contentIds,
     })).data;

@@ -1,12 +1,7 @@
 import type { Group, GroupType } from "@/types/Group";
 import type { Profile } from "@/types/Profile";
 import type { ApiResponse } from "@/types/UniversimeApi";
-import axios from "axios";
-
-const groupApi = axios.create({
-    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/group`,
-    withCredentials: true,
-});
+import { api } from "./api";
 
 export type GroupId_RequestDTO = {
     groupId: string;
@@ -53,14 +48,14 @@ export type GroupJoin_ResponseDTO =             ApiResponse;
 export type GroupExit_ResponseDTO =             ApiResponse;
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
-    return (await groupApi.post<GroupGet_ResponseDTO>('/get', {
+    return (await api.post<GroupGet_ResponseDTO>('/group/get', {
         groupId:   body.groupId,
         groupPath: body.groupPath,
     })).data;
 }
 
 export async function create(body: GroupCreate_RequestDTO) {
-    return (await groupApi.post<GroupCreate_ResponseDTO>("/create", {
+    return (await api.post<GroupCreate_ResponseDTO>("/group/create", {
         groupRoot:      body.isRootGroup,
         groupId:        body.parentGroupId,
         nickname:       body.nickname,
@@ -75,7 +70,7 @@ export async function create(body: GroupCreate_RequestDTO) {
 }
 
 export async function update(body: GroupUpdate_RequestDTO) {
-    return (await groupApi.post<GroupUpdate_ResponseDTO>("/update", {
+    return (await api.post<GroupUpdate_ResponseDTO>("/group/update", {
         groupId:        body.groupId,
         groupPath:      body.groupPath,
         name:           body.name,
@@ -89,29 +84,29 @@ export async function update(body: GroupUpdate_RequestDTO) {
 }
 
 export async function availableParents() {
-    return (await groupApi.post<GroupAvailableParents_ResponseDTO>("/parents", {})).data;
+    return (await api.post<GroupAvailableParents_ResponseDTO>("/group/parents", {})).data;
 }
 
 export async function subgroups(body: GroupId_RequestDTO) {
-    return (await groupApi.post<GroupSubgroups_ResponseDTO>('/list', {
+    return (await api.post<GroupSubgroups_ResponseDTO>('/group/list', {
         groupId: body.groupId,
     })).data;
 }
 
 export async function participants(body: GroupId_RequestDTO) {
-    return (await groupApi.post<GroupParticipants_ResponseDTO>('/participant/list', {
+    return (await api.post<GroupParticipants_ResponseDTO>('/group/participant/list', {
         groupId: body.groupId,
     })).data;
 }
 
 export async function join(body: GroupId_RequestDTO) {
-    return (await groupApi.post<GroupJoin_ResponseDTO>('/participant/enter', {
+    return (await api.post<GroupJoin_ResponseDTO>('/group/participant/enter', {
         groupId: body.groupId,
     })).data;
 }
 
 export async function exit(body: GroupId_RequestDTO) {
-    return (await groupApi.post<GroupExit_ResponseDTO>('/participant/exit', {
+    return (await api.post<GroupExit_ResponseDTO>('/group/participant/exit', {
         groupId: body.groupId,
     })).data;
 }

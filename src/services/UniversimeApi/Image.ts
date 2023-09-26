@@ -1,10 +1,5 @@
-import axios from "axios";
 import { ApiResponse } from "@/types/UniversimeApi";
-
-const imageApi = axios.create({
-    baseURL: import.meta.env.VITE_UNIVERSIME_API,
-    withCredentials: true,
-});
+import { api } from "./api";
 
 export type ImageUpload_RequestDTO = {
     image: File;
@@ -16,5 +11,5 @@ export async function upload(body: ImageUpload_RequestDTO) {
     const formData = new FormData();
     formData.append("imagem", body.image);
 
-    return (await imageApi.post<ImageUpload_ResponseDTO>("/imagem/upload", formData)).data;
+    return (await api.post<ImageUpload_ResponseDTO>("/imagem/upload", formData)).data;
 }

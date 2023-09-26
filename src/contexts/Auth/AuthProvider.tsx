@@ -74,6 +74,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 };
 
 async function getLoggedProfile() {
+    if(!await UniversimeApi.Auth.validateToken()) {
+        return null;
+    }
     return (await UniversimeApi.Profile.profile()).body?.profile ?? null;
 }
 

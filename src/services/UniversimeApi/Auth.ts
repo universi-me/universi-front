@@ -1,11 +1,6 @@
 import type { ApiResponse } from "@/types/UniversimeApi";
 import type { User } from "@/types/User";
-import axios from "axios";
-
-const api = axios.create({
-    baseURL: import.meta.env.VITE_UNIVERSIME_API,
-    withCredentials: true,
-});
+import { api } from "./api";
 
 export type SignIn_RequestDTO = {
     username: string;

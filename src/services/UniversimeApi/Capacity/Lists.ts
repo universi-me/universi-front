@@ -1,11 +1,6 @@
 import type { Category, Folder, Content } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
-import axios from "axios";
-
-const capacityApi = axios.create({
-    baseURL: `${import.meta.env.VITE_UNIVERSIME_API}/capacity`,
-    withCredentials: true,
-});
+import { api } from "../api";
 
 export type ContentList_ResponseDTO =  ApiResponse<{ contents: Content[] }>;
 export type CategoryList_ResponseDTO = ApiResponse<{ categories: Category[] }>;
@@ -13,17 +8,17 @@ export type FolderList_ResponseDTO =   ApiResponse<{ folders: Folder[] }>;
 export type ContentType_ResponseDTO =  ApiResponse<{ tipos: string[] }>;
 
 export async function contentList() {
-    return (await capacityApi.get<ContentList_ResponseDTO>("/contents")).data;
+    return (await api.get<ContentList_ResponseDTO>("/capacity/contents")).data;
 }
 
 export async function categoryList() {
-    return (await capacityApi.get<CategoryList_ResponseDTO>("/categories")).data;
+    return (await api.get<CategoryList_ResponseDTO>("/capacity/categories")).data;
 }
 
 export async function folderList() {
-    return (await capacityApi.get<FolderList_ResponseDTO>("/folders")).data;
+    return (await api.get<FolderList_ResponseDTO>("/capacity/folders")).data;
 }
 
 export async function typeList(){
-    return (await capacityApi.get<ContentType_ResponseDTO>("/contentTypes")).data
+    return (await api.get<ContentType_ResponseDTO>("/capacity/contentTypes")).data
 }

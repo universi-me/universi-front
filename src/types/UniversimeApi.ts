@@ -4,4 +4,5 @@ export type ApiResponse<ResponseBody = undefined> = {
     redirectTo?: string;
     token?:      string;
     body?:       ResponseBody;
+    alertOptions?: any;
 };

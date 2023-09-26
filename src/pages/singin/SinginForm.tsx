@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import { oauthSignIn } from "@/services/oauth2-google";
 import { IMG_DCX_LOGO } from "@/utils/assets";
-import * as SwalUtils from "@/utils/sweetalertUtils"
 
 import "./signinForm.css";
 
@@ -22,15 +21,6 @@ export default function SinginForm() {
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     const logged = await auth.signin(email, password);
-
-    if (logged === null) {
-        SwalUtils.fireToasty({
-            text: "Credenciais inválidas",
-            icon: 'error',
-            timer: 3000,
-            timerProgressBar: true,
-        });
-    }
   };
 
   const isButtonDisable = email.length && password.length > 0 ? false : true;

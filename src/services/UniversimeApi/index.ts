@@ -1,3 +1,4 @@
+import * as api from "./api";
 import * as Auth from "./Auth";
 import * as Competence from "./Competence";
 import * as CompetenceType from "./CompetenceType";
@@ -9,6 +10,7 @@ import * as User from "./User"
 import * as Image from "./Image"
 
 export const UniversimeApi = {
+    api,
     Auth,
     Capacity,
     Competence,
