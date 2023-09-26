@@ -7,7 +7,7 @@ import {
     CompetencesSettings, ProfileDiscardChanges, ProfileContext
 } from '@/pages/Profile'
 import { UniversiModal } from "@/components/UniversiModal";
-import { UniversiWarning } from "@/components/UniversiWarning";
+import * as SwalUtils from "@/utils/sweetalertUtils"
 import { AuthContext } from "@/contexts/Auth";
 import { UniversimeApi } from "@/services/UniversimeApi";
 import type { ProfileContextType } from '@/pages/Profile'
@@ -45,8 +45,13 @@ export function ProfilePage() {
     if (!profileContext)
         return null;
 
-    if (profileContext.profile.user.needProfile && profileContext.profile.user.ownerOfSession)
-        return <UniversiWarning message="Esse usuário não criou seu perfil ainda" onClickClose={() => navigate(-1)} />;
+    if (profileContext.profile.user.needProfile) {
+        SwalUtils.fireModal({
+            title: "Erro ao acessar perfil",
+            text: "Esse usuário não criou seu perfil ainda",
+        }).then(_ => navigate(-1));
+        return null;
+    }
 
     return (
         <ProfileContext.Provider value={profileContext} >
