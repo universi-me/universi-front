@@ -11,9 +11,7 @@ export function Header() {
       <Link to="/" id="header-logo">
         Universi<span className="tld">.me</span>
       </Link>
-      <Navbar />
       <div className="right-items">
-        {/* <SearchInput /> */}
         <WelcomeUser />
         <LoginButton />
       </div>
