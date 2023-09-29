@@ -4,11 +4,11 @@ import { SearchInput } from "./components/SearchInput";
 import { WelcomeUser } from "./components/WelcomeUser/WelcomeUser";
 import { LoginButton } from "./components/LoginButton/LoginButton";
 import Navbar from "./components/Navbar/Navbar";
-import "./styles.css";
+import "./styles.less";
 
 export function Header() {
   return (
-    <header className="header">
+    <header id="header">
       <Link to="/">
         <img src={IMG_UNIVERSI_LOGO} alt="Logo universi.me" />
       </Link>
