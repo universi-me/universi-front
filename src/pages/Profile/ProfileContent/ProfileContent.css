@@ -1,0 +1,22 @@
+.profile-content{
+    border-radius: 15px;
+    overflow: hidden;
+    max-width: 320px;
+    max-height: 240px;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-bottom: 3%;
+
+}
+
+.profile-content-thumbnail{
+    display: block;
+}
+
+.profile-content-title{
+    background-color: purple;
+    color: white;
+    text-align: center;
+    padding-bottom: 20px;
+    padding-top: 15px;
+}
