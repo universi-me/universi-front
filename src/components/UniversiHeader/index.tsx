@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { IMG_UNIVERSI_LOGO } from "@/utils/assets";
 import { SearchInput } from "./components/SearchInput";
 import { WelcomeUser } from "./components/WelcomeUser/WelcomeUser";
 import { LoginButton } from "./components/LoginButton/LoginButton";
@@ -9,8 +8,8 @@ import "./styles.less";
 export function Header() {
   return (
     <header id="header">
-      <Link to="/">
-        <img src={IMG_UNIVERSI_LOGO} alt="Logo universi.me" />
+      <Link to="/" id="header-logo">
+        Universi<span className="tld">.me</span>
       </Link>
       <Navbar />
       <div className="right-items">
