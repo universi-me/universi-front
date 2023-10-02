@@ -22,11 +22,11 @@ api.interceptors.response.use(function (response) {
 
 export const handleForResponseData = (response: ApiResponse<any>, isModalAsDefault: boolean, isError: boolean) => {
     // handle redirect
-    if(response && response?.redirectTo) {
-        goTo(response?.redirectTo);
+    if(response.redirectTo) {
+        goTo(response.redirectTo);
     }
     // handle alert
-    if(response && response.message) {
+    if(response.message) {
         const alertOptions : any = {
             text: response.message,
         };
