@@ -1,6 +1,7 @@
 import type { ApiResponse } from "@/types/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import axios from "axios";
+import { goTo } from "@/services/routes";
 
 export const api = axios.create({
     baseURL: import.meta.env.VITE_UNIVERSIME_API,
@@ -8,18 +9,23 @@ export const api = axios.create({
 });
 
 api.interceptors.response.use(function (response) {
-    if(response.data && response.data.message) {
-        showAlertForResponseData(response.data, false, false)
+    if(response.data) {
+        handleForResponseData(response.data, false, false)
     }
     return response;
 }, function (error) {
-    if(error.response && error.response.data && error.response.data.message) {
-        showAlertForResponseData(error.response.data, true, true)
+    if(error.response && error.response.data) {
+        handleForResponseData(error.response.data, true, true)
     }
     return error.response;
 });
 
-export const showAlertForResponseData = (response: ApiResponse<any>, isModalAsDefault: boolean, isError: boolean) => {
+export const handleForResponseData = (response: ApiResponse<any>, isModalAsDefault: boolean, isError: boolean) => {
+    // handle redirect
+    if(response && response?.redirectTo) {
+        goTo(response?.redirectTo);
+    }
+    // handle alert
     if(response && response.message) {
         const alertOptions : any = {
             text: response.message,

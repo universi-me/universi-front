@@ -29,7 +29,7 @@ export default function SinginForm() {
     setShowPassword(!showPassword);
   };
 
-  const ENABLE_GOOGLE_LOGIN = import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1";
+  const ENABLE_GOOGLE_LOGIN = true;//import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1";
 
   return (
   <>
