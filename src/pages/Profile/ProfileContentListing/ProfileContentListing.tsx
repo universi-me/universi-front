@@ -1,10 +1,10 @@
 import UniversimeApi from "@/services/UniversimeApi";
 import { Content } from "@/types/Capacity";
 import { useEffect, useState } from "react";
-import { ProfileContent } from "../ProfileContent/ProfileContent";
-import "./Contents.css"
+import { ProfileContentItem } from "../ProfileContentItem/ProfileContentItem";
+import "./ProfileContentListing.css"
 
-export function Contents({amount = -1}){
+export function ProfileContentListing({amount = -1}){
 
     const [availableContents, setAvailableContents] = useState<Content[]>([])
 
@@ -46,7 +46,7 @@ export function Contents({amount = -1}){
                     availableContents.length === 0 ? <p>Nenhum conteúdo no momento</p> :  
 
                     availableContents.map((content) =>(
-                        <ProfileContent content_={content}></ProfileContent>
+                        <ProfileContentItem content_={content}></ProfileContentItem>
                     ))
                 }
             </div>

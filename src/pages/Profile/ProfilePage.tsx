@@ -15,7 +15,7 @@ import type { ProfileContextType } from '@/pages/Profile'
 import './Profile.css'
 import './card.css'
 import './section.css'
-import { Contents } from "./ProfileContents/Contents";
+import { ProfileContentListing } from "./ProfileContentListing/ProfileContentListing";
 
 export function ProfilePage() {
     const auth = useContext(AuthContext);
@@ -76,7 +76,7 @@ export function ProfilePage() {
                 </div>
 
                 <div id="right-side">
-                    <Contents></Contents>
+                    <ProfileContentListing></ProfileContentListing>
                     <ProfileRecommendSettingsButton />
                     <ProfileCompetences
                         openCompetenceSettings={()=>{setShowCompetencesSettings(true)}}

@@ -1,8 +1,8 @@
 import { Content } from "@/types/Capacity";
 import { useEffect, useState } from "react";
-import './ProfileContent.css'
+import './ProfileContentItem.css'
 
-export function ProfileContent({content_} : {content_ : Content}){
+export function ProfileContentItem({content_} : {content_ : Content}){
 
     const [content, setContent] = useState<Content | undefined>(content_)
     useEffect(() =>{
