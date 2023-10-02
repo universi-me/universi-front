@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { Profile } from "@/types/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi";
+import { goTo } from "@/services/routes";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -78,16 +79,6 @@ async function getLoggedProfile() {
         return null;
     }
     return (await UniversimeApi.Profile.profile()).body?.profile ?? null;
-}
-
-function goTo(pathname: string) {
-    if (!window)
-        return;
-
-    const destiny = `${window.location.origin}/${pathname}`;
-    const alreadyThere = window.location.href === destiny;
-    if (!alreadyThere)
-        window.location.href = `${window.location.origin}/${pathname}`;
 }
 
 function redirectAfterSignIn(needProfile: boolean) {
