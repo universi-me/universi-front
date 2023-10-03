@@ -2,7 +2,7 @@
 @import url("src/layouts/fonts.less");
 @import url("src/layouts/transitions.less");
 
-header.header {
+#header {
 
     /* todo: Change 'color' and 'background-color' if user is logged */
     .auth-button {
@@ -17,9 +17,12 @@ header.header {
 
         text-transform: uppercase;
         text-decoration: none;
-        transition: @hover-transition-duration background-color;
+        transition: @hover-transition-duration background-color, border-color;
+        will-change: background-color, border-color;
 
         &, &.login, &.logout {
+            cursor: pointer;
+
             &:hover {
                 background-color: @button-hover-color;
                 border-color: @button-hover-color;
@@ -33,7 +36,7 @@ header.header {
         }
 
         &.logout {
-            color: @secondary-color;
+            color: @font-color-v1;
             border-color: @secondary-color;
             background: none;
         }

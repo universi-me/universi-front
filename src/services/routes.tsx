@@ -91,3 +91,13 @@ export const router = createBrowserRouter([{
   ]
 },
 ])
+
+export function goTo(pathname: string) {
+  if (!window)
+      return;
+  const pathnameWithoutSlash = pathname.startsWith('/')? pathname.substring(1) : pathname;
+  const destiny = `${window.location.origin}/${pathnameWithoutSlash}`;
+  const alreadyThere = window.location.href === destiny;
+  if (!alreadyThere)
+      router.navigate(`/${pathnameWithoutSlash}`);
+}

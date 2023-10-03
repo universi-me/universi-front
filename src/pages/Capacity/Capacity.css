@@ -4,7 +4,7 @@
     --background-tela: var(--background-color);
     --background-banner: #121416;
 
-    --color-font-titulo: var(--tertiary-color);
+    --color-font-titulo: var(--font-color-v2);
 }
 
 .capacity-tela{

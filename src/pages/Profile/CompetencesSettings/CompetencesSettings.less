@@ -87,6 +87,7 @@
 
                     cursor: pointer;
                     transition: var(--hover-transition-duration) background-color, border-color, color;
+                    will-change: background-color, border-color, color;
 
                     &:not(:last-of-type) {
                         margin-right: 1.2rem;
@@ -99,7 +100,8 @@
 
                     &:hover {
                         color: var(--font-color-v1);
-                        background-color: var(--primary-color);
+                        background-color: @wrong-invalid-color;
+                        border-color: @wrong-invalid-color;
                     }
                 }
     
@@ -108,8 +110,8 @@
                     background-color: var(--primary-color);
 
                     &:hover {
-                        border-color: @button-hover-color;
-                        background-color: @button-hover-color;
+                        border-color: @secondary-color;
+                        background-color: @secondary-color;
                     }
                 }
             }
