@@ -21,7 +21,7 @@
     font-size: 50px;
     font-weight: 600;
     text-align: 10px;
-    color: var(--tertiary-color);
+    color: var(--font-color-v2);
 }
 
 footer {
