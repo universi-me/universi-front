@@ -1,0 +1,75 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+#group-page #contents {
+    width: 100%;
+
+    .heading {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .contents-icon {
+            @side: 1.35em !important;
+            width: @side;
+            height: @side;
+            aspect-ratio: 1;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background-color: @primary-color;
+            border-radius: 50%;
+
+            color: @font-color-v1;
+            font-size: 2rem;
+
+            margin-right: .75rem;
+        }
+
+        .title {
+            font-weight: @font-weight-default;
+            font-size: 1.5rem;
+        }
+
+        .go-right {
+            margin-left: auto;
+            width: fit-content;
+
+            #filter-wrapper {
+                border-radius: .5rem;
+                border: 2px solid @primary-color;
+                outline: 0px solid @primary-color;
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                padding: .25em;
+
+                color: @primary-color;
+
+                .filter-icon {
+                    margin-left: .15em;
+                    margin-right: .5em;
+                }
+
+                #filter-contents {
+                    border: none;
+                    background-color: transparent;
+                    outline: none;
+
+                    color: @primary-color;
+                    font-weight: @font-weight-default;
+
+                    width: 25em;
+
+                    &::placeholder {
+                        color: inherit;
+                        opacity: 50%;
+                    }
+                }
+            }
+        }
+    }
+}

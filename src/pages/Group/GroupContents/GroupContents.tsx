@@ -4,6 +4,7 @@ import { setStateAsValue } from "@/utils/tsxUtils";
 import { Folder } from "@/types/Capacity";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { Link } from "react-router-dom";
+import "./GroupContents.less";
 
 export function GroupContents() {
     const groupContext = useContext(GroupContext);
@@ -18,9 +19,12 @@ export function GroupContents() {
                 <i className="bi bi-list-ul contents-icon"/>
                 <h2 className="title">Conteúdos {groupContext.group.name}</h2>
                 <div className="go-right">
-                    <input type="search" name="filter-contents" id="filter-contents"
-                        onChange={setStateAsValue(setFilterContents)}
-                    />
+                    <div id="filter-wrapper">
+                        <i className="bi bi-search filter-icon"/>
+                        <input type="search" name="filter-contents" id="filter-contents"
+                            onChange={setStateAsValue(setFilterContents)} placeholder={`Buscar em Conteúdos ${groupContext.group.name}`}
+                        />
+                    </div>
                 </div>
             </div>
 
