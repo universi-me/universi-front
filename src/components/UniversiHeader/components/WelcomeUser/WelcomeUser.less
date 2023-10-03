@@ -1,7 +1,7 @@
 @import url("src/layouts/colors.less");
 @import url("src/layouts/fonts.less");
 
-header.header {
+#header {
     .welcome-wrapper {
         margin-left: 1.5rem;
 
@@ -23,9 +23,12 @@ header.header {
             display: none;
         }
 
-        .logged-user-image {
+        img.logged-user-image {
             height: 3rem;
             width: auto;
+
+            border: 3px solid @background-color;
+            background-color: @background-color;
         }
     }
 }
