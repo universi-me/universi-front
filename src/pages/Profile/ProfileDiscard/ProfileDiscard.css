@@ -57,23 +57,23 @@
 }
 
 #discard-changes .buttons .discard-button {
-    color: var(--font-color-v1);
-    background-color: var(--primary-color);
+    color: var(--font-color-v2);
+    background-color: transparent;
+    border-color: var(--wrong-invalid-color);
 }
 
 #discard-changes .buttons .discard-button:hover {
-    background-color: var(--button-hover-color);
-    border-color: var(--button-hover-color);
+    background-color: var(--wrong-invalid-color);
+    border-color: var(--wrong-invalid-color);
 }
 
 #discard-changes .buttons .cancel-button {
-    background-color: transparent;
-    border-color: var(--secondary-color);
-    color: var(--secondary-color);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--font-color-v1);
 }
 
 #discard-changes .buttons .cancel-button:hover {
-    background-color: var(--button-hover-color);
-    border-color: var(--button-hover-color);
-    color: var(--font-color-v1);
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
 }
