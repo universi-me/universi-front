@@ -63,7 +63,6 @@ export function ProfilePage() {
                 <div id="left-side">
                     <ProfileBio onClickEdit={()=>{setShowProfileSettings(true)}} />
                     <ProfileGroups />
-                    <ProfileAchievements />
                 </div>
 
                 <div id="right-side">

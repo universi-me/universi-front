@@ -4,14 +4,25 @@ import { useEffect, useState } from "react";
 import { ProfileContentItem } from "../ProfileContentItem/ProfileContentItem";
 import "./ProfileContentListing.css"
 
-export function ProfileContentListing({amount = -1}){
+export function ProfileContentListing({amount = -1, filter = "Vídeo"} : {amount?: number, filter? : string}){
 
     const [availableContents, setAvailableContents] = useState<Content[]>([])
+    const [title, setTitle] = useState(filter)
 
     useEffect( () =>{
         UniversimeApi.Capacity.contentList()
-        .then(res => setAvailableContents(res.body.contents))
-    }, [])
+        .then(res => setAvailableContents(filterContents(res.body.contents)))
+        setTitle(filter.replace("Vídeo", "Conteúdos").replace("Documento", "Arquivos"))
+    }, [availableContents, [], filter])
+
+    function filterContents(contents : Content[]){
+        let contentsFiltered : Content[] = []
+        contents.forEach((content) => {
+          if(content.type == filter)
+            contentsFiltered.push(content)
+        })
+        return contentsFiltered
+    }
 
     useEffect(() => {
         const extractVideoId = (url: string) => {
@@ -36,12 +47,13 @@ export function ProfileContentListing({amount = -1}){
 
         if(amount != -1)
             setAvailableContents(availableContents.slice(1, amount))
+        
 
       }, [availableContents]);
 
       return(
         <div>
-            <h1 className="content-name">Meus conteúdos</h1>
+            <h1 className="content-name">Meus {title}</h1>
             <div className="contents">
                 {
                     availableContents.length === 0 ? <p>Nenhum conteúdo no momento</p> :  

@@ -34,7 +34,7 @@ function getSelectElement(selectElement : string){
     if(selectElement == "content")
         return <ProfileContentListing/>
     if(selectElement == "files")
-        return <h1>Arquivos</h1>
+        return <ProfileContentListing filter="Documento"/>
     if(selectElement == "groups")
         return <h1>Grupos</h1>
 }

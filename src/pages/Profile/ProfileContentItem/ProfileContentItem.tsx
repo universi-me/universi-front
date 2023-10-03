@@ -1,6 +1,7 @@
 import { Content } from "@/types/Capacity";
 import { useEffect, useState } from "react";
 import './ProfileContentItem.css'
+import { Link } from "react-router-dom";
 
 export function ProfileContentItem({content_} : {content_ : Content}){
 
@@ -19,7 +20,9 @@ export function ProfileContentItem({content_} : {content_ : Content}){
         <div className="profile-content">
             {content !== undefined ?
             <>
+            <Link to={`/capacitacao/play/${content.id}`}>
             <img src={content.image != null ? content.image : "a"} className="profile-content-thumbnail"/>
+            </Link>
             <p className="profile-content-title">{content.title}</p>
             </>
             :
