@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UniversimeApi } from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
-import { GroupBanner, GroupIntro, GroupAbout, GroupSubGroups, GroupMembers, GroupContext, GroupContextType } from "@/pages/Group"
+import { GroupBanner, GroupIntro, GroupAbout, GroupSubGroups, GroupMembers, GroupContext, GroupContextType, GroupContents } from "@/pages/Group"
 import "./Group.css"
 import "./card.css"
 
@@ -39,7 +39,8 @@ export function GroupPage() {
                     </div>
 
                     <div className="right-side">
-                        <GroupMembers />
+                        {/* <GroupMembers /> */}
+                        <GroupContents />
                     </div>
                 </div>
             </div>
@@ -49,9 +50,10 @@ export function GroupPage() {
 
     async function loadAccessedGroup() {
         const groupRes = await UniversimeApi.Group.get({groupPath});
-        const [subgroupsRes, participantsRes] = await Promise.all([
+        const [subgroupsRes, participantsRes, foldersRes] = await Promise.all([
             UniversimeApi.Group.subgroups({groupId: groupRes.body.group.id}),
             UniversimeApi.Group.participants({groupId: groupRes.body.group.id}),
+            UniversimeApi.Group.folders({groupId: groupRes.body.group.id}),
         ]);
 
         setGroupContext({
@@ -59,6 +61,7 @@ export function GroupPage() {
             subgroups: subgroupsRes.body.subgroups,
             participants: participantsRes.body.participants,
             isParticipant: participantsRes.body.participants.find(p => p.user.name === auth.user?.name) !== undefined,
+            folders: foldersRes.body.folders,
 
             reloadPage: loadAccessedGroup,
         });
