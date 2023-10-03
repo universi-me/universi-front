@@ -56,7 +56,7 @@ function renderContent(content: Folder) {
 
     const imageUrl = content.image?.startsWith("/")
         ? `${import.meta.env.VITE_UNIVERSIME_API}${content.image}`
-        : undefined;
+        : content.image;
 
     return (
         <div className="content-item" key={content.id}>
