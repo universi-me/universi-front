@@ -1,13 +1,12 @@
 import Swal, { SweetAlertOptions } from "sweetalert2";
-import { FONT_COLOR_V2, PRIMARY_COLOR } from "@/utils/colors";
 
 export function fireModal<T = any>(options: SweetAlertOptions) {
     return Swal.fire<T>({
         // default values. can be changed by `options`
-        confirmButtonColor: PRIMARY_COLOR,
+        confirmButtonColor: "var(--primary-color)",
         allowOutsideClick: false,
         showCloseButton: false,
-        color: FONT_COLOR_V2,
+        color: "var(--font-color-v2)",
 
         ...options,
         // fixed values. cannot be changed
@@ -18,7 +17,7 @@ export function fireModal<T = any>(options: SweetAlertOptions) {
 export function fireToasty<T = any>(options: SweetAlertOptions) {
     return Swal.fire<T>({
         // default values. can be changed by `options`
-        color: FONT_COLOR_V2,
+        color: "var(--font-color-v2)",
         showConfirmButton: false,
         showCancelButton: false,
         position: "top-right",
