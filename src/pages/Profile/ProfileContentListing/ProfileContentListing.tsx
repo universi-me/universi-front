@@ -41,7 +41,7 @@ export function ProfileContentListing({amount = -1}){
 
       return(
         <div>
-            <h1>Meus conteúdos</h1>
+            <h1 className="content-name">Meus conteúdos</h1>
             <div className="contents">
                 {
                     availableContents.length === 0 ? <p>Nenhum conteúdo no momento</p> :  

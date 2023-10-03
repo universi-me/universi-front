@@ -16,6 +16,7 @@ import './Profile.css'
 import './card.css'
 import './section.css'
 import { ProfileContentListing } from "./ProfileContentListing/ProfileContentListing";
+import { SelectionBar } from "./SelectionBar/SelectionBar";
 
 export function ProfilePage() {
     const auth = useContext(AuthContext);
@@ -66,13 +67,8 @@ export function ProfilePage() {
                 </div>
 
                 <div id="right-side">
-                    <ProfileContentListing></ProfileContentListing>
+                    <SelectionBar/>
                     <ProfileRecommendSettingsButton />
-                    <ProfileCompetences
-                        openCompetenceSettings={()=>{setShowCompetencesSettings(true)}}
-                        updateProfileContext={setProfileContext}
-                    />
-                    <ProfileLastRecommendations />
                 </div>
             </div>
 

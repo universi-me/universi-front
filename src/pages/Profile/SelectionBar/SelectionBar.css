@@ -1,0 +1,17 @@
+.selection-bar{
+    background-color: #0091b8;
+    display: flex;
+    width: 100%;
+    color: white;
+    flex-direction: row;
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+
+.select-element{
+    padding: 20px 20px;
+    border-right: solid 1px white ;
+    font-size: large;
+    font-weight: 500;
+    cursor: pointer;
+}
