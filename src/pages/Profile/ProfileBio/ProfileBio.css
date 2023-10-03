@@ -82,7 +82,11 @@
     border-top: solid #B2B2B2 2px;
 }
 
-.section {
+.intro-section {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
     padding: 0  !important;
     margin-top: -70px;
 }
@@ -92,4 +96,12 @@
     height: 100px;
     background-color: #0091b8;
     border-radius: 10px 10px 0px 0px;
+}
+
+.content-count{
+
+    border-top: solid 1px #0091b8;
+    padding: 20px 30px;
+    margin-top: 40px;
+
 }

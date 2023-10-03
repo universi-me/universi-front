@@ -39,7 +39,7 @@ export function ProfileBio(props: ProfileBioProps) {
                 }
             </div>
 
-            <div className="intro section">
+            <div className="intro intro-section">
                 <ProfileImage className="image" imageUrl={getProfileImageUrl(profileContext.profile)} noImageColor="#505050" />
                 <h2 className="card-heading name">{ `${profileContext.profile.firstname} ${profileContext.profile.lastname}` }</h2>
                 {
@@ -65,7 +65,7 @@ export function ProfileBio(props: ProfileBioProps) {
                     </div>
                 </div>
             }
-            <div className="member-since">Meus conteúdos: {contentCounter}</div>
+            <div className="content-count">Meus conteúdos: {contentCounter}</div>
         </div>
     );
 
