@@ -1,4 +1,4 @@
-import { MouseEventHandler, useContext } from 'react';
+import { MouseEventHandler, useContext, useEffect, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { getGenderName, getProfileImageUrl } from '@/utils/profileUtils';
 import { TypeLinkToBootstrapIcon } from '@/types/Link';
@@ -6,38 +6,46 @@ import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
 import { Link } from 'react-router-dom';
 import { ICON_EDIT_BLACK } from '@/utils/assets';
 import './ProfileBio.css'
+import UniversimeApi from '@/services/UniversimeApi';
 
 export type ProfileBioProps = {
     onClickEdit: MouseEventHandler;
 };
 
+
+
+
 export function ProfileBio(props: ProfileBioProps) {
     const profileContext = useContext(ProfileContext)
+    const [contentCounter, setContentCounter] = useState(10)
+
+    useEffect(() =>{
+    UniversimeApi.Capacity.contentList()
+    .then(res=>setContentCounter(res.body?.contents.length == undefined ? 0 : res.body.contents.length))
+    }, [contentCounter])
 
     return (
         profileContext === null ? null :
 
         <div className="bio card">
-            {
-                profileContext.accessingLoggedUser ?
-                    <Link className="edit-button" to="/manage-profile">
-                        <img src={ICON_EDIT_BLACK} alt="Editar" />
-                    </Link>
-                : null
-            }
+
+            <div className='profile-header'>
+                {
+                    profileContext.accessingLoggedUser ?
+                        <Link className="edit-button" to="/manage-profile">
+                            <img src={ICON_EDIT_BLACK} alt="Editar" />
+                        </Link>
+                    : null
+                }
+            </div>
 
             <div className="intro section">
                 <ProfileImage className="image" imageUrl={getProfileImageUrl(profileContext.profile)} noImageColor="#505050" />
                 <h2 className="card-heading name">{ `${profileContext.profile.firstname} ${profileContext.profile.lastname}` }</h2>
-                <div className="function-pronoun">{ getFunctionGender() }</div>
-            </div>
-
-            <div className="about-me section">
-                <h3 className="section-heading">Sobre mim</h3>
                 {
                     profileContext.profile.bio === null || profileContext.profile.bio.length === 0
-                    ? <p style={{fontStyle: 'italic'}}>Nenhuma bio</p>
-                    : <p>{ profileContext.profile.bio }</p>
+                    ? <p style={{fontStyle: 'italic', textAlign: 'center'}}>Nenhuma bio</p>
+                    : <p style={{whiteSpace: 'break-spaces', textAlign: 'center'}}>{ profileContext.profile.bio }</p>
                 }
             </div>
 
@@ -57,7 +65,7 @@ export function ProfileBio(props: ProfileBioProps) {
                     </div>
                 </div>
             }
-            <div className="member-since">{`Membro desde: ${ getMemberSince() }`}</div>
+            <div className="member-since">Meus conteúdos: {contentCounter}</div>
         </div>
     );
 

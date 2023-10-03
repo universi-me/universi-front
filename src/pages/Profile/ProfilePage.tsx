@@ -58,16 +58,6 @@ export function ProfilePage() {
         <ProfileContext.Provider value={profileContext} >
         <div id="profile-page">
             {/* todo: color from API */}
-            <div id="user-header-bar" style={{background: "#515151"}}>
-                {
-                    // profileContext?.accessingLoggedUser ?
-                    //     <button className="edit-button" >
-                    //         <img src='/assets/icons/edit-1.svg' alt="Editar" />
-                    //     </button>
-                    // : null
-                }
-            </ div>
-
             <div className="content">
                 <div id="left-side">
                     <ProfileBio onClickEdit={()=>{setShowProfileSettings(true)}} />

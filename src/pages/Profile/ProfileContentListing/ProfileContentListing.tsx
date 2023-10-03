@@ -41,12 +41,15 @@ export function ProfileContentListing({amount = -1}){
 
       return(
         <div>
+            <h1>Meus conteúdos</h1>
             <div className="contents">
                 {
                     availableContents.length === 0 ? <p>Nenhum conteúdo no momento</p> :  
 
                     availableContents.map((content) =>(
-                        <ProfileContentItem content_={content}></ProfileContentItem>
+                        <div>
+                          <ProfileContentItem content_={content}></ProfileContentItem>
+                        </div>
                     ))
                 }
             </div>

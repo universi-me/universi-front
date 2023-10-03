@@ -14,7 +14,7 @@
 }
 
 #profile-page .content {
-    margin: 0 2.5em;
+    margin: 40px 2.5em;
 
     display: grid;
     grid-template-columns: 20% auto;
@@ -22,7 +22,6 @@
 
 #profile-page #left-side {
     --section-separator: 1.5em;
-    translate: 0 calc(var(--user-header-bar-height) / -2);
 }
 
 #profile-page #right-side {
@@ -31,7 +30,6 @@
 }
 
 #profile-page .edit-button {
-    position: absolute;
     width: min-content;
     height: min-content;
 
@@ -39,6 +37,7 @@
     background: none;
 
     cursor: pointer;
+
 }
 
 #profile-page #user-header-bar .edit-button {
