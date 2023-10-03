@@ -56,3 +56,38 @@
     text-decoration: none;
     color: var(--secondary-color);
 }
+
+.groups.card{
+    background-color: transparent !important;
+    border: solid 1px #0091b8;
+}
+
+.groups-name{
+    text-align: center;
+    padding: 20px 20px;
+    background-color: #0091b8;
+    border-radius: 10px 10px 0px 0px;
+    color: white;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+.group-section{
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+.group-item img{
+    border-radius: 5px;
+    border: solid 1px #0091b8;
+    width: 60px;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    object-fit: scale-down;
+    padding: 2px;
+}
