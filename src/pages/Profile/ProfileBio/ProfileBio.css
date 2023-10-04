@@ -1,11 +1,19 @@
 #left-side .bio .edit-button {
-    right: .75em;
+    /* right: .75em; */
     top: .5em;
+    left: 90%;
+    position: relative;
+}
+
+.bio{
+    background-color: transparent !important;
+    border: solid #0091b8 1px !important;
+    border-radius: 10px !important;
 }
 
 #left-side .bio .image {
     width: 9.5em;
-    border: 5px solid #FFF;
+    border: 2px solid #FFF;
 }
 
 #left-side .bio .name {
@@ -71,4 +79,32 @@
     text-transform: uppercase;
 
     border-top: solid #B2B2B2 2px;
+}
+
+.intro-section {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    padding: 0  !important;
+    margin-top: -70px;
+}
+
+.profile-header{
+    width: 100%;
+    height: 100px;
+    background-color: var(--primary-color);
+    border-radius: 10px 10px 0px 0px;
+}
+
+.content-count{
+
+    border-top: solid 1px var(--primary-color);
+    padding: 20px 30px;
+    margin-top: 40px;
+
+}
+
+.bio.card{
+    margin-bottom: 30px !important;
 }

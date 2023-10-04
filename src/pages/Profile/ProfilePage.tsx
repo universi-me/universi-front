@@ -15,6 +15,8 @@ import type { ProfileContextType } from '@/pages/Profile'
 import './Profile.css'
 import './card.css'
 import './section.css'
+import { ProfileContentListing } from "./ProfileContentListing/ProfileContentListing";
+import { SelectionBar } from "./SelectionBar/SelectionBar";
 
 export function ProfilePage() {
     const auth = useContext(AuthContext);
@@ -57,30 +59,15 @@ export function ProfilePage() {
         <ProfileContext.Provider value={profileContext} >
         <div id="profile-page">
             {/* todo: color from API */}
-            <div id="user-header-bar" style={{background: "#515151"}}>
-                {
-                    // profileContext?.accessingLoggedUser ?
-                    //     <button className="edit-button" >
-                    //         <img src='/assets/icons/edit-1.svg' alt="Editar" />
-                    //     </button>
-                    // : null
-                }
-            </ div>
-
             <div className="content">
                 <div id="left-side">
                     <ProfileBio onClickEdit={()=>{setShowProfileSettings(true)}} />
                     <ProfileGroups />
-                    <ProfileAchievements />
                 </div>
 
                 <div id="right-side">
+                    <SelectionBar/>
                     <ProfileRecommendSettingsButton />
-                    <ProfileCompetences
-                        openCompetenceSettings={()=>{setShowCompetencesSettings(true)}}
-                        updateProfileContext={setProfileContext}
-                    />
-                    <ProfileLastRecommendations />
                 </div>
             </div>
 
