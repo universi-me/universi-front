@@ -21,7 +21,7 @@ export function ProfileContentItem({content_} : {content_ : Content}){
             {content !== undefined ?
             <>
             <Link to={`/capacitacao/play/${content.id}`}>
-            <img src={content.image != null ? content.image : "a"} className="profile-content-thumbnail"/>
+                <img src={content.image != null ? content.image : content.url} className="profile-content-thumbnail"/>
             </Link>
             <p className="profile-content-title">{content.title}</p>
             </>
