@@ -2,6 +2,7 @@ import type { Group, GroupType } from "@/types/Group";
 import type { Profile } from "@/types/Profile";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
+import { Folder } from "@/types/Capacity";
 
 export type GroupId_RequestDTO = {
     groupId: string;
@@ -46,6 +47,7 @@ export type GroupSubgroups_ResponseDTO =        ApiResponse<{ subgroups: Group[]
 export type GroupParticipants_ResponseDTO =     ApiResponse<{ participants: Profile[] }>;
 export type GroupJoin_ResponseDTO =             ApiResponse;
 export type GroupExit_ResponseDTO =             ApiResponse;
+export type GroupFolders_ResponseDTO =          ApiResponse<{ folders: Folder[] }>;
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
     return (await api.post<GroupGet_ResponseDTO>('/group/get', {
@@ -108,5 +110,12 @@ export async function join(body: GroupId_RequestDTO) {
 export async function exit(body: GroupId_RequestDTO) {
     return (await api.post<GroupExit_ResponseDTO>('/group/participant/exit', {
         groupId: body.groupId,
+    })).data;
+}
+
+export async function folders(body: GroupIdOrPath_RequestDTO) {
+    return (await api.post<GroupFolders_ResponseDTO>("/group/folders", {
+        groupId: body.groupId,
+        groupPath: body.groupPath,
     })).data;
 }
