@@ -1,18 +1,21 @@
 .profile-content{
     border-radius: 15px;
     overflow: hidden;
-    max-width: 320px;
-    max-height: 240px;
-    background-color: #914786;
+    width: 320px;
+    height: 280px;
+    background-color: var(--secondary-color);
 
 }
 
 .profile-content-thumbnail{
+    width: 320px;
+    height: 210px;
     display: block;
+    object-fit: fill;
 }
 
 .profile-content-title{
     color: white;
     text-align: center;
-    padding: 10px 0px;
+    padding: 20px 0px;
 }

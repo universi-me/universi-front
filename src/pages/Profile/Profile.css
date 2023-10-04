@@ -59,13 +59,13 @@
 
 .groups.card{
     background-color: transparent !important;
-    border: solid 1px #0091b8;
+    border: solid 1px var(--primary-color);
 }
 
 .groups-name{
     text-align: center;
     padding: 20px 20px;
-    background-color: #0091b8;
+    background-color: var(--primary-color);
     border-radius: 10px 10px 0px 0px;
     color: white;
     font-weight: 300;
@@ -81,7 +81,7 @@
 
 .group-item img{
     border-radius: 5px;
-    border: solid 1px #0091b8;
+    border: solid 1px var(--primary-color);
     width: 60px;
     aspect-ratio: 1;
     display: flex;
