@@ -1,0 +1,19 @@
+.groups-listing-container{
+    margin-top: 2%;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.group-item-listing img{
+    width: 150px;
+    aspect-ratio: 1;
+    object-fit: scale-down;
+    display: flex;
+    border: 1px solid var(--primary-color);
+    border-radius: 10px;
+}
+
+.group-name{
+    font-weight: 500;
+}

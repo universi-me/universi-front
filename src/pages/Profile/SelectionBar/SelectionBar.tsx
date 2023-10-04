@@ -3,6 +3,7 @@ import {useState} from "react"
 
 import "./SelectionBar.css"
 import { ProfileContentListing } from "../ProfileContentListing/ProfileContentListing"
+import { ProfileGroupListing } from "../ProfileGroupListing/ProfileGroupListing"
 
 export function SelectionBar(){
 
@@ -36,5 +37,5 @@ function getSelectElement(selectElement : string){
     if(selectElement == "files")
         return <ProfileContentListing filter="Documento"/>
     if(selectElement == "groups")
-        return <h1>Grupos</h1>
+        return <ProfileGroupListing/>
 }
