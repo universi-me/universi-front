@@ -98,13 +98,23 @@ const FolderPage: React.FC = () => {
             contents.map((content) => (
               <div key={content.id} className="content-item">
                 <div className="content-thumbnail">
-                  <Link to={`/capacitacao/play/${content.id}`}>
+                  { content.type == "Vídeo"?
+                    <Link to={`/capacitacao/play/${content.id}`}>
+                      <img
+                        className="content-image"
+                        src={content.url}
+                        alt="Thumbnail do conteúdo"
+                      />
+                    </Link>
+                    :
+                    <Link to={content.url}>
                     <img
                       className="content-image"
                       src={content.url}
                       alt="Thumbnail do conteúdo"
                     />
-                  </Link>
+                    </Link>
+                  }
                 </div>
                 <div>
                   <h3 className="content-title">
