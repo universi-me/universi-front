@@ -3,8 +3,8 @@ export default ProfilePage;
 
 export * from './ProfilePage'
 export * from './ProfileAchievements/ProfileAchievements'
-export * from './ProfileBio/ProfileBio'
-export * from './ProfileGroups/ProfileGroups'
+export * from '../../components/ProfileInfo/ProfileBio/ProfileBio'
+export * from '../../components/ProfileInfo/ProfileGroups/ProfileGroups'
 export * from './ProfileRecommendSettingsButton/ProfileRecommendSettingsButton'
 export * from './ProfileCompetences/ProfileCompetences'
 export * from './ProfileLastRecommendations/ProfileLastRecommendations'

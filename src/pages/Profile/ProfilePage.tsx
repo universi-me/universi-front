@@ -2,10 +2,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 
 import {
-    ProfileBio, ProfileGroups, ProfileAchievements, ProfileRecommendSettingsButton,
-    ProfileCompetences, ProfileLastRecommendations, ProfileSettings,
-    CompetencesSettings, ProfileDiscardChanges, ProfileContext
-} from '@/pages/Profile'
+    ProfileBio, ProfileGroups,  ProfileRecommendSettingsButton,
+    ProfileSettings, CompetencesSettings, ProfileDiscardChanges, ProfileContext } 
+from '@/pages/Profile'
 import { UniversiModal } from "@/components/UniversiModal";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import { AuthContext } from "@/contexts/Auth";
