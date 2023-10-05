@@ -12,7 +12,7 @@
 }
 
 #left-side .bio .image {
-    width: 9.5em;
+    width: 6em;
     border: 2px solid #FFF;
 }
 
@@ -87,7 +87,7 @@
 
     width: 100%;
     padding: 0  !important;
-    margin-top: -70px;
+    margin-top: -3em;
 }
 
 .profile-header{
