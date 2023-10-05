@@ -2,10 +2,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 
 import {
-    ProfileBio, ProfileGroups, ProfileAchievements, ProfileRecommendSettingsButton,
-    ProfileCompetences, ProfileLastRecommendations, ProfileSettings,
-    CompetencesSettings, ProfileDiscardChanges, ProfileContext
-} from '@/pages/Profile'
+    ProfileBio, ProfileGroups,  ProfileRecommendSettingsButton,
+    ProfileSettings, CompetencesSettings, ProfileDiscardChanges, ProfileContext } 
+from '@/pages/Profile'
 import { UniversiModal } from "@/components/UniversiModal";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import { AuthContext } from "@/contexts/Auth";
@@ -15,6 +14,8 @@ import type { ProfileContextType } from '@/pages/Profile'
 import './Profile.css'
 import './card.css'
 import './section.css'
+import { ProfileContentListing } from "./ProfileContentListing/ProfileContentListing";
+import { SelectionBar } from "./SelectionBar/SelectionBar";
 
 export function ProfilePage() {
     const auth = useContext(AuthContext);
@@ -57,30 +58,15 @@ export function ProfilePage() {
         <ProfileContext.Provider value={profileContext} >
         <div id="profile-page">
             {/* todo: color from API */}
-            <div id="user-header-bar" style={{background: "#515151"}}>
-                {
-                    // profileContext?.accessingLoggedUser ?
-                    //     <button className="edit-button" >
-                    //         <img src='/assets/icons/edit-1.svg' alt="Editar" />
-                    //     </button>
-                    // : null
-                }
-            </ div>
-
             <div className="content">
                 <div id="left-side">
                     <ProfileBio onClickEdit={()=>{setShowProfileSettings(true)}} />
                     <ProfileGroups />
-                    <ProfileAchievements />
                 </div>
 
                 <div id="right-side">
+                    <SelectionBar/>
                     <ProfileRecommendSettingsButton />
-                    <ProfileCompetences
-                        openCompetenceSettings={()=>{setShowCompetencesSettings(true)}}
-                        updateProfileContext={setProfileContext}
-                    />
-                    <ProfileLastRecommendations />
                 </div>
             </div>
 

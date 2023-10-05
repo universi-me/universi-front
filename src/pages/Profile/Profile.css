@@ -14,7 +14,7 @@
 }
 
 #profile-page .content {
-    margin: 0 2.5em;
+    margin: 40px 2.5em;
 
     display: grid;
     grid-template-columns: 20% auto;
@@ -22,7 +22,6 @@
 
 #profile-page #left-side {
     --section-separator: 1.5em;
-    translate: 0 calc(var(--user-header-bar-height) / -2);
 }
 
 #profile-page #right-side {
@@ -31,7 +30,6 @@
 }
 
 #profile-page .edit-button {
-    position: absolute;
     width: min-content;
     height: min-content;
 
@@ -39,6 +37,7 @@
     background: none;
 
     cursor: pointer;
+
 }
 
 #profile-page #user-header-bar .edit-button {
@@ -56,4 +55,39 @@
     margin-left: auto;
     text-decoration: none;
     color: var(--secondary-color);
+}
+
+.groups.card{
+    background-color: transparent !important;
+    border: solid 1px var(--primary-color);
+}
+
+.groups-name{
+    text-align: center;
+    padding: 20px 20px;
+    background-color: var(--primary-color);
+    border-radius: 10px 10px 0px 0px;
+    color: white;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+.group-section{
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+.group-item img{
+    border-radius: 5px;
+    border: solid 1px var(--primary-color);
+    width: 60px;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    object-fit: scale-down;
+    padding: 2px;
 }
