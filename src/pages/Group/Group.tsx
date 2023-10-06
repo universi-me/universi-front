@@ -25,10 +25,7 @@ export function GroupPage() {
 
         <GroupContext.Provider value={groupContext}>
         <div id="group-page">
-            {/* todo: get banner content from API */}
-            <GroupBanner bannerContent={"#4E4E4E"} />
             <div className="content">
-                <GroupIntro verified={true}/>
                 <div className="group-infos">
                     <div className="left-side">
                         <GroupAbout />

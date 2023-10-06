@@ -1,6 +1,5 @@
 #group-page .content {
     --group-image-height: 12.5rem;
-    translate: 0 calc(var(--group-image-height) / -2);
     width: 100%;
 }
 
