@@ -59,8 +59,8 @@ export function ProfilePage() {
             {/* todo: color from API */}
             <div className="content">
                 <div id="left-side">
-                    <ProfileBio onClickEdit={()=>{setShowProfileSettings(true)}} />
-                    <ProfileGroups />
+                    <ProfileBio profile={profileContext.profile} />
+                    <ProfileGroups groups={profileContext.profileListData.groups} />
                 </div>
 
                 <div id="right-side">
