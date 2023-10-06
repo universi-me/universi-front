@@ -1,12 +1,14 @@
 import { MouseEventHandler, useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
+import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
 import { ProfileContext } from '@/pages/Profile';
 import { getGenderName, getProfileImageUrl } from '@/utils/profileUtils';
-import { TypeLinkToBootstrapIcon } from '@/types/Link';
-import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
-import { Link } from 'react-router-dom';
 import { ICON_EDIT_BLACK } from '@/utils/assets';
-import './ProfileBio.css'
 import UniversimeApi from '@/services/UniversimeApi';
+
+import { TypeLinkToBootstrapIcon } from '@/types/Link';
+import './ProfileBio.css';
 
 export type ProfileBioProps = {
     onClickEdit: MouseEventHandler;
