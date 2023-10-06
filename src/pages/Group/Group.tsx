@@ -2,9 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UniversimeApi } from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
-import { GroupBanner, GroupIntro, GroupAbout, GroupSubGroups, GroupMembers, GroupContext, GroupContextType, GroupContents } from "@/pages/Group"
+import { GroupBanner, GroupIntro, GroupAbout, GroupSubGroups, GroupMembers, GroupContext, GroupContextType, GroupContents } from "@/pages/Group";
+import { ProfileBio, ProfileGroups } from "@/components/ProfileInfo";
 import "./Group.css"
-import "./card.css"
+import { Group } from "@/types/Group";
 
 export function GroupPage() {
     const auth = useContext(AuthContext);
@@ -12,13 +13,14 @@ export function GroupPage() {
     const groupPath = '/' + useParams()["*"];
 
     const [groupContext, setGroupContext] = useState<GroupContextType>(null);
+    const [userGroups, setUserGroups] = useState<Group[]>([]);
 
     if (auth.user === null) {
         navigate('/login');
     }
 
     useEffect(() => { loadAccessedGroup() }, [groupPath])
-    console.dir(groupContext);
+    useEffect(() => { UniversimeApi.Profile.groups({profileId: auth.profile!.id}).then(res => setUserGroups(res.body?.groups ?? [])) }, []);
 
     return (
         !groupContext ? null :
@@ -28,7 +30,8 @@ export function GroupPage() {
             <div className="content">
                 <div className="group-infos">
                     <div className="left-side">
-
+                        <ProfileBio profile={auth.profile!} />
+                        <ProfileGroups groups={userGroups} />
                     </div>
 
                     <div className="right-side">
