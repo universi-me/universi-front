@@ -35,7 +35,7 @@ export function GroupPage() {
                     </div>
 
                     <div className="right-side">
-                        {/* <GroupMembers /> */}
+                        <GroupIntro />
                         <GroupContents />
                     </div>
                 </div>
