@@ -97,7 +97,7 @@ export function goTo(pathname: string) {
       return;
   const pathnameWithoutSlash = pathname.startsWith('/')? pathname.substring(1) : pathname;
   const destiny = `${window.location.origin}/${pathnameWithoutSlash}`;
-  const alreadyThere = window.location.href === destiny;
+  const alreadyThere = location.href === destiny;
   if (!alreadyThere)
       router.navigate(`/${pathnameWithoutSlash}`);
   
