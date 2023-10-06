@@ -13,8 +13,6 @@ import type { ProfileContextType } from '@/pages/Profile'
 import { SelectionBar } from "./SelectionBar/SelectionBar";
 
 import './Profile.css'
-import './card.css'
-import './section.css'
 
 export function ProfilePage() {
     const auth = useContext(AuthContext);
