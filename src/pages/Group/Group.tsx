@@ -1,14 +1,15 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
-import { GroupIntro, GroupContext, GroupContextType, GroupContents, GroupPageLoaderResponse } from "@/pages/Group";
+import { GroupIntro, GroupContext, GroupContextType, GroupContents, GroupPageLoaderResponse, GroupTabs, GroupTabDefinition, AvailableTabs } from "@/pages/Group";
 import { ProfileBio, ProfileGroups } from "@/components/ProfileInfo";
 import "./Group.css";
 
 export function GroupPage() {
     const page = useLoaderData() as GroupPageLoaderResponse;
+    const [currentTab, setCurrentTab] = useState<AvailableTabs>("contents");
     const context = useMemo<GroupContextType>(() => {
-        // some values are using "!" even though they can be null
+        // some values are using "!" even though they can be undefined
         // they are validated later
 
         return {
@@ -36,6 +37,7 @@ export function GroupPage() {
 
                     <div className="right-side">
                         <GroupIntro />
+                        <GroupTabs tabs={TABS} changeTab={setCurrentTab} />
                         <GroupContents />
                     </div>
                 </div>
@@ -44,3 +46,22 @@ export function GroupPage() {
         </GroupContext.Provider>
     );
 }
+
+const TABS: GroupTabDefinition[] = [
+    {
+        name: 'Conteúdos',
+        value: "contents"
+    },
+    {
+        name: "Arquivos",
+        value: "files"
+    },
+    {
+        name: "Grupos",
+        value: "groups"
+    },
+    {
+        name: "Pessoas",
+        value: "people"
+    },
+];
