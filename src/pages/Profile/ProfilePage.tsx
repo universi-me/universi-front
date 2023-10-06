@@ -60,7 +60,7 @@ export function ProfilePage() {
             <div className="content">
                 <div id="left-side">
                     <ProfileBio profile={profileContext.profile} />
-                    <ProfileGroups />
+                    <ProfileGroups groups={profileContext.profileListData.groups} />
                 </div>
 
                 <div id="right-side">

@@ -1,41 +1,33 @@
-import { useContext } from "react";
 import { Link } from "react-router-dom";
 
-import { ProfileContext } from "@/pages/Profile";
+import type { Group } from "@/types/Group";
 
-export function ProfileGroups() {
-    const profileContext = useContext(ProfileContext);
+export type ProfileGroupsProps = {
+    groups: Group[];
+};
 
-    if (profileContext === null)
-        return null;
-
-    const groupCount = profileContext.profileListData.groups.length.toLocaleString('pt-BR', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-    })
-
+export function ProfileGroups(props: ProfileGroupsProps) {
     return (
         <div className="groups card">
             <div className="group-section">
                 <h1 className="groups-name">Meus grupos</h1>
                 <div className="items-wrapper">
                     {
-                        profileContext.profileListData.groups.length <= 0
+                        props.groups.length <= 0
                         ? <div className="empty-groups">Não participa de um grupo.</div>
                         : <div className="show-items">
                             {
-                                profileContext.profileListData.groups.map((group) => {
+                                props.groups.map((group) => {
                                     return group === undefined ? null : (
                                         <Link to={`/group${group.path}`} className="group-item" title={group.name} key={group.id}>
                                             {/* todo: set group url */}
-                                            <img src={group.image} alt="" />
+                                            <img src={group.image ?? undefined} alt="" />
                                         </Link>
                                     );
                                 })
                             }
                         </div>
                     }
-                    {/* todo: All groups page */}
                 </div>
             </div>
         </div>
