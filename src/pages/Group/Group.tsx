@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
-import { GroupIntro, GroupContext, GroupContextType, GroupContents, GroupPageLoaderResponse, GroupTabs, GroupTabDefinition, AvailableTabs } from "@/pages/Group";
+import { GroupIntro, GroupContext, GroupContextType, GroupPageLoaderResponse, GroupTabs, GroupTabDefinition, GroupTabRenderer, AvailableTabs } from "@/pages/Group";
 import { ProfileBio, ProfileGroups } from "@/components/ProfileInfo";
 import "./Group.css";
 
@@ -38,7 +38,7 @@ export function GroupPage() {
                     <div className="right-side">
                         <GroupIntro />
                         <GroupTabs tabs={TABS} changeTab={setCurrentTab} />
-                        <GroupContents />
+                        <GroupTabRenderer tab={currentTab} />
                     </div>
                 </div>
             </div>
