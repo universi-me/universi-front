@@ -9,8 +9,6 @@ export type GroupContextType = null | {
     participants:  Profile[];
     folders:       Folder[];
     isParticipant: boolean;
-
-    reloadPage: () => any;
 };
 
 export const GroupContext = createContext<GroupContextType>(null);

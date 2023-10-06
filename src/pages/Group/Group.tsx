@@ -1,37 +1,37 @@
-import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { UniversimeApi } from "@/services/UniversimeApi";
-import { AuthContext } from "@/contexts/Auth";
-import { GroupBanner, GroupIntro, GroupAbout, GroupSubGroups, GroupMembers, GroupContext, GroupContextType, GroupContents } from "@/pages/Group";
+import { useMemo } from "react";
+import { Navigate, useLoaderData } from "react-router-dom";
+
+import { GroupIntro, GroupContext, GroupContextType, GroupContents, GroupPageLoaderResponse } from "@/pages/Group";
 import { ProfileBio, ProfileGroups } from "@/components/ProfileInfo";
-import "./Group.css"
-import { Group } from "@/types/Group";
+import "./Group.css";
 
 export function GroupPage() {
-    const auth = useContext(AuthContext);
-    const navigate = useNavigate();
-    const groupPath = '/' + useParams()["*"];
+    const page = useLoaderData() as GroupPageLoaderResponse;
+    const context = useMemo<GroupContextType>(() => {
+        // some values are using "!" even though they can be null
+        // they are validated later
 
-    const [groupContext, setGroupContext] = useState<GroupContextType>(null);
-    const [userGroups, setUserGroups] = useState<Group[]>([]);
+        return {
+            folders: page.folders,
+            group: page.group!,
+            isParticipant: page.loggedData?.isParticipant!,
+            participants: page.participants,
+            subgroups: page.subGroups,
+        };
+    }, []);
 
-    if (auth.user === null) {
-        navigate('/login');
+    if (!page.loggedData || !page.group) {
+        return (<Navigate to="/login" />);
     }
 
-    useEffect(() => { loadAccessedGroup() }, [groupPath])
-    useEffect(() => { UniversimeApi.Profile.groups({profileId: auth.profile!.id}).then(res => setUserGroups(res.body?.groups ?? [])) }, []);
-
     return (
-        !groupContext ? null :
-
-        <GroupContext.Provider value={groupContext}>
+        <GroupContext.Provider value={context}>
         <div id="group-page">
             <div className="content">
                 <div className="group-infos">
                     <div className="left-side">
-                        <ProfileBio profile={auth.profile!} />
-                        <ProfileGroups groups={userGroups} />
+                        <ProfileBio profile={page.loggedData.profile} />
+                        <ProfileGroups groups={page.loggedData.groups} />
                     </div>
 
                     <div className="right-side">
@@ -43,45 +43,4 @@ export function GroupPage() {
         </div>
         </GroupContext.Provider>
     );
-
-    async function loadAccessedGroup() {
-        const groupRes = await UniversimeApi.Group.get({groupPath});
-        const [subgroupsRes, participantsRes, foldersRes] = await Promise.all([
-            UniversimeApi.Group.subgroups({groupId: groupRes.body.group.id}),
-            UniversimeApi.Group.participants({groupId: groupRes.body.group.id}),
-            UniversimeApi.Group.folders({groupId: groupRes.body.group.id}),
-        ]);
-
-        setGroupContext({
-            group: groupRes.body.group,
-            subgroups: subgroupsRes.body.subgroups,
-            participants: participantsRes.body.participants,
-            isParticipant: participantsRes.body.participants.find(p => p.user.name === auth.user?.name) !== undefined,
-            folders: foldersRes.body.folders,
-
-            reloadPage: loadAccessedGroup,
-        });
-    }
-
-    function joinGroup() {
-        if (groupContext === null)
-            return;
-
-        UniversimeApi.Group.join({groupId: groupContext.group.id})
-            .then(r => {
-                console.dir(r);
-                groupContext.reloadPage();
-            });
-    }
-
-    function exitGroup() {
-        if (groupContext === null)
-            return;
-
-        UniversimeApi.Group.exit({groupId: groupContext.group.id})
-            .then(r => {
-                console.dir(r);
-                groupContext.reloadPage();
-            });
-    }
 }
