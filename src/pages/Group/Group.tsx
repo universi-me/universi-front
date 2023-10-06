@@ -37,7 +37,7 @@ export function GroupPage() {
 
                     <div className="right-side">
                         <GroupIntro />
-                        <GroupTabs tabs={TABS} changeTab={setCurrentTab} />
+                        <GroupTabs tabs={TABS} changeTab={setCurrentTab} currentTab={currentTab} />
                         <GroupTabRenderer tab={currentTab} />
                     </div>
                 </div>

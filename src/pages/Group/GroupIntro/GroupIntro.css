@@ -44,15 +44,16 @@
 }
 
 #group-page #group-intro #banner-wrapper {
+    height: 20rem;
     width: 100%;
 }
 
 #group-page #group-intro #organization-banner {
-    height: 20rem;
+    height: 100%;
     width: 100%;
     object-fit: cover;
 
-    border-radius: 1rem;
+    border-radius: 1rem 1rem 0 0;
 }
 
 #group-page #group-intro #banner-wrapper #group-name {

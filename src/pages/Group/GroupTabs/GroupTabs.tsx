@@ -10,6 +10,8 @@ export type GroupTabDefinition = {
 
 export type GroupTabsProps = {
     tabs: GroupTabDefinition[];
+    currentTab: AvailableTabs;
+
     changeTab: (tab: AvailableTabs) => any;
 };
 
@@ -18,7 +20,7 @@ export function GroupTabs(props: GroupTabsProps) {
         <nav id="group-tabs"> {
             props.tabs.map(t => {
                 return (
-                    <button value={t.value} key={t.value} onClick={_ => props.changeTab(t.value)}>
+                    <button className="group-tab-button" value={t.value} key={t.value} onClick={_ => props.changeTab(t.value)} disabled={t.value === props.currentTab}>
                         {t.name}
                     </button>
                 );
