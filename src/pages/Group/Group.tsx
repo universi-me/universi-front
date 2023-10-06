@@ -28,11 +28,7 @@ export function GroupPage() {
             <div className="content">
                 <div className="group-infos">
                     <div className="left-side">
-                        <GroupAbout />
-                        <button onClick={ groupContext.isParticipant ? exitGroup : joinGroup } className="join-button">
-                            { groupContext.isParticipant ? "Sair" : "Participar" }
-                        </button>
-                        <GroupSubGroups />
+
                     </div>
 
                     <div className="right-side">
