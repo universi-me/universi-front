@@ -100,4 +100,5 @@ export function goTo(pathname: string) {
   const alreadyThere = window.location.href === destiny;
   if (!alreadyThere)
       router.navigate(`/${pathnameWithoutSlash}`);
+  
 }
