@@ -13,7 +13,7 @@ export function ProfileContentListing({amount = -1, filter = "Vídeo"} : {amount
         UniversimeApi.Capacity.contentList()
         .then(res => setAvailableContents(filterContents(res.body.contents)))
         setTitle(filter.replace("Vídeo", "Conteúdos").replace("Documento", "Arquivos"))
-    }, [availableContents, [], filter])
+    }, [amount, filter])
 
     function filterContents(contents : Content[]){
         let contentsFiltered : Content[] = []

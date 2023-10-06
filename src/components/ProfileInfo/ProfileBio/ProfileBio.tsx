@@ -22,7 +22,7 @@ export function ProfileBio(props: ProfileBioProps) {
     useEffect(() =>{
     UniversimeApi.Capacity.contentList()
     .then(res=>setContentCounter(res.body?.contents.length == undefined ? 0 : res.body.contents.length))
-    }, [contentCounter])
+    }, [profileContext?.profile.user.name])
 
     return (
         profileContext === null ? null :

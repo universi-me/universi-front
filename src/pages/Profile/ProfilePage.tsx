@@ -3,19 +3,18 @@ import { useContext, useState, useEffect } from "react";
 
 import {
     ProfileBio, ProfileGroups,  ProfileRecommendSettingsButton,
-    ProfileSettings, CompetencesSettings, ProfileDiscardChanges, ProfileContext } 
+    ProfileSettings, CompetencesSettings, ProfileDiscardChanges, ProfileContext }
 from '@/pages/Profile'
 import { UniversiModal } from "@/components/UniversiModal";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import { AuthContext } from "@/contexts/Auth";
 import { UniversimeApi } from "@/services/UniversimeApi";
 import type { ProfileContextType } from '@/pages/Profile'
+import { SelectionBar } from "./SelectionBar/SelectionBar";
 
 import './Profile.css'
 import './card.css'
 import './section.css'
-import { ProfileContentListing } from "./ProfileContentListing/ProfileContentListing";
-import { SelectionBar } from "./SelectionBar/SelectionBar";
 
 export function ProfilePage() {
     const auth = useContext(AuthContext);
