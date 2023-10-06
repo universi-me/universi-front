@@ -14,14 +14,14 @@ export function GroupContents() {
         return null;
 
     return (
-        <section id="contents">
+        <section id="contents" className="group-tab">
             <div className="heading">
-                <i className="bi bi-list-ul contents-icon"/>
+                <i className="bi bi-list-ul tab-icon"/>
                 <h2 className="title">Conteúdos {groupContext.group.name}</h2>
                 <div className="go-right">
                     <div id="filter-wrapper">
                         <i className="bi bi-search filter-icon"/>
-                        <input type="search" name="filter-contents" id="filter-contents"
+                        <input type="search" name="filter-contents" id="filter-contents" className="filter-input"
                             onChange={setStateAsValue(setFilterContents)} placeholder={`Buscar em Conteúdos ${groupContext.group.name}`}
                         />
                     </div>
