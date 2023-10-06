@@ -1,3 +1,6 @@
+import { GroupContents, GroupPeople } from "@/pages/Group";
+import "./GroupTabs.less";
+
 export type AvailableTabs = "contents" | "files" | "groups" | "people";
 
 export type GroupTabDefinition = {
@@ -22,4 +25,16 @@ export function GroupTabs(props: GroupTabsProps) {
             })
         } </nav>
     );
+}
+
+export function GroupTabRenderer({tab}: { tab: AvailableTabs }) {
+    switch (tab) {
+        case "contents":
+            return <GroupContents />;
+        case "people":
+            return <GroupPeople />;
+
+        default:
+            return null;
+    }
 }
