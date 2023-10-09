@@ -16,6 +16,8 @@ import VideoPage from "@/pages/Capacity/VideoPlayer";
 import FolderPage from "@/pages/Capacity/Folder";
 import ManagerCapacity from "@/pages/Capacity/ManagerCapacity";
 import SignUpPage from "@/pages/SignUp";
+import Recovery  from "@/pages/Recovery/Recovery";
+import NewPassword from "@/pages/NewPassword/NewPassword";
 import ManageProfilePage, { ManageProfileLoader } from "@/pages/ManageProfile";
 
 
@@ -61,6 +63,7 @@ export const router = createBrowserRouter([{
     { path: "/profile/:id", element: <ProfilePage /> },
     { path: "/manage-profile", element: <ManageProfilePage />, loader: ManageProfileLoader },
     { path: "/group/*", element: <GroupPage /> },
+    { path: "/recovery-password/:id", element: <NewPassword/>},
     {//identificador unico - dynamic routes
       //path: "perfil/:id",
       //element: <></>
@@ -78,6 +81,10 @@ export const router = createBrowserRouter([{
     {
       path: "/signup",
       element: <SignUpPage/>
+    },
+    {
+      path: "/recovery",
+      element: <Recovery/>
     },
     {
         path: "/google-oauth-redirect",
