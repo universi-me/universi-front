@@ -58,7 +58,7 @@ function renderGroup(group: Group) {
     return (
         <div className="group-item" key={group.id}>
             <Link to={linkToGroup}>
-                <img src={groupImageUrl(group)} />
+                <img className="group-image" src={groupImageUrl(group)} />
             </Link>
 
             <div className="info">
