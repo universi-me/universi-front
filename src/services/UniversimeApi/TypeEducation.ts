@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
-import { TypeEducation } from "@/types/typeEducation";
+import { TypeEducation } from "@/types/TypeEducation";
 
 
 export type typeEducation_RequestDTO = {
@@ -17,5 +17,11 @@ export async function get(body: typeEducation_RequestDTO) {
 }
 
 export async function list() {
-    return (await api.post("/curriculum/TypeEducation", {})).data;
+    return {
+        body: {
+            list: []
+        }
+    };
+
+    return (await api.post<typeEducationList_ResponseDTO>("/curriculum/TypeEducation", {})).data;
 }
