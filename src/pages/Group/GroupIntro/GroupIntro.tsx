@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { GroupContext } from "@/pages/Group";
 import { groupBannerUrl } from "@/utils/apiUtils";
 
-import "./GroupIntro.css";
+import "./GroupIntro.less";
 
 export function GroupIntro() {
     const groupContext = useContext(GroupContext);
