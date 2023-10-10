@@ -1,9 +1,11 @@
 import { useContext, useState } from "react";
-import { GroupContext } from "@/pages/Group";
-import { setStateAsValue } from "@/utils/tsxUtils";
-import { Folder } from "@/types/Capacity";
-import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { Link } from "react-router-dom";
+
+import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
+import { setStateAsValue } from "@/utils/tsxUtils";
+import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
+
+import type { Folder } from "@/types/Capacity";
 import "./GroupContents.less";
 
 export function GroupContents() {
@@ -33,10 +35,9 @@ export function GroupContents() {
     );
 }
 
-const NO_CONTENTS_CLASS = "empty-text";
 function makeContentList(contents: Folder[], filter: string) {
     if (contents.length === 0) {
-        return <p className={NO_CONTENTS_CLASS}>Esse grupo não possui conteúdos.</p>
+        return <p className={EMPTY_LIST_CLASS}>Esse grupo não possui conteúdos.</p>
     }
 
     const filteredContents = filter.length === 0
@@ -44,7 +45,7 @@ function makeContentList(contents: Folder[], filter: string) {
         : contents.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()));
 
     if (filteredContents.length === 0) {
-        return <p className={NO_CONTENTS_CLASS}>Nenhum conteúdo encontrado com a pesquisa.</p>
+        return <p className={EMPTY_LIST_CLASS}>Nenhum conteúdo encontrado com a pesquisa.</p>
     }
 
     return filteredContents

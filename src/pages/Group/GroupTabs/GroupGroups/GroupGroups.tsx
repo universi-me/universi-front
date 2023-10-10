@@ -1,9 +1,12 @@
 import { useContext, useState } from "react";
-import { GroupContext } from "@/pages/Group";
-import { setStateAsValue } from "@/utils/tsxUtils";
-import { Group } from "@/types/Group";
 import { Link } from "react-router-dom";
+
+import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
+import { setStateAsValue } from "@/utils/tsxUtils";
 import { groupImageUrl } from "@/utils/apiUtils";
+
+import type { Group } from "@/types/Group";
+import "./GroupGroups.less";
 
 export function GroupGroups() {
     const groupContext = useContext(GroupContext);
@@ -32,10 +35,9 @@ export function GroupGroups() {
     );
 }
 
-const NO_GROUPS_CLASS = "empty-text";
 function makeGroupList(groups: Group[], filter: string) {
     if (groups.length === 0) {
-        return <p className={NO_GROUPS_CLASS}>Esse grupo não possui grupos.</p>
+        return <p className={EMPTY_LIST_CLASS}>Esse grupo não possui grupos.</p>
     }
 
     const filteredGroups = filter.length === 0
@@ -43,7 +45,7 @@ function makeGroupList(groups: Group[], filter: string) {
         : groups.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()));
 
     if (filteredGroups.length === 0) {
-        return <p className={NO_GROUPS_CLASS}>Nenhum grupo encontrado com a pesquisa.</p>
+        return <p className={EMPTY_LIST_CLASS}>Nenhum grupo encontrado com a pesquisa.</p>
     }
 
     return filteredGroups

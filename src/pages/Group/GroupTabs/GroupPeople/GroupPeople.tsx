@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { GroupContext } from "@/pages/Group";
+import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { Profile } from "@/types/Profile";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
@@ -36,10 +36,9 @@ export function GroupPeople() {
     );
 }
 
-const NO_PEOPLE_CLASS = "empty-text";
 function makePeopleList(people: Profile[], filter: string) {
     if (people.length === 0) {
-        return <p className={NO_PEOPLE_CLASS}>Esse grupo não possui participantes.</p>
+        return <p className={EMPTY_LIST_CLASS}>Esse grupo não possui participantes.</p>
     }
 
     const lowercaseFilter = filter.toLowerCase();
@@ -48,7 +47,7 @@ function makePeopleList(people: Profile[], filter: string) {
         : people.filter(p => (getFullName(p)).toLowerCase().includes(lowercaseFilter));
 
     if (filteredPeople.length === 0) {
-        return <p className={NO_PEOPLE_CLASS}>Nenhum participante encontrado com a pesquisa.</p>
+        return <p className={EMPTY_LIST_CLASS}>Nenhum participante encontrado com a pesquisa.</p>
     }
 
     return filteredPeople

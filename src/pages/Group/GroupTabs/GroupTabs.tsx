@@ -38,6 +38,8 @@ export function GroupTabRenderer({tab}: { tab: AvailableTabs }) {
         : null;
 }
 
+export const EMPTY_LIST_CLASS = "empty-text";
+
 const TABS: GroupTabDefinition[] = [
     {
         name: 'Conteúdos',
