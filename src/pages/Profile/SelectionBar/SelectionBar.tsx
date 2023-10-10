@@ -4,6 +4,7 @@ import {useState} from "react"
 import "./SelectionBar.css"
 import { ProfileContentListing } from "../ProfileContentListing/ProfileContentListing"
 import { ProfileGroupListing } from "../ProfileGroupListing/ProfileGroupListing"
+import { ProfileCurriculum } from "../ProfileCurriculum/ProfileCurriculum"
 
 export function SelectionBar(){
 
@@ -22,6 +23,9 @@ export function SelectionBar(){
                 <div className="select-element" onClick={() => setSelectelement("groups")}>
                     Grupos
                 </div>
+                <div className="select-element" onClick={() => setSelectelement("curriculum")}>
+                    Currículo
+                </div>
             </div>
             {getSelectElement(selectElement)}
         </>
@@ -38,4 +42,6 @@ function getSelectElement(selectElement : string){
         return <ProfileContentListing filter="Documento"/>
     if(selectElement == "groups")
         return <ProfileGroupListing/>
+    if(selectElement == "curriculum")
+        return <ProfileCurriculum/>
 }

@@ -100,6 +100,7 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
                 throw new Error(r.message);
 
             profileContext?.reloadPage();
+            
         }).catch((reason: Error) => {
             SwalUtils.fireModal({
                 title: "Erro ao salvar competência",

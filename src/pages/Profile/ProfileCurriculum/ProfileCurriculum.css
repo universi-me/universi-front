@@ -1,0 +1,68 @@
+.curriculum-panel {
+    border-radius: 30px;
+    background-color: var(--card-background-color);
+    padding: 0 0 5px 0;
+}
+
+.curriculum-title {
+    background-color: var(--primary-color);
+    border-radius: 30px 30px 0px 0px;
+}
+
+.curriculum-name{
+    color: #fff;
+    font-weight: 600;
+    padding: 15px;
+    text-align: center;
+}
+
+.curriculum-settings {
+    background-color: var(--primary-color);
+    cursor: pointer;
+    border: none;
+    float: right;
+    margin-top: -58px;
+    margin-right: 25px;
+}
+
+.item-competence {
+    padding: 24px;
+}
+
+.curriculum-competence {
+    padding-top: 8px;
+    border-radius: 30px;
+    background-color: var(--card-item-color);
+    margin: 20px;
+}
+
+.competence-title {
+    font-size: 22px;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.space {
+    margin: 8px 0 5px 0;
+    height: 5px;
+    background-color: var(--primary-color);
+}
+
+.button-add-competence {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.competence-link {
+    margin: 5px 0 5px 0;
+    height: 50px;
+    width: 400px;
+    font-size: 18px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-color);
+    background-color: transparent;
+}
