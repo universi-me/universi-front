@@ -19,7 +19,7 @@ export function GroupPage() {
             participants: page.participants,
             subgroups: page.subGroups,
         };
-    }, []);
+    }, [page]);
 
     if (!page.loggedData || !page.group) {
         return (<Navigate to="/login" />);
