@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         else {
-            redirectAfterSignIn(profile.user.needProfile, profile.user.id);
+            redirectAfterSignIn(profile.user.needProfile, profile.user.name);
         }
 
         setFinishedLogin(true);
