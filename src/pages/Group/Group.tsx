@@ -28,14 +28,15 @@ export function GroupPage() {
     return (
         <GroupContext.Provider value={context}>
         <div id="group-page">
-            <ProfileBio profile={page.loggedData.profile} />
+            <div>
+                <ProfileBio profile={page.loggedData.profile} />
+                <ProfileGroups groups={page.loggedData.groups} />
+            </div>
             <div id="intro-tabs-wrapper">
                 <GroupIntro />
                 <GroupTabs changeTab={setCurrentTab} currentTab={currentTab} />
+                <GroupTabRenderer tab={currentTab} />
             </div>
-
-            <ProfileGroups groups={page.loggedData.groups} />
-            <GroupTabRenderer tab={currentTab} />
         </div>
         </GroupContext.Provider>
     );
