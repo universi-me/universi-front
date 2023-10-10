@@ -5,6 +5,7 @@ import { Translate } from "phosphor-react"
 import "../singin/signinForm.css"
 import {useState} from "react"
 import UniversimeApi from "@/services/UniversimeApi"
+import * as SwalUtils from "@/utils/sweetalertUtils"
 
 
 export default function Recovery(){
@@ -13,6 +14,7 @@ export default function Recovery(){
     const [msg, setMsg] = useState<null | string>(null)
 
     function handleRecover(){
+        SwalUtils.fireToasty({title: "Verificando dados"})
         UniversimeApi.User.recoverPassword({username})
         .then(res =>{
             if(res.success)
@@ -23,11 +25,8 @@ export default function Recovery(){
 
     return(
         <div>
-            <h2 className="center-text">Recuperação de senha</h2>
             <div className="center-container">
-                {
-                    msg === null ? <></> : <h2>{msg}</h2>
-                }
+                <h3 className="center-text">Recuperação de senha</h3>
                 <div className="container form-container">
                     <div className="form-group">
                         <div className="label-form">
