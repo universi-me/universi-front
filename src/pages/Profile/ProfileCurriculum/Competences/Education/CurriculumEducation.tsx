@@ -1,11 +1,10 @@
 import { useContext, MouseEvent } from 'react';
-import { ProfileContext, ProfileContextType } from '@/pages/Profile';
+import { ProfileContext } from '@/pages/Profile';
 import { ICON_EDIT_BLACK } from '@/utils/assets';
 import './CurriculumEducation.css'
 
 export type ProfileEducationProps = {
     openEducationSettings: (e: MouseEvent) => void;
-    updateProfileContext: (pc: ProfileContextType) => void;
 };
 
 export function CurriculumEducation(props: ProfileEducationProps) {
@@ -24,11 +23,7 @@ export function CurriculumEducation(props: ProfileEducationProps) {
   : [];
 
   const addEducation = (e: MouseEvent<HTMLButtonElement>) => {
-    props.updateProfileContext({
-      ...profileContext,
-      editEducation: null,
-    });
-
+    profileContext.setEditEducation(null);
     props.openEducationSettings(e);
   };
 
@@ -37,11 +32,7 @@ export function CurriculumEducation(props: ProfileEducationProps) {
       (c) => c.id === educationId
     );
 
-    props.updateProfileContext({
-      ...profileContext,
-      editEducation: education || null,
-    });
-
+    profileContext.setEditEducation(education ?? null);
     props.openEducationSettings(e);
   };
 

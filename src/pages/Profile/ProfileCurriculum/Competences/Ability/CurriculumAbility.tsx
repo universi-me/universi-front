@@ -1,12 +1,11 @@
 import { useContext, MouseEvent } from 'react';
-import { ProfileContext, ProfileContextType } from '@/pages/Profile';
+import { ProfileContext } from '@/pages/Profile';
 import { LevelToLabel, LevelToNumber } from '@/types/Competence';
 import { ICON_EDIT_BLACK } from '@/utils/assets';
-import './CurriculumAbility.css'
+import './CurriculumAbility.css';
 
 export type ProfileCompetencesProps = {
   openCompetenceSettings: (e: MouseEvent) => void;
-  updateProfileContext: (pc: ProfileContextType) => void;
 };
 
 const MAX_COMPETENCE_LEVEL = 4;
@@ -18,17 +17,11 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
     return null;
   }
 
-  const sortedCompetences = profileContext.profileListData.competences.sort(
-    (c1, c2) =>
-      new Date(c1.creationDate).getTime() - new Date(c2.creationDate).getTime()
-  );
+  const sortedCompetences = profileContext.profileListData.competences
+    .toSorted((c1, c2) => new Date(c1.creationDate).getTime() - new Date(c2.creationDate).getTime());
 
   const addCompetence = (e: MouseEvent<HTMLButtonElement>) => {
-    props.updateProfileContext({
-      ...profileContext,
-      editCompetence: null,
-    });
-
+    profileContext.setEditCompetence(null);
     props.openCompetenceSettings(e);
   };
 
@@ -37,11 +30,7 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
       (c) => c.id === competenceId
     );
 
-    props.updateProfileContext({
-      ...profileContext,
-      editCompetence: competence || null,
-    });
-
+    profileContext.setEditCompetence(competence ?? null);
     props.openCompetenceSettings(e);
   };
 
@@ -79,7 +68,7 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
                                     <h2 className="level-label">{LevelToLabel[competence.level]}</h2>
                                     <div className="competence-level-list">
                                         {
-                                            Array.apply(null, Array(MAX_COMPETENCE_LEVEL)).map((_, i) => {
+                                            Array(MAX_COMPETENCE_LEVEL).map((_, i) => {
                                                 const learnedLevel = LevelToNumber[competence.level] >= i + 1
                                                     ? 'learned'
                                                     : '';

@@ -2,20 +2,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 
 import {
-    ProfileBio, ProfileGroups,  ProfileRecommendSettingsButton,
-    ProfileSettings, CompetencesSettings, ProfileDiscardChanges, ProfileContext } 
-from '@/pages/Profile'
+    ProfileBio, ProfileGroups, ProfileRecommendSettingsButton,
+    ProfileSettings, CompetencesSettings, ProfileDiscardChanges, ProfileContext
+} from '@/pages/Profile';
 import { UniversiModal } from "@/components/UniversiModal";
-import * as SwalUtils from "@/utils/sweetalertUtils"
+import * as SwalUtils from "@/utils/sweetalertUtils";
 import { AuthContext } from "@/contexts/Auth";
 import { UniversimeApi } from "@/services/UniversimeApi";
-import type { ProfileContextType } from '@/pages/Profile'
+import type { ProfileContextType } from '@/pages/Profile';
 
-import './Profile.css'
-import './card.css'
-import './section.css'
-import { ProfileContentListing } from "./ProfileContentListing/ProfileContentListing";
+import './Profile.css';
+import './card.css';
+import './section.css';
 import { SelectionBar } from "./SelectionBar/SelectionBar";
+import type { Education } from "@/types/Education";
+import type { Competence } from "@/types/Competence";
 
 export function ProfilePage() {
     const auth = useContext(AuthContext);
@@ -27,6 +28,8 @@ export function ProfilePage() {
     const [showDiscardChanges, setShowDiscardChanges] = useState<boolean>(false);
 
     const [profileContext, setProfileContext] = useState<ProfileContextType>(null);
+    const [editCompetence, setEditCompetence] = useState<Competence | null>(null);
+    const [editEducation, setEditEducation] = useState<Education | null>(null);
 
     useEffect(() => {
         loadAccessedUser();
@@ -109,9 +112,11 @@ export function ProfilePage() {
     }
 
     async function loadAccessedUser() {
-        const [profileRes, competenceTypeRes] = await Promise.all([
+        const [profileRes, competenceTypeRes, institutionsRes, typeEducationRes] = await Promise.all([
             UniversimeApi.Profile.get({username: id}),
             UniversimeApi.CompetenceType.list(),
+            UniversimeApi.Institution.list(),
+            UniversimeApi.TypeEducation.list(),
         ]);
 
         const profileListData = await loadProfileListData(profileRes.body.profile.id);
@@ -121,7 +126,15 @@ export function ProfilePage() {
             profile: profileRes.body.profile,
             allCompetenceTypes: competenceTypeRes.body.list,
             profileListData: profileListData,
-            editCompetence: null,
+
+            editCompetence: editCompetence,
+            setEditCompetence,
+
+            editEducation: editEducation,
+            setEditEducation,
+
+            allInstitution: institutionsRes.body.list,
+            allTypeEducation: typeEducationRes.body.list,
 
             reloadPage: loadAccessedUser,
         });
@@ -130,15 +143,17 @@ export function ProfilePage() {
     }
 
     async function loadProfileListData(profileId: string) {
-        const [groupsRes, competencesRes, linksRes, recommendationsRes] = await Promise.all([
+        const [groupsRes, competencesRes, linksRes, recommendationsRes, educationsRes] = await Promise.all([
             UniversimeApi.Profile.groups({profileId}),
             UniversimeApi.Profile.competences({profileId}),
             UniversimeApi.Profile.links({profileId}),
             UniversimeApi.Profile.recommendations({profileId}),
+            UniversimeApi.Profile.educations({ profileId }),
         ]);
 
         return {
             groups: groupsRes.body.groups,
+            education: educationsRes.body.educations,
             competences: competencesRes.body.competences,
             links: linksRes.body.links,
             recommendationsSend: recommendationsRes.body.recomendationsSend,

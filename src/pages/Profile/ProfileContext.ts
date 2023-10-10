@@ -31,6 +31,8 @@ export type ProfileContextType = null | {
         achievements:            Achievements[];
     };
 
+    setEditCompetence(competence: Competence | null): any;
+    setEditEducation(education: Education | null): any;
     reloadPage: () => void | Promise<void>;
 }
 
