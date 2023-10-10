@@ -1,4 +1,4 @@
-import { GroupContents, GroupPeople } from "@/pages/Group";
+import { GroupContents, GroupGroups, GroupPeople } from "@/pages/Group";
 import "./GroupTabs.less";
 
 export type AvailableTabs = "contents" | "files" | "groups" | "people";
@@ -35,6 +35,8 @@ export function GroupTabRenderer({tab}: { tab: AvailableTabs }) {
             return <GroupContents />;
         case "people":
             return <GroupPeople />;
+        case "groups":
+            return <GroupGroups />;
 
         default:
             return null;
