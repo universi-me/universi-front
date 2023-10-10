@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
-import { GroupIntro, GroupContext, GroupContextType, GroupPageLoaderResponse, GroupTabs, GroupTabDefinition, GroupTabRenderer, AvailableTabs } from "@/pages/Group";
+import { GroupIntro, GroupContext, GroupContextType, GroupPageLoaderResponse, GroupTabs, GroupTabRenderer, AvailableTabs } from "@/pages/Group";
 import { ProfileBio, ProfileGroups } from "@/components/ProfileInfo";
 import "./Group.css";
 
@@ -37,7 +37,7 @@ export function GroupPage() {
 
                     <div className="right-side">
                         <GroupIntro />
-                        <GroupTabs tabs={TABS} changeTab={setCurrentTab} currentTab={currentTab} />
+                        <GroupTabs changeTab={setCurrentTab} currentTab={currentTab} />
                         <GroupTabRenderer tab={currentTab} />
                     </div>
                 </div>
@@ -46,22 +46,3 @@ export function GroupPage() {
         </GroupContext.Provider>
     );
 }
-
-const TABS: GroupTabDefinition[] = [
-    {
-        name: 'Conteúdos',
-        value: "contents"
-    },
-    {
-        name: "Arquivos",
-        value: "files"
-    },
-    {
-        name: "Grupos",
-        value: "groups"
-    },
-    {
-        name: "Pessoas",
-        value: "people"
-    },
-];
