@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom"
 import { useState } from "react"
 import "./NewPassword.css"
 import UniversimeApi from "@/services/UniversimeApi";
+import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
+import * as SwalUtils from "@/utils/sweetalertUtils"
 
 export default function NewPassword(){
 
@@ -15,6 +17,9 @@ export default function NewPassword(){
     }
 
     function handleNewPassword(){
+
+        SwalUtils.fireToasty({title: "Verificando dados"})
+
         UniversimeApi.User.newPassword({password, token})
         .then(res =>{
             if(res.success)
@@ -24,11 +29,8 @@ export default function NewPassword(){
 
     return(
         <div>
-            <h2 className="center-text">Recuperação de senha: escolha sua nova senha</h2>
             <div className="center-container">
-                {
-                    msg === null ? <></> : <h2>{msg}</h2>
-                }
+                <h3 className="center-text">Recuperação de senha: escolha sua nova senha</h3>
                 <div className="container form-container">
                     <div className="form-group">
                         <div className="label-form">
@@ -48,6 +50,12 @@ export default function NewPassword(){
                             {showPassword == false ? "visibility" : "visibility_off"}
                             </span>
                         </span>
+                    </div>
+                    <div className="form-group" style={{color: "var(--font-color-v1)"}}>
+                        <h3>Sua senha precisa conter:</h3>
+                        <p className={`bi min-length ${passwordValidationClass(minimumLength(password))}`}>Tamanho mínimo de oito caracteres</p>
+                        <p className={`bi upper-lower-case ${passwordValidationClass(upperAndLowerCase(password))}`}>Letras minúsculas e maiúsculas</p>
+                        <p className={`bi number-special-char ${passwordValidationClass(numberOrSpecialChar(password))}`}>Números ou caracteres especiais</p>
                     </div>
 
                     <button
