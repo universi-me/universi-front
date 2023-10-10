@@ -7,7 +7,7 @@ import { groupImageUrl } from "@/utils/apiUtils";
 
 export function GroupGroups() {
     const groupContext = useContext(GroupContext);
-    const [filterContents, setFilterContents] = useState<string>("");
+    const [filterGroups, setFilterGroups] = useState<string>("");
 
     if (!groupContext)
         return null;
@@ -20,14 +20,14 @@ export function GroupGroups() {
                 <div className="go-right">
                     <div id="filter-wrapper">
                         <i className="bi bi-search filter-icon"/>
-                        <input type="search" name="filter-contents" id="filter-contents" className="filter-input"
-                            onChange={setStateAsValue(setFilterContents)} placeholder={`Buscar em Conteúdos ${groupContext.group.name}`}
+                        <input type="search" name="filter-groups" id="filter-groups" className="filter-input"
+                            onChange={setStateAsValue(setFilterGroups)} placeholder={`Buscar grupos em ${groupContext.group.name}`}
                         />
                     </div>
                 </div>
             </div>
 
-            <div className="content-list"> { makeGroupList(groupContext.subgroups, filterContents) } </div>
+            <div className="group-list"> { makeGroupList(groupContext.subgroups, filterGroups) } </div>
         </section>
     );
 }
