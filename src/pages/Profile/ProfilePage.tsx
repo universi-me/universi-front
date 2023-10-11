@@ -133,8 +133,8 @@ export function ProfilePage() {
             editEducation: editEducation,
             setEditEducation,
 
-            allInstitution: institutionsRes.body.list,
-            allTypeEducation: typeEducationRes.body.list,
+            allInstitution: institutionsRes,
+            allTypeEducation: typeEducationRes,
 
             reloadPage: loadAccessedUser,
         });

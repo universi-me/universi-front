@@ -57,12 +57,12 @@ export function EducationSettings(props: EducationSettingsProps) {
                 </div>
                 <div className="">
                     <h2 className="section-heading">Data Inicial</h2>
-                    <input type="date" placeholder="Data Inicial" value={startDate} onChange={(e) => setStartDate(e.target.value)}/>
+                    <input type="date" name="startDate" placeholder="Data Inicial" value={startDate} onChange={(e) => setStartDate(e.target.value)}/>
                     {!isPresent && (
-                      <input type="date" placeholder="Data Final" value={endDate} onChange={(e) => setEndDate(e.target.value)}/>
+                      <input type="date" name="endDate" placeholder="Data Final" value={endDate} onChange={(e) => setEndDate(e.target.value)}/>
                     )}
                     <label>
-                        <input type="checkbox" checked={isPresent} onChange={handlePresentDateChange} value={"presentDate"}/>
+                        <input type="checkbox" checked={isPresent} onChange={handlePresentDateChange} name="presentDate"/>
                         Data Presente
                     </label>
                 </div>
@@ -87,14 +87,14 @@ export function EducationSettings(props: EducationSettingsProps) {
     function saveEducation() {
         const typeElement = document.querySelector('[name="institution-type"]') as HTMLSelectElement;
 
-        const presentDateElement = document.querySelector('[name="presentDate"]') as HTMLTextAreaElement;
-        const presentDate = presentDateElement.value;
+        const presentDateElement = document.querySelector('[name="presentDate"]') as HTMLInputElement;
+        const presentDate = presentDateElement.checked;
 
-        const startDateElement = document.querySelector('[name="startDate"]') as HTMLTextAreaElement;
+        const startDateElement = document.querySelector('[name="startDate"]') as HTMLInputElement;
         const startDate = startDateElement.value;
 
-        const endDateElement = document.querySelector('[name="endDate"]') as HTMLTextAreaElement;
-        const endDate = endDateElement.value;
+        const endDateElement = document.querySelector('[name="endDate"]') as HTMLInputElement | null;
+        const endDate = endDateElement?.value;
 
         const typeEducationElement = document.querySelector('[name="education-type"]') as HTMLSelectElement;
 
@@ -105,7 +105,7 @@ export function EducationSettings(props: EducationSettingsProps) {
                 institutionId: typeElement.value,
                 presentDate,
                 startDate,
-                endDate,
+                endDate: endDate ?? "",
                 typeEducationId: typeEducationElement.value,
             })
 
@@ -114,7 +114,7 @@ export function EducationSettings(props: EducationSettingsProps) {
                 institutionId: typeElement.value,
                 presentDate,
                 startDate,
-                endDate,
+                endDate: endDate ?? "",
                 typeEducationId: typeEducationElement.value,
             });
 
