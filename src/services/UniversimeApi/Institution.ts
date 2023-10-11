@@ -7,7 +7,7 @@ export type instituionGet_RequestDTO = {
 }
 
 export type InstitutionTypeGet_ResponseDTO = ApiResponse<{ instituion: Institution }>;
-export type InstitutionTypeList_ResponseDTO = ApiResponse<{ list: Institution[] }>;
+export type InstitutionTypeList_ResponseDTO = Institution[];
 
 export async function get(body:instituionGet_RequestDTO) {
     return (await api.post<InstitutionTypeGet_ResponseDTO>("/curriculum/institution", {
@@ -16,11 +16,5 @@ export async function get(body:instituionGet_RequestDTO) {
 }
 
 export async function list() {
-    return {
-        body: {
-            list: []
-        }
-    };
-
-    return (await api.post<InstitutionTypeList_ResponseDTO>("/curriculum/institution", {})).data;
+    return (await api.get<InstitutionTypeList_ResponseDTO>("/curriculum/institution")).data;
 }

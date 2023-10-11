@@ -7,7 +7,7 @@ export type EducationCreate_RequestDTO = {
     institutionId:      string;
     startDate:          string;
     endDate:            string;
-    presentDate:        string;
+    presentDate:        boolean;
 }
 
 export type EducationUpdate_RequestDTO = {
@@ -16,7 +16,7 @@ export type EducationUpdate_RequestDTO = {
     institutionId:      string;
     startDate:          string;
     endDate:            string;
-    presentDate:        string;
+    presentDate:        boolean;
 }
 
 export type EducationId_RequestDTO = {

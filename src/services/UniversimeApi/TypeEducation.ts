@@ -7,21 +7,15 @@ export type typeEducation_RequestDTO = {
     typeEducationId: string;
 }
 
-export type typeEducationGet_ResponseDTO = ApiResponse<{ typeEducation: TypeEducation }>;
-export type typeEducationList_ResponseDTO = ApiResponse<{ list: TypeEducation[] }>;
+export type TypeEducationGet_ResponseDTO = ApiResponse<{ typeEducation: TypeEducation }>;
+export type TypeEducationList_ResponseDTO = TypeEducation[];
 
 export async function get(body: typeEducation_RequestDTO) {
-    return (await api.post<typeEducationGet_ResponseDTO>("/curriculum/TypeEducation", {
+    return (await api.post<TypeEducationGet_ResponseDTO>("/curriculum/TypeEducation", {
         instituionId: body.typeEducationId
     })).data;
 }
 
 export async function list() {
-    return {
-        body: {
-            list: []
-        }
-    };
-
-    return (await api.post<typeEducationList_ResponseDTO>("/curriculum/TypeEducation", {})).data;
+    return (await api.get<TypeEducationList_ResponseDTO>("/curriculum/TypeEducation", {})).data;
 }
