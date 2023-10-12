@@ -107,6 +107,11 @@ export default function SinginForm() {
             <div>Não possui uma conta? <Link to="/signup">Cadastre-se!</Link></div>
             <div className="line-form"></div>
         </div>
+        <div className="container-line-form" style={{marginTop: "20px"}}>
+            <div className="line-form"></div>
+            <div>Esqueceu sua senha? <Link to="/recovery">Recuperar senha</Link></div>
+            <div className="line-form"></div>
+        </div>
     </div>
   </>
   
