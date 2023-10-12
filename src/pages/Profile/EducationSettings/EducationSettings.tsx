@@ -13,13 +13,13 @@ export type EducationSettingsProps = {
 export function EducationSettings(props: EducationSettingsProps) {
     const profileContext = useContext(ProfileContext)
     const editEducation = profileContext?.editEducation ?? null;
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
+    const [dateStart, setDateStart] = useState("");
+    const [dateEnd, setDateEnd] = useState("");
     const [isPresent, setIsPresent] = useState(false);
     const handlePresentDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsPresent(e.target.checked);
         if (e.target.checked) {
-          setEndDate("");
+          setDateEnd("");
         }
     };
 
@@ -55,17 +55,23 @@ export function EducationSettings(props: EducationSettingsProps) {
                         }
                     </select>
                 </div>
-                <div className="">
-                    <h2 className="section-heading">Data Inicial</h2>
-                    <input type="date" name="startDate" placeholder="Data Inicial" value={startDate} onChange={(e) => setStartDate(e.target.value)}/>
+                <div className="section flex-direction">
+                    <div className="section">
+                        <h2 className="section-heading">Data Inicial</h2>
+                        <input name="startDate" className="date-input" type="date" placeholder="Data Inicial" value={dateStart} onChange={(e) => setDateStart(e.target.value)}/>
+                    </div>
                     {!isPresent && (
-                      <input type="date" name="endDate" placeholder="Data Final" value={endDate} onChange={(e) => setEndDate(e.target.value)}/>
+                    <div className="section ajust-date">
+                        <h2 className="section-heading">Data Final</h2>
+                        <input name="endDate" className="date-input" type="date" placeholder="Data Final" value={dateEnd} onChange={(e) => setDateEnd(e.target.value)} />
+                    </div>
                     )}
-                    <label>
-                        <input type="checkbox" checked={isPresent} onChange={handlePresentDateChange} name="presentDate"/>
-                        Data Presente
-                    </label>
                 </div>
+                <div className="section checkbox">
+                    <input name="presentDate" type="checkbox" checked={isPresent} onChange={handlePresentDateChange}/>
+                    Ainda Não me formei
+                </div>
+                
 
                 <div className="buttons">
                     {
