@@ -16,9 +16,9 @@ export function SelectionBar(){
                 <div className="select-element" onClick={() => setSelectelement("content")}>
                     Conteúdos
                 </div>
-                <div className="select-element" onClick={() => setSelectelement("files")}>
+                {/* <div className="select-element" onClick={() => setSelectelement("files")}>
                     Arquivos
-                </div>
+                </div> */}
                 <div className="select-element" onClick={() => setSelectelement("groups")}>
                     Grupos
                 </div>
@@ -33,9 +33,9 @@ export function SelectionBar(){
 
 function getSelectElement(selectElement : string){
     if(selectElement == "content")
-        return <ProfileContentListing/>
+        return <ProfileContentListing title="Conteúdos"/>
     if(selectElement == "files")
-        return <ProfileContentListing filter="Documento"/>
+        return <ProfileContentListing title="Arquivos"/>
     if(selectElement == "groups")
         return <ProfileGroupListing/>
 }
