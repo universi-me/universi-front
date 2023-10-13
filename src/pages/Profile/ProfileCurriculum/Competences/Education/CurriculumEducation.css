@@ -62,6 +62,29 @@
     text-transform: uppercase;
     font-weight: var(--font-weight-bold);
 }
+
+.education-presentation {
+    margin-left: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+.direction-dateStart{
+    position: fixed;
+    right: 240px;
+}
+
+.direction-dateEnd{
+    position: fixed;
+    right: 80px;
+}
+
+.title-date {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
 #profile-page #right-side .education .education-list .education-item .icon {
     margin-right: 1.75em;
 

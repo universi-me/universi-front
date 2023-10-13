@@ -1,6 +1,6 @@
 import { useContext, MouseEvent } from 'react';
 import { ProfileContext } from '@/pages/Profile';
-import { ICON_EDIT_BLACK } from '@/utils/assets';
+import { ICON_DELETE_BLACK, ICON_EDIT_BLACK } from '@/utils/assets';
 import './CurriculumEducation.css'
 
 export type ProfileEducationProps = {
@@ -31,7 +31,6 @@ export function CurriculumEducation(props: ProfileEducationProps) {
     const education = profileContext.profileListData.education.find(
       (c) => c.id === educationId
     );
-
     profileContext.setEditEducation(education ?? null);
     props.openEducationSettings(e);
   };
@@ -64,14 +63,33 @@ export function CurriculumEducation(props: ProfileEducationProps) {
                                         <img src={ICON_EDIT_BLACK} />
                                     </button>
                                 }
-                                <h4 className="education-type">{education.typeEducation.name}</h4>
-                                <h4 className="learning">{education.institution.name}</h4>
-                                <h4 className="learning">{education.startDate}</h4>
                                 {
-                                  education.presentDate ? (
-                                    <h4 className="learning">{education.presentDate}</h4>
-                                  ) : true}
-                                <h4 className="learning">{education.endDate}</h4>
+                                    !profileContext.accessingLoggedUser ? null :
+                                    <button
+                                        className="edit-education"
+                                        onClick={(e) => editEducation(e, education.id)}
+                                        title="Editar competência"
+                                    >
+                                        <img src={ICON_DELETE_BLACK} />
+                                    </button>
+                                }
+                                
+                                <div className="education-presentation">
+                                  <h4 className="education-type">{education.typeEducation.name}</h4>
+                                  <h4 className="learning">{education.institution.name}</h4>
+                                </div>
+                                
+                                <div className="direction-dateStart">
+                                  <h4 className="title-date">Data de Inicio</h4>
+                                  <h4 className="learning education-date">{education.startDate}</h4>
+                                </div>
+                                <div className="direction-dateEnd">
+                                  <h4 className="title-date">Data de Término</h4>
+                                  <h4 className="learning education-date">
+                                    {education.endDate === "0002-11-30" ? education.presentDate = "Atuando" : education.endDate}
+                                  </h4>
+                                </div>
+
                             </div>
                         );
                     })

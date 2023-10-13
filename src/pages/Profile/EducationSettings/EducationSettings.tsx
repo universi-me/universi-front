@@ -45,7 +45,7 @@ export function EducationSettings(props: EducationSettingsProps) {
                 <div className="section level">
                     <h2 className="section-heading">Tipo de Formação</h2>
                     <select name="education-type" defaultValue={editEducation?.typeEducation.id ?? ""}>
-                        <option disabled value={""}>Selecione a Insituição de Formação</option>
+                        <option disabled value={""}>Selecione o tipo de Formação</option>
                         {
                             profileContext.allTypeEducation.map(typeEducation => {
                                 return (
@@ -57,19 +57,19 @@ export function EducationSettings(props: EducationSettingsProps) {
                 </div>
                 <div className="section flex-direction">
                     <div className="section">
-                        <h2 className="section-heading">Data Inicial</h2>
+                        <h2 className="section-heading">Data de Inicio</h2>
                         <input name="startDate" className="date-input" type="date" placeholder="Data Inicial" value={dateStart} onChange={(e) => setDateStart(e.target.value)}/>
                     </div>
                     {!isPresent && (
                     <div className="section ajust-date">
-                        <h2 className="section-heading">Data Final</h2>
+                        <h2 className="section-heading">Data de Termino</h2>
                         <input name="endDate" className="date-input" type="date" placeholder="Data Final" value={dateEnd} onChange={(e) => setDateEnd(e.target.value)} />
                     </div>
                     )}
                 </div>
                 <div className="section checkbox">
-                    <input name="presentDate" type="checkbox" checked={isPresent} onChange={handlePresentDateChange}/>
-                    Ainda Não me formei
+                    <input className="text-checkbox" name="presentDate" type="checkbox" checked={isPresent} onChange={handlePresentDateChange}/>
+                    Data atual
                 </div>
                 
 
@@ -100,7 +100,7 @@ export function EducationSettings(props: EducationSettingsProps) {
         const startDate = startDateElement.value;
 
         const endDateElement = document.querySelector('[name="endDate"]') as HTMLInputElement | null;
-        const endDate = endDateElement?.value;
+        const endDate = endDateElement?.value || "0000-00-00"
 
         const typeEducationElement = document.querySelector('[name="education-type"]') as HTMLSelectElement;
 
@@ -111,7 +111,7 @@ export function EducationSettings(props: EducationSettingsProps) {
                 institutionId: typeElement.value,
                 presentDate,
                 startDate,
-                endDate: endDate ?? "",
+                endDate,
                 typeEducationId: typeEducationElement.value,
             })
 
@@ -120,7 +120,7 @@ export function EducationSettings(props: EducationSettingsProps) {
                 institutionId: typeElement.value,
                 presentDate,
                 startDate,
-                endDate: endDate ?? "",
+                endDate,
                 typeEducationId: typeEducationElement.value,
             });
 

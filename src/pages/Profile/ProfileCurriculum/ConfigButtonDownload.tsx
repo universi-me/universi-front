@@ -1,3 +1,4 @@
+import { ICON_DOWNLOAD_WHITE } from '@/utils/assets';
 import React, { useState } from 'react';
 import { colors } from 'react-select/dist/declarations/src/theme';
 
@@ -12,7 +13,7 @@ function ConfigButtonDownload() {
   return (
     <div>
       <button className="curriculum-settings" onClick={handleButtonClick}>
-        <img style={{filter: 'brightness(0) invert(1)'}} src="/assets/icons/download.svg" />
+        <img style={{filter: 'brightness(0) invert(1)'}} src={ICON_DOWNLOAD_WHITE} />
       </button>
 
       {isOpen && (
