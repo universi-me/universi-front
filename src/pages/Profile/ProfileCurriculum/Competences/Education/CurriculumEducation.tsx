@@ -1,7 +1,9 @@
-import { useContext, MouseEvent } from 'react';
+import { useContext, MouseEvent, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { ICON_DELETE_BLACK, ICON_EDIT_BLACK } from '@/utils/assets';
 import './CurriculumEducation.css'
+import { remove } from '@/services/UniversimeApi/Education';
+import * as SwalUtils from "@/utils/sweetalertUtils";
 
 export type ProfileEducationProps = {
     openEducationSettings: (e: MouseEvent) => void;
@@ -22,6 +24,15 @@ export function CurriculumEducation(props: ProfileEducationProps) {
     )
   : [];
 
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedEducationId, setSelectedEducationId] = useState('');
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+
+  const toggleMenu = (educationId: string) => {
+    setSelectedEducationId(educationId);
+    setMenuOpen(!menuOpen);
+  };
+
   const addEducation = (e: MouseEvent<HTMLButtonElement>) => {
     profileContext.setEditEducation(null);
     props.openEducationSettings(e);
@@ -32,70 +43,92 @@ export function CurriculumEducation(props: ProfileEducationProps) {
       (c) => c.id === educationId
     );
     profileContext.setEditEducation(education ?? null);
+    setMenuOpen(false);
     props.openEducationSettings(e);
+  };
+
+  const deleteEducation = (educationId: string) => {
+    setDeleteConfirmation(false);
+    setSelectedEducationId('');
+  
+    remove({ educationId })
+    .then((response) => {
+      console.log(educationId)
+        if (!response.success) {
+            throw new Error(response.message);
+        } else {
+          window.location.reload();
+        }
+    })
+    .catch((reason: Error) => {
+        SwalUtils.fireModal({
+            title: "Erro ao remover a Formação",
+            text: reason.message,
+            icon: "error",
+        });
+    });
   };
 
   return (
     <div className="education">
-            <div className="heading">
-                Formação Acadêmica
-                {
-                    profileContext.accessingLoggedUser ?
-                        <button className="edit-button" onClick={addEducation}>
-                            <i className="bi bi-plus-circle-fill" />
+      <div className="heading">
+        Formação Acadêmica
+        {profileContext.accessingLoggedUser ? (
+          <button className="edit-button" onClick={addEducation}>
+            <i className="bi bi-plus-circle-fill" />
+          </button>
+        ) : null}
+      </div>
+      <div className="education-list">
+        {profileContext.profileListData.education &&
+        profileContext.profileListData.education.length > 0 ? (
+          sortedEducation.map((education) => {
+            return (
+              <div className="education-item" key={education.id}>
+                {profileContext.accessingLoggedUser ? (
+                  <div className="config-button">
+                    <button
+                      className="config-button-icon"
+                      onClick={() => toggleMenu(education.id)}
+                      title="Configurações"
+                    >
+                      <img src="/assets/icons/settings.svg" />
+                    </button>
+                    {menuOpen && selectedEducationId === education.id ? (
+                      <div className="config-menu">
+                        <button onClick={(e) => editEducation(e, education.id)}>
+                          <img src={ICON_EDIT_BLACK} />
                         </button>
-                    : null
-                }
-            </div>
-            <div className="education-list">
-                {
-                    profileContext.profileListData.education && profileContext.profileListData.education.length > 0
-                    ? sortedEducation.map(education => {
-                        return (
-                            <div className="education-item" key={education.id}>
-                                {
-                                    !profileContext.accessingLoggedUser ? null :
-                                    <button
-                                        className="edit-education"
-                                        onClick={(e) => editEducation(e, education.id)}
-                                        title="Editar competência"
-                                    >
-                                        <img src={ICON_EDIT_BLACK} />
-                                    </button>
-                                }
-                                {
-                                    !profileContext.accessingLoggedUser ? null :
-                                    <button
-                                        className="edit-education"
-                                        onClick={(e) => editEducation(e, education.id)}
-                                        title="Editar competência"
-                                    >
-                                        <img src={ICON_DELETE_BLACK} />
-                                    </button>
-                                }
-                                
-                                <div className="education-presentation">
-                                  <h4 className="education-type">{education.typeEducation.name}</h4>
-                                  <h4 className="learning">{education.institution.name}</h4>
-                                </div>
-                                
-                                <div className="direction-dateStart">
-                                  <h4 className="title-date">Data de Inicio</h4>
-                                  <h4 className="learning education-date">{education.startDate}</h4>
-                                </div>
-                                <div className="direction-dateEnd">
-                                  <h4 className="title-date">Data de Término</h4>
-                                  <h4 className="learning education-date">
-                                    {education.endDate === "0002-11-30" ? education.presentDate = "Atuando" : education.endDate}
-                                  </h4>
-                                </div>
-
-                            </div>
-                        );
-                    })
-                    : <p className="empty-educations">Nenhuma Formação cadastrada.</p>
-                }
-            </div>
-        </div>
+                        <button onClick={() => deleteEducation(education.id)}>
+                        <img src={ICON_DELETE_BLACK} />
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
+                <div className="education-presentation">
+                  <h4 className="education-type">{education.typeEducation.name}</h4>
+                  <h4 className="learning">{education.institution.name}</h4>
+                </div>
+                <div className="direction-dateStart">
+                  <h4 className="title-date">Data de Inicio</h4>
+                  <h4 className="learning education-date">{education.startDate}</h4>
+                </div>
+                <div className="direction-dateEnd">
+                  <h4 className="title-date">Data de Término</h4>
+                  <h4 className="learning education-date">
+                    {education.endDate === '0002-11-30'
+                      ? (education.presentDate = 'Atuando')
+                      : education.endDate}
+                  </h4>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <p className="empty-educations">Nenhuma Formação cadastrada.</p>
+        )}
+      </div>
+    </div>
   );
 }

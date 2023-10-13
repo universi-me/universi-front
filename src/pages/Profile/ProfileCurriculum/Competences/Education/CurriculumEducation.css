@@ -64,7 +64,7 @@
 }
 
 .education-presentation {
-    margin-left: 0.3rem;
+    margin-left: 0.6rem;
     display: flex;
     flex-direction: column;
     align-items: left;
@@ -84,6 +84,41 @@
     font-size: 0.9rem;
     font-weight: 600;
 }
+
+.config-button {
+    position: relative;
+}
+
+.config-button-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+
+.config-menu {
+    position: absolute;
+    top: -100%;
+    right: 0;
+    background: #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    display: none;
+  }
+  
+  .config-button:hover .config-menu {
+    display: block;
+  }
+  
+  .config-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
 
 #profile-page #right-side .education .education-list .education-item .icon {
     margin-right: 1.75em;

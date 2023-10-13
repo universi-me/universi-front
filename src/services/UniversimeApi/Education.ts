@@ -46,7 +46,7 @@ export async function create(body:EducationCreate_RequestDTO) {
 }
 
 export async function update(body: EducationUpdate_RequestDTO) {
-    return (await api.put<EducationUpdate_ResponseDTO>(`/curriculum/education/${body.educationId}`, {
+    return (await api.put<EducationUpdate_ResponseDTO>(`/curriculum/education/atualizar/`, {
         id:            body.educationId,
         typeEducation: body.typeEducationId,
         institution:   body.institutionId,
@@ -57,8 +57,8 @@ export async function update(body: EducationUpdate_RequestDTO) {
 }
 
 export async function remove(body:  EducationId_RequestDTO) {
-    return (await api.post<EducationRemove_ResponseDTO>("/curriculum/education", {
-        educacaoId: body.educationId,
+    return (await api.post<EducationRemove_ResponseDTO>("/curriculum/education/remover", {
+        educationId: body.educationId,
     })).data;
 }
 
