@@ -33,9 +33,9 @@ export function SelectionBar(){
 
 function getSelectElement(selectElement : string){
     if(selectElement == "content")
-        return <ProfileContentListing/>
+        return <ProfileContentListing title="Conteúdos"/>
     if(selectElement == "files")
-        return <ProfileContentListing filter="Documento"/>
+        return <ProfileContentListing title="Arquivos"/>
     if(selectElement == "groups")
         return <ProfileGroupListing/>
 }
