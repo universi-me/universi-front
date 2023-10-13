@@ -62,12 +62,6 @@ export async function competences(body: ProfileIdAndUsername_RequestDTO) {
 }
 
 export async function educations(body: ProfileIdAndUsername_RequestDTO) {
-    return {
-        body: {
-            educations: []
-        }
-    };
-
     return (await api.post<ProfileEducation_ResponseDTO>('/profile/educations', {
         profileId: body.profileId,
         username:  body.username,

@@ -36,23 +36,23 @@ export async function get(body:EducationId_RequestDTO) {
 }
 
 export async function create(body:EducationCreate_RequestDTO) {
-    return (await api.post<EducationCreate_ResponseDTO>("/curriculum/education", {
-        educacaotipoId:    body.typeEducationId,
-        instituicaoId:     body.institutionId,
-        dataInicial:       body.startDate,
-        dataFinal:         body.endDate,
-        dataPresente:      body.presentDate,
+    return (await api.post<EducationCreate_ResponseDTO>("/curriculum/education/criar", {
+        typeEducationId: body.typeEducationId,
+        institutionId:   body.institutionId,
+        starDate:        body.startDate,
+        endDate:         body.endDate,
+        presentDate:     body.presentDate,
     })).data;
 }
 
 export async function update(body: EducationUpdate_RequestDTO) {
-    return (await api.post<EducationCreate_ResponseDTO>("/curriculum/education", {
-        educacaoId:        body.educationId,
-        educacaotipoId:    body.typeEducationId,
-        instituicaoId:     body.institutionId,
-        dataInicial:       body.startDate,
-        dataFinal:         body.endDate,
-        dataPresente:      body.presentDate,
+    return (await api.put<EducationUpdate_ResponseDTO>(`/curriculum/education/${body.educationId}`, {
+        id:            body.educationId,
+        typeEducation: body.typeEducationId,
+        institution:   body.institutionId,
+        startDate:     body.startDate,
+        endDate:       body.endDate,
+        presentDate:   body.presentDate,
     })).data;
 }
 
