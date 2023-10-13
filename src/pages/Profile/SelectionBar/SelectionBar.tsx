@@ -16,9 +16,9 @@ export function SelectionBar(){
                 <div className="select-element" onClick={() => setSelectelement("content")}>
                     Conteúdos
                 </div>
-                <div className="select-element" onClick={() => setSelectelement("files")}>
+                {/* <div className="select-element" onClick={() => setSelectelement("files")}>
                     Arquivos
-                </div>
+                </div> */}
                 <div className="select-element" onClick={() => setSelectelement("groups")}>
                     Grupos
                 </div>
