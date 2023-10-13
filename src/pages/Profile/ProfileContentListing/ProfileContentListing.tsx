@@ -1,27 +1,29 @@
-import UniversimeApi from "@/services/UniversimeApi";
-import { Content } from "@/types/Capacity";
-import { useEffect, useState } from "react";
+import { Content, Folder } from "@/types/Capacity";
+import { useEffect, useState, useContext } from "react";
 import { ProfileContentItem } from "../ProfileContentItem/ProfileContentItem";
 import "./ProfileContentListing.css"
+import { ProfileContext } from "../ProfileContext";
 
 export function ProfileContentListing({amount = -1, filter = "Vídeo"} : {amount?: number, filter? : string}){
 
-    const [availableContents, setAvailableContents] = useState<Content[]>([])
+    const profileContext = useContext(ProfileContext);
+    const [availableContents, setAvailableContents] = useState<Folder[]>([])
     const [title, setTitle] = useState(filter)
 
     useEffect( () =>{
-        UniversimeApi.Capacity.contentList()
-        .then(res => setAvailableContents(filterContents(res.body.contents)))
+        setAvailableContents(filterContents(profileContext?.profileListData.folders ?? []))
         setTitle(filter.replace("Vídeo", "Conteúdos").replace("Documento", "Arquivos"))
     }, [amount, filter])
 
-    function filterContents(contents : Content[]){
-        let contentsFiltered : Content[] = []
-        contents.forEach((content) => {
-          if(content.type == filter)
-            contentsFiltered.push(content)
-        })
-        return contentsFiltered
+    function filterContents(contents : Folder[]){
+        return contents;
+
+        // let contentsFiltered : Content[] = []
+        // contents.forEach((content) => {
+        //   if(content.type == filter)
+        //     contentsFiltered.push(content)
+        // })
+        // return contentsFiltered
     }
 
     useEffect(() => {
@@ -43,7 +45,7 @@ export function ProfileContentListing({amount = -1, filter = "Vídeo"} : {amount
     
         // const contentThumbnails = document.querySelectorAll('.content-thumbnail');
         // contentThumbnails.forEach(updateThumbnailImage);
-        availableContents.forEach(updateThumbnailImage)
+        // availableContents.forEach(updateThumbnailImage)
 
         if(amount != -1)
             setAvailableContents(availableContents.slice(1, amount))
@@ -59,9 +61,7 @@ export function ProfileContentListing({amount = -1, filter = "Vídeo"} : {amount
                     availableContents.length === 0 ? <p>Nenhum conteúdo no momento</p> :  
 
                     availableContents.map((content) =>(
-                        <div>
-                          <ProfileContentItem content_={content}></ProfileContentItem>
-                        </div>
+                          <ProfileContentItem content={content} key={content.id} />
                     ))
                 }
             </div>

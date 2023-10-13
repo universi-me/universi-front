@@ -127,11 +127,12 @@ export function ProfilePage() {
     }
 
     async function loadProfileListData(profileId: string) {
-        const [groupsRes, competencesRes, linksRes, recommendationsRes] = await Promise.all([
+        const [groupsRes, competencesRes, linksRes, recommendationsRes, foldersRes] = await Promise.all([
             UniversimeApi.Profile.groups({profileId}),
             UniversimeApi.Profile.competences({profileId}),
             UniversimeApi.Profile.links({profileId}),
             UniversimeApi.Profile.recommendations({profileId}),
+            UniversimeApi.Profile.folders({profileId, assignedOnly: true}),
         ]);
 
         return {
@@ -140,6 +141,7 @@ export function ProfilePage() {
             links: linksRes.body.links,
             recommendationsSend: recommendationsRes.body.recomendationsSend,
             recommendationsReceived: recommendationsRes.body.recomendationsReceived,
+            folders: foldersRes.body.folders,
             achievements: [], // todo: fetch achievements
         };
     }

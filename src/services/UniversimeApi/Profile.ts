@@ -4,6 +4,7 @@ import type { Link } from "@/types/Link";
 import type { Profile } from "@/types/Profile";
 import type { Recommendation } from "@/types/Recommendation";
 import type { ApiResponse } from "@/types/UniversimeApi";
+import type { Folder } from "@/types/Capacity";
 import { api } from "./api";
 
 export type ProfileEdit_RequestDTO = {
@@ -20,6 +21,10 @@ export type ProfileIdAndUsername_RequestDTO = {
     username?:  string;
 };
 
+export type ProfileFolders_RequestDTO = ProfileIdAndUsername_RequestDTO & {
+    assignedOnly?: boolean;
+};
+
 export type ProfileGet_ResponseDTO =             ApiResponse<{ profile: Profile }>;
 export type ProfileEdit_ResponseDTO =            ApiResponse;
 export type ProfileGroups_ResponseDTO =          ApiResponse<{ groups: Group[] }>;
@@ -29,6 +34,7 @@ export type ProfileRecommendations_ResponseDTO = ApiResponse<{
     recomendationsSend: Recommendation[];
     recomendationsReceived: Recommendation[]
 }>;
+export type ProfileFolders_ResponseDTO         = ApiResponse<{ folders: Folder[] }>;
 
 export async function profile() {
     return (await api.get<ProfileGet_ResponseDTO>('/profile', {})).data
@@ -71,4 +77,12 @@ export async function recommendations(body: ProfileIdAndUsername_RequestDTO) {
         profileId: body.profileId,
         username:  body.username,
     })).data
+}
+
+export async function folders(body: ProfileFolders_RequestDTO) {
+    return (await api.post<ProfileFolders_ResponseDTO>("/profile/folders", {
+        profileId: body.profileId,
+        username:  body.username,
+        assignedOnly: body.assignedOnly,
+    })).data;
 }
