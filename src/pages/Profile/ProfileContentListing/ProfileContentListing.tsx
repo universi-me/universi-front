@@ -4,14 +4,14 @@ import { ProfileContentItem } from "../ProfileContentItem/ProfileContentItem";
 import "./ProfileContentListing.css"
 import { ProfileContext } from "../ProfileContext";
 
-export function ProfileContentListing({amount = -1, title = "Vídeo"} : {amount?: number, title : string}){
+export function ProfileContentListing({title = "Vídeo"} : {title : string}){
 
     const profileContext = useContext(ProfileContext);
     const [availableContents, setAvailableContents] = useState<Folder[]>([])
 
     useEffect( () =>{
         setAvailableContents(profileContext?.profileListData.folders ?? []);
-    }, [amount, title])
+    }, [title])
 
       return(
         <div>
