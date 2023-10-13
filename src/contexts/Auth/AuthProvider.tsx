@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { Profile } from "@/types/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi";
-import { goTo } from "@/services/routes";
+import { goTo, requiresLoginToAccess } from "@/services/routes";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -12,6 +12,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     updateLoggedUser()
   }, []);
+
+  const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false);
+
+  useEffect(() => {
+    const isLogged = !!profile;
+    const requiresLogin = requiresLoginToAccess(location.pathname);
+
+    setRedirectToLogin(requiresLogin && !isLogged);
+  }, [location.pathname])
+
+    if (redirectToLogin) {
+        goTo("/login");
+        return <></>;
+    }
 
     return (
         <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser }}>

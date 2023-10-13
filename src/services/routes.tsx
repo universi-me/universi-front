@@ -109,3 +109,26 @@ export function goTo(pathname: string) {
       router.navigate(`/${pathnameWithoutSlash}`);
   
 }
+
+
+export function requiresLoginToAccess(pathname: string): boolean {
+    if (!pathname.startsWith("/")) {
+        pathname = "/" + pathname;
+    }
+
+    pathname = pathname.replace(/\/+$/, "");
+
+    return !PASSWORD_FREE.find(page => {
+        return page.exec(pathname) !== null;
+    });
+}
+
+const PASSWORD_FREE = [
+    /^\/$/,
+    /^\/sobre$/,
+    /^\/login$/,
+    /^\/signup$/,
+    /^\/recovery$/,
+    /^\/recovery-password\/[-a-zA-Z0-9]/,
+    /^\/google-oauth-redirect$/,
+];
