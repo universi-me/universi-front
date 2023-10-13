@@ -11,6 +11,8 @@ import * as Image from "./Image"
 import * as Education from "./Education"
 import * as Institution from "./Institution"
 import * as TypeEducation from "./TypeEducation"
+import * as TypeExperience from "./TypeExperience"
+import * as Experience from "./Experience"
 
 export const UniversimeApi = {
     api,
@@ -20,6 +22,8 @@ export const UniversimeApi = {
     Institution,
     TypeEducation,
     Education,
+    Experience,
+    TypeExperience,
     CompetenceType,
     Group,
     Link,

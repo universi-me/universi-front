@@ -8,22 +8,27 @@ import { Achievements } from "@/types/Achievements";
 import { Education } from "@/types/Education";
 import { Institution } from "@/types/Institution";
 import { TypeEducation } from "@/types/TypeEducation";
+import { Experience } from "@/types/Experience";
+import { TypeExperience } from "@/types/TypeExperience";
 
 export type ProfileContextType = null | {
     accessingLoggedUser: boolean;
 
     profile:        Profile;
     editCompetence: Competence | null;
-    editEducation: Education | null;
+    editEducation:  Education | null;
+    editExperience: Experience | null;
 
 
     allInstitution:      Institution[];
     allCompetenceTypes:  CompetenceType[];
     allTypeEducation:    TypeEducation[];
+    allTypeExperience:   TypeExperience[];
 
     profileListData: {
         groups:                  Group[];
         education:               Education[];
+        experience:              Experience[];
         competences:             Competence[];
         links:                   Link[];
         recommendationsSend:     Recommendation[];
@@ -33,6 +38,7 @@ export type ProfileContextType = null | {
 
     setEditCompetence(competence: Competence | null): any;
     setEditEducation(education: Education | null): any;
+    setEditExperience(experience: Experience | null): any;
     reloadPage: () => void | Promise<void>;
 }
 

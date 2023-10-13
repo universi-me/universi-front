@@ -58,7 +58,7 @@ export async function update(body: EducationUpdate_RequestDTO) {
 
 export async function remove(body:  EducationId_RequestDTO) {
     return (await api.post<EducationRemove_ResponseDTO>("/curriculum/education", {
-        competenciaId: body.educationId,
+        educacaoId: body.educationId,
     })).data;
 }
 

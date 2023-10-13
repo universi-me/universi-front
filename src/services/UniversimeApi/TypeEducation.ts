@@ -12,7 +12,7 @@ export type TypeEducationList_ResponseDTO = TypeEducation[];
 
 export async function get(body: typeEducation_RequestDTO) {
     return (await api.post<TypeEducationGet_ResponseDTO>("/curriculum/TypeEducation", {
-        instituionId: body.typeEducationId
+        typeEducationId: body.typeEducationId
     })).data;
 }
 

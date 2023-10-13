@@ -3,7 +3,7 @@ import { api } from "./api";
 import { Institution } from "@/types/Institution";
 
 export type instituionGet_RequestDTO = {
-    instituionId:   string;
+    institutionId:   string;
 }
 
 export type InstitutionTypeGet_ResponseDTO = ApiResponse<{ instituion: Institution }>;
@@ -11,7 +11,7 @@ export type InstitutionTypeList_ResponseDTO = Institution[];
 
 export async function get(body:instituionGet_RequestDTO) {
     return (await api.post<InstitutionTypeGet_ResponseDTO>("/curriculum/institution", {
-        instituionId: body.instituionId,
+        institutionId: body.institutionId,
     })).data;
 }
 

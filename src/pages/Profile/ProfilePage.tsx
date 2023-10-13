@@ -17,6 +17,7 @@ import './section.css';
 import { SelectionBar } from "./SelectionBar/SelectionBar";
 import type { Education } from "@/types/Education";
 import type { Competence } from "@/types/Competence";
+import { Experience } from "@/types/Experience";
 
 export function ProfilePage() {
     const auth = useContext(AuthContext);
@@ -30,6 +31,7 @@ export function ProfilePage() {
     const [profileContext, setProfileContext] = useState<ProfileContextType>(null);
     const [editCompetence, setEditCompetence] = useState<Competence | null>(null);
     const [editEducation, setEditEducation] = useState<Education | null>(null);
+    const [editExperience, setEditExperience] = useState<Experience | null>(null);
 
     useEffect(() => {
         loadAccessedUser();
@@ -112,11 +114,12 @@ export function ProfilePage() {
     }
 
     async function loadAccessedUser() {
-        const [profileRes, competenceTypeRes, institutionsRes, typeEducationRes] = await Promise.all([
+        const [profileRes, competenceTypeRes, institutionsRes, typeEducationRes, typeExperienceRes] = await Promise.all([
             UniversimeApi.Profile.get({username: id}),
             UniversimeApi.CompetenceType.list(),
             UniversimeApi.Institution.list(),
             UniversimeApi.TypeEducation.list(),
+            UniversimeApi.TypeExperience.list(),
         ]);
 
         const profileListData = await loadProfileListData(profileRes.body.profile.id);
@@ -133,8 +136,12 @@ export function ProfilePage() {
             editEducation: editEducation,
             setEditEducation,
 
+            editExperience: editExperience,
+            setEditExperience,
+
             allInstitution: institutionsRes,
             allTypeEducation: typeEducationRes,
+            allTypeExperience: typeExperienceRes,
 
             reloadPage: loadAccessedUser,
         });
