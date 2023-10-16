@@ -16,6 +16,7 @@ export type Group = {
     publicGroup:       boolean;
     rootGroup:         boolean;
     bannerImage:       string | null;
+    organization:      Group | null;
 };
 
 export type GroupType = "INSTITUTION" | "CAMPUS" | "COURSE" | "PROJECT" | "CLASSROOM" | "MONITORIA" | "LABORATORY"
