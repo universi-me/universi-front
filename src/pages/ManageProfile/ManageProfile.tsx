@@ -40,12 +40,12 @@ export function ManageProfilePage() {
                             <legend>Altere seu nome</legend>
                             <label className="legend" htmlFor="firstname">
                                 <span className="required-input">Nome</span>
-                                <input type="text" name="firstname" id="firstname" defaultValue={firstname} onChange={setStateAsValue(setFirstname)} required />
+                                <input type="text" name="firstname" id="firstname" defaultValue={profile.firstname ?? ""} onChange={setStateAsValue(setFirstname)} required maxLength={255} />
                             </label>
 
                             <label className="legend" htmlFor="lastname">
                                 <span className="required-input">Sobrenome</span>
-                                <input type="text" name="lastname" id="lastname" defaultValue={lastname} onChange={setStateAsValue(setLastname)} required />
+                                <input type="text" name="lastname" id="lastname" defaultValue={profile.lastname ?? ""} onChange={setStateAsValue(setLastname)} required maxLength={255} />
                             </label>
                         </fieldset>
                     </div>
