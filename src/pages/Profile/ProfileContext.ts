@@ -2,9 +2,10 @@ import { createContext } from "react"
 import type { Profile } from "@/types/Profile";
 import type { Group } from "@/types/Group";
 import type { Competence, CompetenceType, Level } from "@/types/Competence";
-import { Recommendation } from "@/types/Recommendation";
-import { Link } from "@/types/Link";
-import { Achievements } from "@/types/Achievements";
+import type { Recommendation } from "@/types/Recommendation";
+import type { Link } from "@/types/Link";
+import type { Achievements } from "@/types/Achievements";
+import type { Folder } from "@/types/Capacity";
 
 export type ProfileContextType = null | {
     accessingLoggedUser: boolean;
@@ -20,6 +21,7 @@ export type ProfileContextType = null | {
         recommendationsSend:     Recommendation[];
         recommendationsReceived: Recommendation[];
         achievements:            Achievements[];
+        folders:                 Folder[];
     };
 
     reloadPage: () => void | Promise<void>;

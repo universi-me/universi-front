@@ -1,55 +1,17 @@
-import UniversimeApi from "@/services/UniversimeApi";
-import { Content } from "@/types/Capacity";
-import { useEffect, useState } from "react";
+import { Folder } from "@/types/Capacity";
+import { useEffect, useState, useContext } from "react";
 import { ProfileContentItem } from "../ProfileContentItem/ProfileContentItem";
 import "./ProfileContentListing.css"
+import { ProfileContext } from "../ProfileContext";
 
-export function ProfileContentListing({amount = -1, filter = "Vídeo"} : {amount?: number, filter? : string}){
+export function ProfileContentListing({title = "Vídeo"} : {title : string}){
 
-    const [availableContents, setAvailableContents] = useState<Content[]>([])
-    const [title, setTitle] = useState(filter)
+    const profileContext = useContext(ProfileContext);
+    const [availableContents, setAvailableContents] = useState<Folder[]>([])
 
     useEffect( () =>{
-        UniversimeApi.Capacity.contentList()
-        .then(res => setAvailableContents(filterContents(res.body.contents)))
-        setTitle(filter.replace("Vídeo", "Conteúdos").replace("Documento", "Arquivos"))
-    }, [amount, filter])
-
-    function filterContents(contents : Content[]){
-        let contentsFiltered : Content[] = []
-        contents.forEach((content) => {
-          if(content.type == filter)
-            contentsFiltered.push(content)
-        })
-        return contentsFiltered
-    }
-
-    useEffect(() => {
-        const extractVideoId = (url: string) => {
-          const regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
-          const match = url.match(regExp);
-          if (match && match[1].length === 11) {
-            return match[1];
-          }
-        };
-    
-        const updateThumbnailImage = (content : Content) => {
-          const videoId = extractVideoId(content.url);
-          if (videoId) {
-            const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
-            content.image = thumbnailUrl
-          }
-        };
-    
-        // const contentThumbnails = document.querySelectorAll('.content-thumbnail');
-        // contentThumbnails.forEach(updateThumbnailImage);
-        availableContents.forEach(updateThumbnailImage)
-
-        if(amount != -1)
-            setAvailableContents(availableContents.slice(1, amount))
-        
-
-      }, [availableContents]);
+        setAvailableContents(profileContext?.profileListData.folders ?? []);
+    }, [title])
 
       return(
         <div>
@@ -59,9 +21,7 @@ export function ProfileContentListing({amount = -1, filter = "Vídeo"} : {amount
                     availableContents.length === 0 ? <p>Nenhum conteúdo no momento</p> :  
 
                     availableContents.map((content) =>(
-                        <div>
-                          <ProfileContentItem content_={content}></ProfileContentItem>
-                        </div>
+                          <ProfileContentItem content={content} key={content.id} />
                     ))
                 }
             </div>
