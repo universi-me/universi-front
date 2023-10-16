@@ -19,15 +19,22 @@
 
         #group-name {
             width: fit-content;
-            height: 0;
+            height: fit-content;
 
             margin-left: auto;
             margin-right: 1rem;
-            translate: 0 -2.5em;
+            transform: translateY(calc(-100% - 0.5em));
+            transform-origin: bottom right;
 
             color: var(--font-color-v1);
             font-size: 1.5rem;
             font-weight: var(--font-weight-default);
+            text-align: right;
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
         }
     }
 }
