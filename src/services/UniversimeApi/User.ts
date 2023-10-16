@@ -21,6 +21,10 @@ export type UserNewPassword_RequestDTO = {
     token:    string | undefined;
 };
 
+export type UsernameAvailable_RequestDTO = {
+    username: string;
+};
+
 export type UserSignUp_ResponseDTO = ApiResponse;
 export type UserEdit_ResponseDTO =   ApiResponse;
 
@@ -49,5 +53,11 @@ export async function newPassword(body : UserNewPassword_RequestDTO){
     return (await api.post<ApiResponse>("/new-password", {
         newPassword: body.password,
         token: body.token,
+    })).data;
+}
+
+export async function usernameAvailable(body : UsernameAvailable_RequestDTO){
+    return (await api.post<ApiResponse>("/username-available",{
+        username: body.username,
     })).data;
 }
