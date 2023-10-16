@@ -18,8 +18,8 @@ export function ProfileBio(props: ProfileBioProps) {
     const [contentCounter, setContentCounter] = useState(10)
 
     useEffect(() =>{
-    UniversimeApi.Capacity.contentList()
-    .then(res=>setContentCounter(res.body?.contents.length == undefined ? 0 : res.body.contents.length))
+    UniversimeApi.Profile.folders({assignedOnly: true, profileId: props.profile.id})
+    .then(res=>setContentCounter(res.body?.folders.length ?? 0))
     }, [props.profile.user.name])
 
     return (
