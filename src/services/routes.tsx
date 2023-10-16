@@ -1,6 +1,6 @@
 import { QuizPage } from "@/pages/Quiz";
 import { App } from "@/src/App";
-import GroupPage from "@/pages/Group";
+import GroupPage, { GroupPageLoader } from "@/pages/Group";
 import {ProfilePage} from "@/pages/Profile";
 import { About } from "@/pages/About";
 import ManageGroupPage, { ManageGroupLoader } from "@/pages/ManageGroup";
@@ -62,7 +62,7 @@ export const router = createBrowserRouter([{
     },
     { path: "/profile/:id", element: <ProfilePage /> },
     { path: "/manage-profile", element: <ManageProfilePage />, loader: ManageProfileLoader },
-    { path: "/group/*", element: <GroupPage /> },
+    { path: "/group/*", element: <GroupPage />, loader: GroupPageLoader },
     { path: "/recovery-password/:id", element: <NewPassword/>},
     {//identificador unico - dynamic routes
       //path: "perfil/:id",

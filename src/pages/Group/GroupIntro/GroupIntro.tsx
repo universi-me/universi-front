@@ -2,45 +2,31 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { GroupContext } from "@/pages/Group";
-import { EDIT_GROUP_PARAMETER } from "@/pages/ManageGroup";
-import { AuthContext } from "@/contexts/Auth";
-import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
-import { GroupTypeToLabel } from "@/types/Group";
-import { ICON_VERIFIED, ICON_EDIT_BLACK } from "@/utils/assets";
-import "./GroupIntro.css"
+import { groupBannerUrl } from "@/utils/apiUtils";
 
-export type GroupIntroProps = {
-    /**
-     * If true will render a verified icon
-     */
-    verified: boolean;
-}
+import "./GroupIntro.less";
 
-export function GroupIntro(props: GroupIntroProps) {
+export function GroupIntro() {
     const groupContext = useContext(GroupContext);
-    const authContext = useContext(AuthContext);
+    const organization = groupContext?.group.organization ?? undefined;
 
     return (
         groupContext === null ? null :
 
         <div id="group-intro">
-            <ProfileImage className="image" imageUrl={groupContext.group.image} noImageColor="var(--card-background-color)" />
-            <div className="name">
-                <h2 >{groupContext.group.name}</h2>
-                {
-                    props.verified ?
-                        <img src={ICON_VERIFIED} className="verified-icon" />
-                    : null
-                }
-                {
-                    groupContext.group.admin.user.id === authContext?.user?.id
-                    ? <Link title="Editar dados grupo" className="edit-group-button" to={`/manage-group?${EDIT_GROUP_PARAMETER}=${groupContext.group.path}`}>
-                        <img src={ICON_EDIT_BLACK} />
-                      </Link>
-                    : null
-                }
+            <div id="banner-wrapper">
+                <img id="organization-banner" src={groupBannerUrl(groupContext.group)} />
+                <h3 id="group-name">
+                    { organization
+                        ? <>
+                            <Link to={`/group${organization.path}`}>{organization.name}</Link>
+                            {" > "}
+                            {groupContext.group.name}
+                          </>
+                        : null
+                    }
+                </h3>
             </div>
-            <div className="type">{GroupTypeToLabel[groupContext.group.type]}</div>
         </div>
     );
 }
