@@ -17,7 +17,7 @@
     margin: 40px 2.5em;
 
     display: grid;
-    grid-template-columns: 20% auto;
+    grid-template-columns: 20rem auto;
 }
 
 #profile-page #left-side {
@@ -27,26 +27,4 @@
 #profile-page #right-side {
     width: 95%;
     margin-left: auto;
-}
-
-#profile-page .edit-button {
-    width: min-content;
-    height: min-content;
-
-    border: none;
-    background: none;
-
-    cursor: pointer;
-
-}
-
-#profile-page #user-header-bar .edit-button {
-    top: 1.5em;
-    right: 3.2em;
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: .5em;
-    border-radius: 4px;
-
-    /* todo: figure out why the button is bigger than the image */
-    padding-bottom: calc(.5em - 6px);
 }

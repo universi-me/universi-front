@@ -16,6 +16,8 @@ export type ProfileBioProps = {
 
 export function ProfileBio(props: ProfileBioProps) {
     const [contentCounter, setContentCounter] = useState(10)
+    const renderEditButton = props.profile.user.ownerOfSession
+        && location.pathname.replace(/\/+$/, "") == `/profile/${props.profile.user.name}`;
 
     useEffect(() =>{
     UniversimeApi.Profile.folders({assignedOnly: true, profileId: props.profile.id})
@@ -27,8 +29,8 @@ export function ProfileBio(props: ProfileBioProps) {
 
             <div className='profile-header'>
                 {
-                    props.profile.user.ownerOfSession ?
-                        <Link className="edit-button" to="/manage-profile">
+                    renderEditButton ?
+                        <Link className="edit-button" to="/manage-profile" title="Editar seu perfil">
                             <img src={ICON_EDIT_WHITE} alt="Editar" />
                         </Link>
                     : null
