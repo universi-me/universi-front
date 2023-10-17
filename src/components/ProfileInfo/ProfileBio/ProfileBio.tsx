@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
-import { getProfileImageUrl } from '@/utils/profileUtils';
+import { getFullName, getProfileImageUrl } from '@/utils/profileUtils';
 import { ICON_EDIT_WHITE } from '@/utils/assets';
 import UniversimeApi from '@/services/UniversimeApi';
 
@@ -16,8 +16,9 @@ export type ProfileBioProps = {
 
 export function ProfileBio(props: ProfileBioProps) {
     const [contentCounter, setContentCounter] = useState(10)
-    const renderEditButton = props.profile.user.ownerOfSession
-        && location.pathname.replace(/\/+$/, "") == `/profile/${props.profile.user.name}`;
+    const linkToOwnProfile = `/profile/${props.profile.user.name}`;
+    const isOnOwnProfile = location.pathname.replace(/\/+$/, "") == linkToOwnProfile;
+    const renderEditButton = props.profile.user.ownerOfSession && isOnOwnProfile;
 
     useEffect(() =>{
     UniversimeApi.Profile.folders({assignedOnly: true, profileId: props.profile.id})
@@ -39,7 +40,11 @@ export function ProfileBio(props: ProfileBioProps) {
 
             <div className="intro intro-section">
                 <ProfileImage className="image" imageUrl={getProfileImageUrl(props.profile)} noImageColor="#505050" />
-                <h2 className="card-heading name">{ `${props.profile.firstname} ${props.profile.lastname}` }</h2>
+                {
+                    isOnOwnProfile
+                        ? <h2 className="card-heading name">{ getFullName(props.profile) }</h2>
+                        : <Link className="card-heading name" to={linkToOwnProfile}>{ getFullName(props.profile) }</Link>
+                }
                 {
                     props.profile.bio === null || props.profile.bio.length === 0
                     ? <p style={{fontStyle: 'italic', textAlign: 'center'}}>Nenhuma bio</p>

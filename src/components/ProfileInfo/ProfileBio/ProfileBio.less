@@ -1,3 +1,5 @@
+@import url(/src/layouts/fonts.less);
+
 .profile-bio-component {
     background-color: transparent !important;
     border: solid #0091b8 1px !important;
@@ -22,6 +24,21 @@
     .name {
         margin-top: .25em;
         text-align: center;
+
+        font-size: 1.25rem;
+        font-weight: @font-weight-semibold;
+
+        text-decoration: none;
+        color: inherit;
+
+        &[href] {
+            cursor: pointer;
+            will-change: text-decoration;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 
     .intro-section {
