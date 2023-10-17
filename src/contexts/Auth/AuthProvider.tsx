@@ -82,6 +82,6 @@ async function getLoggedProfile() {
 }
 
 function redirectAfterSignIn(needProfile: boolean, profileId: string) {
-    goTo(needProfile ? "manage-profile" : "profile/"+profileId);
+    //goTo(needProfile ? "manage-profile" : "profile/"+profileId);
     //location.reload()
 }
