@@ -97,31 +97,31 @@ export function ExperienceSettings(props: ExperienceSettingsProps) {
         const startDate = startDateElement.value;
 
         const endDateElement = document.querySelector('[name="endDate"]') as HTMLInputElement | null;
-        const endDate = endDateElement?.value;
+        const endDate = endDateElement?.value || "0000-00-00";
 
         const presentDateElement = document.querySelector('[name="presentDate"]') as HTMLInputElement;
         const presentDate = presentDateElement.checked;
 
-        const experienceId = profileContext?.editExperience?.id ?? null;
+        const profileExperienceId = profileContext?.editExperience?.id ?? null;
 
-        const apiOperation = experienceId === null
+        const apiOperation = profileExperienceId === null
             ? UniversimeApi.Experience.create({
                 typeExperienceId: typeExperienceElement.value ,
                 description,
                 local,
                 presentDate,
                 startDate,
-                endDate: endDate ?? "",
+                endDate,
             })
 
             : UniversimeApi.Experience.update({
-                experienceId,
+                profileExperienceId,
                 typeExperienceId: typeExperienceElement.value ,
                 description,
                 local,
                 presentDate,
                 startDate,
-                endDate: endDate ?? "",
+                endDate,
             });
 
         apiOperation.then((r) => {

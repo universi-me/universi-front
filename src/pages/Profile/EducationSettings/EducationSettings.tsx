@@ -100,7 +100,7 @@ export function EducationSettings(props: EducationSettingsProps) {
         const startDate = startDateElement.value;
 
         const endDateElement = document.querySelector('[name="endDate"]') as HTMLInputElement | null;
-        const endDate = endDateElement?.value || "0000-00-00"
+        const endDate = endDateElement?.value || "0000-00-00";
 
         const typeEducationElement = document.querySelector('[name="education-type"]') as HTMLSelectElement;
 

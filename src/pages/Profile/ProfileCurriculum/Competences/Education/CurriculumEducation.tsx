@@ -53,7 +53,6 @@ export function CurriculumEducation(props: ProfileEducationProps) {
   
     remove({ educationId })
     .then((response) => {
-      console.log(educationId)
         if (!response.success) {
             throw new Error(response.message);
         } else {
