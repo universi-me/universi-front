@@ -54,7 +54,6 @@ export function ProfilePage() {
     return (
         <ProfileContext.Provider value={profileContext} >
         <div id="profile-page">
-            {/* todo: color from API */}
             <div className="content">
                 <div id="left-side">
                     <ProfileBio profile={profileContext.profile} />
@@ -111,19 +110,21 @@ export function ProfilePage() {
             UniversimeApi.CompetenceType.list(),
         ]);
 
-        const profileListData = await loadProfileListData(profileRes.body.profile.id);
+        if (profileRes.success && profileRes.body?.profile) {
+            const profileListData = await loadProfileListData(profileRes.body.profile.id);
 
-        setProfileContext({
-            accessingLoggedUser: profileRes.body?.profile.user.ownerOfSession ?? false,
-            profile: profileRes.body.profile,
-            allCompetenceTypes: competenceTypeRes.body.list,
-            profileListData: profileListData,
-            editCompetence: null,
+            setProfileContext({
+                accessingLoggedUser: profileRes.body?.profile.user.ownerOfSession ?? false,
+                profile: profileRes.body.profile,
+                allCompetenceTypes: competenceTypeRes.body.list,
+                profileListData: profileListData,
+                editCompetence: null,
+    
+                reloadPage: loadAccessedUser,
+            });
 
-            reloadPage: loadAccessedUser,
-        });
-
-        discardChanges();
+            discardChanges();
+        }
     }
 
     async function loadProfileListData(profileId: string) {
@@ -136,12 +137,12 @@ export function ProfilePage() {
         ]);
 
         return {
-            groups: groupsRes.body.groups,
-            competences: competencesRes.body.competences,
-            links: linksRes.body.links,
-            recommendationsSend: recommendationsRes.body.recomendationsSend,
-            recommendationsReceived: recommendationsRes.body.recomendationsReceived,
-            folders: foldersRes.body.folders,
+            groups: groupsRes.body?.groups ?? [],
+            competences: competencesRes.body?.competences ?? [],
+            links: linksRes.body?.links ?? [],
+            recommendationsSend: recommendationsRes.body?.recomendationsSend ?? [],
+            recommendationsReceived: recommendationsRes.body?.recomendationsReceived ?? [],
+            folders: foldersRes.body?.folders ?? [],
             achievements: [], // todo: fetch achievements
         };
     }
