@@ -53,7 +53,7 @@ const CrudTela: React.FC = () => {
   const fetchContents = async () => {
     try {
       const response = await UniversimeApi.Capacity.contentList();
-      setContents(response.body.contents);
+      setContents(response.body?.contents ?? []);
     } catch (error) {
       console.error('Erro ao buscar os conteúdos:', error);
     }
@@ -63,7 +63,7 @@ const CrudTela: React.FC = () => {
     try {
       const arr: { value: string; label: string; }[] = [];
       const response = await UniversimeApi.Capacity.categoryList();
-      let categoriesArr = response.body.categories;
+      let categoriesArr = response.body?.categories ?? [];
       categoriesArr.map((category: Category) => {
         return arr.push({value: category.id, label: category.name});
       });
@@ -77,7 +77,7 @@ const CrudTela: React.FC = () => {
     try {
       const arr: { value: string; label: string; }[] = [];
       const response = await UniversimeApi.Capacity.folderList()
-      let foldersArr = response.body.folders;
+      let foldersArr = response.body?.folders ?? [];
       foldersArr.map((folder: Folder) => {
         return arr.push({value: folder.id, label: folder.name});
       });
