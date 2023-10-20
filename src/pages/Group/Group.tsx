@@ -1,25 +1,16 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
-import { GroupIntro, GroupContext, GroupContextType, GroupPageLoaderResponse, GroupTabs, GroupTabRenderer, AvailableTabs } from "@/pages/Group";
+import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, type GroupContextType, type GroupPageLoaderResponse } from "@/pages/Group";
 import { ProfileBio, ProfileGroups } from "@/components/ProfileInfo";
 import "./Group.less";
 
 export function GroupPage() {
     const page = useLoaderData() as GroupPageLoaderResponse;
     const [currentTab, setCurrentTab] = useState<AvailableTabs>("contents");
-    const context = useMemo<GroupContextType>(() => {
-        // some values are using "!" even though they can be undefined
-        // they are validated later
 
-        return {
-            folders: page.folders,
-            group: page.group!,
-            isParticipant: page.loggedData?.isParticipant!,
-            participants: page.participants,
-            subgroups: page.subGroups,
-        };
-    }, [page]);
+    const [context, setContext] = useState(makeContext(page));
+    useEffect(() => { setContext(makeContext(page)) }, [page]);
 
     if (!page.loggedData || !page.group) {
         return (<Navigate to="/login" />);
@@ -29,8 +20,8 @@ export function GroupPage() {
         <GroupContext.Provider value={context}>
         <div id="group-page">
             <div>
-                <ProfileBio profile={page.loggedData.profile} />
-                <ProfileGroups groups={page.loggedData.groups} />
+                <ProfileBio profile={context.loggedData.profile} />
+                <ProfileGroups groups={context.loggedData.groups} />
             </div>
             <div id="intro-tabs-wrapper">
                 <GroupIntro />
@@ -40,4 +31,27 @@ export function GroupPage() {
         </div>
         </GroupContext.Provider>
     );
+
+    async function refreshGroupData() {
+        const data = await fetchGroupPageData({ groupPath: page.group?.path });
+        setContext(makeContext(data));
+    }
+
+    function makeContext(data: GroupPageLoaderResponse): NonNullable<GroupContextType> {
+        // some values are using "!" even though they can be undefined
+
+        return {
+            folders: data.folders,
+            group: data.group!,
+            loggedData: {
+                isParticipant: data.loggedData?.isParticipant!,
+                profile: data.loggedData?.profile!,
+                groups: data.loggedData?.groups!,
+            },
+            participants: data.participants,
+            subgroups: data.subGroups,
+
+            refreshData: refreshGroupData,
+        };
+    }
 }

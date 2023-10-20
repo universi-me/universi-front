@@ -18,27 +18,25 @@ export type GroupPageLoaderResponse = {
     };
 };
 
-export async function GroupPageLoader(args: LoaderFunctionArgs): Promise<GroupPageLoaderResponse> {
-    const groupPath = args.params["*"];
-
+export async function fetchGroupPageData(props: {groupPath: string | undefined}): Promise<GroupPageLoaderResponse> {
     const [groupRes, profileRes] = await Promise.all([
-        UniversimeApi.Group.get({groupPath}),
+        UniversimeApi.Group.get({groupPath: props.groupPath}),
         UniversimeApi.Profile.profile(),
     ]);
     if (!groupRes.success || !groupRes.body || !profileRes.success || !profileRes.body) {
         return FAILED_TO_LOAD;
     }
-
+    
     const group = groupRes.body.group;
     const profile = profileRes.body.profile;
-
+    
     const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes] = await Promise.all([
         UniversimeApi.Group.subgroups({groupId: group.id}),
         UniversimeApi.Group.participants({groupId: group.id}),
         UniversimeApi.Group.folders({groupId: group.id}),
         UniversimeApi.Profile.groups({profileId: profile.id}),
     ]);
-
+    
     return {
         group: group,
         folders: foldersRes.body?.folders ?? [],
@@ -48,9 +46,14 @@ export async function GroupPageLoader(args: LoaderFunctionArgs): Promise<GroupPa
             profile: profile,
             groups: profileGroupsRes.body?.groups ?? [],
             isParticipant: participantsRes.body?.participants
-                .find(p => p.user.name === profile.user?.name) !== undefined,
+            .find(p => p.user.name === profile.user?.name) !== undefined,
         }
     };
+}
+
+export function GroupPageLoader(args: LoaderFunctionArgs) {
+    const groupPath = args.params["*"];
+    return fetchGroupPageData({groupPath});
 }
 
 const FAILED_TO_LOAD: GroupPageLoaderResponse = {

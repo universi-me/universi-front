@@ -3,6 +3,7 @@ import { GroupContents, GroupContext, GroupGroups, GroupPeople } from "@/pages/G
 import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
+import { useNavigate } from "react-router-dom";
 
 export type AvailableTabs = "contents" | "files" | "groups" | "people";
 
@@ -18,10 +19,10 @@ export type GroupTabsProps = {
 };
 
 export  function GroupTabs(props: GroupTabsProps){
-
+    const navigate = useNavigate();
     const context = useContext(GroupContext);
     const auth = useContext(AuthContext);
-    const [joined, setJoined] = useState(auth.profile != null ? context?.isParticipant : false)
+    const [joined, setJoined] = useState(auth.profile != null ? context?.loggedData.isParticipant : false)
 
 
 
@@ -32,7 +33,10 @@ export  function GroupTabs(props: GroupTabsProps){
             return;
 
         const resData = await UniversimeApi.Group.join({groupId: context.group.id});
-        if(resData.success) setJoined(true);
+        if(resData.success) {
+            setJoined(true)
+            context.refreshData();
+        };
     }
 
     async function leave(){
@@ -40,7 +44,10 @@ export  function GroupTabs(props: GroupTabsProps){
             return;
 
         const resData = await UniversimeApi.Group.exit({groupId: context.group.id});
-        if(resData.success) setJoined(false);
+        if(resData.success) {
+            setJoined(false)
+            context.refreshData();
+        };
     }
 
 
