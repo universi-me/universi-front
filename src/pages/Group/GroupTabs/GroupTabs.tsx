@@ -1,10 +1,8 @@
-import { useContext, type ReactElement, useMemo, useState, useEffect } from "react";
-
-import { GroupContents, GroupContext, GroupGroups, GroupPageLoaderResponse, GroupPeople } from "@/pages/Group";
+import { useContext, type ReactElement, useState } from "react";
+import { GroupContents, GroupContext, GroupGroups, GroupPeople } from "@/pages/Group";
 import "./GroupTabs.less";
-import { useLoaderData } from "react-router-dom";
-import { Group } from "@/types/Group";
 import UniversimeApi from "@/services/UniversimeApi";
+import { AuthContext } from "@/contexts/Auth";
 
 export type AvailableTabs = "contents" | "files" | "groups" | "people";
 
@@ -19,36 +17,30 @@ export type GroupTabsProps = {
     changeTab: (tab: AvailableTabs) => any;
 };
 
-export function GroupTabs(props: GroupTabsProps){
+export  function GroupTabs(props: GroupTabsProps){
 
-    let page = useLoaderData() as GroupPageLoaderResponse;
     const context = useContext(GroupContext);
+    const auth = useContext(AuthContext);
+    const [joined, setJoined] = useState(auth.profile != null ? context?.isParticipant : false)
 
-    const [joined, setJoined] = useState<boolean>(containsGroup())
 
-    function containsGroup(){
-        const userGroups : (Group | undefined)[] | undefined = page.loggedData?.groups;
-        if(!userGroups)
-            return false;
 
-        for (const value of userGroups){
-            if (context?.group.id.trim()  == value?.id.trim()){
-                return true;
-            }
-        }
-        return false;
+
+
+    async function join(){
+        if(!context?.group.canEnter || context.group.id == null)
+            return;
+
+        const resData = await UniversimeApi.Group.join({groupId: context.group.id});
+        if(resData.success) setJoined(true);
     }
 
-    function join(){
-        context?.group.id != undefined ? UniversimeApi.Group.join({groupId: context.group.id}) : null;
-        setJoined(containsGroup())
-        location.reload()
-    }
+    async function leave(){
+        if(context?.group.id == null)
+            return;
 
-    function leave(){
-        context?.group.id != undefined ? UniversimeApi.Group.exit({groupId: context?.group.id}): null; // enviar mensagem que deu errado;
-        setJoined(containsGroup())
-        location.reload()
+        const resData = await UniversimeApi.Group.exit({groupId: context.group.id});
+        if(resData.success) setJoined(false);
     }
 
 
@@ -63,11 +55,14 @@ export function GroupTabs(props: GroupTabsProps){
                 );
             })
         }
-        {
-            joined ? 
-            <button className="group-tab-button group-tab-participacao" onClick={leave}>Sair</button> 
-            :
-            <button className="group-tab-button group-tab-participacao" onClick={join}>Participar</button> 
+        
+        
+        {   context?.group.canEnter?
+                joined ?
+                <button className="group-tab-button group-tab-participacao" onClick={leave}>Sair</button> 
+                :
+                <button className="group-tab-button group-tab-participacao" onClick={join}>Participar</button> 
+            : <></>
         }
 
          </nav>
