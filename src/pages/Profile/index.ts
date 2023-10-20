@@ -12,3 +12,4 @@ export * from './ProfileSettings/ProfileSettings'
 export * from './CompetencesSettings/CompetencesSettings'
 export * from './ProfileDiscard/ProfileDiscard'
 export * from './ProfileContext'
+export * from "./loader";
