@@ -1,12 +1,12 @@
 import { QuizPage } from "@/pages/Quiz";
 import { App } from "@/src/App";
 import GroupPage, { GroupPageLoader } from "@/pages/Group";
-import {ProfilePage} from "@/pages/Profile";
+import { ProfilePage, ProfilePageLoader } from "@/pages/Profile";
 import { About } from "@/pages/About";
 import ManageGroupPage, { ManageGroupLoader } from "@/pages/ManageGroup";
 
 import {Navigate, createBrowserRouter} from 'react-router-dom'
-import Singin from "../../src/pages/singin/Singin";
+import Singin from "@/pages/singin/Singin";
 
 import { OAuth2Element }  from './oauth2-google';
 
@@ -60,7 +60,7 @@ export const router = createBrowserRouter([{
       path: "/sobre",
       element: <About />
     },
-    { path: "/profile/:id", element: <ProfilePage /> },
+    { path: "/profile/:id", element: <ProfilePage />, loader: ProfilePageLoader },
     { path: "/manage-profile", element: <ManageProfilePage />, loader: ManageProfileLoader },
     { path: "/group/*", element: <GroupPage />, loader: GroupPageLoader },
     { path: "/recovery-password/:id", element: <NewPassword/>},
