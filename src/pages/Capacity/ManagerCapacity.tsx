@@ -2,11 +2,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import Select, { MultiValue } from 'react-select';
 
 import UniversimeApi from '@/services/UniversimeApi';
-import { Folder, Content , Category, Types} from '@/types/Capacity';
+import { Folder, Content , Category, Types, ContentType} from '@/types/Capacity';
 import { AuthContext } from '@/contexts/Auth';
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import './ManagerCapacity.css'
+import { string } from 'prop-types';
 
 const CrudTela: React.FC = () => {
   const [contents, setContents] = useState<Content[]>([]);
@@ -22,6 +23,7 @@ const CrudTela: React.FC = () => {
   const [editedDescription, setEditedDescription] = useState('');
   const [editedUrl, setEditedUrl] = useState('');
   const [editedRating, setEditedRating] = useState(1);
+  const [editedType, setEditedType] = useState<string>(contentTypes[0])
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -107,12 +109,21 @@ const CrudTela: React.FC = () => {
     }
   };
 
+  const handleEditType = (option : any) =>{
+    console.log("aa")
+    console.log(option)
+    setEditedType(option.value)
+    console.log(editedType)
+    console.log(option.value)
+  }
+
   const handleEditClick = (content: Content) => {
     setEditedContent(content);
     setEditedTitle(content.title);
     setEditedDescription(content.description ?? "");
     setEditedUrl(content.url);
     setEditedRating(content.rating);
+    setEditedType(content.type != null ? content.type : "");
     
     const contentCategoriesIds = content.categories;
     const arrCategories: { value: string; label: string; }[] = [];
@@ -145,6 +156,7 @@ const CrudTela: React.FC = () => {
         description: editedDescription,
         url: editedUrl,
         rating: editedRating,
+        type: editedType,
 
         addCategoriesByIds: categoriesToAddIds,
         removeCategoriesByIds: categoriesToRemoveIds,
@@ -373,6 +385,24 @@ const CrudTela: React.FC = () => {
                 },
               })}
               onChange={handleCategoriesOnChange} value={categoriesStateSelected} classNamePrefix="select" noOptionsMessage={()=>"Categoria Não Encontrada"} />
+            </div>
+             <div style={{marginTop: '15px'}}>
+              <label >Tipo:</label>
+              <Select placeholder= "Selecionar Tipo..." name="tipos" options={contentTypes.map((label) => ({value: label, label: label}))} className="basic-multi-select" theme={(theme) => ({
+                ...theme,
+                borderRadius: 10,
+                color: 'black',
+                colors: {
+                  ...theme.colors,
+                  primary25: 'red',
+                  primary: 'blue',
+                  neutral10: 'green',
+                  neutral5:  'black',
+                  neutral0: '#c2c2c2'
+                },
+              })}
+              onChange={handleEditType} value={{value: editedType, label: editedType}} classNamePrefix="select" noOptionsMessage={()=>"Tipo Não Encontrado"} />
+              
             </div>
             <div style={{marginTop: '15px'}}>
               <label>Pastas:</label>
