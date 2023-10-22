@@ -122,8 +122,6 @@ export function CurriculumExperience(props: ProfileExperienceProps) {
                       : experience.endDate}
                   </h4>
                 </div>
-                <div>
-                </div>
                 <div className="direction-description">
                   <h4 className="title">Descrição</h4>
                   <h4 className="learning description-text">{experience.description}</h4>

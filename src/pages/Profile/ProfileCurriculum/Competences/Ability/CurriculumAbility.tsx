@@ -26,8 +26,8 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
   const [selectedCompeteceId, setSelectedCompeteceId] = useState('');
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
-  const toggleMenu = (experienceId: string) => {
-    setSelectedCompeteceId(experienceId);
+  const toggleMenu = (competenceId: string) => {
+    setSelectedCompeteceId(competenceId);
     setMenuOpen(!menuOpen);
   };
 
@@ -107,7 +107,6 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
                     ) : null}
                                 <div className="competece-initial">
                                     <h4 className="competence-type">{competence.competenceType.name}</h4>
-                                    <h4 className="learning">{competence.description}</h4>
                                 </div>
                                 <div className="level-container">
                                     <h2 className="level-label">{LevelToLabel[competence.level]}</h2>

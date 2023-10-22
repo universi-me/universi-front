@@ -18,10 +18,10 @@
     background: var(--primary-color);
 
     color: var(--font-color-v1);
-    font-size: 1.6em;
+    font-size: 1.4em;
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
-    padding: 5px 0px 5px 0px;
+    padding: 2px 0px 2px 0px;
 }
 
 #profile-page #right-side .competence .edit-button {

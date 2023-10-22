@@ -34,11 +34,6 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
                     </select>
                 </div>
 
-                <div className="section description">
-                    <h2 className="section-heading">Descrição</h2>
-                    <textarea name="description" defaultValue={editCompetence?.description} maxLength={255} />
-                </div>
-
                 <div className="section level">
                     <h2 className="section-heading">Nível de Experiência</h2>
                     <select name="level" defaultValue={editCompetence?.level ?? ""}>
@@ -73,8 +68,8 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
     function saveCompetence() {
         const typeElement = document.querySelector('[name="competence-type"]') as HTMLSelectElement;
 
-        const descriptionElement = document.querySelector('[name="description"]') as HTMLTextAreaElement;
-        const description = descriptionElement.value;
+        const descriptionElement = document.querySelector('[name="description"]') as HTMLTextAreaElement | null;
+        const description = descriptionElement?.value || ""
 
         const levelElement = document.querySelector('[name="level"]') as HTMLSelectElement;
         const level = levelElement.value;

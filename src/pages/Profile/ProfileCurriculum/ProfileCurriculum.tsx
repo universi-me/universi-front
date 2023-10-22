@@ -40,7 +40,9 @@ export function ProfileCurriculum() {
       <div className="curriculum-panel">
         <div className="curriculum-title">
           <h1 className="curriculum-name">Meu Currículo</h1>
-          <ConfigButtonDownload />
+          <div className="button-download">
+            <ConfigButtonDownload />
+          </div>
         </div>
 
         <div className="item-competence">
