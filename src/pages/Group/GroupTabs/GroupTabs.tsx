@@ -1,7 +1,8 @@
-import type { ReactElement } from "react";
-
-import { GroupContents, GroupGroups, GroupPeople } from "@/pages/Group";
+import { useContext, type ReactElement, useState } from "react";
+import { GroupContents, GroupContext, GroupGroups, GroupPeople } from "@/pages/Group";
 import "./GroupTabs.less";
+import UniversimeApi from "@/services/UniversimeApi";
+import { AuthContext } from "@/contexts/Auth";
 
 export type AvailableTabs = "contents" | "files" | "groups" | "people";
 
@@ -16,9 +17,32 @@ export type GroupTabsProps = {
     changeTab: (tab: AvailableTabs) => any;
 };
 
-export function GroupTabs(props: GroupTabsProps) {
+export  function GroupTabs(props: GroupTabsProps){
+
+    const context = useContext(GroupContext);
+    const auth = useContext(AuthContext);
+    const [joined, setJoined] = useState(auth.profile != null ? context?.isParticipant : false)
+
+    async function join(){
+        if(!context?.group.canEnter || context.group.id == null)
+            return;
+
+        const resData = await UniversimeApi.Group.join({groupId: context.group.id});
+        if(resData.success) setJoined(true);
+    }
+
+    async function leave(){
+        if(context?.group.id == null)
+            return;
+
+        const resData = await UniversimeApi.Group.exit({groupId: context.group.id});
+        if(resData.success) setJoined(false);
+    }
+
+
     return (
-        <nav id="group-tabs"> {
+        <nav id="group-tabs"> 
+        {
             TABS.map(t => {
                 return (
                     <button className="group-tab-button" value={t.value} key={t.value} onClick={_ => props.changeTab(t.value)} disabled={t.value === props.currentTab}>
@@ -26,7 +50,18 @@ export function GroupTabs(props: GroupTabsProps) {
                     </button>
                 );
             })
-        } </nav>
+        }
+        
+        
+        {   context?.group.canEnter?
+                joined ?
+                <button className="group-tab-button group-tab-participacao" onClick={leave}>Sair</button> 
+                :
+                <button className="group-tab-button group-tab-participacao" onClick={join}>Participar</button> 
+            : <></>
+        }
+
+         </nav>
     );
 }
 

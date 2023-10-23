@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
-import Select, { MultiValue } from 'react-select';
+import React, { useContext, useEffect, useState } from 'react';
+import Select from 'react-select';
 
-import UniversimeApi from '@/services/UniversimeApi';
-import { Folder, Content , Category, Types, ContentType} from '@/types/Capacity';
 import { AuthContext } from '@/contexts/Auth';
+import UniversimeApi from '@/services/UniversimeApi';
+import { Category, Content, Folder, Types } from '@/types/Capacity';
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
-import './ManagerCapacity.css'
-import { string } from 'prop-types';
+import './ManagerCapacity.css';
 
 const CrudTela: React.FC = () => {
   const [contents, setContents] = useState<Content[]>([]);
