@@ -10,6 +10,8 @@ import { Institution } from "@/types/Institution";
 import { TypeEducation } from "@/types/TypeEducation";
 import { Experience } from "@/types/Experience";
 import { TypeExperience } from "@/types/TypeExperience";
+import { Vacancy } from "@/types/Vacancy";
+import { TypeVacancy } from "@/types/TypeVacancy";
 
 export type ProfileContextType = null | {
     accessingLoggedUser: boolean;
@@ -18,12 +20,14 @@ export type ProfileContextType = null | {
     editCompetence: Competence | null;
     editEducation:  Education | null;
     editExperience: Experience | null;
+    editVacancy: Vacancy | null;
 
 
     allInstitution:      Institution[];
     allCompetenceTypes:  CompetenceType[];
     allTypeEducation:    TypeEducation[];
     allTypeExperience:   TypeExperience[];
+    allTypeVacancy:      TypeVacancy[];
 
     profileListData: {
         groups:                  Group[];
@@ -39,6 +43,7 @@ export type ProfileContextType = null | {
     setEditCompetence(competence: Competence | null): any;
     setEditEducation(education: Education | null): any;
     setEditExperience(experience: Experience | null): any;
+    setEditVacancy(vacancy: Vacancy | null): any;
     reloadPage: () => void | Promise<void>;
 }
 

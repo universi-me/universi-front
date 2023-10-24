@@ -1,10 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, MouseEvent, useEffect, useState } from 'react';
 import { list, VacancyList_ResponseDTO } from '@/services/UniversimeApi/Vacancy';
 import { Vacancy } from '@/types/Vacancy';
 import './Vacancies.css'
+import { ProfileContext } from '../Profile';
 
-export function Vacancies() {
+export type VacancyProps = {
+    openVacancySettings: (e: MouseEvent) => void;
+}
+
+export function Vacancies(props: VacancyProps) {
     const [vacancies, setVacancies] = useState<Vacancy[]>();
+    const profileContext = useContext(ProfileContext);
+
+    if (profileContext === null) {
+        return null;
+    }
+
+    const addVacancy = (e: MouseEvent<HTMLButtonElement>) => {
+        profileContext.setEditVacancy(null);
+        props.openVacancySettings(e);
+    }
   
     useEffect(() => {
       async function fetchVacancies() {
@@ -25,18 +40,25 @@ export function Vacancies() {
   
     return (
       <div>
-        <h2>Vagas Disponíveis</h2>
+        <div className="header-vacancy">
+            <h2 className="title-header">Vagas Disponíveis</h2>
+            {  profileContext.profile.firstname === 'Admin' && (
+                <button className="button-addVacancy" onClick={addVacancy}>Adicionar Vaga</button>
+            )}
+        </div>
         <div className="vacancy">
             <div className="list-vacancy">
                 <div className="panel-vacancy">
+                    <img className="image-vacancy" src='/assets/icons/work-black.svg'/>
                     <h3 className="title-vacancy">Projeto AYTY Phoebus - UFPB</h3>
                     <h3 className="type-vacancy">Projeto de Extensão</h3>
                 </div>
                 <div className="date-vacancy">
-                    <h3 className="textDate-vacancy">aberto desde</h3>
+                    <h3 className="textDate-vacancy">( de</h3>
                     <h3 className="date-format">23-10-2023</h3>
                     <h3 className="textDate-vacancy">até</h3>
                     <h3 className="date-format">30-10-2023</h3>
+                    <h3 className="textDate-vacancy">)</h3>
                 </div>
                 <div className="prequisites-vacancy">
                     <h3 className="prequisites-title">Pré-requisito: </h3>

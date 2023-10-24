@@ -1,4 +1,25 @@
 
+.header-vacancy{
+    display: flex;
+    align-items: center;
+}
+
+.title-header {
+    font-weight: 500;
+    font-size: 32px;
+}
+
+.button-addVacancy {
+    margin-left: auto;
+    height: 40px;
+    width: 150px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
 .vacancy {
     margin-top: 10px;
     background-color: #fff;
@@ -16,6 +37,10 @@
     margin-bottom: 5px;
 }
 
+.image-vacancy {
+    margin: 0px -12px 4px 20px;
+}
+
 .title-vacancy {
     padding: 10px 0px 10px 20px;
     font-size: 20px;
@@ -25,12 +50,12 @@
 .type-vacancy {
     margin: 5px 15px 0px auto;
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 600;
     color: var(--primary-color);
 }
 
 .description {
-    background-color: #d6d6d6;
+    background-color: #e2e2e2;
     margin: 0px 10px 0px 10px;
     border-radius: 12px;
 }
@@ -39,7 +64,7 @@
     display: flex;
     flex-direction: row;
     padding-left: 20px;
-    margin: -14px 0px 20px 0px;
+    margin: -14px 0px 20px 38px;
     align-items: center;
 }
 
@@ -52,13 +77,13 @@
     font-size: 14px;
     margin: 0px 5px 0px 5px;
     font-weight: 400;
-    color: #972929;
+    color: #b90000;
 }
 
 .description-title {
     font-size: 16px;
     font-weight: 600;
-    padding: 0px 20px 0px 20px;
+    padding: 0px 20px 0px 10px;
 }
 
 .description-vacancy {
@@ -83,7 +108,7 @@
 .prequisites-format {
     font-size: 13px;
     font-weight: 400;
-    color: #972929;
+    color: #b90000;
 }
 
 .empty-vacancy {
