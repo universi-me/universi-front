@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import "./ProfileCurriculum.css";
-import ConfigButtonDownload from "./ConfigButtonDownload";
 import { CurriculumAbility } from "./Competences/Ability/CurriculumAbility";
 import { UniversiModal } from "@/components/UniversiModal";
 import { CompetencesSettings } from "../CompetencesSettings/CompetencesSettings";
@@ -40,9 +39,6 @@ export function ProfileCurriculum() {
       <div className="curriculum-panel">
         <div className="curriculum-title">
           <h1 className="curriculum-name">Meu Currículo</h1>
-          <div className="button-download">
-            <ConfigButtonDownload />
-          </div>
         </div>
 
         <div className="item-competence">

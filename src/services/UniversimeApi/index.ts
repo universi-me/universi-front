@@ -13,6 +13,8 @@ import * as Institution from "./Institution"
 import * as TypeEducation from "./TypeEducation"
 import * as TypeExperience from "./TypeExperience"
 import * as Experience from "./Experience"
+import * as Vacancy from "./Vacancy"
+import * as TypeVacancy from "./TypeVacancy"
 
 export const UniversimeApi = {
     api,
@@ -21,6 +23,8 @@ export const UniversimeApi = {
     Competence,
     Institution,
     TypeEducation,
+    TypeVacancy,
+    Vacancy,
     Education,
     Experience,
     TypeExperience,
