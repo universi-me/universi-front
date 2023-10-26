@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
 import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, type GroupContextType, type GroupPageLoaderResponse } from "@/pages/Group";
@@ -28,12 +28,20 @@ export function GroupPage() {
             </div>
             <div id="intro-tabs-wrapper">
                 <GroupIntro />
-                <GroupTabs changeTab={setCurrentTab} currentTab={currentTab} />
+                <GroupTabs changeTab={changeTab} currentTab={currentTab} />
                 <GroupTabRenderer tab={currentTab} />
             </div>
         </div>
         </GroupContext.Provider>
     );
+
+    function changeTab(tab: AvailableTabs) {
+        if (tab === "contents") {
+            context.setCurrentContent(undefined);
+        }
+
+        setCurrentTab(tab);
+    }
 
     async function refreshGroupData() {
         const data = await fetchGroupPageData({ groupPath: page.group?.path });
@@ -53,6 +61,11 @@ export function GroupPage() {
             },
             participants: data.participants,
             subgroups: data.subGroups,
+
+            currentContent: undefined,
+            setCurrentContent(c) {
+                setContext({...context, currentContent: c});
+            },
 
             refreshData: refreshGroupData,
         };

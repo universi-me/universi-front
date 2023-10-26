@@ -9,6 +9,9 @@ export type GroupContextType = null | {
     participants:  Profile[];
     folders:       Folder[];
 
+    currentContent: Folder | undefined;
+    setCurrentContent(content: Folder | undefined): any;
+
     loggedData: {
         isParticipant: boolean;
         profile:       Profile;
