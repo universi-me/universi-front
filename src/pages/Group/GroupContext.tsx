@@ -8,7 +8,14 @@ export type GroupContextType = null | {
     subgroups:     Group[];
     participants:  Profile[];
     folders:       Folder[];
-    isParticipant: boolean;
+
+    loggedData: {
+        isParticipant: boolean;
+        profile:       Profile;
+        groups:        Group[];
+    };
+
+    refreshData: () => Promise<any>;
 };
 
 export const GroupContext = createContext<GroupContextType>(null);
