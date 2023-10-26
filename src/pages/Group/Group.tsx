@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
 import { GroupIntro, GroupContext, GroupContextType, GroupPageLoaderResponse, GroupTabs, GroupTabRenderer, AvailableTabs } from "@/pages/Group";
@@ -20,6 +20,10 @@ export function GroupPage() {
             subgroups: page.subGroups,
         };
     }, [page]);
+
+    useEffect(() => {
+        setCurrentTab("contents");
+    }, [page.group?.path]);
 
     if (!page.loggedData || !page.group) {
         return (<Navigate to="/login" />);
