@@ -51,6 +51,7 @@ function makePeopleList(people: Profile[], filter: string) {
     }
 
     return filteredPeople
+        .filter(p => !p.user.needProfile)
         .map(renderPerson);
 }
 

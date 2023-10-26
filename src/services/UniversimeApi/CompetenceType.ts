@@ -16,5 +16,5 @@ export async function get(body: CompetenceTypeGet_RequestDTO) {
 }
 
 export async function list() {
-    return (await api.post("/competencetype/list", {})).data;
+    return (await api.post<CompetenceTypeList_ResponseDTO>("/competencetype/list", {})).data;
 }

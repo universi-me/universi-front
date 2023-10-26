@@ -28,6 +28,7 @@ export type ContentEdit_RequestDTO = {
     removeFoldersByIds?:    string | string[];
     rating?:                number;
     image?:                 string;
+    type?:                  string;
 };
 
 export type ContentGet_ResponseDTO =    ApiResponse<{content: Content}>;
@@ -66,6 +67,7 @@ export async function editContent(body: ContentEdit_RequestDTO) {
         removeCategoriesByIds: body.removeCategoriesByIds,
         addFoldersByIds:       body.addFoldersByIds,
         removeFoldersByIds:    body.removeFoldersByIds,
+        type:                  body.type,
     })).data;
 }
 
