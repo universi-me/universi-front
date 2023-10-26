@@ -10,11 +10,10 @@ export function GroupPage() {
     const [currentTab, setCurrentTab] = useState<AvailableTabs>("contents");
 
     const [context, setContext] = useState(makeContext(page));
-    useEffect(() => { setContext(makeContext(page)) }, [page]);
-
     useEffect(() => {
+        setContext(makeContext(page));
         setCurrentTab("contents");
-    }, [page.group?.path]);
+    }, [page]);
 
     if (!page.loggedData || !page.group) {
         return (<Navigate to="/login" />);
