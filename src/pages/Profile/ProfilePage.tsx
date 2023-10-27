@@ -66,7 +66,7 @@ export function ProfilePage() {
         <div id="profile-page">
             <div className="content">
                 <div id="left-side">
-                    <ProfileBio profile={profileContext.profile} />
+                    <ProfileBio profile={profileContext.profile} links={profileContext.profileListData.links} />
                 </div>
 
                 <div id="right-side">

@@ -2,6 +2,7 @@ import { createContext } from "react";
 import { Group } from "@/types/Group";
 import { Profile } from "@/types/Profile";
 import { Folder } from "@/types/Capacity";
+import { Link } from "@/types/Link";
 
 export type GroupContextType = null | {
     group:         Group;
@@ -12,6 +13,7 @@ export type GroupContextType = null | {
     loggedData: {
         isParticipant: boolean;
         profile:       Profile;
+        links:         Link[];
         groups:        Group[];
     };
 

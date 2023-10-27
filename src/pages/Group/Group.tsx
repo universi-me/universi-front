@@ -20,7 +20,7 @@ export function GroupPage() {
         <GroupContext.Provider value={context}>
         <div id="group-page">
             <div>
-                <ProfileBio profile={context.loggedData.profile} />
+                <ProfileBio profile={context.loggedData.profile} links={context.loggedData.links} />
                 <ProfileGroups groups={context.loggedData.groups} />
             </div>
             <div id="intro-tabs-wrapper">
@@ -46,7 +46,8 @@ export function GroupPage() {
             loggedData: {
                 isParticipant: data.loggedData?.isParticipant!,
                 profile: data.loggedData?.profile!,
-                groups: data.loggedData?.groups!,
+                links: data.loggedData?.links ?? [],
+                groups: data.loggedData?.groups ?? [],
             },
             participants: data.participants,
             subgroups: data.subGroups,

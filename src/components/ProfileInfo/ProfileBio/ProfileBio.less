@@ -1,4 +1,5 @@
 @import url(/src/layouts/fonts.less);
+@import url(/src/layouts/colors.less);
 
 .profile-bio-component {
     background-color: transparent !important;
@@ -49,6 +50,7 @@
         width: 100%;
         padding: 0  !important;
         margin-top: -3em;
+        margin-bottom: 1rem;
     }
 
     .profile-header{
@@ -60,7 +62,32 @@
 
     .content-count{
         border-top: solid 1px var(--primary-color);
-        padding: 20px 30px;
-        margin-top: 40px;
+        padding: 1rem 1rem;
+
+        .links-wrapper {
+            width: fit-content;
+
+            .profile-bio-link {
+                color: @font-color-v2;
+                text-decoration: none;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                will-change: text-decoration;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+
+                &:not(:last-of-type) {
+                    margin-bottom: .5em;
+                }
+
+                .link-type-icon {
+                    margin-right: .5em;
+                }
+            }
+        }
     }
 }

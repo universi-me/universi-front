@@ -12,7 +12,7 @@ export type TypeLink = "LINK" | "GITHUB" | "GIT" | "TWITTER" | "WORDPRESS" | "TE
                      | "LINKEDIN" | "DISCORD" | "PAYPAL" | "WHATSAPP" | "TRELLO" | "SLACK" | "SPOTIFY" | "YOUTUBE"
                      | "SKYPE" | "STACK" | "FACEBOOK";
 
-export const TypeLinkToLabel = {
+export const TypeLinkToLabel: {[k in TypeLink]: string} = {
     "LINK":      "Link",
     "GITHUB":    "GitHub",
     "GIT":       "Git",
@@ -34,7 +34,7 @@ export const TypeLinkToLabel = {
     "FACEBOOK":  "Facebook",
 };
 
-export const TypeLinkToBootstrapIcon = {
+export const TypeLinkToBootstrapIcon: {[k in TypeLink]: string} = {
     "LINK":      "link-45deg",
     "GITHUB":    "github",
     "GIT":       "git",
