@@ -4,6 +4,7 @@ import UniversimeApi from "@/services/UniversimeApi";
 import type { Profile } from "@/types/Profile";
 import type { Group } from "@/types/Group";
 import type { Folder } from "@/types/Capacity";
+import { Link } from "@/types/Link";
 
 export type GroupPageLoaderResponse = {
     group: Group | undefined;
@@ -14,6 +15,7 @@ export type GroupPageLoaderResponse = {
     loggedData: undefined | {
         profile: Profile;
         groups: Group[];
+        links: Link[];
         isParticipant: boolean;
     };
 };
@@ -30,11 +32,12 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     const group = groupRes.body.group;
     const profile = profileRes.body.profile;
     
-    const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes] = await Promise.all([
+    const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes] = await Promise.all([
         UniversimeApi.Group.subgroups({groupId: group.id}),
         UniversimeApi.Group.participants({groupId: group.id}),
         UniversimeApi.Group.folders({groupId: group.id}),
         UniversimeApi.Profile.groups({profileId: profile.id}),
+        UniversimeApi.Profile.links({profileId: profile.id}),
     ]);
     
     return {
@@ -45,6 +48,7 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
         loggedData: {
             profile: profile,
             groups: profileGroupsRes.body?.groups ?? [],
+            links: profileLinksRes.body?.links ?? [],
             isParticipant: participantsRes.body?.participants
             .find(p => p.user.name === profile.user?.name) !== undefined,
         }

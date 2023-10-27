@@ -1,29 +1,23 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
 import { getFullName, getProfileImageUrl } from '@/utils/profileUtils';
 import { ICON_EDIT_WHITE } from '@/utils/assets';
-import UniversimeApi from '@/services/UniversimeApi';
 
 import type { Profile } from '@/types/Profile';
+import { TypeLinkToBootstrapIcon, type Link as Link_API } from '@/types/Link';
 import './ProfileBio.less';
 
 export type ProfileBioProps = {
     profile: Profile;
+    links: Link_API[];
 };
 
 
 export function ProfileBio(props: ProfileBioProps) {
-    const [contentCounter, setContentCounter] = useState(10)
     const linkToOwnProfile = `/profile/${props.profile.user.name}`;
     const isOnOwnProfile = location.pathname.replace(/\/+$/, "") == linkToOwnProfile;
     const renderEditButton = props.profile.user.ownerOfSession && isOnOwnProfile;
-
-    useEffect(() =>{
-    UniversimeApi.Profile.folders({assignedOnly: true, profileId: props.profile.id})
-    .then(res=>setContentCounter(res.body?.folders.length ?? 0))
-    }, [props.profile.user.name])
 
     return (
         <div className="profile-bio-component card">
@@ -51,7 +45,22 @@ export function ProfileBio(props: ProfileBioProps) {
                     : <p style={{whiteSpace: 'break-spaces', textAlign: 'center'}}>{ props.profile.bio }</p>
                 }
             </div>
-            <div className="content-count">Meus conteúdos: {contentCounter}</div>
+
+            { props.links.length === 0 ? null :
+                <div className="content-count">
+                    <div className="links-wrapper">
+                        {
+                            props.links.map((link) => {
+                                return <a href={link.url} className="profile-bio-link" target='_blank' key={link.id}>
+                                    <i className={`link-type-icon bi bi-${TypeLinkToBootstrapIcon[link.typeLink]}`}/>
+                                    { link.name }
+                                </a>
+                            })
+                        }
+                    </div>
+                </div>
+            }
+
         </div>
     );
 }
