@@ -87,7 +87,11 @@ export function SignUpModal(props: SignUpModalProps) {
                         />
                         <section className="password-requirements">
                             { usernameAvailableChecked ? <p className={`bi fieldset-info ${usernameAvailable?'success-validation':'failed-validation'}`}>{usernameAvailable?'Usuário Disponível para uso.':'Usuário não está disponivel para uso.'}</p> : null }
-                            <p className="fieldset-info">Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).</p>
+                            <p className="fieldset-info">
+                                Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).<br/>
+                                Todos irão acessar seu perfil em: <div className="profile-url-preview">{location.origin}/profile/{username || "<insira um nome de usuário>"}</div>
+                            </p>
+                            {/* <p className="fieldset-info">Seu nome de usuário será usado para acessar seu perfil em: {location.origin}/profile/{username}</p> */}
                         </section>
                     </fieldset>
 
