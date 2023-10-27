@@ -6,6 +6,8 @@ import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { type Content } from "@/types/Capacity";
 
+import "./GroupContentMaterials.less";
+
 export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
     const [materials, setMaterials] = useState<Content[]>();
@@ -20,14 +22,16 @@ export function GroupContentMaterials() {
     }
 
     const organizationName = groupContext.group.organization
-        ? `${groupContext.group.organization.name} > `
-        : "";
+        ? <Link to={`/group/${groupContext.group.organization.path}`}>{groupContext.group.organization.name} &gt; </Link>
+        : null;
+
+    const groupName = <div onClick={() => groupContext.setCurrentContent(undefined)} style={{cursor: "pointer", display: "inline"}}>{groupContext.group.name}</div>
 
     return (
         <section id="materials" className="group-tab">
             <div className="heading">
                 <i className="bi bi-list-ul tab-icon"/>
-                <h2 className="title">Materiais em {organizationName}{groupContext.group.name} &gt; {groupContext.currentContent.name}</h2>
+                <h2 className="title">Materiais em {organizationName}{groupName} &gt; {groupContext.currentContent.name}</h2>
                 <div className="go-right">
                     <div id="filter-wrapper">
                         <i className="bi bi-search filter-icon"/>
@@ -113,6 +117,7 @@ export function GroupContentMaterials() {
 
         return (
             <iframe
+                className="youtube-embed material-image"
                 src={`https://www.youtube-nocookie.com/embed/${videoId}`}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
