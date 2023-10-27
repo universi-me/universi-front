@@ -13,9 +13,20 @@ export function ProfileContentListing({title = "Vídeo"} : {title : string}){
         setAvailableContents(profileContext?.profileListData.folders ?? []);
     }, [title])
 
+    const isOwnProfile = !!profileContext?.accessingLoggedUser;
+    const hasOtherProfile = !!profileContext?.profile.firstname;
+
+    const otherProfileText = hasOtherProfile
+        ? `${title} de ${profileContext.profile.firstname}`
+        : title;
+
+    const tabTitle = isOwnProfile
+        ? `Meus ${title}`
+        : otherProfileText;
+
       return(
         <div>
-            <h1 className="content-name">Meus {title}</h1>
+            <h1 className="content-name">{tabTitle}</h1>
             <div className="contents">
                 {
                     availableContents.length === 0 ? <p>Nenhum conteúdo no momento</p> :  
