@@ -60,6 +60,18 @@ export function SignUpModal(props: SignUpModalProps) {
                 </div>
 
                 <form>
+                <fieldset id="email-fieldset">
+                        <legend>Email</legend>
+                        <input type="text" name="email" maxLength={255}
+                            placeholder="novousuario@email.com" required
+                            onBlur={onBlurEmail} onChange={e => {
+                                document.querySelector("#email-fieldset")
+                                    ?.classList.remove(INVALID_EMAIL_CLASS);
+                                setEmail(e.currentTarget.value)
+                            }}
+                        />
+                    </fieldset>
+
                     <fieldset>
                         <legend>Nome de usuário</legend>
                         <input type="text" name="username" maxLength={255}
@@ -77,18 +89,6 @@ export function SignUpModal(props: SignUpModalProps) {
                             { usernameAvailableChecked ? <p className={`bi fieldset-info ${usernameAvailable?'success-validation':'failed-validation'}`}>{usernameAvailable?'Usuário Disponível para uso.':'Usuário não está disponivel para uso.'}</p> : null }
                             <p className="fieldset-info">Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).</p>
                         </section>
-                    </fieldset>
-
-                    <fieldset id="email-fieldset">
-                        <legend>Email</legend>
-                        <input type="text" name="email" maxLength={255}
-                            placeholder="novousuario@email.com" required
-                            onBlur={onBlurEmail} onChange={e => {
-                                document.querySelector("#email-fieldset")
-                                    ?.classList.remove(INVALID_EMAIL_CLASS);
-                                setEmail(e.currentTarget.value)
-                            }}
-                        />
                     </fieldset>
 
                     <fieldset id="password-fieldset">
