@@ -5,6 +5,7 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { type Content } from "@/types/Capacity";
+import YouTube from "react-youtube";
 
 export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
@@ -112,14 +113,48 @@ export function GroupContentMaterials() {
         const videoId = videoUrl[1] ?? videoUrl[2];
 
         return (
-            <iframe
-                src={`https://www.youtube-nocookie.com/embed/${videoId}`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                {...{frameborder:"0"}}
-            />
+            <div id={`iframe${videoId}`} style={{transition: "0.2s"}}>
+                <YouTube
+                    // src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+                    videoId={`${videoId}`}
+                    title="YouTube video player"
+                    opts={{height: "200rem", width: "auto"}}
+                    style={{transition: "0.2s"}}
+                    // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    // allowFullScreen
+                    {...{frameborder:"0"}}
+                    id={`${videoId}`}
+                    onPlay={()=>playVideo(videoId)}
+                    onPause={() => pauseVideo(videoId)}
+                />
+            </div>
         );
+    }
+
+
+    function playVideo(id : string){
+        let iframeContainer = document.getElementById("iframe"+id)
+        console.log(iframeContainer)
+        iframeContainer?.classList.add("iframe-container")
+
+        let iframe = document.getElementById(id)
+        iframe?.classList.add("fullscreen-video")
+    }
+
+    function pauseVideo(id: string){
+        let iframeContainer = document.getElementById("iframe"+id)
+        console.log(iframeContainer)
+        iframeContainer?.classList.remove("iframe-container")
+
+        let iframe = document.getElementById(id)
+        iframe?.classList.remove("fullscreen-video")
+    }
+
+    function onload(id: string){
+        document.getElementById(id)?.addEventListener("change", function(event){
+            alert("Click!")
+        })
+        alert("loaded")
     }
 }
 
