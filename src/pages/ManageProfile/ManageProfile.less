@@ -176,6 +176,18 @@
                     width: 100%;
                 }
             }
+
+            .counter-wrapper {
+                display: flex;
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: end;
+
+                .counter {
+                    font-size: .75em;
+                }
+            }
         }
 
         &#fieldset-bio {
@@ -187,11 +199,6 @@
 
                 .info-text {
                     font-size: .75em;
-
-                    &.full-bio {
-                        color: @wrong-invalid-color;
-                        font-weight: @font-weight-semibold;
-                    }
                 }
             }
 
@@ -334,6 +341,11 @@
                 }
             }
 
+        }
+
+        .full-counter {
+            color: @wrong-invalid-color;
+            font-weight: @font-weight-semibold;
         }
     }
 
