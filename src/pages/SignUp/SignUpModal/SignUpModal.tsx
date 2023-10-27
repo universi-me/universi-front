@@ -60,6 +60,18 @@ export function SignUpModal(props: SignUpModalProps) {
                 </div>
 
                 <form>
+                <fieldset id="email-fieldset">
+                        <legend>Email</legend>
+                        <input type="text" name="email" maxLength={255}
+                            placeholder="novousuario@email.com" required
+                            onBlur={onBlurEmail} onChange={e => {
+                                document.querySelector("#email-fieldset")
+                                    ?.classList.remove(INVALID_EMAIL_CLASS);
+                                setEmail(e.currentTarget.value)
+                            }}
+                        />
+                    </fieldset>
+
                     <fieldset>
                         <legend>Nome de usuário</legend>
                         <input type="text" name="username" maxLength={255}
@@ -75,20 +87,12 @@ export function SignUpModal(props: SignUpModalProps) {
                         />
                         <section className="password-requirements">
                             { usernameAvailableChecked ? <p className={`bi fieldset-info ${usernameAvailable?'success-validation':'failed-validation'}`}>{usernameAvailable?'Usuário Disponível para uso.':'Usuário não está disponivel para uso.'}</p> : null }
-                            <p className="fieldset-info">Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).</p>
+                            <p className="fieldset-info">
+                                Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).<br/>
+                                Todos irão acessar seu perfil em: <div className="profile-url-preview">{location.origin}/profile/{username || "<insira um nome de usuário>"}</div>
+                            </p>
+                            {/* <p className="fieldset-info">Seu nome de usuário será usado para acessar seu perfil em: {location.origin}/profile/{username}</p> */}
                         </section>
-                    </fieldset>
-
-                    <fieldset id="email-fieldset">
-                        <legend>Email</legend>
-                        <input type="text" name="email" maxLength={255}
-                            placeholder="novousuario@email.com" required
-                            onBlur={onBlurEmail} onChange={e => {
-                                document.querySelector("#email-fieldset")
-                                    ?.classList.remove(INVALID_EMAIL_CLASS);
-                                setEmail(e.currentTarget.value)
-                            }}
-                        />
                     </fieldset>
 
                     <fieldset id="password-fieldset">
