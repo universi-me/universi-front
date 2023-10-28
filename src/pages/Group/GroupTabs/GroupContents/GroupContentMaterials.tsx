@@ -102,19 +102,18 @@ export function GroupContentMaterials() {
                 {
                     youTubeMatch !== null
                         ? renderYouTubeEmbed(youTubeMatch)
-                    : material.type === "Documento"
-                        ?
+                        :
                         <Link to={material.url} target="_blank" className="material-name icon-container">
-                            <img src={`/assets/imgs/file.png`} className="material-image"></img>
-                        </Link>
-                    : material.type === "Pasta"
-                        ?
-                        <Link to={material.url} target="_blank" className="material-name icon-container">
-                            <img src={`/assets/imgs/file.png`} className="material-image"></img>
-                        </Link>
-                    :
-                        <Link to={material.url} target="_blank" className="material-name icon-container">
-                            <img src={`/assets/imgs/link.png`} className="material-image"></img>
+                            {
+                                material.type === "Documento"
+                                    ?
+                                        <img src={`/assets/imgs/file.png`} className="material-image"></img>
+                                : material.type === "Pasta"
+                                    ?
+                                        <img src={`/assets/imgs/file.png`} className="material-image"></img>
+                                :
+                                        <img src={`/assets/imgs/link.png`} className="material-image"></img>
+                            }
                         </Link>
                 }
 
@@ -161,7 +160,7 @@ export function GroupContentMaterials() {
 
         elements.popupContainer = popupContainer;
         elements.close = close;
-        elements.iframe = iframeContainer;
+        elements.iframeContainer = iframeContainer;
 
         return elements
     }
@@ -170,6 +169,7 @@ export function GroupContentMaterials() {
     function expand(id : string){
 
         let containers = getVideoContainers()
+        console.log(containers)
 
         containers.popupContainer?.classList.remove("mini-player")
         containers.popupContainer?.classList.add("popup-container")
