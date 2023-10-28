@@ -138,24 +138,6 @@ export function GroupContentMaterials() {
                     : <></>
                 }
             </div>
-            // <div id={`iframe${videoId}`} style={{transition: "0.2s"}} onClick={() => videoChange(videoId)}>
-            //     <YouTube
-            //         // src={`https://www.youtube-nocookie.com/embed/${videoId}`}
-            //         videoId={`${videoId}`}
-            //         title="YouTube video player"
-            //         opts={{height: "200rem", width: "auto", playVideo: true}}
-            //         style={{transition: "0.2s"}}
-            //         // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            //         // allowFullScreen
-            //         {...{frameborder:"0"}}
-            //         id={`${videoId}`}
-            //         onPlay={()=>playVideo(videoId)}
-            //         onStateChange={()=>videoChange(videoId)}
-            //         onPause={() => pauseVideo(videoId)}
-            //         className="iframe"
-            //         iframeClassName="iframe"
-            //     />
-            // </div>
         )
     }
 
@@ -169,19 +151,33 @@ export function GroupContentMaterials() {
         }
     }
 
+    function getVideoContainers() : {[key : string] : HTMLElement | null} {
 
-    function expand(id : string){
+        let elements : {[key : string] : HTMLElement | null} = {};
+
         let popupContainer = document.getElementById("popup-container")
         let close = document.getElementById("close")
-        let iframeContainer = document.getElementById("iframe-container")
+        let iframeContainer = document.getElementById("iframe-container");
 
-        popupContainer?.classList.remove("mini-player")
-        popupContainer?.classList.add("popup-container")
-        iframeContainer?.classList.remove("mini-iframe")
-        iframeContainer?.classList.add("iframe-container")
-        if(close){
-            close.innerHTML = "✖";
-            close.onclick = () => { handleVideoClose}
+        elements.popupContainer = popupContainer;
+        elements.close = close;
+        elements.iframe = iframeContainer;
+
+        return elements
+    }
+
+
+    function expand(id : string){
+
+        let containers = getVideoContainers()
+
+        containers.popupContainer?.classList.remove("mini-player")
+        containers.popupContainer?.classList.add("popup-container")
+        containers.iframeContainer?.classList.remove("mini-iframe")
+        containers.iframeContainer?.classList.add("iframe-container")
+        if(containers.close){
+            containers.close.innerHTML = "✖";
+            containers.close.onclick = () => { handleVideoClose}
         }
         setIsMiniature(false)
 
@@ -189,17 +185,16 @@ export function GroupContentMaterials() {
     }
 
     function showMiniature(id : string){
-        let popupContainer = document.getElementById("popup-container")
-        let close = document.getElementById("close")
-        let iframeContainer = document.getElementById("iframe-container")
 
-        popupContainer?.classList.remove("popup-container")
-        popupContainer?.classList.add("mini-player")
-        iframeContainer?.classList.remove("iframe-container")
-        iframeContainer?.classList.add("mini-iframe")
-        if(close){
-            close.innerHTML = "&#x26F6;"
-            close.onclick = () => { handleVideoClose}
+        let containers = getVideoContainers()
+
+        containers.popupContainer?.classList.remove("popup-container")
+        containers.popupContainer?.classList.add("mini-player")
+        containers.iframeContainer?.classList.remove("iframe-container")
+        containers.iframeContainer?.classList.add("mini-iframe")
+        if(containers.close){
+            containers.close.innerHTML = "&#x26F6;"
+            containers.close.onclick = () => { handleVideoClose}
         }
         setIsMiniature(true)
 
@@ -217,28 +212,6 @@ export function GroupContentMaterials() {
 
     }
 
-    // function videoChange(id : string){
-    //     if(isFullScreen){
-    //         setIsFullScreen(false)
-    //         pauseVideo(id)
-    //     }
-    // }
-
-    // function playVideo(id : string){
-    //     let iframeContainer = document.getElementById("iframe"+id)
-    //     iframeContainer?.classList.add("iframe-container")
-
-    //     let iframe = document.getElementById(id)
-    //     iframe?.classList.add("fullscreen-video")
-    //     setIsFullScreen(true)
-    // }
-
-    // function pauseVideo(id: string){
-    //     let iframeContainer = document.getElementById("iframe"+id)
-    //     iframeContainer?.classList.remove("iframe-container")
-    //     let iframe = document.getElementById(id)
-    //     iframe?.classList.remove("fullscreen-video")
-    // }
 }
 
 
