@@ -1,4 +1,3 @@
-
 import {useState} from "react"
 
 import "./SelectionBar.css"
@@ -6,36 +5,52 @@ import { ProfileContentListing } from "../ProfileContentListing/ProfileContentLi
 import { ProfileGroupListing } from "../ProfileGroupListing/ProfileGroupListing"
 
 export function SelectionBar(){
-
-    const [selectElement, setSelectelement] = useState("content")
-
+    const [currentTab, setCurrentTab] = useState("groups");
+    const renderTabs = TABS.length > 1;
 
     return(
         <>
-            <div className="selection-bar">
-                <div className="select-element" onClick={() => setSelectelement("content")}>
-                    Conteúdos
+            {
+                !renderTabs ? null : 
+                <div className="selection-bar">
+                    {
+                        TABS.map((tab) => {
+                            return <div key={tab.value} className="select-element" onClick={() => setCurrentTab(tab.value)}>{tab.name}</div>
+                        })
+                    }
                 </div>
-                {/* <div className="select-element" onClick={() => setSelectelement("files")}>
-                    Arquivos
-                </div> */}
-                <div className="select-element" onClick={() => setSelectelement("groups")}>
-                    Grupos
-                </div>
-            </div>
-            {getSelectElement(selectElement)}
+            }
+            {renderTab(currentTab)}
         </>
     )
-
-
 }
 
+type TabDefinition = {
+    name: string;
+    value: string;
+};
 
-function getSelectElement(selectElement : string){
-    if(selectElement == "content")
+const TABS: TabDefinition[] = [
+    // {
+    //     name: "Conteúdos",
+    //     value: "content",
+    // },
+    // {
+    //     name: "Arquivos",
+    //     value: "files",
+    // },
+    {
+        name: "Grupos",
+        value: "groups",
+    },
+];
+
+
+function renderTab(tabValue : string){
+    if(tabValue == "content")
         return <ProfileContentListing title="Conteúdos"/>
-    if(selectElement == "files")
+    if(tabValue == "files")
         return <ProfileContentListing title="Arquivos"/>
-    if(selectElement == "groups")
+    if(tabValue == "groups")
         return <ProfileGroupListing/>
 }
