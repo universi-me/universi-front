@@ -13,6 +13,7 @@ export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
     const [materials, setMaterials] = useState<Content[]>();
     const [filterMaterials, setFilterMaterials] = useState<string>("");
+    const [isFullScreen, setIsFullScreen] = useState(false)
 
     useEffect(() => {
         refreshMaterials();
@@ -117,18 +118,19 @@ export function GroupContentMaterials() {
         const videoId = videoUrl[1] ?? videoUrl[2];
 
         return (
-            <div id={`iframe${videoId}`} style={{transition: "0.2s"}}>
+            <div id={`iframe${videoId}`} style={{transition: "0.2s"}} onClick={() => videoChange(videoId)}>
                 <YouTube
                     // src={`https://www.youtube-nocookie.com/embed/${videoId}`}
                     videoId={`${videoId}`}
                     title="YouTube video player"
-                    opts={{height: "200rem", width: "auto"}}
+                    opts={{height: "200rem", width: "auto", playVideo: true}}
                     style={{transition: "0.2s"}}
                     // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     // allowFullScreen
                     {...{frameborder:"0"}}
                     id={`${videoId}`}
                     onPlay={()=>playVideo(videoId)}
+                    onStateChange={()=>videoChange(videoId)}
                     onPause={() => pauseVideo(videoId)}
                 />
             </div>
@@ -136,18 +138,24 @@ export function GroupContentMaterials() {
     }
 
 
+    function videoChange(id : string){
+        if(isFullScreen){
+            setIsFullScreen(false)
+            pauseVideo(id)
+        }
+    }
+
     function playVideo(id : string){
         let iframeContainer = document.getElementById("iframe"+id)
-        console.log(iframeContainer)
         iframeContainer?.classList.add("iframe-container")
 
         let iframe = document.getElementById(id)
         iframe?.classList.add("fullscreen-video")
+        setIsFullScreen(true)
     }
 
     function pauseVideo(id: string){
         let iframeContainer = document.getElementById("iframe"+id)
-        console.log(iframeContainer)
         iframeContainer?.classList.remove("iframe-container")
         let iframe = document.getElementById(id)
         iframe?.classList.remove("fullscreen-video")
