@@ -10,7 +10,10 @@ export function GroupPage() {
     const [currentTab, setCurrentTab] = useState<AvailableTabs>("contents");
 
     const [context, setContext] = useState(makeContext(page));
-    useEffect(() => { setContext(makeContext(page)) }, [page]);
+    useEffect(() => {
+        setContext(makeContext(page));
+        setCurrentTab("contents");
+    }, [page]);
 
     if (!page.loggedData || !page.group) {
         return (<Navigate to="/login" />);
@@ -25,12 +28,20 @@ export function GroupPage() {
             </div>
             <div id="intro-tabs-wrapper">
                 <GroupIntro />
-                <GroupTabs changeTab={setCurrentTab} currentTab={currentTab} />
+                <GroupTabs changeTab={changeTab} currentTab={currentTab} />
                 <GroupTabRenderer tab={currentTab} />
             </div>
         </div>
         </GroupContext.Provider>
     );
+
+    function changeTab(tab: AvailableTabs) {
+        if (tab === "contents") {
+            context.setCurrentContent(undefined);
+        }
+
+        setCurrentTab(tab);
+    }
 
     async function refreshGroupData() {
         const data = await fetchGroupPageData({ groupPath: page.group?.path });
@@ -51,6 +62,11 @@ export function GroupPage() {
             },
             participants: data.participants,
             subgroups: data.subGroups,
+
+            currentContent: undefined,
+            setCurrentContent(c) {
+                setContext({...context, currentContent: c});
+            },
 
             refreshData: refreshGroupData,
         };

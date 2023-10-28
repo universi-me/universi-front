@@ -1,6 +1,14 @@
 @import url(/src/layouts/colors.less);
 @import url(/src/layouts/fonts.less);
 
+.material-item{
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+
 #group-page #contents {
     .content-list {
         .content-item {
@@ -20,11 +28,12 @@
                 @side: 8rem !important;
                 width: @side;
                 height: @side;
-                aspect-ratio: 1;
 
                 border-radius: 1rem;
                 border: 1px solid @secondary-color;
                 object-fit: cover;
+
+                cursor: pointer;
             }
 
             .info {
@@ -36,6 +45,8 @@
                     text-decoration: none;
                     font-weight: @font-weight-semibold;
                     font-size: 1.5rem;
+
+                    cursor: pointer;
                 }
 
                 .content-description {
