@@ -14,8 +14,8 @@ export function VideoPopup({id, handleClose} : {id: string, handleClose : (id : 
                 <YouTube
                 videoId={`${id}`}
                 id={`${id}`}
-                opts={{height: "100%", width: "100%"}}
-                style={{aspectRatio: "16/9", height: "100%", width: "100%"}}
+                opts={{height: "100%", width: "100%", "border-radius" : "10px"}}
+                style={{aspectRatio: "16/9", height: "100%", width: "100%", borderRadius : "10px"}}
                 />
             </div>
         </div>

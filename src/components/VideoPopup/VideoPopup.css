@@ -43,7 +43,7 @@
     width: 20rem;
     /* aspect-ratio: 16 / 12; */
     /* padding: 15px; */
-    background-color: var(--background-color);
+    background-color: var(--primary-color);
     /* border: 1px solid var(--primary-color); */
     border-radius: 10px;
     overflow: hidden;
@@ -62,8 +62,20 @@
         overflow: hidden;
         margin: 0px;
     }
+
+    @media screen and (max-height: 800px) {
+        .close{
+            font-size: 1rem;
+            padding-top: 0rem;
+        } 
+    }
+
     .popup-container{
         height: auto;
         width: auto;
     }
+}
+
+iframe{
+    border-radius: 10px;
 }
