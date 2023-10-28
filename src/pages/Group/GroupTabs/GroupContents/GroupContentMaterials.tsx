@@ -13,7 +13,7 @@ export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
     const [materials, setMaterials] = useState<Content[]>();
     const [filterMaterials, setFilterMaterials] = useState<string>("");
-    const [isFullScreen, setIsFullScreen] = useState(false)
+    const [isPlaying, setIsClicked] = useState(false)
 
     useEffect(() => {
         refreshMaterials();
@@ -24,7 +24,7 @@ export function GroupContentMaterials() {
     }
 
     const organizationName = groupContext.group.organization
-        ? <Link to={`/group/${groupContext.group.organization.path}`}>{groupContext.group.organization.name} &gt; </Link>
+        ? <Link to={`/group/${groupContext.group.organization.path}`} className="title-hyperlink">{groupContext.group.organization.name} &gt; </Link>
         : null;
 
     const groupName = <div onClick={() => groupContext.setCurrentContent(undefined)} style={{cursor: "pointer", display: "inline"}}>{groupContext.group.name}</div>
@@ -100,10 +100,19 @@ export function GroupContentMaterials() {
                     youTubeMatch !== null
                         ? renderYouTubeEmbed(youTubeMatch)
                     : material.type === "Documento"
-                        ? "doc-icon"
+                        ?
+                        <Link to={material.url} target="_blank" className="material-name icon-container">
+                            <img src={`/assets/imgs/file.png`} className="material-image"></img>
+                        </Link>
                     : material.type === "Pasta"
-                        ? "folder-icon"
-                    : "no idea"
+                        ?
+                        <Link to={material.url} target="_blank" className="material-name icon-container">
+                            <img src={`/assets/imgs/file.png`} className="material-image"></img>
+                        </Link>
+                    :
+                        <Link to={material.url} target="_blank" className="material-name icon-container">
+                            <img src={`/assets/imgs/link.png`} className="material-image"></img>
+                        </Link>
                 }
 
                 <div className="info">
@@ -118,48 +127,53 @@ export function GroupContentMaterials() {
         const videoId = videoUrl[1] ?? videoUrl[2];
 
         return (
-            <div id={`iframe${videoId}`} style={{transition: "0.2s"}} onClick={() => videoChange(videoId)}>
-                <YouTube
-                    // src={`https://www.youtube-nocookie.com/embed/${videoId}`}
-                    videoId={`${videoId}`}
-                    title="YouTube video player"
-                    opts={{height: "200rem", width: "auto", playVideo: true}}
-                    style={{transition: "0.2s"}}
-                    // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    // allowFullScreen
-                    {...{frameborder:"0"}}
-                    id={`${videoId}`}
-                    onPlay={()=>playVideo(videoId)}
-                    onStateChange={()=>videoChange(videoId)}
-                    onPause={() => pauseVideo(videoId)}
-                />
+            <div className="icon-container">
+                <img src="/assets/imgs/video.png" className="material-image"></img>
             </div>
+            // <div id={`iframe${videoId}`} style={{transition: "0.2s"}} onClick={() => videoChange(videoId)}>
+            //     <YouTube
+            //         // src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+            //         videoId={`${videoId}`}
+            //         title="YouTube video player"
+            //         opts={{height: "200rem", width: "auto", playVideo: true}}
+            //         style={{transition: "0.2s"}}
+            //         // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            //         // allowFullScreen
+            //         {...{frameborder:"0"}}
+            //         id={`${videoId}`}
+            //         onPlay={()=>playVideo(videoId)}
+            //         onStateChange={()=>videoChange(videoId)}
+            //         onPause={() => pauseVideo(videoId)}
+            //         className="iframe"
+            //         iframeClassName="iframe"
+            //     />
+            // </div>
         )
     }
 
 
-    function videoChange(id : string){
-        if(isFullScreen){
-            setIsFullScreen(false)
-            pauseVideo(id)
-        }
-    }
+    // function videoChange(id : string){
+    //     if(isFullScreen){
+    //         setIsFullScreen(false)
+    //         pauseVideo(id)
+    //     }
+    // }
 
-    function playVideo(id : string){
-        let iframeContainer = document.getElementById("iframe"+id)
-        iframeContainer?.classList.add("iframe-container")
+    // function playVideo(id : string){
+    //     let iframeContainer = document.getElementById("iframe"+id)
+    //     iframeContainer?.classList.add("iframe-container")
 
-        let iframe = document.getElementById(id)
-        iframe?.classList.add("fullscreen-video")
-        setIsFullScreen(true)
-    }
+    //     let iframe = document.getElementById(id)
+    //     iframe?.classList.add("fullscreen-video")
+    //     setIsFullScreen(true)
+    // }
 
-    function pauseVideo(id: string){
-        let iframeContainer = document.getElementById("iframe"+id)
-        iframeContainer?.classList.remove("iframe-container")
-        let iframe = document.getElementById(id)
-        iframe?.classList.remove("fullscreen-video")
-    }
+    // function pauseVideo(id: string){
+    //     let iframeContainer = document.getElementById("iframe"+id)
+    //     iframeContainer?.classList.remove("iframe-container")
+    //     let iframe = document.getElementById(id)
+    //     iframe?.classList.remove("fullscreen-video")
+    // }
 }
 
 const YOU_TUBE_MATCH = /^(?:https:\/\/)?(?:(?:www\.youtube\.com\/watch\?v=([-A-Za-z0-9_]{11,}))|(?:youtu\.be\/([-A-Za-z0-9_]{11,})))/;
