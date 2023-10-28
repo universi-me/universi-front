@@ -59,7 +59,7 @@ export  function GroupTabs(props: GroupTabsProps){
         
         
         {   context?.group.canEnter?
-                joined ?
+                joined && !context.group.rootGroup?
                 <button className="group-tab-button group-tab-participacao" onClick={leave}>Sair</button> 
                 :
                 <button className="group-tab-button group-tab-participacao" onClick={join}>Participar</button> 
