@@ -17,7 +17,6 @@ import FolderPage from "@/pages/Capacity/Folder";
 import ManagerCapacity from "@/pages/Capacity/ManagerCapacity";
 import SignUpPage from "@/pages/SignUp";
 import ManageProfilePage, { ManageProfileLoader } from "@/pages/ManageProfile";
-import { CurrilumFilter } from "@/pages/CurriculumFilter/CurriculumFilter";
 
 
 
@@ -51,10 +50,6 @@ export const router = createBrowserRouter([{
     {
       path: "/capacitacao/gerenciador", 
       element: <ManagerCapacity/>
-    },
-    {
-      path: "/curriculo/filtros", 
-      element: <CurrilumFilter/>
     },
     {
       path: "/quiz/:id",
