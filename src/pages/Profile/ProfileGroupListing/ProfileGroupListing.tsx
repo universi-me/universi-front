@@ -9,14 +9,20 @@ export function ProfileGroupListing(){
     if(profileContext == null)
         return null
 
-    const groupCount = profileContext.profileListData.groups.length.toLocaleString('pt-BR', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-    })
+    const isOwnProfile = !!profileContext?.accessingLoggedUser;
+    const hasOtherProfile = !!profileContext?.profile.firstname;
+
+    const otherProfileText = hasOtherProfile
+        ? `Grupos de ${profileContext.profile.firstname}`
+        : "Grupos";
+
+    const tabTitle = isOwnProfile
+        ? `Meus Grupos`
+        : otherProfileText;
 
     return(
         <>
-        <h1 className="group-name">Meus Grupos</h1>
+        <h1 className="group-name">{tabTitle}</h1>
         <div className="groups-listing-container">
             {
                 profileContext.profileListData.groups.length <= 0
@@ -26,8 +32,7 @@ export function ProfileGroupListing(){
                         profileContext.profileListData.groups.map((group) => {
                             return group === undefined ? null : (
                                 <Link to={`/group${group.path}`} className="group-item-listing" title={group.name} key={group.id}>
-                                    {/* todo: set group url */}
-                                    <img src={group.image} alt="" />
+                                    <img src={group.image ?? undefined} alt="" />
                                 </Link>
                             );
                         })

@@ -95,9 +95,6 @@ export function CurriculumEducation(props: ProfileEducationProps) {
                     </button>
                     {menuOpen && selectedEducationId === education.id ? (
                       <div className="config-menu">
-                        <button onClick={(e) => editEducation(e, education.id)}>
-                          <img src={ICON_EDIT_BLACK} />
-                        </button>
                         <button onClick={() => deleteEducation(education.id)}>
                         <img src={ICON_DELETE_BLACK} />
                         </button>

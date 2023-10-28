@@ -1,4 +1,3 @@
-
 import {useState} from "react"
 
 import "./SelectionBar.css"
@@ -8,46 +7,64 @@ import { ProfileCurriculum } from "../ProfileCurriculum/ProfileCurriculum"
 import { Vacancies } from "@/pages/Vacancies/Vacancies"
 
 export function SelectionBar(){
-
-    const [selectElement, setSelectelement] = useState("content")
-
+    const [currentTab, setCurrentTab] = useState("groups");
+    const renderTabs = TABS.length > 1;
 
     return(
         <>
-            <div className="selection-bar">
-                <div className="select-element" onClick={() => setSelectelement("content")}>
-                    Conteúdos
+            {
+                !renderTabs ? null : 
+                <div className="selection-bar">
+                    {
+                        TABS.map((tab) => {
+                            return <div key={tab.value} className="select-element" onClick={() => setCurrentTab(tab.value)}>{tab.name}</div>
+                        })
+                    }
                 </div>
-                <div className="select-element" onClick={() => setSelectelement("files")}>
-                    Arquivos
-                </div>
-                <div className="select-element" onClick={() => setSelectelement("groups")}>
-                    Grupos
-                </div>
-                <div className="select-element" onClick={() => setSelectelement("curriculum")}>
-                    Currículo
-                </div>
-                <div className="select-element" onClick={() => setSelectelement("vacancies")}>
-                    Vagas
-                </div>
-            </div>
-            {getSelectElement(selectElement)}
+            }
+            {renderTab(currentTab)}
         </>
     )
-
-
 }
 
+type TabDefinition = {
+    name: string;
+    value: string;
+};
 
-function getSelectElement(selectElement : string){
-    if(selectElement == "content")
-        return <ProfileContentListing/>
-    if(selectElement == "files")
-        return <ProfileContentListing filter="Documento"/>
-    if(selectElement == "groups")
+const TABS: TabDefinition[] = [
+    // {
+    //     name: "Conteúdos",
+    //     value: "content",
+    // },
+    // {
+    //     name: "Arquivos",
+    //     value: "files",
+    // },
+    {
+        name: "Grupos",
+        value: "groups",
+    },
+    {
+        name: "Currículo",
+        value: "curriculum",
+    },
+    {
+        name: "Vagas",
+        value: "vacancies",
+    },
+];
+
+
+function renderTab(tabValue : string){
+    if(tabValue == "content")
+        return <ProfileContentListing title="Conteúdos"/>
+    if(tabValue == "files")
+        return <ProfileContentListing title="Arquivos"/>
+    if(tabValue == "groups")
         return <ProfileGroupListing/>
-    if(selectElement == "curriculum")
+    if(tabValue == "curriculum")
         return <ProfileCurriculum/>
-    if(selectElement == "vacancies")
+    if(tabValue == "vacancies")
         return <Vacancies/>
 }

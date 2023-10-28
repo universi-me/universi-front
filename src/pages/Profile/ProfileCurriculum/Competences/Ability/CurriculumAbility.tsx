@@ -95,9 +95,6 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
                         </button>
                         {menuOpen && selectedCompeteceId === competence.id ? (
                         <div className="config-menu">
-                            <button onClick={(e) => editCompetence(e, competence.id)}>
-                            <img src={ICON_EDIT_BLACK} />
-                            </button>
                             <button onClick={() => deleteCompetece(competence.id)}>
                             <img src={ICON_DELETE_BLACK} />
                             </button>

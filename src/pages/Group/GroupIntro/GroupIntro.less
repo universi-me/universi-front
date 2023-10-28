@@ -1,0 +1,40 @@
+#group-page #group-intro {
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    #banner-wrapper {
+        height: 17.3rem;
+        width: 100%;
+
+        #organization-banner {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        #group-name {
+            width: fit-content;
+            height: fit-content;
+
+            margin-left: auto;
+            margin-right: 1rem;
+            transform: translateY(calc(-100% - 0.5em));
+            transform-origin: bottom right;
+
+            color: var(--font-color-v1);
+            font-size: 1.5rem;
+            font-weight: var(--font-weight-default);
+            text-align: right;
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+        }
+    }
+}

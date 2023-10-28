@@ -3,6 +3,7 @@ export const IMG_DCX_LOGO =      "/assets/imgs/dcx-png 1.png";
 
 export const ICON_CHEVRON_DOWN =     "/assets/icons/chevron-down-1.svg";
 export const ICON_CHEVRON_UP_BLACK = "/assets/icons/chevron-up-black.svg";
+export const ICON_EDIT_WHITE =       "/assets/icons/edit-1.svg"
 export const ICON_EDIT_BLACK =       "/assets/icons/edit-2.svg"
 export const ICON_VERIFIED =         "/assets/icons/icon-verificated.svg"
 

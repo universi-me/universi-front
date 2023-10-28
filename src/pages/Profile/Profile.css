@@ -14,10 +14,11 @@
 }
 
 #profile-page .content {
-    margin: 40px 2.5em;
+    padding: 0 3.5rem;
+    margin-top: 2rem;
 
     display: grid;
-    grid-template-columns: 20% auto;
+    grid-template-columns: 20rem auto;
 }
 
 #profile-page #left-side {
@@ -27,67 +28,4 @@
 #profile-page #right-side {
     width: 95%;
     margin-left: auto;
-}
-
-#profile-page .edit-button {
-    width: min-content;
-    height: min-content;
-
-    border: none;
-    background: none;
-
-    cursor: pointer;
-
-}
-
-#profile-page #user-header-bar .edit-button {
-    top: 1.5em;
-    right: 3.2em;
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: .5em;
-    border-radius: 4px;
-
-    /* todo: figure out why the button is bigger than the image */
-    padding-bottom: calc(.5em - 6px);
-}
-
-#profile-page .groups.card .create-group-button {
-    margin-left: auto;
-    text-decoration: none;
-    color: var(--secondary-color);
-}
-
-.groups.card{
-    background-color: transparent !important;
-    border: solid 1px var(--primary-color);
-}
-
-.groups-name{
-    text-align: center;
-    padding: 20px 20px;
-    background-color: var(--primary-color);
-    border-radius: 10px 10px 0px 0px;
-    color: white;
-    font-weight: 300;
-    margin-bottom: 20px;
-}
-
-.group-section{
-    display: flex;
-    flex-direction: column;
-
-    width: 100%;
-}
-
-.group-item img{
-    border-radius: 5px;
-    border: solid 1px var(--primary-color);
-    width: 60px;
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-    object-fit: scale-down;
-    padding: 2px;
 }

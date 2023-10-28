@@ -1,12 +1,12 @@
 import { QuizPage } from "@/pages/Quiz";
 import { App } from "@/src/App";
-import GroupPage from "@/pages/Group";
-import {ProfilePage} from "@/pages/Profile";
+import GroupPage, { GroupPageLoader } from "@/pages/Group";
+import { ProfilePage, ProfilePageLoader } from "@/pages/Profile";
 import { About } from "@/pages/About";
 import ManageGroupPage, { ManageGroupLoader } from "@/pages/ManageGroup";
 
 import {Navigate, createBrowserRouter} from 'react-router-dom'
-import Singin from "../../src/pages/singin/Singin";
+import Singin from "@/pages/singin/Singin";
 
 import { OAuth2Element }  from './oauth2-google';
 
@@ -16,6 +16,8 @@ import VideoPage from "@/pages/Capacity/VideoPlayer";
 import FolderPage from "@/pages/Capacity/Folder";
 import ManagerCapacity from "@/pages/Capacity/ManagerCapacity";
 import SignUpPage from "@/pages/SignUp";
+import Recovery  from "@/pages/Recovery/Recovery";
+import NewPassword from "@/pages/NewPassword/NewPassword";
 import ManageProfilePage, { ManageProfileLoader } from "@/pages/ManageProfile";
 
 
@@ -59,9 +61,10 @@ export const router = createBrowserRouter([{
       path: "/sobre",
       element: <About />
     },
-    { path: "/profile/:id", element: <ProfilePage /> },
+    { path: "/profile/:id", element: <ProfilePage />, loader: ProfilePageLoader },
     { path: "/manage-profile", element: <ManageProfilePage />, loader: ManageProfileLoader },
-    { path: "/group/*", element: <GroupPage /> },
+    { path: "/group/*", element: <GroupPage />, loader: GroupPageLoader },
+    { path: "/recovery-password/:id", element: <NewPassword/>},
     {//identificador unico - dynamic routes
       //path: "perfil/:id",
       //element: <></>
@@ -81,6 +84,10 @@ export const router = createBrowserRouter([{
       element: <SignUpPage/>
     },
     {
+      path: "/recovery",
+      element: <Recovery/>
+    },
+    {
         path: "/google-oauth-redirect",
         element: <OAuth2Element/>
     },
@@ -98,7 +105,8 @@ export function goTo(pathname: string) {
       return;
   const pathnameWithoutSlash = pathname.startsWith('/')? pathname.substring(1) : pathname;
   const destiny = `${window.location.origin}/${pathnameWithoutSlash}`;
-  const alreadyThere = window.location.href === destiny;
+  const alreadyThere = location.href === destiny;
   if (!alreadyThere)
       router.navigate(`/${pathnameWithoutSlash}`);
+  
 }

@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const logged = (await getLoggedProfile())!;
         setProfile(logged);
 
-        redirectAfterSignIn(logged.user.needProfile);
+        redirectAfterSignIn(logged.user.needProfile, logged.user.name);
         setFinishedLogin(true);
         return logged;
     }
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         else {
-            redirectAfterSignIn(profile.user.needProfile);
+            redirectAfterSignIn(profile.user.needProfile, profile.user.name);
         }
 
         setFinishedLogin(true);
@@ -81,6 +81,7 @@ async function getLoggedProfile() {
     return (await UniversimeApi.Profile.profile()).body?.profile ?? null;
 }
 
-function redirectAfterSignIn(needProfile: boolean) {
-    goTo(needProfile ? "manage-profile" : "capacitacao");
+function redirectAfterSignIn(needProfile: boolean, profileId: string) {
+    //goTo(needProfile ? "manage-profile" : "profile/"+profileId);
+    //location.reload()
 }

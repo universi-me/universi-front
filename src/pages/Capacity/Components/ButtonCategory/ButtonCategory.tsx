@@ -9,7 +9,7 @@ const AllCategories: React.FC = () => {
 
   useEffect(() => {
     UniversimeApi.Capacity.categoryList()
-        .then(res => setAvailableCategories(res.body.categories));
+        .then(res => setAvailableCategories(res.body?.categories ?? []));
   }, [])
 
   return (

@@ -66,7 +66,7 @@ export function Vacancies(props: VacancyProps) {
                 </div>
                 <div className="description">
                     <h3 className="description-title">Descrição</h3>
-                    <h3 className="description-vacancy">Projeto AYTY Phoebus - UFPB <br/> bla bla <br/> bla</h3>
+                    <h3 className="description-vacancy">Projeto AYTY Phoebus - UFPB <br/> Teste <br/> Teste </h3>
                 </div>
             </div>
         </div>

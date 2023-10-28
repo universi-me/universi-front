@@ -1,91 +1,74 @@
-import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { UniversimeApi } from "@/services/UniversimeApi";
-import { AuthContext } from "@/contexts/Auth";
-import { GroupBanner, GroupIntro, GroupAbout, GroupSubGroups, GroupMembers, GroupContext, GroupContextType, GroupContents } from "@/pages/Group"
-import "./Group.css"
-import "./card.css"
+import { useEffect, useState } from "react";
+import { Navigate, useLoaderData } from "react-router-dom";
+
+import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, type GroupContextType, type GroupPageLoaderResponse } from "@/pages/Group";
+import { ProfileBio, ProfileGroups } from "@/components/ProfileInfo";
+import "./Group.less";
 
 export function GroupPage() {
-    const auth = useContext(AuthContext);
-    const navigate = useNavigate();
-    const groupPath = '/' + useParams()["*"];
+    const page = useLoaderData() as GroupPageLoaderResponse;
+    const [currentTab, setCurrentTab] = useState<AvailableTabs>("contents");
 
-    const [groupContext, setGroupContext] = useState<GroupContextType>(null);
+    const [context, setContext] = useState(makeContext(page));
+    useEffect(() => {
+        setContext(makeContext(page));
+        setCurrentTab("contents");
+    }, [page]);
 
-    if (auth.user === null) {
-        navigate('/login');
+    if (!page.loggedData || !page.group) {
+        return (<Navigate to="/login" />);
     }
 
-    useEffect(() => { loadAccessedGroup() }, [groupPath])
-    console.dir(groupContext);
-
     return (
-        !groupContext ? null :
-
-        <GroupContext.Provider value={groupContext}>
+        <GroupContext.Provider value={context}>
         <div id="group-page">
-            {/* todo: get banner content from API */}
-            <GroupBanner bannerContent={"#4E4E4E"} />
-            <div className="content">
-                <GroupIntro verified={true}/>
-                <div className="group-infos">
-                    <div className="left-side">
-                        <GroupAbout />
-                        <button onClick={ groupContext.isParticipant ? exitGroup : joinGroup } className="join-button">
-                            { groupContext.isParticipant ? "Sair" : "Participar" }
-                        </button>
-                        <GroupSubGroups />
-                    </div>
-
-                    <div className="right-side">
-                        {/* <GroupMembers /> */}
-                        <GroupContents />
-                    </div>
-                </div>
+            <div>
+                <ProfileBio profile={context.loggedData.profile} links={context.loggedData.links} />
+                <ProfileGroups groups={context.loggedData.groups} />
+            </div>
+            <div id="intro-tabs-wrapper">
+                <GroupIntro />
+                <GroupTabs changeTab={changeTab} currentTab={currentTab} />
+                <GroupTabRenderer tab={currentTab} />
             </div>
         </div>
         </GroupContext.Provider>
     );
 
-    async function loadAccessedGroup() {
-        const groupRes = await UniversimeApi.Group.get({groupPath});
-        const [subgroupsRes, participantsRes, foldersRes] = await Promise.all([
-            UniversimeApi.Group.subgroups({groupId: groupRes.body.group.id}),
-            UniversimeApi.Group.participants({groupId: groupRes.body.group.id}),
-            UniversimeApi.Group.folders({groupId: groupRes.body.group.id}),
-        ]);
+    function changeTab(tab: AvailableTabs) {
+        if (tab === "contents") {
+            context.setCurrentContent(undefined);
+        }
 
-        setGroupContext({
-            group: groupRes.body.group,
-            subgroups: subgroupsRes.body.subgroups,
-            participants: participantsRes.body.participants,
-            isParticipant: participantsRes.body.participants.find(p => p.user.name === auth.user?.name) !== undefined,
-            folders: foldersRes.body.folders,
-
-            reloadPage: loadAccessedGroup,
-        });
+        setCurrentTab(tab);
     }
 
-    function joinGroup() {
-        if (groupContext === null)
-            return;
-
-        UniversimeApi.Group.join({groupId: groupContext.group.id})
-            .then(r => {
-                console.dir(r);
-                groupContext.reloadPage();
-            });
+    async function refreshGroupData() {
+        const data = await fetchGroupPageData({ groupPath: page.group?.path });
+        setContext(makeContext(data));
     }
 
-    function exitGroup() {
-        if (groupContext === null)
-            return;
+    function makeContext(data: GroupPageLoaderResponse): NonNullable<GroupContextType> {
+        // some values are using "!" even though they can be undefined
 
-        UniversimeApi.Group.exit({groupId: groupContext.group.id})
-            .then(r => {
-                console.dir(r);
-                groupContext.reloadPage();
-            });
+        return {
+            folders: data.folders,
+            group: data.group!,
+            loggedData: {
+                isParticipant: data.loggedData?.isParticipant!,
+                profile: data.loggedData?.profile!,
+                links: data.loggedData?.links ?? [],
+                groups: data.loggedData?.groups ?? [],
+            },
+            participants: data.participants,
+            subgroups: data.subGroups,
+
+            currentContent: undefined,
+            setCurrentContent(c) {
+                setContext({...context, currentContent: c});
+            },
+
+            refreshData: refreshGroupData,
+        };
     }
 }

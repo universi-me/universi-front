@@ -29,6 +29,9 @@
     color: var(--font-color-v1);
     font-size: 1.5rem;
     right: 1rem;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
 }
 
 #profile-page #right-side .competence .competence-list {

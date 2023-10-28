@@ -1,0 +1,46 @@
+.profile-groups-component {
+    background-color: transparent;
+    border: solid 1px var(--primary-color);
+    border-radius: 10px;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: fit-content;
+
+    .groups-name {
+        text-align: center;
+        padding: 20px 20px;
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: 300;
+        margin-bottom: 20px;
+    }
+
+    .items-wrapper {
+        margin: 0 auto;
+        width: 90%;
+
+        .show-items {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            column-gap: 1em;
+            row-gap: 1em;
+
+            .group-item img {
+                border-radius: 5px;
+                border: solid 1px var(--primary-color);
+                width: 60px;
+                aspect-ratio: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 20px;
+                object-fit: scale-down;
+                padding: 2px;
+            }
+        }
+    }
+
+}

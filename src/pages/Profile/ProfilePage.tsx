@@ -1,57 +1,59 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useState, useEffect } from "react";
+import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
+import { useContext, useState, useEffect, useMemo } from "react";
 
 import {
     ProfileBio, ProfileGroups, ProfileRecommendSettingsButton,
-    ProfileSettings, CompetencesSettings, ProfileDiscardChanges, ProfileContext
-} from '@/pages/Profile';
+    ProfileSettings, CompetencesSettings, ProfileDiscardChanges, ProfileContext,
+    type ProfileContextType, type ProfilePageLoaderResponse } from '@/pages/Profile';
 import { UniversiModal } from "@/components/UniversiModal";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { AuthContext } from "@/contexts/Auth";
-import { UniversimeApi } from "@/services/UniversimeApi";
-import type { ProfileContextType } from '@/pages/Profile';
+import { SelectionBar } from "./SelectionBar/SelectionBar";
 
 import './Profile.css';
-import './card.css';
-import './section.css';
-import { SelectionBar } from "./SelectionBar/SelectionBar";
-import type { Education } from "@/types/Education";
-import type { Competence } from "@/types/Competence";
-import { Experience } from "@/types/Experience";
 
 export function ProfilePage() {
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
-    const { id } = useParams();
+    const loaderData = useLoaderData() as ProfilePageLoaderResponse;
 
     const [showProfileSettings, setShowProfileSettings] = useState<boolean>(false);
     const [showCompetencesSettings, setShowCompetencesSettings] = useState<boolean>(false);
     const [showDiscardChanges, setShowDiscardChanges] = useState<boolean>(false);
+    const profileContext = useMemo<ProfileContextType>(() => ({
 
-    const [profileContext, setProfileContext] = useState<ProfileContextType>(null);
-    const [editCompetence, setEditCompetence] = useState<Competence | null>(null);
-    const [editEducation, setEditEducation] = useState<Education | null>(null);
-    const [editExperience, setEditExperience] = useState<Experience | null>(null);
+        accessingLoggedUser:            loaderData.accessingLoggedUser,
+        allCompetenceTypes:             loaderData.allCompetenceTypes,
+        allInstitution:                 loaderData.allInstitution,
+        allTypeEducation:               loaderData.allTypeEducation,
+        allTypeExperience:              loaderData.allTypeExperience,
+        allTypeVacancy:                 loaderData.allTypeVacancy,
+        profile:                        loaderData.profile!,
+        profileListData: {
+            achievements: loaderData.profileListData.achievements,
+            competences: loaderData.profileListData.competences,
+            folders: loaderData.profileListData.folders,
+            groups: loaderData.profileListData.groups,
+            links: loaderData.profileListData.links,
+            recommendationsReceived: loaderData.profileListData.recommendationsReceived,
+            recommendationsSend: loaderData.profileListData.recommendationsSend,
+            education: loaderData.profileListData.education,
+            experience: loaderData.profileListData.experience,
+        },
+
+        reloadPage: () => {navigate(location.href)},
+    }), [loaderData]);
 
     useEffect(() => {
-        loadAccessedUser();
-
         if (auth.user === null) {
             navigate('/login');
         }
-    }, [id, auth.user]);
-
-    useEffect(() => {
-        const user = profileContext?.profile.user;
-        if (user?.needProfile && user.ownerOfSession) {
-            navigate("/manage-profile");
-        }
-    }, [profileContext?.profile.user])
+    }, [auth.user]);
 
     if (!profileContext)
         return null;
 
-    if (profileContext.profile.user.needProfile) {
+    if (!loaderData.profile || profileContext.profile.user.needProfile) {
         SwalUtils.fireModal({
             title: "Erro ao acessar perfil",
             text: "Esse usuário não criou seu perfil ainda",
@@ -59,14 +61,16 @@ export function ProfilePage() {
         return null;
     }
 
+    if (profileContext.profile.user.needProfile && profileContext.profile.user.ownerOfSession) {
+        return <Navigate to="/manage-profile"/>
+    }
+
     return (
         <ProfileContext.Provider value={profileContext} >
         <div id="profile-page">
-            {/* todo: color from API */}
             <div className="content">
                 <div id="left-side">
-                    <ProfileBio onClickEdit={()=>{setShowProfileSettings(true)}} />
-                    <ProfileGroups />
+                    <ProfileBio profile={profileContext.profile} links={profileContext.profileListData.links} />
                 </div>
 
                 <div id="right-side">
@@ -111,63 +115,5 @@ export function ProfilePage() {
         setShowCompetencesSettings(false);
         setShowProfileSettings(false);
         setShowDiscardChanges(false);
-    }
-
-    async function loadAccessedUser() {
-        const [profileRes, competenceTypeRes, institutionsRes, typeEducationRes, typeExperienceRes] = await Promise.all([
-            UniversimeApi.Profile.get({username: id}),
-            UniversimeApi.CompetenceType.list(),
-            UniversimeApi.Institution.list(),
-            UniversimeApi.TypeEducation.list(),
-            UniversimeApi.TypeExperience.list(),
-        ]);
-
-        const profileListData = await loadProfileListData(profileRes.body.profile.id);
-
-        setProfileContext({
-            accessingLoggedUser: profileRes.body?.profile.user.ownerOfSession ?? false,
-            profile: profileRes.body.profile,
-            allCompetenceTypes: competenceTypeRes.body.list,
-            profileListData: profileListData,
-
-            editCompetence: editCompetence,
-            setEditCompetence,
-
-            editEducation: editEducation,
-            setEditEducation,
-
-            editExperience: editExperience,
-            setEditExperience,
-
-            allInstitution: institutionsRes,
-            allTypeEducation: typeEducationRes,
-            allTypeExperience: typeExperienceRes,
-
-            reloadPage: loadAccessedUser,
-        });
-
-        discardChanges();
-    }
-
-    async function loadProfileListData(profileId: string) {
-        const [groupsRes, competencesRes, linksRes, recommendationsRes, educationsRes, experienceRes] = await Promise.all([
-            UniversimeApi.Profile.groups({profileId}),
-            UniversimeApi.Profile.competences({profileId}),
-            UniversimeApi.Profile.links({profileId}),
-            UniversimeApi.Profile.recommendations({profileId}),
-            UniversimeApi.Profile.educations({ profileId }),
-            UniversimeApi.Profile.experiences({ profileId })
-        ]);
-
-        return {
-            groups: groupsRes.body.groups,
-            education: educationsRes.body.educations,
-            experience: experienceRes.body.experiences,
-            competences: competencesRes.body.competences,
-            links: linksRes.body.links,
-            recommendationsSend: recommendationsRes.body.recomendationsSend,
-            recommendationsReceived: recommendationsRes.body.recomendationsReceived,
-            achievements: [], // todo: fetch achievements
-        };
     }
 }

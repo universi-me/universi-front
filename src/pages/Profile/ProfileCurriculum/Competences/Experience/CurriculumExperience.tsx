@@ -96,9 +96,6 @@ export function CurriculumExperience(props: ProfileExperienceProps) {
                     </button>
                     {menuOpen && selectedExperienceId === experience.id ? (
                       <div className="config-menu">
-                        <button onClick={(e) => editExperience(e, experience.id)}>
-                          <img src={ICON_EDIT_BLACK} />
-                        </button>
                         <button onClick={() => deleteExperience(experience.id)}>
                         <img src={ICON_DELETE_BLACK} />
                         </button>

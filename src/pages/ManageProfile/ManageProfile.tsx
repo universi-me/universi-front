@@ -11,6 +11,8 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import "./ManageProfile.less";
 
 const BIO_MAX_LENGTH = 140;
+const FIRST_NAME_MAX_LENGTH = 21;
+const LAST_NAME_MAX_LENGTH = 21;
 export function ManageProfilePage() {
     const navigate = useNavigate();
     const { genderOptions, links, profile, typeLinks } = useLoaderData() as ManageProfileLoaderResponse;
@@ -25,6 +27,8 @@ export function ManageProfilePage() {
         return <Navigate to="/login" />
 
     const isBioFull = (bio?.length ?? 0) >= BIO_MAX_LENGTH;
+    const isFirstnameFull = (firstname.length) >= FIRST_NAME_MAX_LENGTH;
+    const isLastnameFull = (lastname.length) >= LAST_NAME_MAX_LENGTH;
     const canSaveProfile = !!firstname && !!lastname;
 
     return <div id="manage-profile-page">
@@ -39,13 +43,20 @@ export function ManageProfilePage() {
                         <fieldset id="fieldset-name">
                             <legend>Altere seu nome</legend>
                             <label className="legend" htmlFor="firstname">
-                                <span className="required-input">Nome</span>
-                                <input type="text" name="firstname" id="firstname" defaultValue={firstname} onChange={setStateAsValue(setFirstname)} required />
+                                <span className="counter-wrapper">
+                                    <span className="required-input">Nome</span>
+                                    <span className={`counter ${isFirstnameFull ? 'full-counter' : ''}`}>{firstname.length} / {FIRST_NAME_MAX_LENGTH}</span>
+                                </span>
+                                <input type="text" name="firstname" id="firstname" defaultValue={profile.firstname ?? ""} onChange={setStateAsValue(setFirstname)} required maxLength={FIRST_NAME_MAX_LENGTH} />
                             </label>
 
                             <label className="legend" htmlFor="lastname">
-                                <span className="required-input">Sobrenome</span>
-                                <input type="text" name="lastname" id="lastname" defaultValue={lastname} onChange={setStateAsValue(setLastname)} required />
+                                <span className="counter-wrapper">
+                                    <span className="required-input">Sobrenome</span>
+                                    <span className={`counter ${isLastnameFull ? 'full-counter' : ''}`}>{lastname.length} / {LAST_NAME_MAX_LENGTH}</span>
+                                </span>
+
+                                <input type="text" name="lastname" id="lastname" defaultValue={profile.lastname ?? ""} onChange={setStateAsValue(setLastname)} required maxLength={LAST_NAME_MAX_LENGTH} />
                             </label>
                         </fieldset>
                     </div>
@@ -54,7 +65,7 @@ export function ManageProfilePage() {
                     <fieldset id="fieldset-bio">
                         <legend>
                             Biografia
-                            <span className={`info-text ${isBioFull ? 'full-bio' : ''}`}>{bio?.length ?? 0} / {BIO_MAX_LENGTH}</span>
+                            <span className={`info-text ${isBioFull ? 'full-counter' : ''}`}>{bio?.length ?? 0} / {BIO_MAX_LENGTH}</span>
                         </legend>
                         <textarea name="bio" id="bio" maxLength={BIO_MAX_LENGTH} defaultValue={bio} rows={6} onChange={setStateAsValue(setBio)} />
                     </fieldset>
