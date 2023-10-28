@@ -8,12 +8,15 @@ import { type Content } from "@/types/Capacity";
 import YouTube from "react-youtube";
 
 import "./GroupContentMaterials.less";
+import { VideoPopup } from "@/components/VideoPopup/VideoPopup";
 
 export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
     const [materials, setMaterials] = useState<Content[]>();
     const [filterMaterials, setFilterMaterials] = useState<string>("");
-    const [isPlaying, setIsClicked] = useState(false)
+    const [playingVideo, setPlayingVideo] = useState("")
+    const [isMiniature, setIsMiniature] = useState(false)
+
 
     useEffect(() => {
         refreshMaterials();
@@ -127,8 +130,13 @@ export function GroupContentMaterials() {
         const videoId = videoUrl[1] ?? videoUrl[2];
 
         return (
-            <div className="icon-container">
+            <div className="icon-container" id={`icon-container-${videoId}`} onClick={() => { console.log("videoId: " + videoId+"\n playing: " + playingVideo + "\nMiniature: "+isMiniature);if(!isMiniature || videoId != playingVideo) handleVideoClick(videoId)}}>
                 <img src="/assets/imgs/video.png" className="material-image"></img>
+                {
+                    playingVideo == videoId
+                    ? <VideoPopup id={videoId} handleClose={handleVideoClose}/>
+                    : <></>
+                }
             </div>
             // <div id={`iframe${videoId}`} style={{transition: "0.2s"}} onClick={() => videoChange(videoId)}>
             //     <YouTube
@@ -151,6 +159,63 @@ export function GroupContentMaterials() {
         )
     }
 
+    function handleVideoClick(id : string){
+        if(playingVideo == id){
+            showMiniature(id)
+        }
+        else{
+            setIsMiniature(false)
+            setPlayingVideo(id)
+        }
+    }
+
+
+    function expand(id : string){
+        let popupContainer = document.getElementById("popup-container")
+        let close = document.getElementById("close")
+        let iframeContainer = document.getElementById("iframe-container")
+
+        popupContainer?.classList.remove("mini-player")
+        popupContainer?.classList.add("popup-container")
+        iframeContainer?.classList.remove("mini-iframe")
+        iframeContainer?.classList.add("iframe-container")
+        if(close){
+            close.innerHTML = "✖";
+            close.onclick = () => { handleVideoClose}
+        }
+        setIsMiniature(false)
+
+
+    }
+
+    function showMiniature(id : string){
+        let popupContainer = document.getElementById("popup-container")
+        let close = document.getElementById("close")
+        let iframeContainer = document.getElementById("iframe-container")
+
+        popupContainer?.classList.remove("popup-container")
+        popupContainer?.classList.add("mini-player")
+        iframeContainer?.classList.remove("iframe-container")
+        iframeContainer?.classList.add("mini-iframe")
+        if(close){
+            close.innerHTML = "&#x26F6;"
+            close.onclick = () => { handleVideoClose}
+        }
+        setIsMiniature(true)
+
+    }
+
+    function handleVideoClose(id : string, symbol : string){
+
+        if(symbol == "✖"){
+            setPlayingVideo("")
+            setIsMiniature(false)
+            return
+        }
+        expand(id)
+
+
+    }
 
     // function videoChange(id : string){
     //     if(isFullScreen){
@@ -175,5 +240,7 @@ export function GroupContentMaterials() {
     //     iframe?.classList.remove("fullscreen-video")
     // }
 }
+
+
 
 const YOU_TUBE_MATCH = /^(?:https:\/\/)?(?:(?:www\.youtube\.com\/watch\?v=([-A-Za-z0-9_]{11,}))|(?:youtu\.be\/([-A-Za-z0-9_]{11,})))/;
