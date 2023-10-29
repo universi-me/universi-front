@@ -36,7 +36,7 @@ export function GroupContentMaterials() {
         <section id="materials" className="group-tab">
             <div className="heading">
                 <i className="bi bi-list-ul tab-icon"/>
-                <h2 className="title">Materiais em {organizationName}{groupName} &gt; {groupContext.currentContent.name}</h2>
+                <h2 className="title">{organizationName}{groupName} &gt; {groupContext.currentContent.name}</h2>
                 <div className="go-right">
                     <div id="filter-wrapper">
                         <i className="bi bi-search filter-icon"/>
