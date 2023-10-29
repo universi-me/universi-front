@@ -1,8 +1,9 @@
-import { useContext, type ReactElement, useState } from "react";
+import { useContext, type ReactElement, useState, useEffect } from "react";
 import { GroupContents, GroupContext, GroupGroups, GroupPeople } from "@/pages/Group";
 import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
+import { GroupSubmenu } from "@/pages/Group/GroupSubmenu/GroupSubmenu";
 
 export type AvailableTabs = "contents" | "files" | "groups" | "people";
 
@@ -60,9 +61,10 @@ export  function GroupTabs(props: GroupTabsProps){
         
         {   context?.group.canEnter?
                 joined && !context.group.rootGroup?
-                <button className="group-tab-button group-tab-participacao" onClick={leave}>Sair</button> 
+                <GroupSubmenu leave={leave}/>
+                // <button className="group-tab-button group-tab-participacao" onClick={leave}>Sair</button> 
                 :
-                <button className="group-tab-button group-tab-participacao" onClick={join}>Participar</button> 
+                <button className="group-tab-button group-tab-participacao" onClick={join}>Participar deste grupo</button> 
             : <></>
         }
 
