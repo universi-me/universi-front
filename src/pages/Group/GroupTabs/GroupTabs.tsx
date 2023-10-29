@@ -1,4 +1,4 @@
-import { useContext, type ReactElement, useState } from "react";
+import { useContext, type ReactElement, useState, useEffect } from "react";
 import { GroupContents, GroupContext, GroupGroups, GroupPeople } from "@/pages/Group";
 import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
@@ -21,6 +21,10 @@ export  function GroupTabs(props: GroupTabsProps){
     const context = useContext(GroupContext);
     const auth = useContext(AuthContext);
     const [joined, setJoined] = useState(auth.profile != null ? context?.loggedData.isParticipant : false)
+
+    useEffect(()=>{
+        setJoined(auth.profile != null ? context?.loggedData.isParticipant : false)
+    },[context?.participants])
 
     async function join(){
         if(!context?.group.canEnter || context.group.id == null)
