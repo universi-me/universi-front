@@ -24,7 +24,7 @@ export  function GroupTabs(props: GroupTabsProps){
 
     useEffect(()=>{
         setJoined(auth.profile != null ? context?.loggedData.isParticipant : false)
-    },[context?.participants])
+    },[context?.group])
 
     async function join(){
         if(!context?.group.canEnter || context.group.id == null)
