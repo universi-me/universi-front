@@ -59,10 +59,9 @@ export  function GroupTabs(props: GroupTabsProps){
         }
         
         
-        {   context?.group.canEnter?
+        {   context?.group.canEnter && !context.group.rootGroup?
                 joined && !context.group.rootGroup?
                 <GroupSubmenu leave={leave}/>
-                // <button className="group-tab-button group-tab-participacao" onClick={leave}>Sair</button> 
                 :
                 <button className="group-tab-button group-tab-participacao" onClick={join}>Participar deste grupo</button> 
             : <></>
