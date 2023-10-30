@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import type { Group } from "@/types/Group";
+import { groupImageUrl } from "@/utils/apiUtils";
 
 import "./ProfileGroups.less";
 
@@ -22,7 +23,7 @@ export function ProfileGroups(props: ProfileGroupsProps) {
                                 return group === undefined ? null : (
                                     <Link to={`/group${group.path}`} className="group-item" title={group.name} key={group.id}>
                                         {/* todo: set group url */}
-                                        <img src={group.image ?? undefined} alt="" />
+                                        <img src={groupImageUrl(group)} alt="" />
                                     </Link>
                                 );
                             })
