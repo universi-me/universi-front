@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { ProfileContext } from "../ProfileContext";
+import { groupImageUrl } from "@/utils/apiUtils";
 import { Link } from "react-router-dom";
 import "./ProfileGroupListing.css"
 
@@ -32,7 +33,7 @@ export function ProfileGroupListing(){
                         profileContext.profileListData.groups.map((group) => {
                             return group === undefined ? null : (
                                 <Link to={`/group${group.path}`} className="group-item-listing" title={group.name} key={group.id}>
-                                    <img src={group.image ?? undefined} alt="" />
+                                    <img src={groupImageUrl(group)} alt="" />
                                 </Link>
                             );
                         })
