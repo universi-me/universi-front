@@ -116,9 +116,18 @@ export function GroupContentMaterials() {
                             }
                         </Link>
                 }
-
                 <div className="info">
-                    <Link to={material.url} target="_blank" className="material-name">{material.title}</Link>
+                {
+                    youTubeMatch !== null
+                    ?
+                        <div className="material-name"   onClick={() => { const videoId = (youTubeMatch[1] ?? youTubeMatch[2]); if(!isMiniature || videoId!= playingVideo) handleVideoClick(videoId)}}>
+                            {material.title}
+                        </div>
+                    :
+                        <Link to={material.url} target="_blank" className="material-name">
+                            {material.title}
+                        </Link>
+                }
                     <p className="material-description">{material.description}</p>
                 </div>
             </div>
@@ -129,7 +138,7 @@ export function GroupContentMaterials() {
         const videoId = videoUrl[1] ?? videoUrl[2];
 
         return (
-            <div className="icon-container" id={`icon-container-${videoId}`} onClick={() => { console.log("videoId: " + videoId+"\n playing: " + playingVideo + "\nMiniature: "+isMiniature);if(!isMiniature || videoId != playingVideo) handleVideoClick(videoId)}}>
+            <div className="icon-container" id={`icon-container-${videoId}`} onClick={() => {if(!isMiniature || videoId != playingVideo) handleVideoClick(videoId)}}>
                 <img src="/assets/imgs/video.png" className="material-image"></img>
                 {
                     playingVideo == videoId
