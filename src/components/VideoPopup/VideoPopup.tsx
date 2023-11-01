@@ -17,7 +17,7 @@ export function VideoPopup({id, handleClose, handleWatched} : {id: string, handl
                 opts={{height: "100%", width: "100%"}}
                 style={{aspectRatio: "16/9", height: "100%", width: "100%"}}
                 />
-                <div className="watched-button" onClick={handleWatched}><i className="bi bi-check2-circle"></i> Marcar como visto</div>
+                <div className="watched-button" onClick={handleWatched}><i className="bi bi-check2-circle"></i> Marcar como concluído</div>
             </div>
         </div>
 
