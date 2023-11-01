@@ -142,11 +142,15 @@ export function GroupContentMaterials() {
                 <img src="/assets/imgs/video.png" className="material-image"></img>
                 {
                     playingVideo == videoId
-                    ? <VideoPopup id={videoId} handleClose={handleVideoClose}/>
+                    ? <VideoPopup id={videoId} handleClose={handleVideoClose} handleWatched={handleWatchedButton}/>
                     : <></>
                 }
             </div>
         )
+    }
+
+    function handleWatchedButton(){
+        //Código para quando a pessoa clicar no botão para marcar como assistido
     }
 
     function handleVideoClick(id : string){

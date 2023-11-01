@@ -2,7 +2,7 @@ import YouTube from "react-youtube";
 
 import "./VideoPopup.css"
 
-export function VideoPopup({id, handleClose} : {id: string, handleClose : (id : string, symbol : string) => void }){
+export function VideoPopup({id, handleClose, handleWatched} : {id: string, handleClose : (id : string, symbol : string) => void, handleWatched : () => void}){
 
     return(
 
@@ -17,6 +17,7 @@ export function VideoPopup({id, handleClose} : {id: string, handleClose : (id : 
                 opts={{height: "100%", width: "100%"}}
                 style={{aspectRatio: "16/9", height: "100%", width: "100%"}}
                 />
+                <div className="watched-button" onClick={handleWatched}><i className="bi bi-check2-circle"></i> Marcar como visto</div>
             </div>
         </div>
 
