@@ -76,3 +76,24 @@
 iframe{
     border-radius: 10px;
 }
+
+
+.watched-button{
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    text-align: center;
+    margin-left: 50%;
+    transform: translate(-50%, 0);
+    display: inline-flex;
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: 0.2s linear;
+}
+
+.watched-button:hover{
+    padding: 7px 12px;
+    font-size: large;
+    background: var(--card-background-color);
+}
