@@ -1,8 +1,8 @@
 import { Group } from "@/types/Group";
 import { Profile } from "@/types/Profile";
 
-export type ContentType = "Vídeo" | "Documento" | "Pasta";
-export const Types: ContentType[] = ["Vídeo", "Documento", "Pasta"];
+export type ContentType = "VIDEO" | "LINK" | "FOLDER" | "FILE";
+export const Types: ContentType[] = ["VIDEO", "LINK", "FOLDER", "FILE"];
 
 export type Content = {
     id:          string;

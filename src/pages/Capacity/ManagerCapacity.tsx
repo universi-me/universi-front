@@ -109,11 +109,7 @@ const CrudTela: React.FC = () => {
   };
 
   const handleEditType = (option : any) =>{
-    console.log("aa")
-    console.log(option)
     setEditedType(option.value)
-    console.log(editedType)
-    console.log(option.value)
   }
 
   const handleEditClick = (content: Content) => {
