@@ -1,0 +1,40 @@
+.submenu{
+    display: inline-flex;
+    cursor: pointer;
+    left: 98% !important;
+    color: var(--background-color);
+    transform: translate(-50%, 0);
+    border-radius: 100%;
+    aspect-ratio: 1 / 1;
+    width: 1.5rem;
+    height: 1.5rem;
+    justify-content: center;
+}
+
+i{
+    width: inherit;
+    height: inherit;
+    /* transform: translate(25%, 25%); */
+    text-align: center;
+    display: block;
+}
+
+.box{
+    background-color: white;
+    display: block;
+    position: absolute;
+    padding: 5px;
+    margin-top: 100%;
+    color: var(--font-color-v2);
+    border: 1px solid var(--primary-color);
+    border-radius: 10px;
+    transition: 0.2s linear;
+    width: 10rem;
+    text-align: center;
+    margin-right: 2rem;
+}
+
+.box:hover{
+    background-color: var(--alert-color);
+    color: white;
+}
