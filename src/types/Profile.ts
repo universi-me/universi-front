@@ -1,4 +1,5 @@
 import type { User } from "@/types/User";
+import { Group } from "./Group";
 
 export type Gender = "M" | "F" | "O";
 
@@ -11,4 +12,5 @@ export type Profile = {
     lastname:     string | null;
     bio:          string | null;
     creationDate: string;
+    organization: Group;
 }
