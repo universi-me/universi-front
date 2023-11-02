@@ -1,8 +1,13 @@
 import YouTube from "react-youtube";
+import { useEffect, useState } from "react"
 
 import "./VideoPopup.css"
+import { Content } from "@/types/Capacity";
 
-export function VideoPopup({id, handleClose, handleWatched} : {id: string, handleClose : (id : string, symbol : string) => void, handleWatched : () => void}){
+export function VideoPopup({material, id, handleClose, handleWatched} : {material : Content, id: string, handleClose : (id : string, symbol : string) => void, handleWatched : (event : any) => void}){
+
+    const [status, setStatus] = useState(material.contentStatus.status)
+
 
     return(
 
@@ -17,7 +22,13 @@ export function VideoPopup({id, handleClose, handleWatched} : {id: string, handl
                 opts={{height: "100%", width: "100%"}}
                 style={{aspectRatio: "16/9", height: "100%", width: "100%"}}
                 />
-                <div className="watched-button" onClick={handleWatched}><i className="bi bi-check2-circle"></i> Marcar como concluído</div>
+                {
+                    material.contentStatus.status != "DONE"
+                    ?
+                        <div className="watched-button" onClick={(event) => {handleWatched(event); material.contentStatus.status = "DONE";}}><i className="bi bi-check2-circle status-icon"></i> Marcar como concluído</div>
+                    :
+                        <div className="watched-button watched" onClick={(event) => {handleWatched(event); material.contentStatus.status = "NOT_VIEWED";}}><i className="bi bi-check2-circle status-icon"></i> Concluído</div>
+                }
             </div>
         </div>
 
