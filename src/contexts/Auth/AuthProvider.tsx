@@ -35,8 +35,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             logged.organization = organization.body?.organization
         setProfile(logged);
 
-        console.log(profile)
-
         redirectAfterSignIn(logged.user.needProfile, logged.user.name);
         setFinishedLogin(true);
         return logged;
