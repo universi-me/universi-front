@@ -30,6 +30,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setFinishedLogin(false);
         const logged = (await getLoggedProfile())!;
+        const organization = await UniversimeApi.User.organization();
+        if(organization.body?.organization != null)
+            logged.organization = organization.body?.organization
         setProfile(logged);
 
         redirectAfterSignIn(logged.user.needProfile, logged.user.name);
@@ -66,7 +69,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     async function updateLoggedUser() {
         setFinishedLogin(false);
-        const profile = await getLoggedProfile();
+        const profile = (await getLoggedProfile())!;
+        const organization = await UniversimeApi.User.organization();
+        if(organization.body?.organization != undefined)
+            profile.organization = organization.body?.organization
         setProfile(profile);
 
         setFinishedLogin(true);

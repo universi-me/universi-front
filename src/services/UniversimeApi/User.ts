@@ -1,5 +1,6 @@
 import { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
+import { Group } from "@/types/Group";
 
 export type UserSignUp_RequestDTO = {
     username: string;
@@ -27,6 +28,7 @@ export type UsernameAvailable_RequestDTO = {
 
 export type UserSignUp_ResponseDTO = ApiResponse;
 export type UserEdit_ResponseDTO =   ApiResponse;
+export type UserOrganization_ResponseDTO = ApiResponse<{organization : Group}>
 
 export async function signUp(body: UserSignUp_RequestDTO) {
     return (await api.post<UserSignUp_ResponseDTO>("/signup", {
@@ -59,5 +61,10 @@ export async function newPassword(body : UserNewPassword_RequestDTO){
 export async function usernameAvailable(body : UsernameAvailable_RequestDTO){
     return (await api.post<ApiResponse>("/username-available",{
         username: body.username,
+    })).data;
+}
+
+export async function organization(){
+    return (await api.post<UserOrganization_ResponseDTO>("/group/current-organization", {
     })).data;
 }
