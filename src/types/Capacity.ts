@@ -1,10 +1,12 @@
 import { Group } from "@/types/Group";
 import { Profile } from "@/types/Profile";
 
-export type ContentType = "Vídeo" | "Documento" | "Pasta";
-export const Types: ContentType[] = ["Vídeo", "Documento", "Pasta"];
+
 export type ContentStatusEnum = "VIEW" | "DONE" | "NOT_VIEWED"
 export type ContentStatus = {status : ContentStatusEnum, updatedAt: string}
+export type ContentType = "VIDEO" | "LINK" | "FOLDER" | "FILE";
+export const Types: ContentType[] = ["VIDEO", "LINK", "FOLDER", "FILE"];
+
 
 export type Content = {
     id:                 string;
