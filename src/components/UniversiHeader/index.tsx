@@ -14,7 +14,7 @@ export function Header() {
 
   return (
     <header id="header">
-      <Link to={`${link}`} id="header-logo" onClick={() => console.log(authContext)}>
+      <Link to={`${link}`} id="header-logo">
         Universi<span className="tld">.me</span>
       </Link>
       <div className="right-items">
