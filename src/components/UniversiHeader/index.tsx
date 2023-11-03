@@ -9,7 +9,6 @@ import { AuthContext } from "@/contexts/Auth";
 export function Header() {
 
   const authContext = useContext(AuthContext)
-  console.log(authContext)
 
   const link = authContext == null ? "/" : (authContext.profile?.organization == null ? "/profile/"+authContext.user?.name : "/group"+authContext.profile?.organization.path);
 
