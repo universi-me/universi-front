@@ -31,6 +31,15 @@ export type ContentEdit_RequestDTO = {
     type?:                  string;
 };
 
+export type ContentStatus_RequestDTO={
+    contentId:              string;
+}
+
+export type ContentStatusEdit_RequestDTO={
+    contentId            : string;
+    contentStatusType    : string;
+}
+
 export type ContentGet_ResponseDTO =    ApiResponse<{content: Content}>;
 export type ContentCreate_ResponseDTO = ApiResponse;
 export type ContentEdit_ResponseDTO =   ApiResponse;
@@ -75,4 +84,21 @@ export async function removeContent(body: ContentId_RequestDTO) {
     return (await api.post<ContentRemove_ResponseDTO>("/capacity/content/delete", {
         id: body.id,
     })).data;
+}
+
+export async function createContentStatus(body : ContentStatus_RequestDTO){
+    return(
+        await api.post<ContentStatus_RequestDTO>("/capacity/content/status" ,{
+            contentId : body.contentId,
+        })
+    ).data;
+}
+
+export async function editContentStatus(body : ContentStatusEdit_RequestDTO){
+    return(
+        await api.post<ContentStatusEdit_RequestDTO>("/capacity/content/status/edit", {
+            contentId : body.contentId,
+            contentStatusType : body.contentStatusType,
+        })
+    ).data;
 }

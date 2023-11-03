@@ -4,11 +4,12 @@ import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
-import { type Content } from "@/types/Capacity";
+import { ContentStatusEnum, type Content, ContentStatus } from "@/types/Capacity";
 import YouTube from "react-youtube";
 
 import "./GroupContentMaterials.less";
 import { VideoPopup } from "@/components/VideoPopup/VideoPopup";
+import { ContentStatusEdit_RequestDTO } from "@/services/UniversimeApi/Capacity";
 
 export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
@@ -101,7 +102,7 @@ export function GroupContentMaterials() {
             <div className="material-item" key={material.id}>
                 {
                     youTubeMatch !== null
-                        ? renderYouTubeEmbed(youTubeMatch)
+                        ? renderYouTubeEmbed(youTubeMatch, material)
                         :
                         <Link to={material.url} target="_blank" className="material-name icon-container">
                             {
@@ -134,7 +135,7 @@ export function GroupContentMaterials() {
         );
     }
 
-    function renderYouTubeEmbed(videoUrl: RegExpExecArray) {
+    function renderYouTubeEmbed(videoUrl: RegExpExecArray, material : Content) {
         const videoId = videoUrl[1] ?? videoUrl[2];
 
         return (
@@ -142,11 +143,35 @@ export function GroupContentMaterials() {
                 <img src="/assets/imgs/video.png" className="material-image"></img>
                 {
                     playingVideo == videoId
-                    ? <VideoPopup id={videoId} handleClose={handleVideoClose}/>
+                    ? <VideoPopup material={material} id={videoId} handleClose={handleVideoClose} handleWatched={(event) => handleWatchedButton(material, event)}/>
                     : <></>
                 }
             </div>
         )
+    }
+
+    async function handleWatchedButton(material : Content, event : any){
+
+        event.stopPropagation();
+        console.log(material)
+
+        let nextStatus : ContentStatusEnum = material.contentStatus.status == "DONE"  ? "NOT_VIEWED" : "DONE"
+
+        console.log(nextStatus)
+        console.log(material.contentStatus.status)
+
+
+        await UniversimeApi.Capacity.createContentStatus({contentId : material.id});
+        await UniversimeApi.Capacity.editContentStatus({contentId: material.id, contentStatusType : nextStatus}).then(
+            (data : ContentStatusEdit_RequestDTO) => {
+                if(data.contentStatusType == "DONE" || data.contentStatusType == "NOT_VIEWED")
+                    material.contentStatus.status = data.contentStatusType
+            }
+        )
+
+        refreshMaterials()
+
+
     }
 
     function handleVideoClick(id : string){
