@@ -4,7 +4,7 @@ import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
-import { ContentStatusEnum, type Content, ContentStatus } from "@/types/Capacity";
+import { ContentStatusEnum, type Content, ContentStatus, ContentType } from "@/types/Capacity";
 import YouTube from "react-youtube";
 
 import "./GroupContentMaterials.less";
@@ -106,10 +106,10 @@ export function GroupContentMaterials() {
                         :
                         <Link to={material.url} target="_blank" className="material-name icon-container">
                             {
-                                material.type === "Documento"
+                                material.type === "FILE"
                                     ?
                                         <img src={`/assets/imgs/file.png`} className="material-image"></img>
-                                : material.type === "Pasta"
+                                : material.type === "FOLDER"
                                     ?
                                         <img src={`/assets/imgs/file.png`} className="material-image"></img>
                                 :
