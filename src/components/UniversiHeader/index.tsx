@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { SearchInput } from "./components/SearchInput";
 import { WelcomeUser } from "./components/WelcomeUser/WelcomeUser";
 import { LoginButton } from "./components/LoginButton/LoginButton";
 import "./styles.less";
@@ -10,7 +9,11 @@ export function Header() {
 
   const authContext = useContext(AuthContext)
 
-  const link = authContext == null ? "/" : (authContext.profile?.organization == null ? "/profile/"+authContext.user?.name : "/group"+authContext.profile?.organization.path);
+  let link;
+  if(authContext == null || authContext.user == null)
+    link = "/"
+  else
+    link = (authContext.profile?.organization == null ? "/profile/"+authContext.user.name : "/group"+authContext.profile?.organization.path);
 
   return (
     <header id="header">
