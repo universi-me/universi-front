@@ -70,11 +70,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     async function updateLoggedUser() {
         setFinishedLogin(false);
         const profile = (await getLoggedProfile())!;
-        if(profile != null){
-            const organization = await UniversimeApi.User.organization();
-            if(organization.body?.organization != undefined)
-                profile.organization = organization.body?.organization
-        }
+        const organization = await UniversimeApi.User.organization();
+        if(organization.body?.organization != undefined)
+            profile.organization = organization.body?.organization
         setProfile(profile);
 
         setFinishedLogin(true);
