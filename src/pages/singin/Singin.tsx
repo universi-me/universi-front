@@ -3,7 +3,6 @@ import "./signin.css";
 
 export default function Singin() {
   return (
-    <div>
       <div className="signin-container">
         <div className="logo">
           {/* <UniversiLogo /> */}
@@ -25,6 +24,5 @@ export default function Singin() {
           </div>
         </footer>
       </div>
-    </div>
   );
 }
