@@ -3,13 +3,16 @@ import { Link } from 'react-router-dom';
 import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
 import { getFullName, getProfileImageUrl } from '@/utils/profileUtils';
 import { ICON_EDIT_WHITE } from '@/utils/assets';
+import { groupBannerUrl } from '@/utils/apiUtils';
 
 import type { Profile } from '@/types/Profile';
 import { TypeLinkToBootstrapIcon, type Link as Link_API } from '@/types/Link';
+import type { Group } from '@/types/Group';
 import './ProfileBio.less';
 
 export type ProfileBioProps = {
     profile: Profile;
+    organization?: Group | null;
     links: Link_API[];
 };
 
@@ -19,15 +22,23 @@ export function ProfileBio(props: ProfileBioProps) {
     const isOnOwnProfile = location.pathname.replace(/\/+$/, "") == linkToOwnProfile;
     const renderEditButton = props.profile.user.ownerOfSession && isOnOwnProfile;
 
+    const headerBackground = props.organization
+        ? { backgroundImage: `url(${groupBannerUrl(props.organization)})` }
+        : { backgroundColor: "var(--primary-color)" }
+
+    console.dir({headerBackground});
+
     return (
         <div className="profile-bio-component card">
 
-            <div className='profile-header'>
+            <div className='profile-header' style={headerBackground}>
                 {
                     renderEditButton ?
-                        <Link className="edit-button" to="/manage-profile" title="Editar seu perfil">
-                            <img src={ICON_EDIT_WHITE} alt="Editar" />
-                        </Link>
+                        <div className="edit-button">
+                            <Link to="/manage-profile" title="Editar seu perfil">
+                                <img src={ICON_EDIT_WHITE} alt="Editar" />
+                            </Link>
+                        </div>
                     : null
                 }
             </div>
