@@ -1,8 +1,15 @@
+import { useContext } from "react";
+import { Navigate } from "react-router-dom";
+import { AuthContext } from "@/contexts/Auth";
 import SinginForm from "./SinginForm";
 import "./signin.css";
 
 export default function Singin() {
-  return (
+    const authContext = useContext(AuthContext);
+    if (authContext.profile)
+        return <Navigate to="/" />
+
+    return (
     <div>
       <div className="signin-container">
         <div className="logo">
