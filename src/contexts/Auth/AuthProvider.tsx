@@ -70,8 +70,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     async function updateOrganization() {
-        const currentOrganization = await UniversimeApi.User.organization();
-        const usedOrganization = currentOrganization.body?.organization ?? null;
+        const currentOrganization = profile
+            ? (await UniversimeApi.User.organization()).body?.organization
+            : null;
+
+        const usedOrganization = currentOrganization ?? null;
 
         setOrganization(usedOrganization);
         return usedOrganization;
