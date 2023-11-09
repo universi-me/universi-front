@@ -63,18 +63,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setFinishedLogin(false);
         const profile = await getLoggedProfile();
         setProfile(profile);
-        updateOrganization();
+
+        if (profile)
+            updateOrganization();
+        else
+            setOrganization(null);
 
         setFinishedLogin(true);
         return profile;
     }
 
     async function updateOrganization() {
-        const currentOrganization = profile
-            ? (await UniversimeApi.User.organization()).body?.organization
-            : null;
-
-        const usedOrganization = currentOrganization ?? null;
+        const currentOrganization = await UniversimeApi.User.organization();
+        const usedOrganization = currentOrganization.body?.organization ?? null;
 
         setOrganization(usedOrganization);
         return usedOrganization;
