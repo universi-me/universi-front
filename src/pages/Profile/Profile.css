@@ -14,8 +14,8 @@
 }
 
 #profile-page .content {
-    padding: 0 3.5rem;
-    margin-top: 2rem;
+    padding: 0 var(--left-page-padding);
+    margin-top: var(--top-page-margin);
 
     display: grid;
     grid-template-columns: 15rem auto;
