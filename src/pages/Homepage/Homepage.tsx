@@ -9,7 +9,7 @@ export function Homepage() {
         return <Navigate to="/login" />;
 
     if (authContext.organization)
-        return <Navigate to={`/group/${authContext.organization.path}`} />;
+        return <Navigate to={`/group${authContext.organization.path}`} />;
 
     return <Navigate to={`/profile/${authContext.profile.user.name}`} />;
 }
