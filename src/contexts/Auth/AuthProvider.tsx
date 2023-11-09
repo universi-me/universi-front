@@ -3,9 +3,11 @@ import { AuthContext } from "./AuthContext";
 import { Profile } from "@/types/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi";
 import { goTo } from "@/services/routes";
+import type { Group } from "@/types/Group";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [organization, setOrganization] = useState<Group | null>(null);
   const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
   const user = profile?.user ?? null;
 
@@ -14,7 +16,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
     return (
-        <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser }}>
+        <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser, organization }}>
         { finishedLogin ? children : null }
         </AuthContext.Provider>
     );
@@ -29,13 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         setFinishedLogin(false);
-        const logged = (await getLoggedProfile())!;
-        const organization = await UniversimeApi.User.organization();
-        if(organization.body?.organization != null)
-            logged.organization = organization.body?.organization
-        setProfile(logged);
-
-        redirectAfterSignIn(logged.user.needProfile, logged.user.name);
+        const logged = await updateLoggedUser();
         setFinishedLogin(true);
         return logged;
     }
@@ -47,10 +43,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         if (profile === null) {
             goTo("login");
-        }
-
-        else {
-            redirectAfterSignIn(profile.user.needProfile, profile.user.name);
         }
 
         setFinishedLogin(true);
@@ -69,16 +61,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     async function updateLoggedUser() {
         setFinishedLogin(false);
-        const profile = (await getLoggedProfile())!;
-        if(profile != null){
-            const organization = await UniversimeApi.User.organization();
-            if(organization.body?.organization != undefined)
-                profile.organization = organization.body?.organization
-        }
+        const profile = await getLoggedProfile();
         setProfile(profile);
+        updateOrganization();
 
         setFinishedLogin(true);
         return profile;
+    }
+
+    async function updateOrganization() {
+        const currentOrganization = await UniversimeApi.User.organization();
+        const usedOrganization = currentOrganization.body?.organization ?? null;
+
+        setOrganization(usedOrganization);
+        return usedOrganization;
     }
 };
 
@@ -87,9 +83,4 @@ async function getLoggedProfile() {
         return null;
     }
     return (await UniversimeApi.Profile.profile()).body?.profile ?? null;
-}
-
-function redirectAfterSignIn(needProfile: boolean, profileId: string) {
-    //goTo(needProfile ? "manage-profile" : "profile/"+profileId);
-    //location.reload()
 }

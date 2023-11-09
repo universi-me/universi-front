@@ -28,7 +28,7 @@ export type UsernameAvailable_RequestDTO = {
 
 export type UserSignUp_ResponseDTO = ApiResponse;
 export type UserEdit_ResponseDTO =   ApiResponse;
-export type UserOrganization_ResponseDTO = ApiResponse<{organization : Group}>
+export type UserOrganization_ResponseDTO = ApiResponse<{organization : Group | null}>
 
 export async function signUp(body: UserSignUp_RequestDTO) {
     return (await api.post<UserSignUp_ResponseDTO>("/signup", {

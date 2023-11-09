@@ -5,10 +5,10 @@ import { ProfilePage, ProfilePageLoader } from "@/pages/Profile";
 import { About } from "@/pages/About";
 import ManageGroupPage, { ManageGroupLoader } from "@/pages/ManageGroup";
 
-import {Navigate, createBrowserRouter} from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom';
 import Singin from "@/pages/singin/Singin";
 
-import { OAuth2Element }  from './oauth2-google';
+import { OAuth2Element } from './oauth2-google';
 
 import CapacityPage from "@/pages/Capacity/Capacity";
 import CategoryPage from "@/pages/Capacity/Category";
@@ -16,9 +16,10 @@ import VideoPage from "@/pages/Capacity/VideoPlayer";
 import FolderPage from "@/pages/Capacity/Folder";
 import ManagerCapacity from "@/pages/Capacity/ManagerCapacity";
 import SignUpPage from "@/pages/SignUp";
-import Recovery  from "@/pages/Recovery/Recovery";
+import Recovery from "@/pages/Recovery/Recovery";
 import NewPassword from "@/pages/NewPassword/NewPassword";
 import ManageProfilePage, { ManageProfileLoader } from "@/pages/ManageProfile";
+import Homepage from "@/pages/Homepage";
 
 
 
@@ -30,7 +31,7 @@ export const router = createBrowserRouter([{
   children: [
     {
       path: "/",
-      element: <Navigate to="/login" />
+      element: <Homepage />
     },
     {
       path: "/capacitacao/",
