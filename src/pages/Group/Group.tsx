@@ -65,7 +65,7 @@ export function GroupPage() {
 
             currentContent: undefined,
             setCurrentContent(c) {
-                setContext({...context, currentContent: c});
+                setContext({...this, currentContent: c});
             },
 
             refreshData: refreshGroupData,

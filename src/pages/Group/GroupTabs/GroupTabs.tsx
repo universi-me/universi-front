@@ -54,8 +54,10 @@ export  function GroupTabs(props: GroupTabsProps){
         <nav id="group-tabs"> 
         {
             TABS.map(t => {
+                const isCurrentTab = t.value === props.currentTab;
+
                 return (
-                    <button className="group-tab-button" value={t.value} key={t.value} onClick={_ => props.changeTab(t.value)} disabled={t.value === props.currentTab}>
+                    <button className="group-tab-button" value={t.value} key={t.value} onClick={_ => props.changeTab(t.value)} data-current-tab={isCurrentTab ? "" : undefined}>
                         {t.name}
                     </button>
                 );
