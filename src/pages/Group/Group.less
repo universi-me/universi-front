@@ -1,8 +1,8 @@
 #group-page {
-    width: 90%;
+    width: 100%;
 
     display: grid;
-    grid-template-columns: 20% 60% 20%;
+    grid-template-columns: 15% 85%;
     column-gap: 2%;
 
     //Atençã: ao testar as duas possibilidades tire os comentarios do #intro-tabs-wrapper
@@ -11,9 +11,19 @@
     // padding: 0 5rem;
 
     //opção 2: mesmo espaçamento, centralizado
-    padding: 0 0 0 var(--left-page-padding);
+    padding: 0 var(--left-page-padding);
 
     margin-top: var(--top-page-margin);
+
+    max-width: 1920px;
+}
+
+.group-page-container{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
 }
 
 
