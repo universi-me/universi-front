@@ -4,8 +4,7 @@ import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
-import { ContentStatusEnum, type Content, ContentStatus, ContentType } from "@/types/Capacity";
-import YouTube from "react-youtube";
+import { ContentStatusEnum, type Content } from "@/types/Capacity";
 
 import "./GroupContentMaterials.less";
 import { VideoPopup } from "@/components/VideoPopup/VideoPopup";
