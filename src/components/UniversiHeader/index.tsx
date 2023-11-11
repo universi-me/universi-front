@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { SearchInput } from "./components/SearchInput";
 import { WelcomeUser } from "./components/WelcomeUser/WelcomeUser";
 import { LoginButton } from "./components/LoginButton/LoginButton";
 import "./styles.less";
