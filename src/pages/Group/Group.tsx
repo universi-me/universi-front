@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
 import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, type GroupContextType, type GroupPageLoaderResponse } from "@/pages/Group";
 import { ProfileBio, ProfileGroups } from "@/components/ProfileInfo";
+import { AuthContext } from "@/contexts/Auth";
 import "./Group.less";
 
 export function GroupPage() {
     const page = useLoaderData() as GroupPageLoaderResponse;
+    const authContext = useContext(AuthContext);
     const [currentTab, setCurrentTab] = useState<AvailableTabs>("contents");
 
     const [context, setContext] = useState(makeContext(page));
@@ -24,7 +26,7 @@ export function GroupPage() {
         <div className="group-page-container">
             <div id="group-page">
                 <div>
-                    <ProfileBio profile={context.loggedData.profile} links={context.loggedData.links} />
+                    <ProfileBio profile={context.loggedData.profile} links={context.loggedData.links} organization={authContext.organization} />
                     <ProfileGroups groups={context.loggedData.groups} />
                 </div>
                 <div id="intro-tabs-wrapper">
