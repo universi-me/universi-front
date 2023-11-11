@@ -18,9 +18,11 @@ export function GroupPeople() {
 
     return (
         <section id="people" className="group-tab">
-            <div className="heading">
-                <i className="bi bi-people-fill tab-icon"/>
-                <h2 className="title">Participantes de {groupContext.group.name}</h2>
+            <div className="heading top-container">
+                <div className="title-container">
+                    <i className="bi bi-people-fill tab-icon"/>
+                    <h2 className="title">Participantes de {groupContext.group.name}</h2>
+                </div>
                 <div className="go-right">
                     <div id="filter-wrapper">
                         <i className="bi bi-search filter-icon"/>

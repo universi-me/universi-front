@@ -23,15 +23,17 @@ export function GroupPage() {
 
     return (
         <GroupContext.Provider value={context}>
-        <div id="group-page">
-            <div>
-                <ProfileBio profile={context.loggedData.profile} links={context.loggedData.links} organization={authContext.organization} />
-                <ProfileGroups groups={context.loggedData.groups} />
-            </div>
-            <div id="intro-tabs-wrapper">
-                <GroupIntro />
-                <GroupTabs changeTab={changeTab} currentTab={currentTab} />
-                <GroupTabRenderer tab={currentTab} />
+        <div className="group-page-container">
+            <div id="group-page">
+                <div>
+                    <ProfileBio profile={context.loggedData.profile} links={context.loggedData.links} organization={authContext.organization} />
+                    <ProfileGroups groups={context.loggedData.groups} />
+                </div>
+                <div id="intro-tabs-wrapper">
+                    <GroupIntro />
+                    <GroupTabs changeTab={changeTab} currentTab={currentTab} />
+                    <GroupTabRenderer tab={currentTab} />
+                </div>
             </div>
         </div>
         </GroupContext.Provider>
