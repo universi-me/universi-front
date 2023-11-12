@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
@@ -66,7 +67,27 @@ export function GroupContents() {
                 <ProfileImage imageUrl={imageUrl} className="content-image" onClick={() => groupContext?.setCurrentContent(content)} />
 
                 <div className="info">
-                    <h2 className="content-name" onClick={() => groupContext?.setCurrentContent(content)}>{content.name}</h2>
+                    <div className="content-name-wrapper">
+                        <h2 className="content-name" onClick={() => groupContext?.setCurrentContent(content)}>{content.name}</h2>
+                        <DropdownMenu.Root>
+                            <DropdownMenu.Trigger asChild>
+                                <button className="content-options-button">
+                                    <i className="bi bi-three-dots-vertical" />
+                                </button>
+                            </DropdownMenu.Trigger>
+
+                            <DropdownMenu.Content className="content-options" side="left">
+                                <DropdownMenu.Item className="content-options-item" disabled>
+                                    Editar <i className="bi bi-pencil-fill right-slot" />
+                                </DropdownMenu.Item>
+                                <DropdownMenu.Item className="content-options-item delete">
+                                    Excluir <i className="bi bi-trash-fill right-slot" />
+                                </DropdownMenu.Item>
+
+                                <DropdownMenu.Arrow className="content-options-arrow" height=".5rem" width="1rem" />
+                            </DropdownMenu.Content>
+                        </DropdownMenu.Root>
+                    </div>
                     <p className="content-description">{content.description}</p>
                 </div>
             </div>
