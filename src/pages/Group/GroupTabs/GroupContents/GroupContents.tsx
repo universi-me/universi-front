@@ -6,7 +6,7 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
-import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils"
+import { type OptionInMenu, renderOption, hasAvailableOption } from "@/utils/dropdownMenuUtils"
 
 import type { Folder } from "@/types/Capacity";
 import "./GroupContents.less";
@@ -41,8 +41,6 @@ export function GroupContents() {
             },
         }
     ]
-
-    const hasAvailableOption = undefined !== OPTIONS_DEFINITION.find(def => !def.hidden && !def.disabled);
 
     return (
         <section id="contents" className="group-tab">
@@ -95,7 +93,7 @@ export function GroupContents() {
                     <div className="content-name-wrapper">
                         <h2 className="content-name" onClick={() => groupContext?.setCurrentContent(content)}>{content.name}</h2>
 
-                        { !hasAvailableOption ? null :
+                        { !hasAvailableOption(OPTIONS_DEFINITION) ? null :
                         <DropdownMenu.Root>
                             <DropdownMenu.Trigger asChild>
                                 <button className="content-options-button">
