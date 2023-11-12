@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { ReactNode, useContext, useState } from "react";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import UniversimeApi from "@/services/UniversimeApi";
@@ -20,6 +20,28 @@ export function GroupContents() {
     if (groupContext.currentContent) {
         return <GroupContentMaterials />;
     }
+
+    const OPTIONS_DEFINITION: OptionInMenu[] = [
+        {
+            text: "Editar",
+            biIcon: "pencil-fill",
+            disabled() { return true; },
+            hidden() {
+                return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
+            },
+        },
+        {
+            text: "Excluir",
+            biIcon: "trash-fill",
+            className: "delete",
+            onSelect: handleDeleteContent,
+            hidden() {
+                return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
+            },
+        }
+    ]
+
+    const hasAvailableOption = undefined !== OPTIONS_DEFINITION.find(def => !def.hidden && !def.disabled);
 
     return (
         <section id="contents" className="group-tab">
@@ -71,6 +93,8 @@ export function GroupContents() {
                 <div className="info">
                     <div className="content-name-wrapper">
                         <h2 className="content-name" onClick={() => groupContext?.setCurrentContent(content)}>{content.name}</h2>
+
+                        { !hasAvailableOption ? null :
                         <DropdownMenu.Root>
                             <DropdownMenu.Trigger asChild>
                                 <button className="content-options-button">
@@ -79,16 +103,11 @@ export function GroupContents() {
                             </DropdownMenu.Trigger>
 
                             <DropdownMenu.Content className="content-options" side="left">
-                                <DropdownMenu.Item className="content-options-item" disabled>
-                                    Editar <i className="bi bi-pencil-fill right-slot" />
-                                </DropdownMenu.Item>
-                                <DropdownMenu.Item className="content-options-item delete" onSelect={makeOnClickDelete(content.id)}>
-                                    Excluir <i className="bi bi-trash-fill right-slot" />
-                                </DropdownMenu.Item>
-
+                                { OPTIONS_DEFINITION.map(def => renderOption(content, def)) }
                                 <DropdownMenu.Arrow className="content-options-arrow" height=".5rem" width="1rem" />
                             </DropdownMenu.Content>
                         </DropdownMenu.Root>
+                        }
                     </div>
                     <p className="content-description">{content.description}</p>
                 </div>
@@ -96,28 +115,57 @@ export function GroupContents() {
         );
     }
 
-    function makeOnClickDelete(contentId: string) {
-        return function() {
-            SwalUtils.fireModal({
-                showCancelButton: true,
+    function renderOption(content: Folder, option: OptionInMenu) {
+        if (option.hidden)
+            return null;
 
-                cancelButtonText: "Cancelar",
-                confirmButtonText: "Excluir",
-                confirmButtonColor: "var(--alert-color)",
+        const className = "content-options-item" + (option.className ? ` ${option.className}` : "");
+        const disabled = option.disabled ? option.disabled() : undefined;
+        const onSelect = disabled ? undefined : makeOnSelect(content, option.onSelect);    
+        const key = option.text?.toString();
 
-                text: "Tem certeza que deseja excluir este conteúdo?",
-                icon: "warning",
-            }).then(res => {
-                if (res.isConfirmed) {
-                    UniversimeApi.Capacity.removeFolder({id: contentId})
-                        .then(res => {
-                            if (!res.success)
-                                return;
+        return <DropdownMenu.Item {...{className, disabled, onSelect, key}}>
+            { option.text }
+            { option.biIcon ? <i className={`bi bi-${option.biIcon} right-slot`}/> : null }
+        </DropdownMenu.Item>
+    }
 
-                            groupContext?.refreshData();
-                        });
-                }
-            });
-        }
+    function makeOnSelect(data: Folder, callback?: (data: Folder) => any) {
+        return callback
+            ? function() { callback(data); }
+            : undefined;
+    }
+
+    function handleDeleteContent(content: Folder) {
+        SwalUtils.fireModal({
+            showCancelButton: true,
+
+            cancelButtonText: "Cancelar",
+            confirmButtonText: "Excluir",
+            confirmButtonColor: "var(--alert-color)",
+
+            text: "Tem certeza que deseja excluir este conteúdo?",
+            icon: "warning",
+        }).then(res => {
+            if (res.isConfirmed) {
+                UniversimeApi.Capacity.removeFolder({id: content.id})
+                    .then(res => {
+                        if (!res.success)
+                            return;
+
+                        groupContext?.refreshData();
+                    });
+            }
+        });
     }
 }
+
+type OptionInMenu = {
+    text:       ReactNode;
+    biIcon?:    string;
+    className?: string;
+
+    onSelect?: (data: Folder) => any;
+    disabled?: () => boolean;
+    hidden?:   () => boolean;
+};
