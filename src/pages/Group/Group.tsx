@@ -31,8 +31,10 @@ export function GroupPage() {
                 </div>
                 <div id="intro-tabs-wrapper">
                     <GroupIntro />
-                    <GroupTabs changeTab={changeTab} currentTab={currentTab} />
-                    <GroupTabRenderer tab={currentTab} />
+                    <div className="in-front-container">
+                        <GroupTabs changeTab={changeTab} currentTab={currentTab} />
+                        <GroupTabRenderer tab={currentTab} />
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,6 +45,7 @@ export function GroupPage() {
         if (tab === "contents") {
             context.setCurrentContent(undefined);
         }
+
 
         setCurrentTab(tab);
     }

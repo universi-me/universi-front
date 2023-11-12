@@ -63,8 +63,7 @@ export function ProfileBio(props: ProfileBioProps) {
                         {
                             props.links.map((link) => {
                                 return <a href={link.url} className="profile-bio-link" target='_blank' key={link.id}>
-                                    <i className={`link-type-icon bi bi-${TypeLinkToBootstrapIcon[link.typeLink]}`}/>
-                                    { link.name }
+                                    <i className={`link-type-icon bi bi-${TypeLinkToBootstrapIcon[link.typeLink]}`} title={`${link.name}`}/>
                                 </a>
                             })
                         }

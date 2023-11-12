@@ -7,6 +7,7 @@ import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
 import type { Folder } from "@/types/Capacity";
 import "./GroupContents.less";
+import { Filter } from "@/components/Filter/Filter";
 
 export function GroupContents() {
     const groupContext = useContext(GroupContext);
@@ -22,17 +23,8 @@ export function GroupContents() {
     return (
         <section id="contents" className="group-tab">
             <div className="heading top-container">
-                <div className="title-container">
-                    <i className="bi bi-list-ul tab-icon"/>
-                    <h2 className="title">Conteúdos {groupContext.group.name}</h2>
-                </div>
                 <div className="go-right">
-                    <div id="filter-wrapper">
-                        <i className="bi bi-search filter-icon"/>
-                        <input type="search" name="filter-contents" id="filter-contents" className="filter-input"
-                            onChange={setStateAsValue(setFilterContents)} placeholder={`Buscar em Conteúdos ${groupContext.group.name}`}
-                        />
-                    </div>
+                    <Filter setter={setFilterContents} placeholderMessage={`Buscar em Conteúdos ${groupContext.group.name}`}/>
                 </div>
             </div>
 

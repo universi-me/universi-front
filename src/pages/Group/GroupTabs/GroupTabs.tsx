@@ -50,6 +50,7 @@ export  function GroupTabs(props: GroupTabsProps){
     }
 
 
+
     return (
         <nav id="group-tabs"> 
         {
@@ -57,7 +58,7 @@ export  function GroupTabs(props: GroupTabsProps){
                 const isCurrentTab = t.value === props.currentTab;
 
                 return (
-                    <button className="group-tab-button" value={t.value} key={t.value} onClick={_ => props.changeTab(t.value)} data-current-tab={isCurrentTab ? "" : undefined}>
+                    <button className={`group-tab-button`} value={t.value} key={t.value} onClick={_ => props.changeTab(t.value)} data-current-tab={isCurrentTab ? "" : undefined}>
                         {t.name}
                     </button>
                 );
@@ -65,13 +66,13 @@ export  function GroupTabs(props: GroupTabsProps){
         }
         
         
-        {   context?.group.canEnter && !context.group.rootGroup?
+        {/* {   context?.group.canEnter && !context.group.rootGroup?
                 joined && !context.group.rootGroup?
                 <GroupSubmenu leave={leave}/>
                 :
                 <button className="group-tab-button group-tab-participacao" onClick={join}>Participar deste grupo</button> 
             : <></>
-        }
+        } */}
 
          </nav>
     );

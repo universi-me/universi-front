@@ -8,6 +8,7 @@ import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { getFullName } from "@/utils/profileUtils";
 
 import "./GroupPeople.less";
+import { Filter } from "@/components/Filter/Filter";
 
 export function GroupPeople() {
     const groupContext = useContext(GroupContext);
@@ -19,17 +20,8 @@ export function GroupPeople() {
     return (
         <section id="people" className="group-tab">
             <div className="heading top-container">
-                <div className="title-container">
-                    <i className="bi bi-people-fill tab-icon"/>
-                    <h2 className="title">Participantes de {groupContext.group.name}</h2>
-                </div>
                 <div className="go-right">
-                    <div id="filter-wrapper">
-                        <i className="bi bi-search filter-icon"/>
-                        <input type="search" name="filter-people" id="filter-people" className="filter-input"
-                            onChange={setStateAsValue(setFilterPeople)} placeholder={`Buscar em participantes de ${groupContext.group.name}`}
-                        />
-                    </div>
+                    <Filter setter={setFilterPeople} placeholderMessage={`Buscar em participantes de ${groupContext.group.name}`}/>
                 </div>
             </div>
 

@@ -7,6 +7,7 @@ import { groupImageUrl } from "@/utils/apiUtils";
 
 import type { Group } from "@/types/Group";
 import "./GroupGroups.less";
+import { Filter } from "@/components/Filter/Filter";
 
 export function GroupGroups() {
     const groupContext = useContext(GroupContext);
@@ -18,17 +19,8 @@ export function GroupGroups() {
     return (
         <section id="groups" className="group-tab">
             <div className="heading top-container">
-                <div className="title-container">
-                    <i className="bi bi-building-fill-gear tab-icon"/>
-                    <h2 className="title">Grupos em {groupContext.group.name}</h2>
-                </div>
                 <div className="go-right">
-                    <div id="filter-wrapper">
-                        <i className="bi bi-search filter-icon"/>
-                        <input type="search" name="filter-groups" id="filter-groups" className="filter-input"
-                            onChange={setStateAsValue(setFilterGroups)} placeholder={`Buscar grupos em ${groupContext.group.name}`}
-                        />
-                    </div>
+                    <Filter setter={setFilterGroups} placeholderMessage={`Buscar grupos em ${groupContext.group.name}`}/>
                 </div>
             </div>
 
