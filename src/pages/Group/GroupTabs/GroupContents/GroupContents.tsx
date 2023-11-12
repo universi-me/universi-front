@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
+import UniversimeApi from "@/services/UniversimeApi";
+import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
@@ -80,7 +82,7 @@ export function GroupContents() {
                                 <DropdownMenu.Item className="content-options-item" disabled>
                                     Editar <i className="bi bi-pencil-fill right-slot" />
                                 </DropdownMenu.Item>
-                                <DropdownMenu.Item className="content-options-item delete">
+                                <DropdownMenu.Item className="content-options-item delete" onSelect={makeOnClickDelete(content.id)}>
                                     Excluir <i className="bi bi-trash-fill right-slot" />
                                 </DropdownMenu.Item>
 
@@ -92,5 +94,30 @@ export function GroupContents() {
                 </div>
             </div>
         );
+    }
+
+    function makeOnClickDelete(contentId: string) {
+        return function() {
+            SwalUtils.fireModal({
+                showCancelButton: true,
+
+                cancelButtonText: "Cancelar",
+                confirmButtonText: "Excluir",
+                confirmButtonColor: "var(--alert-color)",
+
+                text: "Tem certeza que deseja excluir este conteúdo?",
+                icon: "warning",
+            }).then(res => {
+                if (res.isConfirmed) {
+                    UniversimeApi.Capacity.removeFolder({id: contentId})
+                        .then(res => {
+                            if (!res.success)
+                                return;
+
+                            groupContext?.refreshData();
+                        });
+                }
+            });
+        }
     }
 }
