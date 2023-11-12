@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import UniversimeApi from "@/services/UniversimeApi";
@@ -6,6 +6,7 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
+import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils"
 
 import type { Folder } from "@/types/Capacity";
 import "./GroupContents.less";
@@ -21,7 +22,7 @@ export function GroupContents() {
         return <GroupContentMaterials />;
     }
 
-    const OPTIONS_DEFINITION: OptionInMenu[] = [
+    const OPTIONS_DEFINITION: OptionInMenu<Folder>[] = [
         {
             text: "Editar",
             biIcon: "pencil-fill",
@@ -115,27 +116,6 @@ export function GroupContents() {
         );
     }
 
-    function renderOption(content: Folder, option: OptionInMenu) {
-        if (option.hidden)
-            return null;
-
-        const className = "content-options-item" + (option.className ? ` ${option.className}` : "");
-        const disabled = option.disabled ? option.disabled() : undefined;
-        const onSelect = disabled ? undefined : makeOnSelect(content, option.onSelect);    
-        const key = option.text?.toString();
-
-        return <DropdownMenu.Item {...{className, disabled, onSelect, key}}>
-            { option.text }
-            { option.biIcon ? <i className={`bi bi-${option.biIcon} right-slot`}/> : null }
-        </DropdownMenu.Item>
-    }
-
-    function makeOnSelect(data: Folder, callback?: (data: Folder) => any) {
-        return callback
-            ? function() { callback(data); }
-            : undefined;
-    }
-
     function handleDeleteContent(content: Folder) {
         SwalUtils.fireModal({
             showCancelButton: true,
@@ -159,13 +139,3 @@ export function GroupContents() {
         });
     }
 }
-
-type OptionInMenu = {
-    text:       ReactNode;
-    biIcon?:    string;
-    className?: string;
-
-    onSelect?: (data: Folder) => any;
-    disabled?: () => boolean;
-    hidden?:   () => boolean;
-};
