@@ -15,7 +15,7 @@ export function renderOption<T>(data: T, option: OptionInMenu<T>) {
     if (isHidden(option))
         return null;
 
-    const className = "content-options-item" + (option.className ? ` ${option.className}` : "");
+    const className = "dropdown-options-item" + (option.className ? ` ${option.className}` : "");
     const disabled = isDisabled(option);
     const key = option.text.toString();
     const onSelect = function() {

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
@@ -9,6 +10,7 @@ import { ContentStatusEnum, type Content } from "@/types/Capacity";
 import "./GroupContentMaterials.less";
 import { VideoPopup } from "@/components/VideoPopup/VideoPopup";
 import { ContentStatusEdit_RequestDTO } from "@/services/UniversimeApi/Capacity";
+import { renderOption, type OptionInMenu, hasAvailableOption } from "@/utils/dropdownMenuUtils";
 
 export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
@@ -31,6 +33,26 @@ export function GroupContentMaterials() {
         : null;
 
     const groupName = <div onClick={() => groupContext.setCurrentContent(undefined)} style={{cursor: "pointer", display: "inline"}}>{groupContext.group.name}</div>
+
+    const OPTIONS_DEFINITION: OptionInMenu<Content>[] = [
+        {
+            text: "Editar",
+            biIcon: "pencil-fill",
+            disabled() { return true; },
+            hidden() {
+                return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
+            },
+        },
+        {
+            text: "Excluir",
+            biIcon: "trash-fill",
+            className: "delete",
+            onSelect: handleDeleteMaterial,
+            hidden() {
+                return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
+            },
+        }
+    ];
 
     return (
         <section id="materials" className="group-tab">
@@ -132,6 +154,21 @@ export function GroupContentMaterials() {
                 }
                     <p className="material-description">{material.description}</p>
                 </div>
+
+            { !hasAvailableOption(OPTIONS_DEFINITION) ? null :
+                <DropdownMenu.Root>
+                    <DropdownMenu.Trigger asChild>
+                        <button className="material-options-button">
+                            <i className="bi bi-three-dots-vertical" />
+                        </button>
+                    </DropdownMenu.Trigger>
+
+                    <DropdownMenu.Content className="material-options" side="left">
+                        { OPTIONS_DEFINITION.map(def => renderOption(material, def)) }
+                        <DropdownMenu.Arrow className="material-options-arrow" height=".5rem" width="1rem" />
+                    </DropdownMenu.Content>
+                </DropdownMenu.Root>
+            }
             </div>
         );
     }
@@ -247,6 +284,35 @@ export function GroupContentMaterials() {
 
     }
 
+    function handleDeleteMaterial(material: Content) {
+        SwalUtils.fireModal({
+            showCancelButton: true,
+
+            cancelButtonText: "Cancelar",
+            confirmButtonText: "Remover",
+            confirmButtonColor: "var(--alert-color)",
+
+            text: "Tem certeza que deseja remover este conteúdo deste grupo?",
+            icon: "warning",
+        }).then(res => {
+            if (res.isConfirmed) {
+                const folderId = groupContext?.currentContent?.id!;
+
+                UniversimeApi.Capacity.removeContentFromFolder({ folderId, contentIds: material.id })
+                    .then(res => {
+                        if (!res.success)
+                            return;
+
+                        groupContext?.refreshData()
+                            .then(data => {
+                                setTimeout(() => {
+                                    data.setCurrentContent(data.folders.find(c => c.id === folderId));
+                                }, 0);
+                            });
+                    });
+            }
+        });
+    }
 }
 
 
