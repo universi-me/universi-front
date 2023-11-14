@@ -20,7 +20,7 @@ export type GroupContextType = null | {
         groups:        Group[];
     };
 
-    refreshData: () => Promise<any>;
+    refreshData: () => Promise<NonNullable<GroupContextType>>;
 };
 
 export const GroupContext = createContext<GroupContextType>(null);
