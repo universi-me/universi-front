@@ -4,7 +4,7 @@ import { LoginButton } from "./components/LoginButton/LoginButton";
 import "./styles.less";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/Auth";
-import { groupImageUrl } from "@/utils/apiUtils";
+import { groupBannerUrl, groupImageUrl } from "@/utils/apiUtils";
 
 
 export function Header() {
@@ -14,21 +14,21 @@ export function Header() {
   const authContext = useContext(AuthContext)
 
     if(authContext?.organization){
-      return <img  className="organization-logo" src={`${groupImageUrl(authContext.organization)}`}></img>
+      return <img  className="organization-logo" src={`${groupBannerUrl(authContext.organization)}`}></img>
     }
 
-    return <div id="header-logo">{location.href.split("/")[2].split(".")[0]}</div>
+    return <></>
 
   }
 
   return (
     <header id="header">
       <div className="logo-container">
-        {logo}
+          <img src="/assets/imgs/universi-me2.png"/>
       </div>
       <div className="left-items">
         <Link to="/" id="header-logo">
-          Universi<span className="tld">.me</span>
+        {logo}
         </Link>
       </div>
       <div className="right-items">
