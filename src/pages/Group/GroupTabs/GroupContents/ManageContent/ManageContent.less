@@ -1,0 +1,106 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+#manage-content {
+    display: flex;
+    flex-direction: column;
+
+    background-color: @card-background-color;
+    border-radius: .625rem;
+
+    padding: 1.5rem;
+    width: 25vw;
+
+    fieldset {
+        border: none;
+
+        &:not(:last-child) {
+            margin-bottom: 1rem;
+        }
+
+        .field-input {
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        input, textarea {
+            border: none;
+            border-radius: .625rem;
+
+            padding: .5em;
+
+            resize: vertical;
+
+            &:focus {
+                outline: solid 2px @primary-color;
+            }
+        }
+
+        .category-select {
+            border-radius: .625rem;
+        }
+
+        > legend {
+            display: flex;
+            flex-direction: row;
+            align-items: end;
+            justify-content: space-between;
+
+            width: 100%;
+
+            font-size: 1.25rem;
+            font-variant: small-caps;
+
+            .char-counter {
+                display: inline;
+                margin-right: .25em;
+
+                font-size: .75em;
+            }
+        }
+    }
+
+    .operation-buttons {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        > button {
+            border: none;
+
+            width: 7em;
+            padding: .75em 0;
+            border-radius: .625rem;
+
+            color: @font-color-v1;
+            font-size: .9rem;
+            text-transform: uppercase;
+            font-weight: @font-weight-bold;
+
+            cursor: pointer;
+
+            will-change: background-color;
+
+            &.cancel-button {
+                background-color: @font-color-v6;
+                &:hover {
+                    background-color: @font-color-v3;
+                }
+            }
+
+            &.submit-button {
+                &:not(:disabled) {
+                    background-color: @primary-color;
+                    &:hover {
+                        background-color: @secondary-color;
+                    }
+                }
+
+                &:disabled {
+                    background-color: @font-color-v3;
+                }
+            }
+        }
+    }
+}

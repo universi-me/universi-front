@@ -3,7 +3,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext } from "@/pages/Group";
+import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext, ManageContent } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { type OptionInMenu, renderOption, hasAvailableOption } from "@/utils/dropdownMenuUtils"
@@ -28,7 +28,9 @@ export function GroupContents() {
         {
             text: "Editar",
             biIcon: "pencil-fill",
-            disabled() { return true; },
+            onSelect(data) {
+                groupContext.setEditContent(data);
+            },
             hidden() {
                 return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
             },
@@ -49,11 +51,15 @@ export function GroupContents() {
             <div className="heading top-container">
                 <div className="go-right">
                     <Filter setter={setFilterContents} placeholderMessage={`Buscar em Conteúdos ${groupContext.group.name}`}/>
-                    <ActionButton name="Criar conteúdo"/>
+                    <ActionButton name="Criar conteúdo" buttonProps={{
+                        onClick(){ groupContext.setEditContent(null); }
+                    }} />
                 </div>
             </div>
 
             <div className="content-list tab-list"> { makeContentList(groupContext.folders, filterContents) } </div>
+
+            <ManageContent />
         </section>
     );
 
