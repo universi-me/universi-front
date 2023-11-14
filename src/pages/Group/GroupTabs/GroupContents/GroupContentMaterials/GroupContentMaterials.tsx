@@ -303,8 +303,7 @@ export function GroupContentMaterials() {
                         if (!res.success)
                             return;
 
-                        groupContext?.refreshData({currentContentId})
-                            .then(refreshMaterials);
+                        refreshMaterials();
                     });
             }
         });
