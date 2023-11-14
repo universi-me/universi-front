@@ -52,7 +52,9 @@ export function GroupPage() {
 
     async function refreshGroupData() {
         const data = await fetchGroupPageData({ groupPath: page.group?.path });
-        setContext(makeContext(data));
+        const newContext = makeContext(data);
+        setContext(newContext);
+        return newContext;
     }
 
     function makeContext(data: GroupPageLoaderResponse): NonNullable<GroupContextType> {
