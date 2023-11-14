@@ -15,6 +15,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     updateLoggedUser()
   }, []);
 
+    if (user?.needProfile) {
+        goTo("/manage-profile");
+    }
+
     return (
         <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser, organization }}>
         { finishedLogin ? children : null }

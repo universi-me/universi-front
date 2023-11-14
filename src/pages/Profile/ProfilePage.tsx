@@ -50,15 +50,16 @@ export function ProfilePage() {
         return null;
 
     if (!loaderData.profile || profileContext.profile.user.needProfile) {
+        if (loaderData.profile?.user.ownerOfSession) {
+            return <Navigate to="/manage-profile"/>
+        }
+
         SwalUtils.fireModal({
             title: "Erro ao acessar perfil",
             text: "Esse usuário não criou seu perfil ainda",
+            confirmButtonText: "Voltar",
         }).then(_ => navigate(-1));
         return null;
-    }
-
-    if (profileContext.profile.user.needProfile && profileContext.profile.user.ownerOfSession) {
-        return <Navigate to="/manage-profile"/>
     }
 
     return (
