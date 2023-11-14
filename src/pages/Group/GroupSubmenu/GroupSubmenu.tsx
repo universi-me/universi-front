@@ -7,7 +7,7 @@ export function GroupSubmenu({leave} : {leave : () => void}){
     const [isVisible, setIsVisible] = useState(false)
 
     return(
-        <div className="group-tab-participacao group-type-button submenu">
+        <div className="group-tab-participacao submenu">
             <i className="bi bi-three-dots-vertical" onClick={() => setIsVisible(!isVisible)}></i>
             {
                 <div className="box" 

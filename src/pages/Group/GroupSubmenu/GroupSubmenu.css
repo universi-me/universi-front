@@ -9,6 +9,7 @@
     width: 1.5rem;
     height: 1.5rem;
     justify-content: center;
+    background-color: transparent !important;
 }
 
 i{
