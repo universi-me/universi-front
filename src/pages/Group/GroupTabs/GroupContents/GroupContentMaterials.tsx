@@ -122,7 +122,7 @@ export function GroupContentMaterials() {
         const youTubeMatch = YOU_TUBE_MATCH.exec(material.url);
 
         return (
-            <div className="material-item" key={material.id}>
+            <div className="material-item tab-item" key={material.id}>
                 {
                     youTubeMatch !== null
                         ? renderYouTubeEmbed(youTubeMatch, material)

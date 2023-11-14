@@ -11,6 +11,7 @@ import { type OptionInMenu, renderOption, hasAvailableOption } from "@/utils/dro
 import type { Folder } from "@/types/Capacity";
 import "./GroupContents.less";
 import { Filter } from "@/components/Filter/Filter";
+import { ActionButton } from "@/components/ActionButton/ActionButton";
 
 export function GroupContents() {
     const groupContext = useContext(GroupContext);
@@ -48,10 +49,11 @@ export function GroupContents() {
             <div className="heading top-container">
                 <div className="go-right">
                     <Filter setter={setFilterContents} placeholderMessage={`Buscar em Conteúdos ${groupContext.group.name}`}/>
+                    <ActionButton name="Criar conteúdo"/>
                 </div>
             </div>
 
-            <div className="content-list"> { makeContentList(groupContext.folders, filterContents) } </div>
+            <div className="content-list tab-list"> { makeContentList(groupContext.folders, filterContents) } </div>
         </section>
     );
 
@@ -78,12 +80,13 @@ export function GroupContents() {
             : content.image;
 
         return (
-            <div className="content-item" key={content.id}>
+            <div className="content-item tab-item" key={content.id}>
                 <ProfileImage imageUrl={imageUrl} className="content-image" onClick={() => groupContext?.setCurrentContent(content)} />
 
                 <div className="info">
                     <div className="content-name-wrapper">
                         <h2 className="content-name" onClick={() => groupContext?.setCurrentContent(content)}>{content.name}</h2>
+                        <p className="content-description">{content.description}</p>
 
                         { !hasAvailableOption(OPTIONS_DEFINITION) ? null :
                         <DropdownMenu.Root>

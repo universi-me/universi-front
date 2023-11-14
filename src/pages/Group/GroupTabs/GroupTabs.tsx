@@ -65,14 +65,14 @@ export  function GroupTabs(props: GroupTabsProps){
             })
         }
         
-        
-        {/* {   context?.group.canEnter && !context.group.rootGroup?
+         
+         {   context?.group.canEnter && !context.group.rootGroup?
                 joined && !context.group.rootGroup?
                 <GroupSubmenu leave={leave}/>
                 :
-                <button className="group-tab-button group-tab-participacao" onClick={join}>Participar deste grupo</button> 
+                <button className="group-tab-participacao" onClick={join}>Participar deste grupo</button> 
             : <></>
-        } */}
+        }
 
          </nav>
     );

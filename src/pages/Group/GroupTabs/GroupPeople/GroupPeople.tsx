@@ -25,7 +25,7 @@ export function GroupPeople() {
                 </div>
             </div>
 
-            <div className="people-list"> { makePeopleList(groupContext.participants, filterPeople) } </div>
+            <div className="people-list tab-list"> { makePeopleList(groupContext.participants, filterPeople) } </div>
         </section>
     );
 }
@@ -57,7 +57,7 @@ function renderPerson(person: Profile) {
         : person.image;
 
     return (
-        <div className="person-item" key={person.id}>
+        <div className="person-item tab-item" key={person.id}>
             <Link to={linkToProfile}>
                 <ProfileImage imageUrl={imageUrl} className="person-image" />
             </Link>

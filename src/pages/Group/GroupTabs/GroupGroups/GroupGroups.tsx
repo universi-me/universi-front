@@ -24,7 +24,7 @@ export function GroupGroups() {
                 </div>
             </div>
 
-            <div className="group-list"> { makeGroupList(groupContext.subgroups, filterGroups) } </div>
+            <div className="group-list tab-list"> { makeGroupList(groupContext.subgroups, filterGroups) } </div>
         </section>
     );
 }
@@ -50,7 +50,7 @@ function renderGroup(group: Group) {
     const linkToGroup = `/group${group.path}`;
 
     return (
-        <div className="group-item" key={group.id}>
+        <div className="group-item tab-item" key={group.id}>
             <Link to={linkToGroup}>
                 <img className="group-image" src={groupImageUrl(group)} />
             </Link>
