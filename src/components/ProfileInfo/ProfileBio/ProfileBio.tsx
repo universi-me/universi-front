@@ -26,8 +26,6 @@ export function ProfileBio(props: ProfileBioProps) {
         ? { backgroundImage: `url(${groupBannerUrl(props.organization)})` }
         : { backgroundColor: "var(--primary-color)" }
 
-    console.dir({headerBackground});
-
     return (
         <div className="profile-bio-component card">
 

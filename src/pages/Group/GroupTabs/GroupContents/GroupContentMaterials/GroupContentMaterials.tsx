@@ -296,19 +296,15 @@ export function GroupContentMaterials() {
             icon: "warning",
         }).then(res => {
             if (res.isConfirmed) {
-                const folderId = groupContext?.currentContent?.id!;
+                const currentContentId = groupContext?.currentContent?.id!;
 
-                UniversimeApi.Capacity.removeContentFromFolder({ folderId, contentIds: material.id })
+                UniversimeApi.Capacity.removeContentFromFolder({ folderId: currentContentId, contentIds: material.id })
                     .then(res => {
                         if (!res.success)
                             return;
 
-                        groupContext?.refreshData()
-                            .then(data => {
-                                setTimeout(() => {
-                                    data.setCurrentContent(data.folders.find(c => c.id === folderId));
-                                }, 0);
-                            });
+                        groupContext?.refreshData({currentContentId})
+                            .then(refreshMaterials);
                     });
             }
         });

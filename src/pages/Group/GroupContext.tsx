@@ -13,6 +13,15 @@ export type GroupContextType = null | {
     currentContent: Folder | undefined;
     setCurrentContent(content: Folder | undefined): any;
 
+    /**
+     * The content being edited/created.
+     *
+     * If `null`, should handle creation of a content. If has a value, should handle
+     * content edit. If `undefined`, no content is being edited nor created.
+     */
+    editContent: Folder | null | undefined;
+    setEditContent(content: Folder | null | undefined): any;
+
     loggedData: {
         isParticipant: boolean;
         profile:       Profile;
@@ -20,7 +29,11 @@ export type GroupContextType = null | {
         groups:        Group[];
     };
 
-    refreshData: () => Promise<NonNullable<GroupContextType>>;
+    refreshData: (options?: RefreshGroupOptions) => Promise<NonNullable<GroupContextType>>;
 };
+
+export type RefreshGroupOptions = {
+    currentContentId?: string;
+}
 
 export const GroupContext = createContext<GroupContextType>(null);

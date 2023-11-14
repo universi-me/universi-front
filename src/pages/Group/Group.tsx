@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
-import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, type GroupContextType, type GroupPageLoaderResponse } from "@/pages/Group";
+import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, type GroupContextType, type GroupPageLoaderResponse, RefreshGroupOptions } from "@/pages/Group";
 import { ProfileBio, ProfileGroups } from "@/components/ProfileInfo";
 import { AuthContext } from "@/contexts/Auth";
 import "./Group.less";
@@ -50,9 +50,14 @@ export function GroupPage() {
         setCurrentTab(tab);
     }
 
-    async function refreshGroupData() {
+    async function refreshGroupData(options?: RefreshGroupOptions) {
         const data = await fetchGroupPageData({ groupPath: page.group?.path });
         const newContext = makeContext(data);
+
+        if (options?.currentContentId) {
+            newContext.currentContent = newContext.folders.find(c => c.id === options.currentContentId);
+        }
+
         setContext(newContext);
         return newContext;
     }
@@ -75,6 +80,11 @@ export function GroupPage() {
             currentContent: undefined,
             setCurrentContent(c) {
                 setContext({...this, currentContent: c});
+            },
+
+            editContent: undefined,
+            setEditContent(c) {
+                setContext({...this, editContent: c});
             },
 
             refreshData: refreshGroupData,
