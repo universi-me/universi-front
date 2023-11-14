@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
+import { EMPTY_LIST_CLASS, GroupContext, ManageMaterial } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { ContentStatusEnum, type Content } from "@/types/Capacity";
 
@@ -38,7 +38,9 @@ export function GroupContentMaterials() {
         {
             text: "Editar",
             biIcon: "pencil-fill",
-            disabled() { return true; },
+            onSelect(data) {
+                groupContext.setEditMaterial(data);
+            },
             hidden() {
                 return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
             },
@@ -72,6 +74,8 @@ export function GroupContentMaterials() {
             </div>
 
             <div className="material-list"> { makeMaterialsList(materials, filterMaterials) } </div>
+
+            <ManageMaterial refreshMaterials={refreshMaterials} />
         </section>
     );
 

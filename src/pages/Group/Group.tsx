@@ -87,6 +87,11 @@ export function GroupPage() {
                 setContext({...this, editContent: c});
             },
 
+            editMaterial: undefined,
+            setEditMaterial(c) {
+                setContext({...this, editMaterial: c});
+            },
+
             refreshData: refreshGroupData,
         };
     }

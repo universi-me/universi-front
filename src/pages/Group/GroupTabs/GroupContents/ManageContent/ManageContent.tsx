@@ -62,7 +62,7 @@ export function ManageContent() {
 
             <fieldset>
                 <legend>
-                    Descrição conteúdo
+                    Descrição
                     <div className="char-counter">
                         {description.length} / {MAX_DESC_LENGTH}
                     </div>
@@ -131,7 +131,7 @@ export function ManageContent() {
     }
 }
 
-const CATEGORY_SELECT_STYLES: StylesConfig<Category, true, GroupBase<Category>> = {
+export const CATEGORY_SELECT_STYLES: StylesConfig<Category, true, GroupBase<Category>> = {
     control: (styles, { isFocused }) => ({
         ...styles,
         borderRadius: ".625rem",
