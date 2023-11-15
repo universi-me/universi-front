@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import Select, { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select';
 
 import UniversimeApi from "@/services/UniversimeApi";
@@ -9,9 +9,10 @@ import { setStateAsValue } from "@/utils/tsxUtils";
 import type { FolderCreate_ResponseDTO, FolderEdit_ResponseDTO } from "@/services/UniversimeApi/Capacity";
 import type { Category } from "@/types/Capacity";
 import "./ManageContent.less";
+import { api } from "@/services/UniversimeApi/api";
 
 const MAX_NAME_LENGTH = 50;
-const MAX_DESC_LENGTH = 150;
+const MAX_DESC_LENGTH = 200;
 
 export function ManageContent() {
     const context = useContext(GroupContext);
@@ -19,6 +20,7 @@ export function ManageContent() {
     const [name, setName] = useState<string>(context?.editContent?.name ?? "");
     const [categoriesIds, setCategoriesIds] = useState<string[]>((context?.editContent?.categories ?? []).map(c => c.id));
     const [description, setDescription] = useState<string>(context?.editContent?.description ?? "");
+    const [imagem, setImagem] = useState<string | undefined>("");
 
     const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
     useEffect(()=>{
@@ -46,14 +48,20 @@ export function ManageContent() {
     if (context.editContent === undefined)
         return null;
 
-    const canSave = (name.length > 0) && (description.length > 0);
+    const canSave = (name.length > 0) && (description.length > 0) && (imagem != "");
 
     return <UniversiModal>
         <div id="manage-content">
+
+            <div className="header">
+                <img src="/assets/imgs/create-content.png"/>
+                <h1 className="title">Criar conteúdo</h1>
+            </div>
+
             <fieldset>
                 <legend>
-                    Nome do Conteúdo
-                    <div className="char-counter">
+                    Título do Conteúdo
+                    <div className="char-counter" style={name.length >= MAX_NAME_LENGTH-5 ? {color: "red"} : {}}>
                         {name.length} / {MAX_NAME_LENGTH}
                     </div>
                 </legend>
@@ -63,31 +71,55 @@ export function ManageContent() {
             <fieldset>
                 <legend>
                     Descrição
-                    <div className="char-counter">
+                    <div className="char-counter" style={description.length >= MAX_DESC_LENGTH-5 ? {color: "red"} : {}}>
                         {description.length} / {MAX_DESC_LENGTH}
                     </div>
                 </legend>
                 <textarea className="field-input" defaultValue={context.editContent?.description ?? undefined} onChange={setStateAsValue(setDescription)} maxLength={MAX_DESC_LENGTH} />
             </fieldset>
 
-            <fieldset>
-                <legend>Categorias</legend>
-                <Select placeholder="Selecionar categorias..." className="field-input category-select" isMulti options={availableCategories}
-                    onChange={(value) => {setCategoriesIds(value.map(v => v.id))}}
-                    defaultValue={ availableCategories.filter(c => context.editContent?.categories.map(c => c.id).includes(c.id)) } noOptionsMessage={()=>"Categoria Não Encontrada"}
-                    getOptionLabel={c => c.name} getOptionValue={c => c.id} classNamePrefix="category-item" styles={CATEGORY_SELECT_STYLES}
-                />
-            </fieldset>
+            <div className="multiple-buttons">
+                <div className="label-button">
+                    <legend>Categorias</legend>
+                    <Select placeholder="Selecionar categorias..." className="field-input category-select" isMulti options={availableCategories}
+                        onChange={(value) => {setCategoriesIds(value.map(v => v.id))}}
+                        defaultValue={ availableCategories.filter(c => context.editContent?.categories.map(c => c.id).includes(c.id)) } noOptionsMessage={()=>"Categoria Não Encontrada"}
+                        getOptionLabel={c => c.name} getOptionValue={c => c.id} classNamePrefix="category-item" styles={CATEGORY_SELECT_STYLES}
+                    />
+                </div>
+                <div className="label-button">
+                    <legend>Imagem de conteúdo</legend>
+                    <input type="file" style={{display: "none"}} id="file-input" accept="image/*" onChange={createImage}/>
+                    <div onClick={()=>{document.getElementById("file-input")?.click()}} className="image-button">
+                        Selecionar arquivo
+                    </div>
+                </div>
+            </div>
 
 
             <section className="operation-buttons">
-                <button type="button" className="cancel-button" onClick={() => {context.setEditContent(undefined)}}>Cancelar</button>
-                <button type="button" className="submit-button" onClick={handleSaveContent} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
+                <button type="button" className="finish-button cancel-button" onClick={() => {context.setEditContent(undefined)}}><i class="bi bi-x-circle-fill"></i>Cancelar</button>
+                <button type="button" className="finish-button submit-button" onClick={handleSaveContent} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
+                    <i className="bi bi-check-circle-fill"></i>
                     { context.editContent === null ? "Criar" : "Salvar" }
                 </button>
             </section>
+
+
+
         </div>
     </UniversiModal>
+
+    async function createImage(e : ChangeEvent<HTMLInputElement>){
+        const image = e.currentTarget.files?.item(0);
+        if(!image)
+            return
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(image);
+        const imageResponse = await UniversimeApi.Image.upload({image:image});
+        setImagem(imageResponse.body?.link)
+    }
+
 
     function handleSaveContent() {
         if (!context || context.editContent === undefined)
@@ -101,6 +133,7 @@ export function ManageContent() {
                 description,
                 rating: 5,
                 groupId: context.group.id,
+                image: imagem,
                 // todo: image upload
             });
         }

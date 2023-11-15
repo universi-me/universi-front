@@ -2,17 +2,82 @@
 @import url(/src/layouts/fonts.less);
 
 #manage-content {
+    @left-padding: 2.1rem;
+
     display: flex;
     flex-direction: column;
 
-    background-color: @card-background-color;
+    background-color: white;
     border-radius: .625rem;
 
-    padding: 1.5rem;
-    width: 25vw;
+    width: 45rem;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.50);
+    img{
+        max-width: 3rem;
+        max-height: 3rem;
+    }
+
+    .header{
+        display: flex;
+        flex-direction: row;
+        background-color: var(--primary-color);
+        border-bottom: 5px solid var(--secondary-color);
+        color: white;
+        padding: 1rem @left-padding;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .finish-button{
+        display: flex; 
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        i{
+            width: 1rem !important;
+            font-size: 1.2rem;
+            margin:0px ;
+        }
+    }
+
+    .title{
+        color: white;
+    }
+
+    .multiple-buttons{
+        display: flex; 
+        padding: 0px 2.1rem;
+        justify-content: space-between;
+
+        .label-button{
+            display: flex; 
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .image-button{
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 0.5rem 0.5rem ;
+            border-radius: 0.675rem;
+            cursor: pointer;
+        }
+
+        .category-select {
+            align-self: center;
+            border-radius: .625rem;
+        }
+    }
 
     fieldset {
         border: none;
+        padding: 0rem @left-padding;
+        margin-top: 1rem;
+
 
         &:not(:last-child) {
             margin-bottom: 1rem;
@@ -20,14 +85,22 @@
 
         .field-input {
             width: 100%;
-            margin-top: 5px;
+            background-color: @card-background-color;
+        }
+
+        input{
+            padding: 1rem 0.5rem;
+            font-size: 1rem;
+        }
+
+        textarea{
+            height: 8rem;
+            padding: 0.5rem 0.5rem;
         }
 
         input, textarea {
             border: none;
             border-radius: .625rem;
-
-            padding: .5em;
 
             resize: vertical;
 
@@ -36,9 +109,6 @@
             }
         }
 
-        .category-select {
-            border-radius: .625rem;
-        }
 
         > legend {
             display: flex;
@@ -49,7 +119,7 @@
             width: 100%;
 
             font-size: 1.25rem;
-            font-variant: small-caps;
+            padding-bottom: 0.75rem;
 
             .char-counter {
                 display: inline;
@@ -64,18 +134,20 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
+        margin: 2.1rem;
+        gap: 1rem;
 
         > button {
             border: none;
 
-            width: 7em;
+            width: 7.5rem;
+            max-height: 2rem;
             padding: .75em 0;
             border-radius: .625rem;
 
             color: @font-color-v1;
             font-size: .9rem;
-            text-transform: uppercase;
             font-weight: @font-weight-bold;
 
             cursor: pointer;
@@ -83,10 +155,7 @@
             will-change: background-color;
 
             &.cancel-button {
-                background-color: @font-color-v6;
-                &:hover {
-                    background-color: @font-color-v3;
-                }
+                background-color: var(--secondary-color);
             }
 
             &.submit-button {
