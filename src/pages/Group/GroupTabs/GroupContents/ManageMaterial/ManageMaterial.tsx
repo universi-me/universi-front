@@ -8,6 +8,7 @@ import { setStateAsValue } from "@/utils/tsxUtils";
 
 import type { ContentCreate_ResponseDTO, ContentEdit_ResponseDTO } from "@/services/UniversimeApi/Capacity";
 import type { Category, ContentType } from "@/types/Capacity";
+import "./ManageMaterial.less";
 
 export type ManageMaterialProps = {
     refreshMaterials: () => any;
@@ -59,6 +60,12 @@ export function ManageMaterial(props: ManageMaterialProps) {
 
     return <UniversiModal>
         <div id="manage-material">
+
+            <div className="header">
+                <img src="/assets/imgs/create-content.png" />
+                <h1 className="title">Criar material</h1>
+            </div>
+
             <fieldset>
                 <legend>
                     Título do Material
@@ -81,7 +88,7 @@ export function ManageMaterial(props: ManageMaterialProps) {
 
             <fieldset>
                 <legend>Categorias</legend>
-                <Select placeholder="Selecionar categorias..." className="field-input category-select" isMulti options={availableCategories}
+                <Select placeholder="Selecionar categorias..." className="category-select" isMulti options={availableCategories}
                     onChange={(value) => {setCategories(value.map(v => v.id))}}
                     defaultValue={ availableCategories.filter(c => context.editMaterial?.categories.map(c => c.id).includes(c.id)) } noOptionsMessage={()=>"Categoria Não Encontrada"}
                     getOptionLabel={c => c.name} getOptionValue={c => c.id} classNamePrefix="category-item" styles={CATEGORY_SELECT_STYLES}
@@ -92,6 +99,7 @@ export function ManageMaterial(props: ManageMaterialProps) {
             <section className="operation-buttons">
                 <button type="button" className="cancel-button" onClick={() => {context.setEditMaterial(undefined)}}>Cancelar</button>
                 <button type="button" className="submit-button" onClick={handleSaveMaterial} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
+                    <i className="bi bi-check-circle-fill" />
                     { context.editMaterial === null ? "Criar" : "Salvar" }
                 </button>
             </section>
