@@ -9,7 +9,6 @@ import { setStateAsValue } from "@/utils/tsxUtils";
 import type { FolderCreate_ResponseDTO, FolderEdit_ResponseDTO } from "@/services/UniversimeApi/Capacity";
 import type { Category } from "@/types/Capacity";
 import "./ManageContent.less";
-import { api } from "@/services/UniversimeApi/api";
 
 const MAX_NAME_LENGTH = 50;
 const MAX_DESC_LENGTH = 200;
@@ -98,7 +97,7 @@ export function ManageContent() {
 
 
             <section className="operation-buttons">
-                <button type="button" className="finish-button cancel-button" onClick={() => {context.setEditContent(undefined)}}><i class="bi bi-x-circle-fill"></i>Cancelar</button>
+                <button type="button" className="finish-button cancel-button" onClick={() => {context.setEditContent(undefined)}}><i className="bi bi-x-circle-fill" />Cancelar</button>
                 <button type="button" className="finish-button submit-button" onClick={handleSaveContent} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
                     <i className="bi bi-check-circle-fill"></i>
                     { context.editContent === null ? "Criar" : "Salvar" }
