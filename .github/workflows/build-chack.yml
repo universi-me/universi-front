@@ -19,7 +19,7 @@ jobs:
         run: echo "NODE_ENV=production" >> $GITHUB_ENV
 
       - name: Install dependencies
-        run: npm install --include=dev
+        run: npm install
 
       - name: Build
         run: npm run build
