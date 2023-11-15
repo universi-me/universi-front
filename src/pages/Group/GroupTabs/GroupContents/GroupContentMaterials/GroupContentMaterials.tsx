@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
+import { EMPTY_LIST_CLASS, GroupContext, ManageMaterial } from "@/pages/Group";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { ContentStatusEnum, type Content } from "@/types/Capacity";
 
@@ -11,9 +11,6 @@ import "./GroupContentMaterials.less";
 import { VideoPopup } from "@/components/VideoPopup/VideoPopup";
 import { ContentStatusEdit_RequestDTO } from "@/services/UniversimeApi/Capacity";
 import { renderOption, type OptionInMenu, hasAvailableOption } from "@/utils/dropdownMenuUtils";
-import { Filter } from "@/components/Filter/Filter";
-import { AuthContext } from "@/contexts/Auth";
-import { ActionButton } from "@/components/ActionButton/ActionButton";
 
 export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
@@ -21,8 +18,6 @@ export function GroupContentMaterials() {
     const [filterMaterials, setFilterMaterials] = useState<string>("");
     const [playingVideo, setPlayingVideo] = useState("")
     const [isMiniature, setIsMiniature] = useState(false)
-    const [currentVideoMaterial, setCurrentVideoMaterial] = useState<Content | null>(null)
-    const authContext = useContext(AuthContext);
 
 
     useEffect(() => {
@@ -43,7 +38,9 @@ export function GroupContentMaterials() {
         {
             text: "Editar",
             biIcon: "pencil-fill",
-            disabled() { return true; },
+            onSelect(data) {
+                groupContext.setEditMaterial(data);
+            },
             hidden() {
                 return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
             },
@@ -62,24 +59,23 @@ export function GroupContentMaterials() {
     return (
         <section id="materials" className="group-tab">
             <div className="heading top-container">
+                <div className="title-container">
+                    <i className="bi bi-list-ul tab-icon"/>
+                    <h2 className="title">{organizationName}{groupName} &gt; {groupContext.currentContent.name}</h2>
+                </div>
                 <div className="go-right">
-                    <Filter setter={setFilterMaterials} placeholderMessage={`Buscar em ${groupContext.group.name}`}/>
-                    {  
-                        authContext.profile?.id == groupContext.group.admin.id || authContext.profile?.id == groupContext.group.organization?.admin.id ?
-                        <ActionButton name="Criar material"/>
-                        :
-                        <></>
-                    }
+                    <div id="filter-wrapper">
+                        <i className="bi bi-search filter-icon"/>
+                        <input type="search" name="filter-materials" id="filter-materials" className="filter-input"
+                            onChange={setStateAsValue(setFilterMaterials)} placeholder={`Buscar em ${groupContext.group.name}`}
+                        />
+                    </div>
                 </div>
             </div>
 
-            <div className="material-list tab-list"> { makeMaterialsList(materials, filterMaterials) } </div>
-            {
-                currentVideoMaterial
-                ? <VideoPopup material={currentVideoMaterial} id={playingVideo} handleClose={handleVideoClose} handleWatched={(event) => handleWatchedButton(currentVideoMaterial, event)} handleMinimized={handleVideoClick}/>
-                : <></>
-            }
-            
+            <div className="material-list"> { makeMaterialsList(materials, filterMaterials) } </div>
+
+            <ManageMaterial refreshMaterials={refreshMaterials} />
         </section>
     );
 
@@ -152,7 +148,7 @@ export function GroupContentMaterials() {
                 {
                     youTubeMatch !== null
                     ?
-                        <div className="material-name"   onClick={() => { const videoId = (youTubeMatch[1] ?? youTubeMatch[2]); if(!isMiniature || videoId!= playingVideo) handleVideoClick(videoId, material)}}>
+                        <div className="material-name"   onClick={() => { const videoId = (youTubeMatch[1] ?? youTubeMatch[2]); if(!isMiniature || videoId!= playingVideo) handleVideoClick(videoId)}}>
                             {material.title}
                         </div>
                     :
@@ -185,13 +181,13 @@ export function GroupContentMaterials() {
         const videoId = videoUrl[1] ?? videoUrl[2];
 
         return (
-            <div className="icon-container" id={`icon-container-${videoId}`} onClick={() => {if(!isMiniature || videoId != playingVideo) handleVideoClick(videoId, material)}}>
+            <div className="icon-container" id={`icon-container-${videoId}`} onClick={() => {if(!isMiniature || videoId != playingVideo) handleVideoClick(videoId)}}>
                 <img src="/assets/imgs/video.png" className="material-image"></img>
-                {/* {
+                {
                     playingVideo == videoId
                     ? <VideoPopup material={material} id={videoId} handleClose={handleVideoClose} handleWatched={(event) => handleWatchedButton(material, event)}/>
                     : <></>
-                } */}
+                }
             </div>
         )
     }
@@ -199,8 +195,13 @@ export function GroupContentMaterials() {
     async function handleWatchedButton(material : Content, event : any){
 
         event.stopPropagation();
+        console.log(material)
 
         let nextStatus : ContentStatusEnum = material.contentStatus.status == "DONE"  ? "NOT_VIEWED" : "DONE"
+
+        console.log(nextStatus)
+        console.log(material.contentStatus.status)
+
 
         await UniversimeApi.Capacity.createContentStatus({contentId : material.id});
         await UniversimeApi.Capacity.editContentStatus({contentId: material.id, contentStatusType : nextStatus}).then(
@@ -215,14 +216,13 @@ export function GroupContentMaterials() {
 
     }
 
-    function handleVideoClick(id : string, material: Content){
+    function handleVideoClick(id : string){
         if(playingVideo == id){
             showMiniature(id)
         }
         else{
             setIsMiniature(false)
             setPlayingVideo(id)
-            setCurrentVideoMaterial(material);
         }
     }
 
@@ -233,12 +233,10 @@ export function GroupContentMaterials() {
         let popupContainer = document.getElementById("popup-container")
         let close = document.getElementById("close")
         let iframeContainer = document.getElementById("iframe-container");
-        let videoContainer = document.getElementById("video-container");
 
         elements.popupContainer = popupContainer;
         elements.close = close;
         elements.iframeContainer = iframeContainer;
-        elements.videoContainer = videoContainer;
 
         return elements
     }
@@ -247,13 +245,12 @@ export function GroupContentMaterials() {
     function expand(id : string){
 
         let containers = getVideoContainers()
+        console.log(containers)
 
         containers.popupContainer?.classList.remove("mini-player")
         containers.popupContainer?.classList.add("popup-container")
         containers.iframeContainer?.classList.remove("mini-iframe")
         containers.iframeContainer?.classList.add("iframe-container")
-        containers.videoContainer?.classList.add("fullscreen")
-
         if(containers.close){
             containers.close.innerHTML = "✖";
             containers.close.onclick = () => { handleVideoClose}
@@ -271,8 +268,6 @@ export function GroupContentMaterials() {
         containers.popupContainer?.classList.add("mini-player")
         containers.iframeContainer?.classList.remove("iframe-container")
         containers.iframeContainer?.classList.add("mini-iframe")
-        containers.videoContainer?.classList.remove("fullscreen")
-
         if(containers.close){
             containers.close.innerHTML = "&#x26F6;"
             containers.close.onclick = () => { handleVideoClose}
@@ -285,7 +280,6 @@ export function GroupContentMaterials() {
 
         if(symbol == "✖"){
             setPlayingVideo("")
-            setCurrentVideoMaterial(null)
             setIsMiniature(false)
             return
         }
@@ -306,19 +300,14 @@ export function GroupContentMaterials() {
             icon: "warning",
         }).then(res => {
             if (res.isConfirmed) {
-                const folderId = groupContext?.currentContent?.id!;
+                const currentContentId = groupContext?.currentContent?.id!;
 
-                UniversimeApi.Capacity.removeContentFromFolder({ folderId, contentIds: material.id })
+                UniversimeApi.Capacity.removeContentFromFolder({ folderId: currentContentId, contentIds: material.id })
                     .then(res => {
                         if (!res.success)
                             return;
 
-                        groupContext?.refreshData()
-                            .then(data => {
-                                setTimeout(() => {
-                                    data.setCurrentContent(data.folders.find(c => c.id === folderId));
-                                }, 0);
-                            });
+                        refreshMaterials();
                     });
             }
         });
