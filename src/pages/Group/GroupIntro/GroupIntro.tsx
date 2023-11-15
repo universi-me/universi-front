@@ -20,8 +20,6 @@ export function GroupIntro() {
                 <h3 id="group-name">
                     { organization
                         ? <>
-                            <Link to={`/group${organization.path}`}>{organization.name}</Link>
-                            {" > "}
                             {groupContext.group.name}
                           </>
                         : null

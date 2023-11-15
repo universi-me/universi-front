@@ -1,8 +1,8 @@
 import { Group } from "@/types/Group";
 
 export function groupBannerUrl(group: Group) {
-    if (group.organization?.bannerImage)
-        group = group.organization;
+    if(!group.bannerImage)
+        return "/assets/imgs/default_bg.jpg"
 
     return `${import.meta.env.VITE_UNIVERSIME_API}/group/banner/${group.id}`;
 }

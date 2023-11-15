@@ -70,7 +70,7 @@ export  function GroupTabs(props: GroupTabsProps){
                 joined && !context.group.rootGroup?
                 <GroupSubmenu leave={leave}/>
                 :
-                <button className="group-tab-participacao" onClick={join}>Participar deste grupo</button> 
+                <button className="group-tab-participacao" onClick={join}>Participar</button> 
             : <></>
         }
 

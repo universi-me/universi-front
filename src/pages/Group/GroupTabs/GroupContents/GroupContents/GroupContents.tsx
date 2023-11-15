@@ -12,9 +12,11 @@ import type { Folder } from "@/types/Capacity";
 import "./GroupContents.less";
 import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
+import { AuthContext } from "@/contexts/Auth";
 
 export function GroupContents() {
     const groupContext = useContext(GroupContext);
+    const authContext = useContext(AuthContext);
     const [filterContents, setFilterContents] = useState<string>("");
 
     if (!groupContext)
@@ -51,9 +53,14 @@ export function GroupContents() {
             <div className="heading top-container">
                 <div className="go-right">
                     <Filter setter={setFilterContents} placeholderMessage={`Buscar em Conteúdos ${groupContext.group.name}`}/>
-                    <ActionButton name="Criar conteúdo" buttonProps={{
-                        onClick(){ groupContext.setEditContent(null); }
-                    }} />
+                    {  
+                        authContext.profile?.id == groupContext.group.admin.id || authContext.profile?.id == groupContext.group.organization?.admin.id ?
+                        <ActionButton name="Criar conteúdo" buttonProps={{
+                            onClick(){ groupContext.setEditContent(null); }
+                        }} />
+                        :
+                        <></>
+                    }
                 </div>
             </div>
 
