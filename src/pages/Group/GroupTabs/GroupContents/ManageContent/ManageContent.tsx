@@ -48,13 +48,14 @@ export function ManageContent() {
         return null;
 
     const canSave = (name.length > 0) && (description.length > 0) && (imagem != "");
+    const isNewContent = context.editContent === null;
 
     return <UniversiModal>
         <div id="manage-content">
 
             <div className="header">
                 <img src="/assets/imgs/create-content.png"/>
-                <h1 className="title">Criar conteúdo</h1>
+                <h1 className="title">{isNewContent ? "Criar" : "Editar"} conteúdo</h1>
             </div>
 
             <fieldset>
@@ -100,7 +101,7 @@ export function ManageContent() {
                 <button type="button" className="finish-button cancel-button" onClick={() => {context.setEditContent(undefined)}}><i className="bi bi-x-circle-fill" />Cancelar</button>
                 <button type="button" className="finish-button submit-button" onClick={handleSaveContent} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
                     <i className="bi bi-check-circle-fill"></i>
-                    { context.editContent === null ? "Criar" : "Salvar" }
+                    { isNewContent ? "Criar" : "Salvar" }
                 </button>
             </section>
 

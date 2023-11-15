@@ -57,13 +57,14 @@ export function ManageMaterial(props: ManageMaterialProps) {
         return null;
 
     const canSave = (title.length > 0) && (description.length > 0) && (url.length > 0);
+    const isNewMaterial = context.editMaterial === null;
 
     return <UniversiModal>
         <div id="manage-material">
 
             <div className="header">
                 <img src="/assets/imgs/create-content.png" />
-                <h1 className="title">Criar material</h1>
+                <h1 className="title">{ isNewMaterial ? "Criar" : "Editar" } material</h1>
             </div>
 
             <fieldset>
@@ -100,7 +101,7 @@ export function ManageMaterial(props: ManageMaterialProps) {
                 <button type="button" className="cancel-button" onClick={() => {context.setEditMaterial(undefined)}}>Cancelar</button>
                 <button type="button" className="submit-button" onClick={handleSaveMaterial} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
                     <i className="bi bi-check-circle-fill" />
-                    { context.editMaterial === null ? "Criar" : "Salvar" }
+                    { isNewMaterial ? "Criar" : "Salvar" }
                 </button>
             </section>
         </div>
