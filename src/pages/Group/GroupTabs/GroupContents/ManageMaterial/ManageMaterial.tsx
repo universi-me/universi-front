@@ -25,7 +25,7 @@ export function ManageMaterial(props: ManageMaterialProps) {
     const [url, setUrl] = useState<string>(context?.editMaterial?.url ?? "");
     const [type, setType] = useState<ContentType>(context?.editMaterial?.type ?? "LINK");
     // const [contentsIds, setContentsIds] = useState<string[]>((context?.editMaterial?.folders ?? []).map(c => c.id));
-    const [categoriesIds, setCategories] = useState<string[]>((context?.editMaterial?.categories ?? []).map(c => c.id));
+    const [categoriesIds, setCategoriesIds] = useState<string[]>((context?.editMaterial?.categories ?? []).map(c => c.id));
 
     const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
     useEffect(()=>{
@@ -46,7 +46,7 @@ export function ManageMaterial(props: ManageMaterialProps) {
         setUrl(context?.editMaterial?.url ?? "");
         setType(context?.editMaterial?.type ?? "LINK");
         // setContentsIds((context?.editMaterial?.folders ?? []).map(c => c.id));
-        setCategories((context?.editMaterial?.categories ?? []).map(c => c.id));
+        setCategoriesIds((context?.editMaterial?.categories ?? []).map(c => c.id));
     }, [context?.editMaterial]);
 
     // prevent later checks
@@ -90,7 +90,7 @@ export function ManageMaterial(props: ManageMaterialProps) {
             <fieldset>
                 <legend>Categorias</legend>
                 <Select placeholder="Selecionar categorias..." className="category-select" isMulti options={availableCategories}
-                    onChange={(value) => {setCategories(value.map(v => v.id))}}
+                    onChange={(value) => {setCategoriesIds(value.map(v => v.id))}}
                     defaultValue={ availableCategories.filter(c => context.editMaterial?.categories.map(c => c.id).includes(c.id)) } noOptionsMessage={()=>"Categoria Não Encontrada"}
                     getOptionLabel={c => c.name} getOptionValue={c => c.id} classNamePrefix="category-item" styles={CATEGORY_SELECT_STYLES}
                 />
