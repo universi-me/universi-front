@@ -19,7 +19,7 @@ export function ManageContent() {
     const [name, setName] = useState<string>(context?.editContent?.name ?? "");
     const [categoriesIds, setCategoriesIds] = useState<string[]>((context?.editContent?.categories ?? []).map(c => c.id));
     const [description, setDescription] = useState<string>(context?.editContent?.description ?? "");
-    const [imagem, setImagem] = useState<string | undefined>("");
+    const [image, setImage] = useState<string | null>(context?.editContent?.image ?? null);
 
     const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
     useEffect(()=>{
@@ -38,6 +38,7 @@ export function ManageContent() {
         setName(context.editContent?.name ?? "");
         setDescription(context.editContent?.description ?? "");
         setCategoriesIds((context.editContent?.categories ?? []).map(c => c.id));
+        setImage(context.editContent?.image ?? null);
     }, [context?.editContent])
 
     // prevent later checks
@@ -47,7 +48,7 @@ export function ManageContent() {
     if (context.editContent === undefined)
         return null;
 
-    const canSave = (name.length > 0) && (description.length > 0) && (imagem != "");
+    const canSave = (name.length > 0) && (description.length > 0) && (image && image.length > 0);
     const isNewContent = context.editContent === null;
 
     return <UniversiModal>
@@ -90,9 +91,9 @@ export function ManageContent() {
                 <div className="label-button">
                     <legend>Imagem de conteúdo</legend>
                     <input type="file" style={{display: "none"}} id="file-input" accept="image/*" onChange={createImage}/>
-                    <div onClick={()=>{document.getElementById("file-input")?.click()}} className="image-button">
+                    <label htmlFor="file-input" className="image-button">
                         Selecionar arquivo
-                    </div>
+                    </label>
                 </div>
             </div>
 
@@ -111,13 +112,14 @@ export function ManageContent() {
     </UniversiModal>
 
     async function createImage(e : ChangeEvent<HTMLInputElement>){
-        const image = e.currentTarget.files?.item(0);
-        if(!image)
-            return
+        const imageFile = e.currentTarget.files?.item(0);
+        if(!imageFile)
+            return;
+
         const reader = new FileReader();
-        reader.readAsArrayBuffer(image);
-        const imageResponse = await UniversimeApi.Image.upload({image:image});
-        setImagem(imageResponse.body?.link)
+        reader.readAsArrayBuffer(imageFile);
+        const imageResponse = await UniversimeApi.Image.upload({image:imageFile});
+        setImage(imageResponse.body?.link ?? null);
     }
 
 
@@ -133,8 +135,7 @@ export function ManageContent() {
                 description,
                 rating: 5,
                 groupId: context.group.id,
-                image: imagem,
-                // todo: image upload
+                image,
             });
         }
 
@@ -152,7 +153,7 @@ export function ManageContent() {
                 addCategoriesByIds: addCategories,
                 removeCategoriesByIds: removeCategories,
                 rating: 5,
-                // todo: image upload
+                image: image ?? undefined,
             });
         }
 
