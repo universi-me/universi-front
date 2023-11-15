@@ -25,7 +25,7 @@ export function VideoPopup({material, id, handleClose, handleWatched, handleMini
                     videoId={`${id}`}
                     id={`${id}`}
                     opts={{height: "100%", width: "100%"}}
-                    style={{aspectRatio: "16/9", height: "100%", width: "100%"}}
+                    style={{aspectRatio: "16/9", height: "90%", width: "100%"}}
                     />
                     {
                         material.contentStatus.status != "DONE"
