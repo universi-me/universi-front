@@ -9,10 +9,13 @@ import { getFullName } from "@/utils/profileUtils";
 
 import "./GroupPeople.less";
 import { Filter } from "@/components/Filter/Filter";
+import { AuthContext } from "@/contexts/Auth";
+import { ActionButton } from "@/components/ActionButton/ActionButton";
 
 export function GroupPeople() {
     const groupContext = useContext(GroupContext);
     const [filterPeople, setFilterPeople] = useState<string>("");
+    const authContext = useContext(AuthContext);
 
     if (!groupContext)
         return null;
@@ -22,6 +25,12 @@ export function GroupPeople() {
             <div className="heading top-container">
                 <div className="go-right">
                     <Filter setter={setFilterPeople} placeholderMessage={`Buscar em participantes de ${groupContext.group.name}`}/>
+                    {  
+                        authContext.profile?.id == groupContext.group.admin.id || authContext.profile?.id == groupContext.group.organization?.admin.id ?
+                        <ActionButton name="Adicionar pessoa"/>
+                        :
+                        <></>
+                    }
                 </div>
             </div>
 

@@ -8,10 +8,13 @@ import { groupImageUrl } from "@/utils/apiUtils";
 import type { Group } from "@/types/Group";
 import "./GroupGroups.less";
 import { Filter } from "@/components/Filter/Filter";
+import { AuthContext } from "@/contexts/Auth";
+import { ActionButton } from "@/components/ActionButton/ActionButton";
 
 export function GroupGroups() {
     const groupContext = useContext(GroupContext);
     const [filterGroups, setFilterGroups] = useState<string>("");
+    const authContext = useContext(AuthContext);
 
     if (!groupContext)
         return null;
@@ -21,6 +24,12 @@ export function GroupGroups() {
             <div className="heading top-container">
                 <div className="go-right">
                     <Filter setter={setFilterGroups} placeholderMessage={`Buscar grupos em ${groupContext.group.name}`}/>
+                    {  
+                        authContext.profile?.id == groupContext.group.admin.id || authContext.profile?.id == groupContext.group.organization?.admin.id ?
+                        <ActionButton name="Criar grupo"/>
+                        :
+                        <></>
+                    }
                 </div>
             </div>
 

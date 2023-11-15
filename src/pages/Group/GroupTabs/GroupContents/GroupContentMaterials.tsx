@@ -11,6 +11,9 @@ import "./GroupContentMaterials.less";
 import { VideoPopup } from "@/components/VideoPopup/VideoPopup";
 import { ContentStatusEdit_RequestDTO } from "@/services/UniversimeApi/Capacity";
 import { renderOption, type OptionInMenu, hasAvailableOption } from "@/utils/dropdownMenuUtils";
+import { Filter } from "@/components/Filter/Filter";
+import { AuthContext } from "@/contexts/Auth";
+import { ActionButton } from "@/components/ActionButton/ActionButton";
 
 export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
@@ -19,6 +22,7 @@ export function GroupContentMaterials() {
     const [playingVideo, setPlayingVideo] = useState("")
     const [isMiniature, setIsMiniature] = useState(false)
     const [currentVideoMaterial, setCurrentVideoMaterial] = useState<Content | null>(null)
+    const authContext = useContext(AuthContext);
 
 
     useEffect(() => {
@@ -59,12 +63,13 @@ export function GroupContentMaterials() {
         <section id="materials" className="group-tab">
             <div className="heading top-container">
                 <div className="go-right">
-                    <div id="filter-wrapper">
-                        <i className="bi bi-search filter-icon"/>
-                        <input type="search" name="filter-materials" id="filter-materials" className="filter-input"
-                            onChange={setStateAsValue(setFilterMaterials)} placeholder={`Buscar em ${groupContext.group.name}`}
-                        />
-                    </div>
+                    <Filter setter={setFilterMaterials} placeholderMessage={`Buscar em ${groupContext.group.name}`}/>
+                    {  
+                        authContext.profile?.id == groupContext.group.admin.id || authContext.profile?.id == groupContext.group.organization?.admin.id ?
+                        <ActionButton name="Criar material"/>
+                        :
+                        <></>
+                    }
                 </div>
             </div>
 
@@ -194,13 +199,8 @@ export function GroupContentMaterials() {
     async function handleWatchedButton(material : Content, event : any){
 
         event.stopPropagation();
-        console.log(material)
 
         let nextStatus : ContentStatusEnum = material.contentStatus.status == "DONE"  ? "NOT_VIEWED" : "DONE"
-
-        console.log(nextStatus)
-        console.log(material.contentStatus.status)
-
 
         await UniversimeApi.Capacity.createContentStatus({contentId : material.id});
         await UniversimeApi.Capacity.editContentStatus({contentId: material.id, contentStatusType : nextStatus}).then(
@@ -247,7 +247,6 @@ export function GroupContentMaterials() {
     function expand(id : string){
 
         let containers = getVideoContainers()
-        console.log(containers)
 
         containers.popupContainer?.classList.remove("mini-player")
         containers.popupContainer?.classList.add("popup-container")
