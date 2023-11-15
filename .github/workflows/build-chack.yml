@@ -1,6 +1,6 @@
 name: Build Check
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: npm i --save-dev @types/jest
-        
+
 
       - name: Set NODE_ENV to production
         run: echo "NODE_ENV=production" >> $GITHUB_ENV
