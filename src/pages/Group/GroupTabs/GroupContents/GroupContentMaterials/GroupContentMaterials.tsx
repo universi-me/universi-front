@@ -4,7 +4,6 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContext, ManageMaterial } from "@/pages/Group";
-import { setStateAsValue } from "@/utils/tsxUtils";
 import { ContentStatusEnum, type Content } from "@/types/Capacity";
 
 import "./GroupContentMaterials.less";
@@ -13,7 +12,6 @@ import { ContentStatusEdit_RequestDTO } from "@/services/UniversimeApi/Capacity"
 import { renderOption, type OptionInMenu, hasAvailableOption } from "@/utils/dropdownMenuUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { Filter } from "@/components/Filter/Filter";
-import { UniversiModal } from "@/components/UniversiModal";
 
 export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
@@ -31,12 +29,6 @@ export function GroupContentMaterials() {
     if (groupContext === null || materials === undefined || groupContext.currentContent === undefined) {
         return null;
     }
-
-    const organizationName = groupContext.group.organization
-        ? <Link to={`/group/${groupContext.group.organization.path}`} className="title-hyperlink">{groupContext.group.organization.name} &gt; </Link>
-        : null;
-
-    const groupName = <div onClick={() => groupContext.setCurrentContent(undefined)} style={{cursor: "pointer", display: "inline"}}>{groupContext.group.name}</div>
 
     const OPTIONS_DEFINITION: OptionInMenu<Content>[] = [
         {
@@ -67,7 +59,7 @@ export function GroupContentMaterials() {
                     <Filter setter={setFilterMaterials} placeholderMessage={`Buscar em ${groupContext.group.name}`}/>
                         {  
                             groupContext.loggedData.profile.id == groupContext.group.admin.id || groupContext.loggedData.profile?.id == groupContext.group.organization?.admin.id ?
-                            <ActionButton name="Criar material"/>
+                            <ActionButton name="Criar material" buttonProps={{onClick(){groupContext.setEditMaterial(null)}}}/>
                             :
                             <></>
                         }
