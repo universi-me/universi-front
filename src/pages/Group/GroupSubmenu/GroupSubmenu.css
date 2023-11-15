@@ -30,12 +30,19 @@ i{
     border: 1px solid var(--primary-color);
     border-radius: 10px;
     transition: 0.2s linear;
-    width: 10rem;
+    width: 11rem;
     text-align: center;
     margin-right: 2rem;
+    display: flex;
+    i{
+        padding-left: 5px;
+        padding-right: 6px;
+        max-height: 2rem;
+        max-width: 2rem;
+    }
 }
 
 .box:hover{
-    background-color: var(--alert-color);
+    background-color: var(--secondary-color);
     color: white;
 }

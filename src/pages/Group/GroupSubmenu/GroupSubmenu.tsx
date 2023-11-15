@@ -17,6 +17,7 @@ export function GroupSubmenu({leave} : {leave : () => void}){
                     marginTop: isVisible? "100%" : "0%",
                     scale: isVisible ? "1" : "0"
                 }} onClick={leave}>
+                    <i className="bi bi-door-open"></i>
                     <p>Sair deste grupo</p>
                 </div>
                 
