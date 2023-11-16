@@ -83,6 +83,7 @@ export function GroupContents() {
         }
 
         return filteredContents
+            .toSorted((a, b) => a.name.localeCompare(b.name))
             .map(renderContent);
     }
 
