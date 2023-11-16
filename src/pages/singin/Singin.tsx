@@ -15,7 +15,7 @@ export default function Singin() {
         <div className="logo">
           <img src="/assets/imgs/universi-me2.png" alt="Universi.me" />
 
-          <h1>Sua plataforma de desenvolvimento</h1>
+          <h1>Sua plataforma de desenvolvimento pessoal</h1>
         </div>
 
         <div className="signin">
