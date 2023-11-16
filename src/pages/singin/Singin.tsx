@@ -14,8 +14,8 @@ export default function Singin() {
       <div className="signin-container">
         <div className="logo">
           {/* <UniversiLogo /> */}
-
-          <h1>Bem-vindo ao Universi.me</h1>
+          <img className="logo-login" src="assets/imgs/universi-me2.png"></img>
+          <h1>Sua plataforma de desenvolvimento pessoal</h1>
         </div>
 
         <div className="signin">

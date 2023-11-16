@@ -3,22 +3,23 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    margin-top: 40px;
+    margin-top: 10rem;
+    gap: 5rem;
 }
 
 .logo {
-    height: 300px;
-    width: 600px;
+    height: auto;
+    width: 35rem;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     letter-spacing: 2px;
     gap: 2px;
 }
 
 .logo h1 {
-    width: 500px;
-    font-size: 3.4rem;
+    width: 100%;
+    font-size:2.5rem;
     font-weight: 600;
     text-align: 10px;
     color: var(--font-color-v2);
