@@ -4,7 +4,6 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext, ManageContent } from "@/pages/Group";
-import { setStateAsValue } from "@/utils/tsxUtils";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { type OptionInMenu, renderOption, hasAvailableOption } from "@/utils/dropdownMenuUtils"
 

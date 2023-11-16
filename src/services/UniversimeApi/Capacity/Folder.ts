@@ -8,7 +8,7 @@ export type FolderId_RequestDTO = {
 
 export type FolderCreate_RequestDTO = {
     name:                string;
-    image?:              string;
+    image?:              string | null;
     description?:        string;
     rating?:             number;
     addCategoriesByIds?: string | string[];
