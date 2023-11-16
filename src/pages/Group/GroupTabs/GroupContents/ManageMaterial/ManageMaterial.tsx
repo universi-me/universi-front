@@ -137,7 +137,10 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
 
 
                 <section className="operation-buttons">
-                    <button type="button" className="cancel-button" onClick={() => {context.setEditMaterial(undefined)}}>Cancelar</button>
+                    <button type="button" className="cancel-button" onClick={() => {context.setEditMaterial(undefined)}}>
+                        <i className="bi bi-x-circle-fill" />
+                        Cancelar
+                    </button>
                     <button type="button" className="submit-button" onClick={handleSaveMaterial} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
                         <i className="bi bi-check-circle-fill" />
                         { isNewMaterial ? "Criar" : "Salvar" }
