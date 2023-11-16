@@ -24,12 +24,6 @@ export function GroupGroups() {
             <div className="heading top-container">
                 <div className="go-right">
                     <Filter setter={setFilterGroups} placeholderMessage={`Buscar grupos em ${groupContext.group.name}`}/>
-                    {  
-                        authContext.profile?.id == groupContext.group.admin.id || authContext.profile?.id == groupContext.group.organization?.admin.id ?
-                        <ActionButton name="Criar grupo"/>
-                        :
-                        <></>
-                    }
                 </div>
             </div>
 

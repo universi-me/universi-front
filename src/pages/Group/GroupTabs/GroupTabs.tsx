@@ -3,7 +3,7 @@ import { GroupContents, GroupContext, GroupGroups, GroupPeople } from "@/pages/G
 import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
-import { GroupSubmenu } from "@/pages/Group/GroupSubmenu/GroupSubmenu";
+import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 
 export type AvailableTabs = "contents" | "files" | "groups" | "people";
 

@@ -25,12 +25,6 @@ export function GroupPeople() {
             <div className="heading top-container">
                 <div className="go-right">
                     <Filter setter={setFilterPeople} placeholderMessage={`Buscar em participantes de ${groupContext.group.name}`}/>
-                    {  
-                        authContext.profile?.id == groupContext.group.admin.id || authContext.profile?.id == groupContext.group.organization?.admin.id ?
-                        <ActionButton name="Adicionar pessoa"/>
-                        :
-                        <></>
-                    }
                 </div>
             </div>
 

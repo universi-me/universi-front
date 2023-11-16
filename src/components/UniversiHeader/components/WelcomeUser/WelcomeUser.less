@@ -23,12 +23,45 @@
             display: none;
         }
 
-        img.logged-user-image {
-            height: 3rem;
-            width: auto;
-
-            border: 3px solid @background-color;
-            background-color: @background-color;
-        }
     }
+}
+
+img.logged-user-image {
+    height: 3rem;
+    width: auto !important;
+
+    border: 3px solid @background-color;
+    background-color: @background-color;
+
+    cursor: pointer;
+}
+
+.image-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.submenu-profile{
+    background-color: var(--card-background-color);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    align-self: center;
+    border-radius: 0.675rem;
+    border: solid 1px var(--card-background-color);
+    cursor: pointer;
+    overflow: hidden;
+    margin-top: 3.5rem;
+}
+
+.submenu-item{
+    padding: 0.25rem 1rem;
+    width: 100%;
+}
+
+.submenu-item:hover{
+    background-color: var(--card-item-color);
 }

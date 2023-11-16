@@ -93,7 +93,13 @@ export function GroupContents() {
 
         return (
             <div className="content-item tab-item" key={content.id}>
-                <ProfileImage imageUrl={imageUrl} className="content-image" onClick={() => groupContext?.setCurrentContent(content)} />
+                {
+                    imageUrl
+                    ?
+                    <ProfileImage imageUrl={imageUrl} className="content-image" onClick={() => groupContext?.setCurrentContent(content)} />
+                    :
+                    <ProfileImage imageUrl={"/assets/imgs/default-content.png"} className="content-image default-image" onClick={() => groupContext?.setCurrentContent(content)} />
+                }
 
                 <div className="info">
                     <div className="content-name-wrapper">

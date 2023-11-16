@@ -81,7 +81,7 @@ iframe{
     text-align: center;
     padding: 5px 10px;
     border-radius: var(--border-radius);
-    margin-top: 1rem;
+    margin: 0.5rem 0rem;
     cursor: pointer;
     transition: 0.2s linear;
     display: flex;

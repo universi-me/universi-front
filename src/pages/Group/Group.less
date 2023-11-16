@@ -25,6 +25,21 @@
 
 }
 
+
+@media screen and (max-width: 800px) {
+    
+#group-page {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    column-gap: 2%;
+    gap: 4%;
+}
+
+
+}
+
 .group-page-container{
 
     display: flex;
@@ -36,9 +51,9 @@
 .in-front-container{
     position: relative;
     margin-top: -4rem;
-    border: 1px solid var(--primary-color);
     border-radius: 0px 0px var(--border-radius) var(--border-radius) ;
     border-top: none;
+    height: 100%;
 
     .group-tab-participacao{
         background-color: var(--secondary-color);
@@ -50,7 +65,7 @@
         border-radius: 0.5rem;
         color: white;
         font-weight: bold;
-        top: -12rem;
+        top: -0.5rem;
         transform: translate(-110%, 25%);
         cursor: pointer;
     }
@@ -62,6 +77,9 @@
 #intro-tabs-wrapper{
     width: 100%;
     border-radius: var(--border-radius);
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--primary-color);
+    border-top: 0px;
+    height: fit-content;
 }

@@ -3,15 +3,13 @@
 
 #group-page #people .people-list {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     row-gap: 1.5rem;
     column-gap: .5rem;
 
     .person-item {
         display: flex;
         flex-direction: column;
-
-        height: fit-content;
 
         width: 95%;
 
@@ -47,5 +45,11 @@
                 text-align: justify;
             }
         }
+    }
+}
+
+@media screen and (max-width: 800px){
+    #group-page #people .people-list {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
