@@ -82,8 +82,9 @@ export function GroupContents() {
             return <p className={EMPTY_LIST_CLASS}>Nenhum conteúdo encontrado com a pesquisa.</p>
         }
 
+        filteredContents.sort((a, b) => a.name.localeCompare(b.name));
+
         return filteredContents
-            .toSorted((a, b) => a.name.localeCompare(b.name))
             .map(renderContent);
     }
 
