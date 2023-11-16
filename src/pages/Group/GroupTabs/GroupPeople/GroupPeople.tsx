@@ -8,10 +8,14 @@ import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { getFullName } from "@/utils/profileUtils";
 
 import "./GroupPeople.less";
+import { Filter } from "@/components/Filter/Filter";
+import { AuthContext } from "@/contexts/Auth";
+import { ActionButton } from "@/components/ActionButton/ActionButton";
 
 export function GroupPeople() {
     const groupContext = useContext(GroupContext);
     const [filterPeople, setFilterPeople] = useState<string>("");
+    const authContext = useContext(AuthContext);
 
     if (!groupContext)
         return null;
@@ -19,21 +23,12 @@ export function GroupPeople() {
     return (
         <section id="people" className="group-tab">
             <div className="heading top-container">
-                <div className="title-container">
-                    <i className="bi bi-people-fill tab-icon"/>
-                    <h2 className="title">Participantes de {groupContext.group.name}</h2>
-                </div>
                 <div className="go-right">
-                    <div id="filter-wrapper">
-                        <i className="bi bi-search filter-icon"/>
-                        <input type="search" name="filter-people" id="filter-people" className="filter-input"
-                            onChange={setStateAsValue(setFilterPeople)} placeholder={`Buscar em participantes de ${groupContext.group.name}`}
-                        />
-                    </div>
+                    <Filter setter={setFilterPeople} placeholderMessage={`Buscar em participantes de ${groupContext.group.name}`}/>
                 </div>
             </div>
 
-            <div className="people-list"> { makePeopleList(groupContext.participants, filterPeople) } </div>
+            <div className="people-list tab-list"> { makePeopleList(groupContext.participants, filterPeople) } </div>
         </section>
     );
 }
@@ -65,7 +60,7 @@ function renderPerson(person: Profile) {
         : person.image;
 
     return (
-        <div className="person-item" key={person.id}>
+        <div className="person-item tab-item" key={person.id}>
             <Link to={linkToProfile}>
                 <ProfileImage imageUrl={imageUrl} className="person-image" />
             </Link>

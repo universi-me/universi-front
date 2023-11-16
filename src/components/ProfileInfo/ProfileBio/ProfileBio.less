@@ -2,11 +2,13 @@
 @import url(/src/layouts/colors.less);
 
 .profile-bio-component {
-    background-color: transparent !important;
+    background-color: white !important;
     border: solid #0091b8 1px !important;
-    border-radius: 10px !important;
+    border-radius: var(--border-radius) !important;
     margin-bottom: 30px !important;
     width: 100%;
+
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));  
 
     .edit-button {
         display: flex;
@@ -17,12 +19,12 @@
     }
 
     .image {
-        width: 6em;
-        border: 2px solid #FFF;
+        width: 7em;
+        border: 3px solid #FFF;
     }
 
     .name {
-        margin-top: .25em;
+        margin: 0.44rem 0;
         text-align: center;
 
         font-size: 1.25rem;
@@ -48,7 +50,7 @@
     
         width: 100%;
         padding: 0  !important;
-        margin-top: -3em;
+        margin-top: -3.5em;
         margin-bottom: 1rem;
 
         font-size: 0.8rem;
@@ -60,15 +62,18 @@
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
-        border-radius: 10px 10px 0px 0px;
+        border-radius: var(--border-radius) var(--border-radius) 0px 0px;
     }
 
     .content-count{
         border-top: solid 1px var(--primary-color);
-        padding: 1rem 1rem;
+        padding: 0.7rem 0.7rem;
 
         .links-wrapper {
             width: fit-content;
+            display: flex;
+            justify-content: center;
+            width: 100%;
 
             .profile-bio-link {
                 color: @font-color-v2;
@@ -78,6 +83,8 @@
                 align-items: center;
 
                 will-change: text-decoration;
+
+                height: 1rem;
 
                 &:hover {
                     text-decoration: underline;

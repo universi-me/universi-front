@@ -16,6 +16,6 @@ export function ProfileImage(props: ProfileImageProps) {
     return (
         imageUrl
             ? <img {...genericElementProps} className={className} src={imageUrl} />
-            : <div {...genericElementProps} className={className} style={{...genericElementProps.style, backgroundColor: DEFAULT_NO_IMAGE_COLOR}} />
+            : <img {...genericElementProps} className={className} src={"/assets/imgs/default_avatar.png"} />
     );
 }

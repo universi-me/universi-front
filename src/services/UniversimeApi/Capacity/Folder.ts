@@ -8,10 +8,12 @@ export type FolderId_RequestDTO = {
 
 export type FolderCreate_RequestDTO = {
     name:                string;
-    image?:              string;
+    image?:              string | null;
     description?:        string;
     rating?:             number;
     addCategoriesByIds?: string | string[];
+    groupId?:            string;
+    groupPath?:          string;
 };
 
 export type FolderEdit_RequestDTO = {
@@ -50,6 +52,8 @@ export async function createFolder(body: FolderCreate_RequestDTO) {
         description:        body.description,
         rating:             body.rating,
         addCategoriesByIds: body.addCategoriesByIds,
+        groupId:            body.groupId,
+        groupPath:          body.groupPath,
     })).data;
 }
 

@@ -13,10 +13,6 @@
     flex-direction: row;
 }
 
-.top-container{
-    display: block !important;
-}
-
 
 #group-page #contents {
     .content-list {
@@ -28,6 +24,8 @@
             height: fit-content;
 
             width: 100%;
+            margin: 0;
+
 
             &:not(:last-of-type) {
                 margin-bottom: 1.5rem;
@@ -43,6 +41,10 @@
                 object-fit: cover;
 
                 cursor: pointer;
+            }
+            .default-image{
+                padding: 0.5rem;
+                object-fit: contain;
             }
 
             .info {
@@ -149,6 +151,7 @@
                 .content-description {
                     margin-top: .75rem;
                     text-align: justify;
+                    margin-right: 1rem;
                 }
             }
         }

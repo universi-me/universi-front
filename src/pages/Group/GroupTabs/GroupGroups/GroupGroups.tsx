@@ -7,10 +7,14 @@ import { groupImageUrl } from "@/utils/apiUtils";
 
 import type { Group } from "@/types/Group";
 import "./GroupGroups.less";
+import { Filter } from "@/components/Filter/Filter";
+import { AuthContext } from "@/contexts/Auth";
+import { ActionButton } from "@/components/ActionButton/ActionButton";
 
 export function GroupGroups() {
     const groupContext = useContext(GroupContext);
     const [filterGroups, setFilterGroups] = useState<string>("");
+    const authContext = useContext(AuthContext);
 
     if (!groupContext)
         return null;
@@ -18,21 +22,12 @@ export function GroupGroups() {
     return (
         <section id="groups" className="group-tab">
             <div className="heading top-container">
-                <div className="title-container">
-                    <i className="bi bi-building-fill-gear tab-icon"/>
-                    <h2 className="title">Grupos em {groupContext.group.name}</h2>
-                </div>
                 <div className="go-right">
-                    <div id="filter-wrapper">
-                        <i className="bi bi-search filter-icon"/>
-                        <input type="search" name="filter-groups" id="filter-groups" className="filter-input"
-                            onChange={setStateAsValue(setFilterGroups)} placeholder={`Buscar grupos em ${groupContext.group.name}`}
-                        />
-                    </div>
+                    <Filter setter={setFilterGroups} placeholderMessage={`Buscar grupos em ${groupContext.group.name}`}/>
                 </div>
             </div>
 
-            <div className="group-list"> { makeGroupList(groupContext.subgroups, filterGroups) } </div>
+            <div className="group-list tab-list"> { makeGroupList(groupContext.subgroups, filterGroups) } </div>
         </section>
     );
 }
@@ -58,7 +53,7 @@ function renderGroup(group: Group) {
     const linkToGroup = `/group${group.path}`;
 
     return (
-        <div className="group-item" key={group.id}>
+        <div className="group-item tab-item" key={group.id}>
             <Link to={linkToGroup}>
                 <img className="group-image" src={groupImageUrl(group)} />
             </Link>

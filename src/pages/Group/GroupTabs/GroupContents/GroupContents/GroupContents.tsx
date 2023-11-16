@@ -3,16 +3,19 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext } from "@/pages/Group";
-import { setStateAsValue } from "@/utils/tsxUtils";
+import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext, ManageContent } from "@/pages/Group";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { type OptionInMenu, renderOption, hasAvailableOption } from "@/utils/dropdownMenuUtils"
 
 import type { Folder } from "@/types/Capacity";
 import "./GroupContents.less";
+import { Filter } from "@/components/Filter/Filter";
+import { ActionButton } from "@/components/ActionButton/ActionButton";
+import { AuthContext } from "@/contexts/Auth";
 
 export function GroupContents() {
     const groupContext = useContext(GroupContext);
+    const authContext = useContext(AuthContext);
     const [filterContents, setFilterContents] = useState<string>("");
 
     if (!groupContext)
@@ -26,7 +29,9 @@ export function GroupContents() {
         {
             text: "Editar",
             biIcon: "pencil-fill",
-            disabled() { return true; },
+            onSelect(data) {
+                groupContext.setEditContent(data);
+            },
             hidden() {
                 return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
             },
@@ -45,21 +50,22 @@ export function GroupContents() {
     return (
         <section id="contents" className="group-tab">
             <div className="heading top-container">
-                <div className="title-container">
-                    <i className="bi bi-list-ul tab-icon"/>
-                    <h2 className="title">Conteúdos {groupContext.group.name}</h2>
-                </div>
                 <div className="go-right">
-                    <div id="filter-wrapper">
-                        <i className="bi bi-search filter-icon"/>
-                        <input type="search" name="filter-contents" id="filter-contents" className="filter-input"
-                            onChange={setStateAsValue(setFilterContents)} placeholder={`Buscar em Conteúdos ${groupContext.group.name}`}
-                        />
-                    </div>
+                    <Filter setter={setFilterContents} placeholderMessage={`Buscar em Conteúdos ${groupContext.group.name}`}/>
+                    {  
+                        authContext.profile?.id == groupContext.group.admin.id || authContext.profile?.id == groupContext.group.organization?.admin.id ?
+                        <ActionButton name="Criar conteúdo" buttonProps={{
+                            onClick(){ groupContext.setEditContent(null); }
+                        }} />
+                        :
+                        <></>
+                    }
                 </div>
             </div>
 
-            <div className="content-list"> { makeContentList(groupContext.folders, filterContents) } </div>
+            <div className="content-list tab-list"> { makeContentList(groupContext.folders, filterContents) } </div>
+
+            <ManageContent />
         </section>
     );
 
@@ -76,6 +82,8 @@ export function GroupContents() {
             return <p className={EMPTY_LIST_CLASS}>Nenhum conteúdo encontrado com a pesquisa.</p>
         }
 
+        filteredContents.sort((a, b) => a.name.localeCompare(b.name));
+
         return filteredContents
             .map(renderContent);
     }
@@ -86,8 +94,14 @@ export function GroupContents() {
             : content.image;
 
         return (
-            <div className="content-item" key={content.id}>
-                <ProfileImage imageUrl={imageUrl} className="content-image" onClick={() => groupContext?.setCurrentContent(content)} />
+            <div className="content-item tab-item" key={content.id}>
+                {
+                    imageUrl
+                    ?
+                    <ProfileImage imageUrl={imageUrl} className="content-image" onClick={() => groupContext?.setCurrentContent(content)} />
+                    :
+                    <ProfileImage imageUrl={"/assets/imgs/default-content.png"} className="content-image default-image" onClick={() => groupContext?.setCurrentContent(content)} />
+                }
 
                 <div className="info">
                     <div className="content-name-wrapper">

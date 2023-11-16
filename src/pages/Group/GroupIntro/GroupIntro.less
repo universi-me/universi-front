@@ -6,7 +6,7 @@
     align-items: center;
 
     #banner-wrapper {
-        height: 14rem;
+        height: 16rem;
         width: 100%;
 
         #organization-banner {
@@ -14,26 +14,49 @@
             width: 100%;
             object-fit: cover;
 
-            border-radius: 1rem 1rem 0 0;
+            border-radius: var(--border-radius);
+            display: block;
+        }
+
+        .image-overlay{
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary-color);
+            position: relative;
+            margin-top: -16rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--primary-color);
+            filter: brightness(0.85);
+            opacity: 80%;
         }
 
         #group-name {
-            width: fit-content;
             height: fit-content;
 
             margin-left: auto;
             margin-right: 1rem;
-            transform: translateY(calc(-100% - 0.5em));
-            transform-origin: bottom right;
 
             color: var(--font-color-v1);
-            font-size: 1.5rem;
-            font-weight: var(--font-weight-default);
-            text-align: right;
+            font-size: 4vh;
+            font-weight: var(--font-weight-bold);
+            text-align: center;
+            transform: translate(0, -11rem);
+            text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.50);
 
             a {
                 text-decoration: none;
                 color: inherit;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 800px){
+    
+    #group-page #group-intro {
+        #banner-wrapper {
+            #group-name {
+                font-size: 4vw;
             }
         }
     }
