@@ -15,14 +15,22 @@
     align-items: center;
     letter-spacing: 2px;
     gap: 2px;
+
+    margin-right: 3rem;
+}
+
+.logo img {
+    width: 80%;
 }
 
 .logo h1 {
     width: 100%;
-    font-size:2.5rem;
+    font-size: 2.5rem;
     font-weight: 600;
     text-align: 10px;
     color: var(--font-color-v2);
+
+    margin-top: 1em;
 }
 
 footer {
