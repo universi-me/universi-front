@@ -33,7 +33,6 @@ export function Header() {
       </div>
       <div className="right-items">
         <WelcomeUser />
-        <LoginButton />
       </div>
     </header>
   );
