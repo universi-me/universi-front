@@ -14,10 +14,9 @@
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.50);
-    img{
-        max-width: 3rem;
-        max-height: 3rem;
-    }
+
+    @header-padding: 1rem;
+    @header-image-size: 3rem;
 
     .header{
         display: flex;
@@ -25,9 +24,19 @@
         background-color: var(--primary-color);
         border-bottom: 5px solid var(--secondary-color);
         color: white;
-        padding: 1rem @left-padding;
+        padding: @header-padding @left-padding;
         gap: 1rem;
         align-items: center;
+
+        img{
+            max-width: @header-image-size;
+            max-height: @header-image-size;
+        }
+    }
+
+    .fields {
+        max-height: calc(90vh - (@header-padding * 2) - @header-image-size);
+        overflow: auto;
     }
 
     .finish-button{
@@ -56,6 +65,29 @@
             display: flex; 
             flex-direction: column;
             gap: 0.5rem;
+        }
+
+        .image-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            .image-preview {
+                height: 5rem;
+                aspect-ratio: 1;
+
+                border-radius: 1rem;
+                border: 1px solid @secondary-color;
+                object-fit: cover;
+
+                &.default-image {
+                    padding: .5rem;
+                }
+            }
+
+            fieldset {
+                margin-top: 0;
+            }
         }
 
         .image-button{

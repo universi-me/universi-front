@@ -5,6 +5,7 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { UniversiModal } from "@/components/UniversiModal";
 import { GroupContext } from "@/pages/Group/GroupContext";
 import { setStateAsValue } from "@/utils/tsxUtils";
+import { arrayBufferToBase64 } from "@/utils/fileUtils";
 
 import type { FolderCreate_ResponseDTO, FolderEdit_ResponseDTO } from "@/services/UniversimeApi/Capacity";
 import type { Category } from "@/types/Capacity";
@@ -13,13 +14,15 @@ import "./ManageContent.less";
 const MAX_NAME_LENGTH = 50;
 const MAX_DESC_LENGTH = 200;
 
+const DEFAULT_IMAGE_PATH = "/assets/imgs/default-content.png";
+
 export function ManageContent() {
     const context = useContext(GroupContext);
 
     const [name, setName] = useState<string>(context?.editContent?.name ?? "");
     const [categoriesIds, setCategoriesIds] = useState<string[]>((context?.editContent?.categories ?? []).map(c => c.id));
     const [description, setDescription] = useState<string>(context?.editContent?.description ?? "");
-    const [image, setImage] = useState<string | null>(context?.editContent?.image ?? null);
+    const [imageBuffer, setImageBuffer] = useState<ArrayBuffer | undefined>();
 
     const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
     useEffect(()=>{
@@ -38,7 +41,7 @@ export function ManageContent() {
         setName(context.editContent?.name ?? "");
         setDescription(context.editContent?.description ?? "");
         setCategoriesIds((context.editContent?.categories ?? []).map(c => c.id));
-        setImage(context.editContent?.image ?? null);
+        setImageBuffer(undefined);
     }, [context?.editContent])
 
     // prevent later checks
@@ -48,7 +51,15 @@ export function ManageContent() {
     if (context.editContent === undefined)
         return null;
 
-    const canSave = (name.length > 0) && (description.length > 0) && (image && image.length > 0);
+    const imageRender = imageBuffer
+        ? "data:image/jpeg;base64," + arrayBufferToBase64(imageBuffer)
+        : context.editContent?.image
+            ? context.editContent.image.startsWith("/")
+                ? import.meta.env.VITE_UNIVERSIME_API + context.editContent.image
+                : context.editContent.image
+            : DEFAULT_IMAGE_PATH;
+
+    const canSave = (name.length > 0) && (description.length > 0);
     const isNewContent = context.editContent === null;
 
     return <UniversiModal>
@@ -59,6 +70,7 @@ export function ManageContent() {
                 <h1 className="title">{isNewContent ? "Criar" : "Editar"} conteúdo</h1>
             </div>
 
+            <div className="fields">
             <fieldset>
                 <legend>
                     Título do Conteúdo
@@ -88,12 +100,16 @@ export function ManageContent() {
                         getOptionLabel={c => c.name} getOptionValue={c => c.id} classNamePrefix="category-item" styles={CATEGORY_SELECT_STYLES}
                     />
                 </div>
-                <div className="label-button">
-                    <legend>Imagem de conteúdo</legend>
-                    <input type="file" style={{display: "none"}} id="file-input" accept="image/*" onChange={createImage}/>
-                    <label htmlFor="file-input" className="image-button">
-                        Selecionar arquivo
-                    </label>
+                <div className="image-wrapper">
+                    <img src={imageRender} className={"image-preview" + (imageRender === DEFAULT_IMAGE_PATH ? " default-image" : "")} />
+
+                    <fieldset className="label-button">
+                        <legend>Imagem de conteúdo</legend>
+                        <input type="file" style={{display: "none"}} id="file-input" accept="image/*" onChange={changeImage}/>
+                        <label htmlFor="file-input" className="image-button">
+                            Selecionar arquivo
+                        </label>
+                    </fieldset>
                 </div>
             </div>
 
@@ -105,27 +121,23 @@ export function ManageContent() {
                     { isNewContent ? "Criar" : "Salvar" }
                 </button>
             </section>
-
-
-
+            </div>
         </div>
     </UniversiModal>
 
-    async function createImage(e : ChangeEvent<HTMLInputElement>){
-        const imageFile = e.currentTarget.files?.item(0);
-        if(!imageFile)
-            return;
-
-        const reader = new FileReader();
-        reader.readAsArrayBuffer(imageFile);
-        const imageResponse = await UniversimeApi.Image.upload({image:imageFile});
-        setImage(imageResponse.body?.link ?? null);
-    }
-
-
-    function handleSaveContent() {
+    async function handleSaveContent() {
         if (!context || context.editContent === undefined)
             return;
+
+        const imageFile = (document.getElementById("file-input") as HTMLInputElement).files?.item(0);
+
+        let imageUrl: string | undefined = undefined;
+        if (imageFile) {
+            const res = await UniversimeApi.Image.upload({ image: imageFile})
+            if (res.success && res.body) {
+                imageUrl = res.body.link;
+            }
+        }
 
         let request: Promise<FolderCreate_ResponseDTO | FolderEdit_ResponseDTO> = undefined!;
         if (context.editContent === null) {
@@ -135,7 +147,7 @@ export function ManageContent() {
                 description,
                 rating: 5,
                 groupId: context.group.id,
-                image,
+                image: imageUrl,
             });
         }
 
@@ -153,7 +165,7 @@ export function ManageContent() {
                 addCategoriesByIds: addCategories,
                 removeCategoriesByIds: removeCategories,
                 rating: 5,
-                image: image ?? undefined,
+                image: imageUrl,
             });
         }
 
@@ -162,6 +174,24 @@ export function ManageContent() {
                 context.refreshData();
             }
         })
+    }
+
+    function changeImage(e: ChangeEvent<HTMLInputElement>) {
+        const imageFile = e.currentTarget.files?.item(0);
+        if (!imageFile) {
+            setImageBuffer(undefined);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = renderLoadedImage;
+        reader.readAsArrayBuffer(imageFile);
+
+        function renderLoadedImage(this: FileReader, ev: ProgressEvent<FileReader>) {
+            if (ev.target?.readyState === FileReader.DONE && ev.target.result) {
+                setImageBuffer(ev.target.result as ArrayBuffer);
+            }
+        }
     }
 }
 
