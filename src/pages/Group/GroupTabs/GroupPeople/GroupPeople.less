@@ -3,13 +3,15 @@
 
 #group-page #people .people-list {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     row-gap: 1.5rem;
+    row-gap: 1rem;
     column-gap: .5rem;
 
     .person-item {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        align-items: start;
 
         width: 95%;
 
@@ -18,21 +20,25 @@
         align-items: center;
         padding: 0;
         overflow: hidden;
+        border: none;
 
         .person-image {
             @side: 8rem !important;
-            width: 100%;
+            width: @side;
+            height: @side;
+            aspect-ratio: 1;
 
             background-color: inherit;
             object-fit: cover;
-            border-radius: 0;
+            border-radius: 50%;
+            padding: 1rem;
         }
 
-        .info {
+        .info { 
+
+            text-align: start;
 
             color: @font-color-v2;
-            padding-top: 2rem;
-            padding-bottom: 2.1rem;
             .person-name {
                 color: inherit;
                 text-decoration: none;
