@@ -29,6 +29,9 @@ export function SignUpModal(props: SignUpModalProps) {
     const [usernameAvailable, setUsernameAvailable] = useState<boolean>(false);
     const [usernameAvailableChecked, setUsernameAvailableChecked] = useState<boolean>(false);
 
+    const [emailAvailable, setEmailAvailable] = useState<boolean>(false);
+    const [emailAvailableChecked, setEmailAvailableChecked] = useState<boolean>(false);
+
     const canSignUp = enableSignUp(username, email, password);
 
     const closeModal = () => props.toggleModal(false);
@@ -47,6 +50,20 @@ export function SignUpModal(props: SignUpModalProps) {
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [username])
+
+    useEffect(() => {
+        setEmailAvailableChecked(false);
+        const delayDebounceFn = setTimeout(async () => {
+            if(email.length < 1) {
+                setEmailAvailable(false);
+                return;
+            }
+            const resp = await UniversimeApi.User.emailAvailable({email: email});
+            setEmailAvailable(resp.success);
+            setEmailAvailableChecked(true);
+        }, 1000)
+        return () => clearTimeout(delayDebounceFn)
+    }, [email])
 
     return (
         <UniversiModal>
@@ -70,6 +87,9 @@ export function SignUpModal(props: SignUpModalProps) {
                                 setEmail(e.currentTarget.value)
                             }}
                         />
+                        <section className="password-requirements">
+                            { emailAvailableChecked ? <p className={`bi fieldset-info ${emailAvailable?'success-validation':'failed-validation'}`}>{emailAvailable?'Email Disponível para uso.':'Email não está disponivel para uso.'}</p> : null }
+                        </section>
                     </fieldset>
 
                     <fieldset>
