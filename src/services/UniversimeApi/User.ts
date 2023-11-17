@@ -26,6 +26,10 @@ export type UsernameAvailable_RequestDTO = {
     username: string;
 };
 
+export type EmailAvailable_RequestDTO = {
+    email: string;
+};
+
 export type UserSignUp_ResponseDTO = ApiResponse;
 export type UserEdit_ResponseDTO =   ApiResponse;
 export type UserOrganization_ResponseDTO = ApiResponse<{organization : Group | null}>
@@ -61,6 +65,12 @@ export async function newPassword(body : UserNewPassword_RequestDTO){
 export async function usernameAvailable(body : UsernameAvailable_RequestDTO){
     return (await api.post<ApiResponse>("/username-available",{
         username: body.username,
+    })).data;
+}
+
+export async function emailAvailable(body : EmailAvailable_RequestDTO){
+    return (await api.post<ApiResponse>("/email-available",{
+        email: body.email,
     })).data;
 }
 
