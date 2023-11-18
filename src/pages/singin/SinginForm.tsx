@@ -1,5 +1,6 @@
 import { FormEvent, useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import { oauthSignIn } from "@/services/oauth2-google";
@@ -13,14 +14,22 @@ export default function SinginForm() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [recaptchaRef, setRecaptchaRef] = useState<any>(null);
+
 
   const handleAuthLoginGoogle = async () => {
     window.location.href = oauthSignIn().toString();
   };
 
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+  };
+
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
-    const logged = await auth.signin(email, password);
+    const logged = await auth.signin(email, password, recaptchaToken);
+    recaptchaRef.reset();
   };
 
   const isButtonDisable = email.length && password.length > 0 ? false : true;
@@ -30,6 +39,7 @@ export default function SinginForm() {
   };
 
   const ENABLE_GOOGLE_LOGIN = import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1";
+  const ENABLE_RECAPTCHA = import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1";
 
   return (
   <>
@@ -70,6 +80,16 @@ export default function SinginForm() {
             </span>
           </span>
         </div>
+
+        {
+          !ENABLE_RECAPTCHA ? null :
+            <center>
+              <br/>
+              <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
+              <br/>
+            </center>
+        }
+
         <button
             type="submit"
             value="Entrar"

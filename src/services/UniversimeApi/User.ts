@@ -6,6 +6,7 @@ export type UserSignUp_RequestDTO = {
     username: string;
     email:    string;
     password: string;
+    recaptchaToken: string | null;
 };
 
 export type UserEdit_RequestDTO = {
@@ -15,6 +16,7 @@ export type UserEdit_RequestDTO = {
 
 export type UserRecoverPassword_RequestDTO = {
     username: string;
+    recaptchaToken: string | null;
 };
 
 export type UserNewPassword_RequestDTO = {
@@ -39,6 +41,7 @@ export async function signUp(body: UserSignUp_RequestDTO) {
         username: body.username,
         email:    body.email,
         password: body.password,
+        recaptchaToken: body.recaptchaToken,
     })).data;
 }
 
@@ -52,6 +55,7 @@ export async function edit(body: UserEdit_RequestDTO) {
 export async function recoverPassword(body : UserRecoverPassword_RequestDTO){
     return (await api.post<ApiResponse>("/recovery-password",{
         username: body.username,
+        recaptchaToken: body.recaptchaToken,
     })).data;
 }
 

@@ -5,6 +5,7 @@ import { api } from "./api";
 export type SignIn_RequestDTO = {
     username: string;
     password: string;
+    recaptchaToken: string | null;
 };
 
 export type GoogleSignIn_RequestDTO = {
@@ -20,8 +21,8 @@ export async function validateToken() {
     return response.data.body;
 }
 
-export async function signin({ username, password }: SignIn_RequestDTO) {
-    const response = await api.post<SignIn_ResponseDTO>("/signin", { username, password });
+export async function signin({ username, password, recaptchaToken }: SignIn_RequestDTO) {
+    const response = await api.post<SignIn_ResponseDTO>("/signin", { username, password, recaptchaToken });
     return response.data;
 }
 
