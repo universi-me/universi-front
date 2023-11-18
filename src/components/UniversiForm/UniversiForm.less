@@ -1,0 +1,31 @@
+.image-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .image-preview {
+        height: 5rem;
+        aspect-ratio: 1;
+
+        border-radius: 1rem;
+        border: 1px solid var(--secondary-color);
+        object-fit: cover;
+
+        &.default-image {
+            padding: .5rem;
+        }
+    }
+
+    fieldset {
+        margin-top: 0;
+    }
+        .image-button{
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 0.5rem 0.5rem ;
+            border-radius: 0.675rem;
+            cursor: pointer;
+        }
+
+}

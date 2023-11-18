@@ -88,13 +88,15 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
                 {DTOName: "description", label: "Descrição do grupo", type: FormInputs.LONG_TEXT},
                 {DTOName: "nickname", label: "Apelido do grupo", type: FormInputs.TEXT},
                 {DTOName: "groupType", label: "tipo de grupo", type: FormInputs.NONE, value: "CAMPUS"},
-                {DTOName: "imageUrl", label: "Link da imagem", type: FormInputs.URL},
+                {DTOName: "imageUrl", label: "Link da imagem", type: FormInputs.IMAGE},
                 {DTOName: "canHaveSubGroup", label: "Pode ter subgrupo?", type: FormInputs.NONE, value: true},
-                {DTOName: "isPublic", label: "é publico", type: FormInputs.NONE, value: true},
-                {DTOName: "canJoin", label: "pode entrar", type: FormInputs.NONE, value: true},
+                {DTOName: "isPublic", label: "é publico", type: FormInputs.BOOLEAN, value: true},
+                {DTOName: "canJoin", label: "pode entrar", type: FormInputs.BOOLEAN, value: true},
                 {DTOName: "isRootGroup", label: "é grupo raiz", type: FormInputs.NONE, value: false},
                 {DTOName: "parentGroupId", label: "id do grupo pai", type: FormInputs.NONE, value: context.group.id}
-            ]} requisition={UniversimeApi.Group.create}></UniversiForm>
+            ]}  requisition={UniversimeApi.Group.create}
+                afterSave={() => {context.setEditMaterial(undefined); props.refreshMaterials()}}
+            ></UniversiForm>
 
             <div className="manage-material fields">
                 <fieldset>

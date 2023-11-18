@@ -1,14 +1,17 @@
 import { ApiResponse } from "@/types/UniversimeApi"
-import { ReactNode, useState, useContext } from "react"
+import { ReactNode, useState, useContext, ChangeEvent } from "react"
 
 import "./ManageMaterial.less"
+import "./UniversiForm.less"
 import { GroupContext } from "@/pages/Group"
 import UniversimeApi from "@/services/UniversimeApi"
+import { arrayBufferToBase64 } from "@/utils/fileUtils"
 
 export type formProps = {
 
     objects: FormObject[],
-    requisition : any
+    requisition : any,
+    afterSave? : any
     
 }
 
@@ -19,7 +22,9 @@ export type FormObject = {
     charLimit? : undefined | number,
     fileType? : undefined | string,
     value? : undefined | any,
-    required? : undefined | boolean
+    required? : undefined | boolean,
+    options? : undefined | any[],
+    file?: undefined | any
 }
 
 export enum FormInputs {
@@ -28,6 +33,8 @@ export enum FormInputs {
     FILE,
     URL,
     LIST,
+    BOOLEAN,
+    IMAGE,
     NONE
 }
 
@@ -39,6 +46,7 @@ export function UniversiForm(props : formProps){
     const MAX_URL_LENGTH = 100
 
     const context = useContext(GroupContext)
+    const DEFAULT_IMAGE_PATH = "/assets/imgs/default-content.png";
 
     const handleChange = (index : number, newValue : any) => {
         setObjects((oldObjects) =>{
@@ -47,6 +55,15 @@ export function UniversiForm(props : formProps){
             return updatedObjects
         })
     }
+    const handleFileChange = (index : number, newValue : any) => {
+        setObjects((oldObjects) =>{
+            const updatedObjects = [...oldObjects]
+            updatedObjects[index].file = newValue;
+            return updatedObjects
+        })
+    }
+
+
 
     function getCharLimit(object : FormObject){
         if(object.type == FormInputs.TEXT)
@@ -65,10 +82,9 @@ export function UniversiForm(props : formProps){
             return "file"
     }
 
-    function renderObjects() : ReactNode{
-        return objects.map((object, index) =>(
-            object.type == FormInputs.NONE ? <></> : 
-            <fieldset key={index}>
+    function getTextInput(object : FormObject, index : number){
+        return (
+            <div>
                 <legend>
                     {object.label}
                     {
@@ -83,7 +99,90 @@ export function UniversiForm(props : formProps){
                         </div>
                     }
                 </legend>
-                <input className="field-input" type={`${getInput(object)}`} defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)}/>
+                <input className="field-input" type="text" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)}/>
+            </div>
+        )
+    }
+
+    function getImageBuffer(object : FormObject){
+        if(object.value)
+            return "data:image/jpeg;base64,"+arrayBufferToBase64(object.file);
+        return DEFAULT_IMAGE_PATH
+    }
+
+    function getImageInput(object : FormObject, index : number){
+
+        const imageBuffer = getImageBuffer(object)
+
+        return(
+            <div className="image-wrapper">
+                <img src={imageBuffer} className={"image-preview "+((imageBuffer === DEFAULT_IMAGE_PATH) ? "default-image" : "")}/>
+                <fieldset className="label-button">
+                    <legend>{object.label}</legend>
+                    <input type="file" style={{display: "none"}} id="file-input" accept="image/*" onChange={(e) =>{changeFile(e, index)}}/>
+                    <label htmlFor="file-input" className="image-button">
+                        Selecionar arquivo
+                    </label>
+                </fieldset>
+            </div>
+        )
+
+    }
+
+    async function changeFile(e : ChangeEvent<HTMLInputElement>, index: number){
+        const imageFile = e.currentTarget.files?.item(0);
+        if(!imageFile){
+            handleFileChange(index, undefined);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = renderLoadedImage;
+        reader.readAsArrayBuffer(imageFile)
+
+        async function renderLoadedImage(this: FileReader, ev: ProgressEvent<FileReader>){
+            if(ev.target?.readyState == FileReader.DONE && ev.target.result){
+                handleFileChange(index, ev.target.result as ArrayBuffer)
+                const imageFile = (document.getElementById("file-input") as HTMLInputElement).files?.item(0) 
+                if(imageFile){
+                    const res = await UniversimeApi.Image.upload({image: imageFile})
+                    if(res.success && res.body)
+                        handleChange(index, res.body.link)
+                }
+                
+            }
+        }
+    }
+
+    function getBooleanInput(object : FormObject, index : number){
+
+        return(
+
+            <div className="checkbox-input">
+                <fieldset>
+                    <legend>{object.label}</legend>
+                    <input id={index.toString()} name={index.toString()} checked={object.value} type="checkbox" className="field-input checkbox" onChange={(e) =>{handleChange(index, e.target.checked)}}></input>
+                </fieldset>
+            </div>
+
+        )
+    }
+
+    function renderObjects() : ReactNode{
+        return objects.map((object, index) =>(
+            object.type == FormInputs.NONE ? <></> : 
+            <fieldset key={index}>
+                {
+                    object.type == FormInputs.TEXT ||
+                    object.type == FormInputs.LONG_TEXT ||
+                    object.type == FormInputs.URL ?
+                    getTextInput(object, index)
+                    : object.type == FormInputs.IMAGE ?
+                    getImageInput(object, index)
+                    :
+                    getBooleanInput(object, index)
+
+                }
             </fieldset>
         
         ))
@@ -98,6 +197,8 @@ export function UniversiForm(props : formProps){
 
     function makeRequest(){
         props.requisition(convertToDTO(objects))
+        if(props.afterSave)
+            props.afterSave()
     }
 
     return(
