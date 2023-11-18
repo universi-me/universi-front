@@ -11,7 +11,7 @@ import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 import type { ContentCreate_ResponseDTO, ContentEdit_ResponseDTO } from "@/services/UniversimeApi/Capacity";
 import type { Category, ContentType } from "@/types/Capacity";
 import "./ManageMaterial.less";
-import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
+import { FormInputs, UniversiForm } from "./UniversiForm";
 
 export type ManageMaterialProps = {
     refreshMaterials: () => any;
@@ -83,18 +83,6 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
                 <h1 className="title">{ isNewMaterial ? "Criar" : "Editar" } material</h1>
             </div>
 
-            <UniversiForm objects={[
-                {DTOName: "name", label: "Nome do grupo", type: FormInputs.TEXT},
-                {DTOName: "description", label: "Descrição do grupo", type: FormInputs.LONG_TEXT},
-                {DTOName: "nickname", label: "Apelido do grupo", type: FormInputs.TEXT},
-                {DTOName: "groupType", label: "tipo de grupo", type: FormInputs.NONE, value: "CAMPUS"},
-                {DTOName: "imageUrl", label: "Link da imagem", type: FormInputs.URL},
-                {DTOName: "canHaveSubGroup", label: "Pode ter subgrupo?", type: FormInputs.NONE, value: true},
-                {DTOName: "isPublic", label: "é publico", type: FormInputs.NONE, value: true},
-                {DTOName: "canJoin", label: "pode entrar", type: FormInputs.NONE, value: true},
-                {DTOName: "isRootGroup", label: "é grupo raiz", type: FormInputs.NONE, value: false},
-                {DTOName: "parentGroupId", label: "id do grupo pai", type: FormInputs.NONE, value: context.group.id}
-            ]} requisition={UniversimeApi.Group.create}></UniversiForm>
 
             <div className="manage-material fields">
                 <fieldset>
