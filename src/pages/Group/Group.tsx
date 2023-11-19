@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
 import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, type GroupContextType, type GroupPageLoaderResponse, RefreshGroupOptions } from "@/pages/Group";
-import { ProfileBio, ProfileGroups } from "@/components/ProfileInfo";
+import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
 import { AuthContext } from "@/contexts/Auth";
 import "./Group.less";
 
@@ -24,11 +24,13 @@ export function GroupPage() {
     return (
         <GroupContext.Provider value={context}>
         <div className="group-page-container">
-            <div id="group-page">
-                <div>
-                    <ProfileBio profile={context.loggedData.profile} links={context.loggedData.links} organization={authContext.organization} />
-                    <ProfileGroups groups={context.loggedData.groups} />
-                </div>
+            <ProfileInfo
+                profile={context.loggedData.profile}
+                links={context.loggedData.links}
+                organization={authContext.organization}
+                groups={context.loggedData.groups}
+                id="group-page"
+            >
                 <div id="intro-tabs-wrapper">
                     <GroupIntro />
                     <div className="in-front-container">
@@ -36,7 +38,7 @@ export function GroupPage() {
                         <GroupTabRenderer tab={currentTab} />
                     </div>
                 </div>
-            </div>
+            </ProfileInfo>
         </div>
         </GroupContext.Provider>
     );

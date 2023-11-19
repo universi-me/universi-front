@@ -5,3 +5,10 @@ export function setStateAsValue(setter: Dispatch<SetStateAction<string>>) {
         setter(event.currentTarget.value);
     }
 }
+
+export function makeClassName(...names: (string | (string | undefined)[] | undefined)[]) {
+    const flatNames = names.flat();
+    return [...new Set(flatNames)]
+        .filter(n => !!n)
+        .join(" ");
+}

@@ -2,10 +2,11 @@ import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect, useMemo } from "react";
 
 import {
-    ProfileBio, ProfileGroups, ProfileRecommendSettingsButton,
+    ProfileRecommendSettingsButton,
     ProfileSettings, CompetencesSettings, ProfileDiscardChanges, ProfileContext,
     type ProfileContextType, type ProfilePageLoaderResponse
 } from '@/pages/Profile';
+import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
 import { UniversiModal } from "@/components/UniversiModal";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { AuthContext } from "@/contexts/Auth";
@@ -65,16 +66,12 @@ export function ProfilePage() {
     return (
         <ProfileContext.Provider value={profileContext} >
         <div id="profile-page">
-            <div className="content">
-                <div id="left-side">
-                    <ProfileBio profile={profileContext.profile} links={profileContext.profileListData.links} organization={auth.organization} />
-                </div>
-
-                <div id="right-side">
-                    <SelectionBar/>
-                    <ProfileRecommendSettingsButton />
-                </div>
-            </div>
+            <ProfileInfo className="content" profile={profileContext.profile}
+                links={profileContext.profileListData.links} organization={auth.organization}
+            >
+                <SelectionBar/>
+                <ProfileRecommendSettingsButton />
+            </ProfileInfo>
 
             {
                 showProfileSettings &&
