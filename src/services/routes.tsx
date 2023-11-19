@@ -20,6 +20,7 @@ import Recovery from "@/pages/Recovery/Recovery";
 import NewPassword from "@/pages/NewPassword/NewPassword";
 import ManageProfilePage, { ManageProfileLoader } from "@/pages/ManageProfile";
 import Homepage from "@/pages/Homepage";
+import SettingsPage from "@/pages/Settings";
 
 
 
@@ -96,6 +97,10 @@ export const router = createBrowserRouter([{
         element: <ManageGroupPage />,
         loader: ManageGroupLoader,
     },
+    {
+        path: "/settings",
+        element: <SettingsPage />,
+    }
   ]
 },
 ])
