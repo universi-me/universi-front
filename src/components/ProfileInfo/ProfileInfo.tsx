@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useContext, type HTMLAttributes } from "react";
+import { type PropsWithChildren, type HTMLAttributes } from "react";
 import { ProfileBio, ProfileGroups } from "@/components/ProfileInfo";
 
 import { type Profile } from "@/types/Profile";
