@@ -1,5 +1,6 @@
 import { MouseEvent, FocusEvent, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 import { UniversiModal } from "@/components/UniversiModal";
 import UniversimeApi from "@/services/UniversimeApi";
@@ -32,10 +33,18 @@ export function SignUpModal(props: SignUpModalProps) {
     const [emailAvailable, setEmailAvailable] = useState<boolean>(false);
     const [emailAvailableChecked, setEmailAvailableChecked] = useState<boolean>(false);
 
+    const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+    const [recaptchaRef, setRecaptchaRef] = useState<any>(null);
+
+
     const canSignUp = enableSignUp(username, email, password);
 
     const closeModal = () => props.toggleModal(false);
     const togglePassword = () => setShowPassword(!showPassword);
+
+    const handleRecaptchaChange = (token: string | null) => {
+        setRecaptchaToken(token);
+    };
 
     useEffect(() => {
         setUsernameAvailableChecked(false);
@@ -64,6 +73,8 @@ export function SignUpModal(props: SignUpModalProps) {
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [email])
+
+    const ENABLE_RECAPTCHA = import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1";
 
     return (
         <UniversiModal>
@@ -133,6 +144,15 @@ export function SignUpModal(props: SignUpModalProps) {
                         <p className={`bi number-special-char ${passwordValidationClass(numberOrSpecialChar(password))}`}>Números ou caracteres especiais</p>
                     </section>
 
+                    {
+                        !ENABLE_RECAPTCHA ? null :
+                            <center>
+                                <br/>
+                                <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
+                                <br/>
+                            </center>
+                    }
+
                     <div className="submit">
                         <button type="submit" className="create-account" onClick={createAccount}
                             disabled={!canSignUp} title={!canSignUp ? "Preencha todos os campos corretamente para poder se cadastrar" : undefined}>
@@ -146,17 +166,18 @@ export function SignUpModal(props: SignUpModalProps) {
 
     function createAccount(e: MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        UniversimeApi.User.signUp({ username, email, password })
+        UniversimeApi.User.signUp({ username, email, password, recaptchaToken })
             .then(res => {
-                if (!res.success)
+                if (!res.success) {
+                    recaptchaRef.reset();
                     SwalUtils.fireModal({
                         title: "Erro ao criar sua conta",
                         text: res.message ?? "Houve algo de errado em nosso sistema.",
                         icon: "error",
                     });
-
-                else
+                } else {
                     navigate("/login");
+                }
             })
     }
 }

@@ -6,22 +6,32 @@ import "../singin/signinForm.css"
 import {useState} from "react"
 import UniversimeApi from "@/services/UniversimeApi"
 import * as SwalUtils from "@/utils/sweetalertUtils"
-
+import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 export default function Recovery(){
 
     const [username, setUsername] = useState("")
     const [msg, setMsg] = useState<null | string>(null)
+    const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+    const [recaptchaRef, setRecaptchaRef] = useState<any>(null);
+
+    const handleRecaptchaChange = (token: string | null) => {
+        setRecaptchaToken(token);
+    };
 
     function handleRecover(){
         SwalUtils.fireToasty({title: "Verificando dados"})
-        UniversimeApi.User.recoverPassword({username})
+        UniversimeApi.User.recoverPassword({username, recaptchaToken})
         .then(res =>{
-            if(res.success)
+            if(res.success) {
                 setMsg(res.message ?? "Houve um erro")
+            } else {
+                recaptchaRef.reset();
+            }
         })
     }
 
+    const ENABLE_RECAPTCHA = import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1";
 
     return(
         <div>
@@ -42,6 +52,15 @@ export default function Recovery(){
                             required
                         />
                     </div>
+
+                    {
+                        !ENABLE_RECAPTCHA ? null :
+                            <center>
+                                <br/>
+                                <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
+                                <br/>
+                            </center>
+                    }
 
                     <button
                         type="submit"

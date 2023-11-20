@@ -25,8 +25,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         </AuthContext.Provider>
     );
 
-    async function signin(email: string, password: string) {
-        const response = await UniversimeApi.Auth.signin({ username: email, password });
+    async function signin(email: string, password: string, recaptchaToken: string | null) {
+        const response = await UniversimeApi.Auth.signin({ username: email, password, recaptchaToken });
 
         if (!response.success || response.body === undefined) {
             goTo("login");
