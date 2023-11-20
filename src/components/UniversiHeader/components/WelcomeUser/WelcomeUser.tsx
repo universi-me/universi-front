@@ -1,5 +1,5 @@
 import { useContext, useMemo, useState } from "react";
-import { Link, redirect } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { AuthContext } from "@/contexts/Auth";
 import "./WelcomeUser.less"
@@ -8,6 +8,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 
 export function WelcomeUser() {
     const auth = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const [profileClicked, setProfileClicked] = useState(false)
 
@@ -24,10 +25,13 @@ export function WelcomeUser() {
                 profileClicked 
                 ?
                     <div className="submenu-profile">
-                        <div className="submenu-item" onClick={()=>{location.href="/profile/"+auth.profile?.user.name}}>
+                        <div className="submenu-item" onClick={()=>{navigate("/profile/"+auth.profile?.user.name); setProfileClicked(false)}}>
                             Perfil
                         </div>
-                        <div className="submenu-item" onClick={()=>{auth.signout()}}>
+                        { auth.user?.accessLevel === "ROLE_ADMIN" && <div className="submenu-item" onClick={() => {navigate("/settings"); setProfileClicked(false)}}>
+                            Configurações
+                        </div> }
+                        <div className="submenu-item" onClick={()=>{auth.signout(); setProfileClicked(false)}}>
                             Sair
                         </div>
                     </div>
