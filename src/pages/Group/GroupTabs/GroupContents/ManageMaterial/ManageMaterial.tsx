@@ -83,19 +83,19 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
                 <h1 className="title">{ isNewMaterial ? "Criar" : "Editar" } material</h1>
             </div>
 
-            <UniversiForm objects={[
-                {DTOName: "name", label: "Nome do grupo", type: FormInputs.TEXT},
-                {DTOName: "description", label: "Descrição do grupo", type: FormInputs.LONG_TEXT},
-                {DTOName: "nickname", label: "Apelido do grupo", type: FormInputs.TEXT},
-                {DTOName: "groupType", label: "tipo de grupo", type: FormInputs.NONE, value: "CAMPUS"},
-                {DTOName: "imageUrl", label: "Link da imagem", type: FormInputs.IMAGE},
-                {DTOName: "canHaveSubGroup", label: "Pode ter subgrupo?", type: FormInputs.NONE, value: true},
-                {DTOName: "isPublic", label: "é publico", type: FormInputs.BOOLEAN, value: true},
-                {DTOName: "canJoin", label: "pode entrar", type: FormInputs.BOOLEAN, value: true},
-                {DTOName: "isRootGroup", label: "é grupo raiz", type: FormInputs.NONE, value: false},
-                {DTOName: "parentGroupId", label: "id do grupo pai", type: FormInputs.NONE, value: context.group.id}
-            ]}  requisition={UniversimeApi.Group.create}
+            <UniversiForm 
+            formTitle="material"
+            objects={[
+                {DTOName: "name", label: "Nome do material", type: FormInputs.TEXT},
+                {DTOName: "description", label: "Descrição do material", type: FormInputs.LONG_TEXT},
+                {DTOName: "url", label: "Link do material", type: FormInputs.URL},
+                {DTOName: "type", label: "Tipo do material", type: FormInputs.LIST, listObjects: AVAILABLE_MATERIAL_TYPES.map(([t] : [ContentType, string])=>({value: t, label: t}))},
+                {DTOName: "addCategoriesByIds", label: "Categorias", type: FormInputs.LIST, listObjects: availableCategories.map(t => ({value: t.id, label: t.name})), isListMulti: true},
+                {DTOName: "addFoldersById", label: "", type: FormInputs.NONE, value: context.currentContent?.id}
+            ]}  requisition={UniversimeApi.Capacity.createContent}
                 afterSave={() => {context.setEditMaterial(undefined); props.refreshMaterials()}}
+                isNew={context.editMaterial == null}
+                cancelClick={() => {context.setEditMaterial(undefined)}}
             ></UniversiForm>
 
             <div className="manage-material fields">

@@ -3,15 +3,19 @@ import { ReactNode, useState, useContext, ChangeEvent } from "react"
 
 import "./ManageMaterial.less"
 import "./UniversiForm.less"
-import { GroupContext } from "@/pages/Group"
+import { CATEGORY_SELECT_STYLES, GroupContext } from "@/pages/Group"
 import UniversimeApi from "@/services/UniversimeApi"
 import { arrayBufferToBase64 } from "@/utils/fileUtils"
+import Select from "react-select"
 
 export type formProps = {
 
     objects: FormObject[],
     requisition : any,
-    afterSave? : any
+    afterSave? : any,
+    isNew? : boolean,
+    cancelClick : () => void,
+    formTitle : string
     
 }
 
@@ -21,10 +25,12 @@ export type FormObject = {
     type : FormInputs,
     charLimit? : undefined | number,
     fileType? : undefined | string,
-    value? : undefined | any,
+    value? : undefined | any | any[],
     required? : undefined | boolean,
     options? : undefined | any[],
-    file?: undefined | any
+    file?: undefined | any,
+    isListMulti? : true | undefined,
+    listObjects? : any[]
 }
 
 export enum FormInputs {
@@ -35,12 +41,14 @@ export enum FormInputs {
     LIST,
     BOOLEAN,
     IMAGE,
-    NONE
+    NONE,
+    NUMBER
 }
 
 export function UniversiForm(props : formProps){
 
     const [objects, setObjects] = useState<FormObject[]>(props.objects);
+    const [canSave, setCanSave] = useState<boolean>(false)
     const MAX_TEXT_LENGTH = 50
     const MAX_LONG_TEXT_LENGTH = 150
     const MAX_URL_LENGTH = 100
@@ -84,7 +92,7 @@ export function UniversiForm(props : formProps){
 
     function getTextInput(object : FormObject, index : number){
         return (
-            <div>
+            <>
                 <legend>
                     {object.label}
                     {
@@ -100,7 +108,7 @@ export function UniversiForm(props : formProps){
                     }
                 </legend>
                 <input className="field-input" type="text" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)}/>
-            </div>
+            </>
         )
     }
 
@@ -168,6 +176,36 @@ export function UniversiForm(props : formProps){
         )
     }
 
+    const handleSelectChange = (index : number, newValue : any) => {
+        setObjects((oldObjects) =>{
+            const updatedObjects = [...oldObjects]
+            if(!updatedObjects[index].value)
+                updatedObjects[index].value = []
+            updatedObjects[index].value.push(newValue);
+            return updatedObjects
+        })
+    }
+
+    function getListInput(object : FormObject, index : number){
+        return(
+            <div>
+                <legend>{object.label}</legend>
+                <Select placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.isListMulti} options={object.listObjects}
+                onChange={(value) => handleSelectChange(index, value)}
+                noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
+                classNamePrefix="category-item"
+                styles={CATEGORY_SELECT_STYLES}
+                defaultValue={null}
+                />
+
+            </div>
+        )
+    }
+
+    function getNumberInput(object : FormObject, index : number){
+        return <></>
+    }
+
     function renderObjects() : ReactNode{
         return objects.map((object, index) =>(
             object.type == FormInputs.NONE ? <></> : 
@@ -179,8 +217,13 @@ export function UniversiForm(props : formProps){
                     getTextInput(object, index)
                     : object.type == FormInputs.IMAGE ?
                     getImageInput(object, index)
-                    :
+                    : object.type == FormInputs.BOOLEAN ? 
                     getBooleanInput(object, index)
+                    : object.type == FormInputs.LIST ?
+                    getListInput(object, index)
+                    : object.type == FormInputs.NUMBER ?
+                    getNumberInput(object, index)
+                    : <></>
 
                 }
             </fieldset>
@@ -201,19 +244,26 @@ export function UniversiForm(props : formProps){
             props.afterSave()
     }
 
-    return(
+    return(        
         <div className="manage-material fields">
+
+        <div className="header">
+            <img src="/assets/imgs/create-content.png" />
+            <h1 className="title">{ (props.isNew ? "Criar " : "Editar ")+props.formTitle } </h1>
+        </div>
+
         {
         renderObjects()
         }   
+
         <section className="operation-buttons">
-            <button type="button" className="cancel-button" onClick={() => {context?.setEditMaterial(undefined)}}>
+            <button type="button" className="cancel-button" onClick={props.cancelClick}>
                 <i className="bi bi-x-circle-fill" />
                 Cancelar
             </button>
             <button type="button" className="submit-button" onClick={makeRequest} /*disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}*/>
                 <i className="bi bi-check-circle-fill" />
-                "Salvar"
+                Salvar
             </button>
         </section>
         </div>
