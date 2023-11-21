@@ -10,6 +10,7 @@ import { arrayBufferToBase64 } from "@/utils/fileUtils";
 import type { FolderCreate_ResponseDTO, FolderEdit_ResponseDTO } from "@/services/UniversimeApi/Capacity";
 import type { Category } from "@/types/Capacity";
 import "./ManageContent.less";
+import { UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
 const MAX_NAME_LENGTH = 50;
 const MAX_DESC_LENGTH = 200;
@@ -63,6 +64,11 @@ export function ManageContent() {
     const isNewContent = context.editContent === null;
 
     return <UniversiModal>
+        {/* <UniversiForm
+        formTitle="Conteúdo"
+        isNew={context.editMaterial ==null}
+
+        /> */}
         <div id="manage-content">
 
             <div className="header">

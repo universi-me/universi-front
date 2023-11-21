@@ -286,7 +286,7 @@ export function UniversiForm(props : formProps){
 
                 <div className="header">
                     <img src="/assets/imgs/create-content.png" />
-                    <h1 className="title">{ (props.isNew ? "Criar " : "Editar ")+props.formTitle } </h1>
+                    <h1 className="title">{ props.formTitle } </h1>
                 </div>
 
                 {

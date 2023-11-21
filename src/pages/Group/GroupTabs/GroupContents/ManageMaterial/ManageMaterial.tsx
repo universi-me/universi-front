@@ -29,7 +29,8 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
     const [description, setDescription] = useState<string>(context?.editMaterial?.description ?? "");
     const [url, setUrl] = useState<string>(context?.editMaterial?.url ?? "");
     const [type, setType] = useState<ContentType>(context?.editMaterial?.type ?? "LINK");
-    // const [contentsIds, setContentsIds] = useState<string[]>((context?.editMaterial?.folders ?? []).map(c => c.id));
+    const [rating, setRating] = useState<number>(context?.editMaterial?.rating ?? 0);
+    const [contentsIds, setContentsIds] = useState<string[]>((context?.editMaterial?.folders ?? []).map(c => c.id));
     const [categoriesIds, setCategoriesIds] = useState<string[]>((context?.editMaterial?.categories ?? []).map(c => c.id));
 
     const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
@@ -62,15 +63,15 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
         return null;
 
     return <UniversiForm 
-            formTitle="material"
+            formTitle={context.editMaterial == null ? "Criar material" : "Editar material"}
             objects={[
-                {DTOName: "title", label: "Nome do material", type: FormInputs.TEXT},
-                {DTOName: "description", label: "Descrição do material", type: FormInputs.LONG_TEXT},
-                {DTOName: "rating", label: "Rating do material", type: FormInputs.LONG_TEXT},
-                {DTOName: "url", label: "Link do material", type: FormInputs.URL},
-                {DTOName: "type", label: "Tipo do material", type: FormInputs.LIST, listObjects: AVAILABLE_MATERIAL_TYPES.map(([t] : [ContentType, string])=>({value: t, label: t}))},
-                {DTOName: "addCategoriesByIds", label: "Categorias", type: FormInputs.LIST, listObjects: availableCategories.map(t => ({value: t.id, label: t.name})), isListMulti: true},
-                {DTOName: "addFoldersByIds", label: "", type: FormInputs.NONE, value: context.currentContent?.id}
+                {DTOName: "title", label: "Nome do material", type: FormInputs.TEXT, value: context.editMaterial?.title},
+                {DTOName: "description", label: "Descrição do material", type: FormInputs.LONG_TEXT, value: context.editMaterial?.description},
+                {DTOName: "rating", label: "Rating do material", type: FormInputs.NUMBER, value: context.editMaterial?.rating},
+                {DTOName: "url", label: "Link do material", type: FormInputs.URL, value: context.editMaterial?.url},
+                {DTOName: "type", label: "Tipo do material", type: FormInputs.LIST, value : context.editMaterial?.type, listObjects: AVAILABLE_MATERIAL_TYPES.map(([t] : [ContentType, string])=>({value: t, label: t}))},
+                {DTOName: "addCategoriesByIds", label: "Categorias", type: FormInputs.LIST, value: context.editMaterial?.categories, listObjects: availableCategories.map(t => ({value: t.id, label: t.name})), isListMulti: true},
+                {DTOName: "addFoldersByIds", label: "", type: FormInputs.NONE, value: context.editMaterial ? context.editMaterial.folders : context.currentContent?.id}
             ]}  requisition={UniversimeApi.Capacity.createContent}
                 callback={() => {context.setEditMaterial(undefined); props.refreshMaterials()}}
                 isNew={context.editMaterial == null}
