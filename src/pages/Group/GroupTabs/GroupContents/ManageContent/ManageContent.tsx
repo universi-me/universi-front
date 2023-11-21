@@ -10,7 +10,7 @@ import { arrayBufferToBase64 } from "@/utils/fileUtils";
 import type { FolderCreate_ResponseDTO, FolderEdit_ResponseDTO } from "@/services/UniversimeApi/Capacity";
 import type { Category } from "@/types/Capacity";
 import "./ManageContent.less";
-import { UniversiForm } from "@/components/UniversiForm/UniversiForm";
+import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
 const MAX_NAME_LENGTH = 50;
 const MAX_DESC_LENGTH = 200;
@@ -64,11 +64,18 @@ export function ManageContent() {
     const isNewContent = context.editContent === null;
 
     return <UniversiModal>
-        {/* <UniversiForm
-        formTitle="Conteúdo"
+        <UniversiForm
+        formTitle={context.editContent == null ? "Criar conteúdo" : "Editar conteúdo"}
         isNew={context.editMaterial ==null}
+        objects={[
+            {DTOName: "name", label: "Nome do conteúdo", type: FormInputs.TEXT, value: context.editContent?.name, required: true},
+            {DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: context.editContent?.description, required: true},
+            {DTOName: "image", label: "Imagem do conteúdo", type: FormInputs.IMAGE, value: context.editContent?.description},
+            {DTOName: "rating", label: "Rating do conteúdo", type: FormInputs.NUMBER, value: context.editContent?.rating},
+            {DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.LIST, value: context.editContent?.categories, },
 
-        /> */}
+        ]}
+        />
         <div id="manage-content">
 
             <div className="header">

@@ -230,7 +230,7 @@ export function UniversiForm(props : formProps){
                 noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
                 classNamePrefix="category-item"
                 styles={CATEGORY_SELECT_STYLES}
-                defaultValue={null}
+                defaultValue={object.value}
                 />
 
             </div>
