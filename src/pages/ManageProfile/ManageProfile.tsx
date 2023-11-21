@@ -110,6 +110,24 @@ export function ManageProfilePage() {
             }
         }
 
+        const { value: password, isConfirmed } = await SwalUtils.fireModal({
+            title: "Edição de perfil",
+            input: "password",
+            inputLabel: "Inserir senha para salvar as alterações",
+            inputPlaceholder: "Insira sua senha",
+            confirmButtonText: "Confirmar Alterações",
+            showCancelButton: true,
+            cancelButtonText: "Cancelar",
+            allowOutsideClick: true,
+            showCloseButton: true,
+            inputAttributes: {
+              autocapitalize: "off",
+              autocorrect: "off"
+            }
+        });
+        if (!isConfirmed)
+            return;
+
         UniversimeApi.Profile.edit({
             profileId: profile.id,
             name: firstname,
@@ -117,19 +135,14 @@ export function ManageProfilePage() {
             bio,
             gender: gender || undefined,
             imageUrl: newImageUrl,
+            rawPassword: password,
         }).then(async res => {
             if (!res.success)
                 throw new Error(res.message);
 
             const p = await authContext.updateLoggedUser();
             navigate(`/profile/${p!.user.name}`);
-        }).catch((reason: Error) => {
-            SwalUtils.fireModal({
-                title: "Erro ao salvar alterações de perfil",
-                text: reason.message,
-                icon: 'error',
-            });
-        }) 
+        })
     }
 
     function submitLinkChanges(e: MouseEvent<HTMLButtonElement>) {
