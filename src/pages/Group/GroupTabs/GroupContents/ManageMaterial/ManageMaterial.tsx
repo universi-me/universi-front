@@ -12,6 +12,7 @@ import type { ContentCreate_ResponseDTO, ContentEdit_ResponseDTO } from "@/servi
 import type { Category, ContentType } from "@/types/Capacity";
 import "./ManageMaterial.less";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
+import { TextValidation } from "@/components/UniversiForm/Validation/TextValidation";
 
 export type ManageMaterialProps = {
     refreshMaterials: () => any;
@@ -60,142 +61,21 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
     if (context.editMaterial === undefined)
         return null;
 
-    const canSave = (title.length > 0) && (description.length > 0) && (url.length > 0);
-    const isNewMaterial = context.editMaterial === null;
-
-    const contentTypeIcon = getContentTypeIcon(type);
-
-    const MATERIAL_TYPE_OPTIONS: [OptionInMenu<ContentType>, ContentType][] = AVAILABLE_MATERIAL_TYPES
-        .map(t => {
-            return [{
-                text: getContentTypeOptionText(t[0], t[1]),
-                className: "type-dropdown-option",
-                onSelect(data){ setType(data); },
-            }, t[0]]
-        });
-
-
-    return <UniversiModal>
-        <div id="manage-material">
-
-            <div className="header">
-                <img src="/assets/imgs/create-content.png" />
-                <h1 className="title">{ isNewMaterial ? "Criar" : "Editar" } material</h1>
-            </div>
-
-            <UniversiForm 
+    return <UniversiForm 
             formTitle="material"
             objects={[
-                {DTOName: "name", label: "Nome do material", type: FormInputs.TEXT},
+                {DTOName: "title", label: "Nome do material", type: FormInputs.TEXT},
                 {DTOName: "description", label: "Descrição do material", type: FormInputs.LONG_TEXT},
+                {DTOName: "rating", label: "Rating do material", type: FormInputs.LONG_TEXT},
                 {DTOName: "url", label: "Link do material", type: FormInputs.URL},
                 {DTOName: "type", label: "Tipo do material", type: FormInputs.LIST, listObjects: AVAILABLE_MATERIAL_TYPES.map(([t] : [ContentType, string])=>({value: t, label: t}))},
                 {DTOName: "addCategoriesByIds", label: "Categorias", type: FormInputs.LIST, listObjects: availableCategories.map(t => ({value: t.id, label: t.name})), isListMulti: true},
-                {DTOName: "addFoldersById", label: "", type: FormInputs.NONE, value: context.currentContent?.id}
+                {DTOName: "addFoldersByIds", label: "", type: FormInputs.NONE, value: context.currentContent?.id}
             ]}  requisition={UniversimeApi.Capacity.createContent}
-                afterSave={() => {context.setEditMaterial(undefined); props.refreshMaterials()}}
+                callback={() => {context.setEditMaterial(undefined); props.refreshMaterials()}}
                 isNew={context.editMaterial == null}
-                cancelClick={() => {context.setEditMaterial(undefined)}}
             ></UniversiForm>
 
-            <div className="manage-material fields">
-                <fieldset>
-                    <legend>
-                        Título do Material
-                        <div className="char-counter">
-                            {title.length} / {MAX_TITLE_LENGTH}
-                        </div>
-                    </legend>
-                    <input className="field-input" type="text" defaultValue={context.editMaterial?.title} onChange={setStateAsValue(setTitle)} maxLength={MAX_TITLE_LENGTH}/>
-                </fieldset>
-
-                <fieldset>
-                    <legend>
-                        Descrição
-                        <div className="char-counter">
-                            {description.length} / {MAX_DESC_LENGTH}
-                        </div>
-                    </legend>
-                    <textarea className="field-input" defaultValue={context.editMaterial?.description ?? undefined} onChange={setStateAsValue(setDescription)} maxLength={MAX_DESC_LENGTH} />
-                </fieldset>
-
-                <section className="url-wrapper">
-                    <fieldset className="type-fieldset">
-                        <legend>Tipo</legend>
-                        <DropdownMenu.Root>
-                            <DropdownMenu.Trigger asChild>
-                                <img className="material-type-trigger" src={`/assets/imgs/${contentTypeIcon}.png`} />
-                            </DropdownMenu.Trigger>
-
-                            <DropdownMenu.Content className="type-dropdown-menu" side="top">
-                                { MATERIAL_TYPE_OPTIONS.map(([def, data]) => renderOption(data, def)) }
-                            </DropdownMenu.Content>
-                        </DropdownMenu.Root>
-                    </fieldset>
-
-                    <fieldset className="url-fieldset">
-                        <legend>
-                            Link de acesso
-                            <div className="char-counter">{url.length}/{MAX_URL_LENGTH}</div>
-                        </legend>
-                        <input className="field-input" type="url" defaultValue={context.editMaterial?.url} onChange={setStateAsValue(setUrl)} maxLength={MAX_URL_LENGTH} />
-                    </fieldset>
-                </section>
-
-                <fieldset>
-                    <legend>Categorias</legend>
-                    <Select placeholder="Selecionar categorias..." className="category-select" isMulti options={availableCategories}
-                        onChange={(value) => {setCategoriesIds(value.map(v => v.id))}}
-                        defaultValue={ availableCategories.filter(c => context.editMaterial?.categories.map(c => c.id).includes(c.id)) } noOptionsMessage={()=>"Categoria Não Encontrada"}
-                        getOptionLabel={c => c.name} getOptionValue={c => c.id} classNamePrefix="category-item" styles={CATEGORY_SELECT_STYLES}
-                    />
-                </fieldset>
-
-
-                <section className="operation-buttons">
-                    <button type="button" className="cancel-button" onClick={() => {context.setEditMaterial(undefined)}}>
-                        <i className="bi bi-x-circle-fill" />
-                        Cancelar
-                    </button>
-                    <button type="button" className="submit-button" onClick={handleSaveMaterial} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
-                        <i className="bi bi-check-circle-fill" />
-                        { isNewMaterial ? "Criar" : "Salvar" }
-                    </button>
-                </section>
-            </div>
-        </div>
-    </UniversiModal>
-
-    function handleSaveMaterial() {
-        if (!context || context.editMaterial === undefined)
-            return;
-
-        if (context.editMaterial === null) {
-            UniversimeApi.Capacity.createContent({
-                title, description, url, type, addCategoriesByIds: categoriesIds, addFoldersByIds: context.currentContent?.id, rating: 5,
-                // todo: image upload
-            }).then(afterSave);
-        }
-
-        else {
-            const addCategoriesByIds = categoriesIds
-                .filter(c => undefined === context.editMaterial!.categories.find(check => c === check.id));
-            const removeCategoriesByIds = context.editMaterial.categories
-                .filter(c => undefined === categoriesIds.find(check => c.id === check))
-                .map(c => c.id);
-
-            UniversimeApi.Capacity.editContent({
-                id: context.editMaterial.id, title, description, url, type, addCategoriesByIds, removeCategoriesByIds
-                // todo: image upload
-                // todo: verify if editing contents will be a thing
-            }).then(afterSave);
-        }
-
-        function afterSave(response: ContentCreate_ResponseDTO | ContentEdit_ResponseDTO) {
-            context!.setEditMaterial(undefined);
-            props.refreshMaterials();
-        }
-    }
 }
 
 function getContentTypeIcon(type: ContentType) {

@@ -1,5 +1,4 @@
-import { ApiResponse } from "@/types/UniversimeApi"
-import { ReactNode, useState, useContext, ChangeEvent } from "react"
+import { ReactNode, useState, useContext, ChangeEvent, useEffect } from "react"
 
 import "./ManageMaterial.less"
 import "./UniversiForm.less"
@@ -7,14 +6,16 @@ import { CATEGORY_SELECT_STYLES, GroupContext } from "@/pages/Group"
 import UniversimeApi from "@/services/UniversimeApi"
 import { arrayBufferToBase64 } from "@/utils/fileUtils"
 import Select from "react-select"
+import { UniversiModal } from "../UniversiModal"
+import { Validation } from "./Validation/Validation"
+import { object } from "prop-types"
 
 export type formProps = {
 
     objects: FormObject[],
     requisition : any,
-    afterSave? : any,
     isNew? : boolean,
-    cancelClick : () => void,
+    callback : () => void,
     formTitle : string
     
 }
@@ -30,7 +31,8 @@ export type FormObject = {
     options? : undefined | any[],
     file?: undefined | any,
     isListMulti? : true | undefined,
-    listObjects? : any[]
+    listObjects? : any[],
+    validation? : Validation
 }
 
 export enum FormInputs {
@@ -55,6 +57,31 @@ export function UniversiForm(props : formProps){
 
     const context = useContext(GroupContext)
     const DEFAULT_IMAGE_PATH = "/assets/imgs/default-content.png";
+
+    useEffect(()=>{
+
+        objects.forEach(obj => { 
+            if(obj.type in [FormInputs.TEXT, FormInputs.LONG_TEXT, FormInputs.URL] && !obj.charLimit){
+                obj.charLimit = obj.type == FormInputs.TEXT ? MAX_TEXT_LENGTH : obj.type == FormInputs.LONG_TEXT ? MAX_LONG_TEXT_LENGTH : MAX_URL_LENGTH;
+            }
+        })
+
+    }, [])
+
+    useEffect(()=>{
+
+        let isValid = true
+
+        console.log(objects)
+
+        objects.forEach(obj => {
+            if(obj.validation && !obj.validation.validate(obj)) {
+                isValid = false
+            }
+        });
+        setCanSave(isValid)
+        
+    }, [objects])
 
     const handleChange = (index : number, newValue : any) => {
         setObjects((oldObjects) =>{
@@ -177,16 +204,26 @@ export function UniversiForm(props : formProps){
     }
 
     const handleSelectChange = (index : number, newValue : any) => {
+        console.log("AAAAAAAAAA", newValue.value)
+        console.log("AAAAAAAAAA", newValue)
         setObjects((oldObjects) =>{
             const updatedObjects = [...oldObjects]
-            if(!updatedObjects[index].value)
+            if(!updatedObjects[index].value && updatedObjects[index].isListMulti)
                 updatedObjects[index].value = []
-            updatedObjects[index].value.push(newValue);
+            if(updatedObjects[index].isListMulti){
+                newValue.forEach(value =>{
+                updatedObjects[index].value.push(value.value);
+                })
+            }
+            else
+                updatedObjects[index].value = newValue.value
             return updatedObjects
         })
     }
 
     function getListInput(object : FormObject, index : number){
+        if(!object.listObjects)
+            return
         return(
             <div>
                 <legend>{object.label}</legend>
@@ -232,6 +269,7 @@ export function UniversiForm(props : formProps){
     }
 
     const convertToDTO = (formObjects: FormObject[]) => {
+        console.log(formObjects)
         return formObjects.reduce((formData, currentObject) => {
             formData[currentObject.DTOName] = currentObject.value;
             return formData;
@@ -240,33 +278,37 @@ export function UniversiForm(props : formProps){
 
     function makeRequest(){
         props.requisition(convertToDTO(objects))
-        if(props.afterSave)
-            props.afterSave()
+        if(props.callback)
+            props.callback()
     }
 
     return(        
-        <div className="manage-material fields">
+    <UniversiModal>
+        <div id="manage-material">
+            <div className="manage-material fields">
 
-        <div className="header">
-            <img src="/assets/imgs/create-content.png" />
-            <h1 className="title">{ (props.isNew ? "Criar " : "Editar ")+props.formTitle } </h1>
+                <div className="header">
+                    <img src="/assets/imgs/create-content.png" />
+                    <h1 className="title">{ (props.isNew ? "Criar " : "Editar ")+props.formTitle } </h1>
+                </div>
+
+                {
+                renderObjects()
+                }   
+
+                <section className="operation-buttons">
+                    <button type="button" className="cancel-button" onClick={props.callback}>
+                        <i className="bi bi-x-circle-fill" />
+                        Cancelar
+                    </button>
+                    <button type="button" className="submit-button" onClick={makeRequest} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
+                        <i className="bi bi-check-circle-fill" />
+                        Salvar
+                    </button>
+                </section>
+            </div>
         </div>
-
-        {
-        renderObjects()
-        }   
-
-        <section className="operation-buttons">
-            <button type="button" className="cancel-button" onClick={props.cancelClick}>
-                <i className="bi bi-x-circle-fill" />
-                Cancelar
-            </button>
-            <button type="button" className="submit-button" onClick={makeRequest} /*disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}*/>
-                <i className="bi bi-check-circle-fill" />
-                Salvar
-            </button>
-        </section>
-        </div>
+    </UniversiModal>
     )
 
 }
