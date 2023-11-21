@@ -204,14 +204,12 @@ export function UniversiForm(props : formProps){
     }
 
     const handleSelectChange = (index : number, newValue : any) => {
-        console.log("AAAAAAAAAA", newValue.value)
-        console.log("AAAAAAAAAA", newValue)
         setObjects((oldObjects) =>{
             const updatedObjects = [...oldObjects]
             if(!updatedObjects[index].value && updatedObjects[index].isListMulti)
                 updatedObjects[index].value = []
             if(updatedObjects[index].isListMulti){
-                newValue.forEach(value =>{
+                newValue.forEach((value : any) =>{
                 updatedObjects[index].value.push(value.value);
                 })
             }
@@ -269,7 +267,6 @@ export function UniversiForm(props : formProps){
     }
 
     const convertToDTO = (formObjects: FormObject[]) => {
-        console.log(formObjects)
         return formObjects.reduce((formData, currentObject) => {
             formData[currentObject.DTOName] = currentObject.value;
             return formData;
