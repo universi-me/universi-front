@@ -77,7 +77,6 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
                 {DTOName: "id", label: "", type: FormInputs.NONE, value: context.editMaterial?.id}
             ]}  requisition={context.editMaterial ? UniversimeApi.Capacity.editContent : UniversimeApi.Capacity.createContent}
                 callback={() => {context.setEditMaterial(undefined); props.refreshMaterials()}}
-                isNew={context.editMaterial == null}
             ></UniversiForm>
 
 }

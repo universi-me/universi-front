@@ -63,80 +63,21 @@ export function ManageContent() {
     const canSave = (name.length > 0) && (description.length > 0);
     const isNewContent = context.editContent === null;
 
-    return <UniversiModal>
-        <UniversiForm
+    return<UniversiForm
         formTitle={context.editContent == null ? "Criar conteúdo" : "Editar conteúdo"}
-        isNew={context.editMaterial ==null}
         objects={[
             {DTOName: "name", label: "Nome do conteúdo", type: FormInputs.TEXT, value: context.editContent?.name, required: true},
             {DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: context.editContent?.description, required: true},
             {DTOName: "image", label: "Imagem do conteúdo", type: FormInputs.IMAGE, value: context.editContent?.description},
-            {DTOName: "rating", label: "Rating do conteúdo", type: FormInputs.NUMBER, value: context.editContent?.rating},
-            {DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.LIST, value: context.editContent?.categories, },
-
+            {DTOName: "rating", label: "Rating do conteúdo", type: FormInputs.NUMBER, value: context.editContent?.rating, charLimit: 5},
+            {DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.LIST, value: context.editContent?.categories.map((t) => ({value: t.id, label: t.name})), listObjects: availableCategories.map((t) => ({value: t.id, label: t.name})), isListMulti: true},
+            {DTOName: "groupId", label: "Id do grupo", type: FormInputs.NONE, value: context.group.id},
+            {DTOName: "groupPath", label: "Path do grupo", type: FormInputs.NONE, value: context.group.path},
+            {DTOName: "id", label: "id do content", type: FormInputs.NONE, value: context.editContent?.id}
         ]}
+        requisition = {context.editContent ? UniversimeApi.Capacity.editFolder : UniversimeApi.Capacity.createFolder}
+        callback={()=>{context.setEditContent(undefined); context.refreshData()}}
         />
-        <div id="manage-content">
-
-            <div className="header">
-                <img src="/assets/imgs/create-content.png"/>
-                <h1 className="title">{isNewContent ? "Criar" : "Editar"} conteúdo</h1>
-            </div>
-
-            <div className="fields">
-            <fieldset>
-                <legend>
-                    Título do Conteúdo
-                    <div className="char-counter" style={name.length >= MAX_NAME_LENGTH-5 ? {color: "red"} : {}}>
-                        {name.length} / {MAX_NAME_LENGTH}
-                    </div>
-                </legend>
-                <input className="field-input" type="text" defaultValue={context.editContent?.name} onChange={setStateAsValue(setName)} maxLength={MAX_NAME_LENGTH}/>
-            </fieldset>
-
-            <fieldset>
-                <legend>
-                    Descrição
-                    <div className="char-counter" style={description.length >= MAX_DESC_LENGTH-5 ? {color: "red"} : {}}>
-                        {description.length} / {MAX_DESC_LENGTH}
-                    </div>
-                </legend>
-                <textarea className="field-input" defaultValue={context.editContent?.description ?? undefined} onChange={setStateAsValue(setDescription)} maxLength={MAX_DESC_LENGTH} />
-            </fieldset>
-
-            <div className="multiple-buttons">
-                <div className="label-button">
-                    <legend>Categorias</legend>
-                    <Select placeholder="Selecionar categorias..." className="field-input category-select" isMulti options={availableCategories}
-                        onChange={(value) => {setCategoriesIds(value.map(v => v.id))}}
-                        defaultValue={ availableCategories.filter(c => context.editContent?.categories.map(c => c.id).includes(c.id)) } noOptionsMessage={()=>"Categoria Não Encontrada"}
-                        getOptionLabel={c => c.name} getOptionValue={c => c.id} classNamePrefix="category-item" styles={CATEGORY_SELECT_STYLES}
-                    />
-                </div>
-                <div className="image-wrapper">
-                    <img src={imageRender} className={"image-preview" + (imageRender === DEFAULT_IMAGE_PATH ? " default-image" : "")} />
-
-                    <fieldset className="label-button">
-                        <legend>Imagem de conteúdo</legend>
-                        <input type="file" style={{display: "none"}} id="file-input" accept="image/*" onChange={changeImage}/>
-                        <label htmlFor="file-input" className="image-button">
-                            Selecionar arquivo
-                        </label>
-                    </fieldset>
-                </div>
-            </div>
-
-
-            <section className="operation-buttons">
-                <button type="button" className="finish-button cancel-button" onClick={() => {context.setEditContent(undefined)}}><i className="bi bi-x-circle-fill" />Cancelar</button>
-                <button type="button" className="finish-button submit-button" onClick={handleSaveContent} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
-                    <i className="bi bi-check-circle-fill"></i>
-                    { isNewContent ? "Criar" : "Salvar" }
-                </button>
-            </section>
-            </div>
-        </div>
-    </UniversiModal>
 
     async function handleSaveContent() {
         if (!context || context.editContent === undefined)

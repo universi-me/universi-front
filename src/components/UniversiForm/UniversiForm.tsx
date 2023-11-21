@@ -14,7 +14,6 @@ export type formProps = {
 
     objects: FormObject[],
     requisition : any,
-    isNew? : boolean,
     callback : () => void,
     formTitle : string
     
@@ -238,7 +237,12 @@ export function UniversiForm(props : formProps){
     }
 
     function getNumberInput(object : FormObject, index : number){
-        return <></>
+        return(
+            <>
+                <legend>{object.label}</legend>
+                <input max={object.charLimit} type="number" value={object.value} className="field-input" onChange={(e) => {handleChange(index, e.target.value)}}/>
+            </>
+        )
     }
 
     function renderObjects() : ReactNode{
