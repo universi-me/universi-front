@@ -9,6 +9,7 @@ import Select from "react-select"
 import { UniversiModal } from "../UniversiModal"
 import { Validation } from "./Validation/Validation"
 import { object } from "prop-types"
+import { RequiredValidation } from "./Validation/RequiredValidation"
 
 export type formProps = {
 
@@ -63,6 +64,8 @@ export function UniversiForm(props : formProps){
             if(obj.type in [FormInputs.TEXT, FormInputs.LONG_TEXT, FormInputs.URL] && !obj.charLimit){
                 obj.charLimit = obj.type == FormInputs.TEXT ? MAX_TEXT_LENGTH : obj.type == FormInputs.LONG_TEXT ? MAX_LONG_TEXT_LENGTH : MAX_URL_LENGTH;
             }
+            if(!obj.validation && obj.required)
+                obj.validation = new RequiredValidation
         })
 
     }, [])
@@ -240,9 +243,23 @@ export function UniversiForm(props : formProps){
         return(
             <>
                 <legend>{object.label}</legend>
-                <input max={object.charLimit} type="number" value={object.value} className="field-input" onChange={(e) => {handleChange(index, e.target.value)}}/>
+                <input max={object.charLimit} type="number" value={object.value} className="field-input" onChange={(e) => {handleNumberChange(index, e.target.value)}}/>
             </>
         )
+    }
+
+    function handleNumberChange(index : number, newValue : any){
+
+        const obj = objects[index]
+
+        if(!obj)
+            return
+
+        if(obj.charLimit && newValue > obj.charLimit)
+            newValue = obj.charLimit
+
+        handleChange(index, newValue)
+
     }
 
     function renderObjects() : ReactNode{

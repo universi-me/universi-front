@@ -1,11 +1,12 @@
-import { Validation, ValidationParams } from "./Validation";
+import { FormObject } from "../UniversiForm";
+import { Validation } from "./Validation";
 
-export class RequiredValidation implements Validation<any>{
+export class RequiredValidation implements Validation{
 
-    validate(required: boolean | undefined, value: any, params?: ValidationParams | undefined): boolean {
-        if(!required)
+    validate(object : FormObject): boolean {
+        if(!object.required)
             return true
-        if(required && value != null && value != undefined)
+        if(object.required && (object.value != null || object.value != undefined))
             return true
         return false
     }

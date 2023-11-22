@@ -31,6 +31,15 @@ export type GroupContextType = null | {
     editMaterial: Content | null | undefined;
     setEditMaterial(material: Content | null | undefined): any;
 
+    /**
+     * The group being edited/created.
+     *
+     * If `null`, should handle creation of a group. If has a value, should handle
+     * group edit. If `undefined`, no group is being edited nor created.
+     */
+    editGroup: Group | null | undefined;
+    setEditGroup(group: Group | null | undefined) : any;
+
     loggedData: {
         isParticipant: boolean;
         profile:       Profile;

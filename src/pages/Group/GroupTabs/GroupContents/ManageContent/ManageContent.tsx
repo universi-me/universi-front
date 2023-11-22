@@ -68,7 +68,7 @@ export function ManageContent() {
         objects={[
             {DTOName: "name", label: "Nome do conteúdo", type: FormInputs.TEXT, value: context.editContent?.name, required: true},
             {DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: context.editContent?.description, required: true},
-            {DTOName: "image", label: "Imagem do conteúdo", type: FormInputs.IMAGE, value: context.editContent?.description},
+            {DTOName: "image", label: "Imagem do conteúdo", type: FormInputs.IMAGE, value: context.editContent?.image},
             {DTOName: "rating", label: "Rating do conteúdo", type: FormInputs.NUMBER, value: context.editContent?.rating, charLimit: 5},
             {DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.LIST, value: context.editContent?.categories.map((t) => ({value: t.id, label: t.name})), listObjects: availableCategories.map((t) => ({value: t.id, label: t.name})), isListMulti: true},
             {DTOName: "groupId", label: "Id do grupo", type: FormInputs.NONE, value: context.group.id},
