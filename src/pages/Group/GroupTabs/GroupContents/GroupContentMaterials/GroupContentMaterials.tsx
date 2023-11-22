@@ -189,12 +189,9 @@ export function GroupContentMaterials() {
     async function handleWatchedButton(material : Content, event : any){
 
         event.stopPropagation();
-        console.log(material)
 
         let nextStatus : ContentStatusEnum = material.contentStatus.status == "DONE"  ? "NOT_VIEWED" : "DONE"
 
-        console.log(nextStatus)
-        console.log(material.contentStatus.status)
 
 
         await UniversimeApi.Capacity.createContentStatus({contentId : material.id});
@@ -242,7 +239,6 @@ export function GroupContentMaterials() {
     function expand(id : string){
 
         let containers = getVideoContainers()
-        console.log(containers)
 
         containers.popupContainer?.classList.remove("mini-player")
         containers.popupContainer?.classList.add("popup-container")

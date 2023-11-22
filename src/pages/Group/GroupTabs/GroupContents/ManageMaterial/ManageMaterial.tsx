@@ -62,7 +62,6 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
     if (context.editMaterial === undefined)
         return null;
 
-    console.log(context.editMaterial?.categories)
 
     return <UniversiForm 
             formTitle={context.editMaterial == null ? "Criar material" : "Editar material"}

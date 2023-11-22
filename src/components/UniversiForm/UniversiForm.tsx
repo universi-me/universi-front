@@ -74,8 +74,6 @@ export function UniversiForm(props : formProps){
 
         let isValid = true
 
-        console.log(objects)
-
         objects.forEach(obj => {
             if(obj.validation && !obj.validation.validate(obj)) {
                 isValid = false
