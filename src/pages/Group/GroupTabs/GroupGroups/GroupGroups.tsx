@@ -21,7 +21,7 @@ export function GroupGroups() {
     const authContext = useContext(AuthContext);
 
     if(groupContext == null)
-        return
+        return <></>
 
     const OPTIONS_DEFINITION: OptionInMenu<Group>[] = [
         {
