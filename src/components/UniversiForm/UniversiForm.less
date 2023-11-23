@@ -1,3 +1,6 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+@import url(/src/layouts/border-radius.less);
 .image-wrapper {
     display: flex;
     flex-direction: row;
@@ -28,4 +31,239 @@
             cursor: pointer;
         }
 
+}
+.checkbox-input{
+    .checkbox{
+        width: 1rem !important;
+    }
+    legend{
+        display: contents !important;
+    }
+    fieldset{
+        display: flex;
+        justify-content: space-between;
+    }
+}
+#universi-form-container {
+    @left-padding: 2.1rem;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: white;
+    border-radius: var(--border-radius);
+
+    width: 45rem;
+    overflow: hidden;
+
+    box-sizing: 0px 4px 4px 0px rgba(0, 0, 0, 0.50);
+
+    @header-padding: 1rem;
+    @header-image-size: 3rem;
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        padding: @header-padding @left-padding;
+
+        background-color: @primary-color;
+        border-bottom: 5px solid @secondary-color;
+
+        color: white;
+
+        gap: 1rem;
+
+        img {
+            width: @header-image-size;
+            height: @header-image-size;
+        }
+
+        .title {
+            color: @font-color-v1;
+        }
+    }
+
+    .universi-form-container.fields {
+        max-height: calc(90vh - (@header-padding * 2) - @header-image-size);
+        overflow: auto;
+
+        .url-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: start;
+
+            .type-fieldset {
+                padding-right: calc(@left-padding / 2);
+
+                .material-type-trigger {
+                    height: 3rem;
+                    padding: .5rem;
+                    aspect-ratio: 1;
+
+                    background-color: @card-background-color;
+
+                    cursor: pointer;
+                }
+
+                .type-dropdown-menu {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    background-color: @card-background-color;
+                    border-radius: @border-radius;
+
+                    border: 1px solid @primary-color;
+
+                    .type-dropdown-arrow {
+                        fill: @card-background-color
+                    }
+
+                    .type-dropdown-option {
+                        outline: none;
+
+                        .material-type-icon {
+                            height: calc(4rem - 10px);
+                            cursor: pointer;
+                            padding: 5px;
+                            margin: 5px;
+
+                            border-radius: 10px;
+
+                            &:hover {
+                                outline: 2px solid @primary-color;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+
+            .url-fieldset {
+                width: 100%;
+                padding-left: 0;
+            }
+        }
+
+        fieldset {
+            border: none;
+            padding: 0 @left-padding;
+            margin-top: 1rem;
+
+            &:not(:last-child) {
+                margin-bottom: 1rem;
+            }
+
+            .field-input {
+                width: 100%;
+                background-color: @card-background-color;
+            }
+
+            input {
+                font-size: 1rem;
+                padding: 1rem .5rem;
+            }
+
+
+            textarea {
+                min-height: 2em;
+                max-height: 8rem;
+                padding: .5rem;
+
+                resize: vertical;
+            }
+
+            input, textarea, .material-type-trigger {
+                border: none;
+                border-radius: .625rem;
+
+                &:focus {
+                    outline: solid 2px @primary-color;
+                }
+            }
+
+            > legend {
+                display: flex;
+                flex-direction: row;
+                align-items: end;
+                justify-content: space-between;
+
+                width: 100%;
+
+                font-size: 1.25rem;
+                padding-bottom: 0.75rem;
+
+                .char-counter {
+                    display: inline;
+                    margin-right: .25em;
+
+                    font-size: .75em;
+                }
+            }
+        }
+
+        .operation-buttons {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+            margin: 2.1rem;
+            gap: 1rem;
+
+            > button {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                border: none;
+                width: 7.5em;
+                max-height: 2rem;
+                padding: .75em 0;
+                border-radius: .625rem;
+
+                gap: .5rem;
+
+                color: @font-color-v1;
+                font-size: .9rem;
+                font-weight: @font-weight-bold;
+
+                cursor: pointer;
+                will-change: background-color;
+
+                &.cancel-button {
+                    background-color: @secondary-color;
+                }
+
+                &.submit-button {
+                    &:not(:disabled) {
+                        background-color: @primary-color;
+                        &:hover {
+                            background-color: @secondary-color;
+                        }
+                    }
+
+                    &:disabled {
+                        background-color: @font-color-v3;
+                    }
+                }
+
+                .bi {
+                    width: 1rem;
+                    font-size: 1.2rem;
+                    margin: 0;
+                }
+            }
+        }
+    }
+}
+input:required:valid, textarea:required:valid{
+    border: 2px solid var(--success-color) !important;
+}
+input:required:invalid, textarea:required:invalid{
+    border: 2px solid var(--wrong-invalid-color) !important;
 }

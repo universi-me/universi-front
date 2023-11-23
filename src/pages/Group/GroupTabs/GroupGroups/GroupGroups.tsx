@@ -31,7 +31,7 @@ export function GroupGroups() {
                 groupContext.setEditGroup(data);
             },
             hidden() {
-                return (groupContext?.group.admin.id !== groupContext?.loggedData.profile.id || groupContext.loggedData.profile.id == groupContext.group.organization?.admin.id);
+                return (groupContext?.group.admin.id !== groupContext?.loggedData.profile.id && groupContext.loggedData.profile.id == groupContext.group.organization?.admin.id);
             },
         }
     ];
@@ -72,13 +72,15 @@ export function GroupGroups() {
                         {DTOName: "nickname", label: "Apelido do grupo", type: FormInputs.TEXT, value: groupContext.editGroup?.name, required: true, validation: new TextValidation},
                         {DTOName: "name", label: "Nome do grupo", type: FormInputs.TEXT, value: groupContext.editGroup?.nickname, required: true, validation: new TextValidation},
                         {DTOName: "description", label: "Descrição do grupo", type: FormInputs.LONG_TEXT, value: groupContext.editGroup?.description, required: true, validation: new TextValidation},
-                        {DTOName: "imageUrl", label: "Imagem do grupo", type: FormInputs.IMAGE, value: groupContext.editGroup ? groupImageUrl(groupContext.editGroup) : undefined},
+                        {DTOName: "imageUrl", label: "Imagem do grupo", type: FormInputs.IMAGE, value: (groupContext.editGroup ? groupImageUrl(groupContext.editGroup) : undefined)},
                         {DTOName: "groupType", label: "Tipo do grupo", type: FormInputs.LIST, value: groupContext.editGroup?.type, listObjects: groupTypes.map((t) => ({value: t[0], label: t[1]})), required: true, },
                         {DTOName: "canHaveSubgroup", label: "Pode criar grupo", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.canCreateGroup},
                         {DTOName: "isPublic", label: "Grupo público", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.publicGroup},
                         {DTOName: "canJoin", label: "Usuários podem entrar", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.canEnter},
                         {DTOName: "isRootGroup", label: "Grupo raiz", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.rootGroup},
                         {DTOName: "parentGroupId", label: "Id do grupo pai (grupo atual)", type: FormInputs.NONE, value: groupContext.group.id},
+                        {DTOName: "groupPath", label: "path", type: FormInputs.NONE, value: groupContext.editGroup?.path},
+
                     ]}
                     requisition={groupContext.editGroup ? UniversimeApi.Group.update : UniversimeApi.Group.create}
                     callback={()=>{groupContext.setEditGroup(undefined); groupContext.refreshData()}}

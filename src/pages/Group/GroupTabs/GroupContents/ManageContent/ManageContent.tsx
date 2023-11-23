@@ -1,10 +1,8 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import Select, { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select';
+import  { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select';
 
 import UniversimeApi from "@/services/UniversimeApi";
-import { UniversiModal } from "@/components/UniversiModal";
 import { GroupContext } from "@/pages/Group/GroupContext";
-import { setStateAsValue } from "@/utils/tsxUtils";
 import { arrayBufferToBase64 } from "@/utils/fileUtils";
 
 import type { FolderCreate_ResponseDTO, FolderEdit_ResponseDTO } from "@/services/UniversimeApi/Capacity";
@@ -12,8 +10,6 @@ import type { Category } from "@/types/Capacity";
 import "./ManageContent.less";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
-const MAX_NAME_LENGTH = 50;
-const MAX_DESC_LENGTH = 200;
 
 const DEFAULT_IMAGE_PATH = "/assets/imgs/default-content.png";
 
@@ -70,7 +66,7 @@ export function ManageContent() {
             {DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: context.editContent?.description, required: true},
             {DTOName: "image", label: "Imagem do conteúdo", type: FormInputs.IMAGE, value: context.editContent?.image},
             {DTOName: "rating", label: "Rating do conteúdo", type: FormInputs.NUMBER, value: context.editContent?.rating, charLimit: 5},
-            {DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.LIST, value: context.editContent?.categories.map((t) => ({value: t.id, label: t.name})), listObjects: availableCategories.map((t) => ({value: t.id, label: t.name})), isListMulti: true},
+            {DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.LIST, value: context.editContent?.categories.map((t) => t.id), listObjects: availableCategories.map((t) => ({value: t.id, label: t.name})), isListMulti: true},
             {DTOName: "groupId", label: "Id do grupo", type: FormInputs.NONE, value: context.group.id},
             {DTOName: "groupPath", label: "Path do grupo", type: FormInputs.NONE, value: context.group.path},
             {DTOName: "id", label: "id do content", type: FormInputs.NONE, value: context.editContent?.id}

@@ -1,15 +1,15 @@
 import { ReactNode, useState, useContext, ChangeEvent, useEffect } from "react"
 
-import "./ManageMaterial.less"
 import "./UniversiForm.less"
-import { CATEGORY_SELECT_STYLES, GroupContext } from "@/pages/Group"
+import { GroupContext, CATEGORY_SELECT_STYLES } from "@/pages/Group"
 import UniversimeApi from "@/services/UniversimeApi"
 import { arrayBufferToBase64 } from "@/utils/fileUtils"
-import Select from "react-select"
+import Select, { CSSObjectWithLabel, GroupBase, StylesConfig } from "react-select"
+import CreatableSelect from "react-select"
 import { UniversiModal } from "../UniversiModal"
 import { Validation } from "./Validation/Validation"
-import { object } from "prop-types"
 import { RequiredValidation } from "./Validation/RequiredValidation"
+import { Category } from "@/types/Capacity"
 
 export type formProps = {
 
@@ -28,11 +28,11 @@ export type FormObject = {
     fileType? : undefined | string,
     value? : undefined | any | any[],
     required? : undefined | boolean,
-    options? : undefined | any[],
     file?: undefined | any,
     isListMulti? : true | undefined,
     listObjects? : any[],
-    validation? : Validation
+    validation? : Validation,
+    listCanCreate? : boolean
 }
 
 export enum FormInputs {
@@ -110,13 +110,6 @@ export function UniversiForm(props : formProps){
         return undefined;
     }
 
-    function getInput(object : FormObject){
-        if(object.type == FormInputs.TEXT || object.type == FormInputs.LONG_TEXT || object.type == FormInputs.URL)
-            return "text"
-        else if(object.type == FormInputs.FILE)
-            return "file"
-    }
-
     function getTextInput(object : FormObject, index : number){
         return (
             <>
@@ -134,7 +127,12 @@ export function UniversiForm(props : formProps){
                         </div>
                     }
                 </legend>
-                <input className="field-input" type="text" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)}/>
+                {
+                    object.type == FormInputs.LONG_TEXT ? 
+                        <textarea className="field-input" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)} required={object.required}/>
+                    :
+                        <input className="field-input" type="text" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)} required={object.required}/>
+                }
             </>
         )
     }
@@ -154,7 +152,7 @@ export function UniversiForm(props : formProps){
                 <img src={imageBuffer} className={"image-preview "+((imageBuffer === DEFAULT_IMAGE_PATH) ? "default-image" : "")}/>
                 <fieldset className="label-button">
                     <legend>{object.label}</legend>
-                    <input type="file" style={{display: "none"}} id="file-input" accept="image/*" onChange={(e) =>{changeFile(e, index)}}/>
+                    <input type="file" style={{display: "none"}} id="file-input" accept="image/*" onChange={(e) =>{changeFile(e, index)}} required={object.required}/>
                     <label htmlFor="file-input" className="image-button">
                         Selecionar arquivo
                     </label>
@@ -196,7 +194,7 @@ export function UniversiForm(props : formProps){
             <div className="checkbox-input">
                 <fieldset>
                     <legend>{object.label}</legend>
-                    <input id={index.toString()} name={index.toString()} checked={object.value} type="checkbox" className="field-input checkbox" onChange={(e) =>{handleChange(index, e.target.checked)}}></input>
+                    <input id={index.toString()} name={index.toString()} checked={object.value} type="checkbox" className="field-input checkbox" onChange={(e) =>{handleChange(index, e.target.checked)}} required={object.required}></input>
                 </fieldset>
             </div>
 
@@ -225,13 +223,26 @@ export function UniversiForm(props : formProps){
         return(
             <div>
                 <legend>{object.label}</legend>
-                <Select placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.isListMulti} options={object.listObjects}
-                onChange={(value) => handleSelectChange(index, value)}
-                noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
-                classNamePrefix="category-item"
-                styles={CATEGORY_SELECT_STYLES}
-                defaultValue={object.value}
-                />
+                {
+                    object.listCanCreate != undefined && object.listCanCreate ? 
+                        <CreatableSelect isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.isListMulti} options={object.listObjects}
+                        onChange={(value) => handleSelectChange(index, value)}
+                        noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
+                        classNamePrefix="category-item"
+                        styles={CATEGORY_SELECT_STYLES}
+                        defaultValue={object.value}
+                        required={object.required}
+                    />
+                    :
+                        <Select placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.isListMulti} options={object.listObjects}
+                        onChange={(value) => handleSelectChange(index, value)}
+                        noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
+                        classNamePrefix="category-item"
+                        styles={CATEGORY_SELECT_STYLES}
+                        defaultValue={Array.isArray(object.value)? object.listObjects.filter((item)=>object.value.includes(item.value)) : object.value != undefined ? object.listObjects.find((item)=> item.value == object.value) : null}
+                        required={object.required}
+                        />
+                }
 
             </div>
         )
@@ -241,7 +252,7 @@ export function UniversiForm(props : formProps){
         return(
             <>
                 <legend>{object.label}</legend>
-                <input max={object.charLimit} type="number" value={object.value} className="field-input" onChange={(e) => {handleNumberChange(index, e.target.value)}}/>
+                <input max={object.charLimit} type="number" value={object.value} className="field-input" onChange={(e) => {handleNumberChange(index, e.target.value)}} required={object.required}/>
             </>
         )
     }
@@ -300,8 +311,8 @@ export function UniversiForm(props : formProps){
 
     return(        
     <UniversiModal>
-        <div id="manage-material">
-            <div className="manage-material fields">
+        <div id="universi-form-container">
+            <div className="universi-form-container fields">
 
                 <div className="header">
                     <img src="/assets/imgs/create-content.png" />

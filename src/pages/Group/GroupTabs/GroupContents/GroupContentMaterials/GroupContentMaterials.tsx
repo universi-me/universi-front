@@ -55,6 +55,7 @@ export function GroupContentMaterials() {
     return (
         <section id="materials" className="group-tab">
             <div className="heading top-container">
+                <div className="content-title">{groupContext.currentContent.name}</div>
                 <div className="go-right">
                     <Filter setter={setFilterMaterials} placeholderMessage={`Buscar em ${groupContext.group.name}`}/>
                         {  
