@@ -181,6 +181,7 @@ export function GroupEmailFilterPage() {
             const failedDelete = deleteRes.filter(f => !f.success);
 
             if (failedCreate.length + failedEdit.length + failedDelete.length === 0) {
+                refreshPage();
                 return;
             }
 
