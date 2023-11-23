@@ -36,7 +36,7 @@ export function GroupEmailFilterPage() {
     }
 
     const currentEmailFilters = emailFilters.filter(f => f.state !== "DELETED");
-    const canSave = emailFilters.filter(f => f.state !== undefined);
+    const canSave = undefined !== emailFilters.find(f => f.state !== undefined);
 
     const FILTER_TYPE_OPTIONS: OptionInMenu<EmailFilterOnList>[] = [{
         text: "Terminado em",
@@ -50,7 +50,7 @@ export function GroupEmailFilterPage() {
             emailFiltersDispatch({ type: "EDIT", filter: {...data, regex: true} });
         },
     }]
-    
+
 
     return <div id="email-filter-settings">
         <SettingsTitle>Filtros de email</SettingsTitle>
@@ -98,7 +98,7 @@ export function GroupEmailFilterPage() {
         </section>
 
         <div className="buttons-wrapper">
-            <button type="button" className="submit" onClick={submitChanges} disabled={!canSave}>Salvar alterações</button>
+            <button type="button" className="submit" onClick={submitChanges} disabled={!canSave} title={canSave ? undefined : "Faça uma alteração para poder salvar"}>Salvar alterações</button>
         </div>
     </div>
 
