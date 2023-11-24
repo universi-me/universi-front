@@ -59,6 +59,23 @@ export function ManageContent() {
     const canSave = (name.length > 0) && (description.length > 0);
     const isNewContent = context.editContent === null;
 
+    function handleCreateOption(value:any){
+        return UniversimeApi.Capacity.createCategory({name: value, image: ""})
+        .then(createResponse =>{
+            if(createResponse.success){
+                return UniversimeApi.Capacity.categoryList()
+                .then(response =>{
+                    if (response.success && response.body) {
+                        setAvailableCategories(response.body.categories);
+
+                        const options = response.body.categories.map(t => ({ value: t.id, label: t.name }));
+                        return options;
+                    }
+                })
+            }
+        }) 
+    }
+
     return<UniversiForm
         formTitle={context.editContent == null ? "Criar conteúdo" : "Editar conteúdo"}
         objects={[
@@ -66,7 +83,7 @@ export function ManageContent() {
             {DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: context.editContent?.description, required: true},
             {DTOName: "image", label: "Imagem do conteúdo", type: FormInputs.IMAGE, value: context.editContent?.image},
             {DTOName: "rating", label: "Rating do conteúdo", type: FormInputs.NUMBER, value: context.editContent?.rating, charLimit: 5},
-            {DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.LIST, value: context.editContent?.categories.map((t) => t.id), listObjects: availableCategories.map((t) => ({value: t.id, label: t.name})), isListMulti: true},
+            {DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.LIST, value: context.editContent?.categories.map((t) => t.id), listObjects: availableCategories.map((t) => ({value: t.id, label: t.name})), isListMulti: true, listCanCreate: true, onCreate: handleCreateOption},
             {DTOName: "groupId", label: "Id do grupo", type: FormInputs.NONE, value: context.group.id},
             {DTOName: "groupPath", label: "Path do grupo", type: FormInputs.NONE, value: context.group.path},
             {DTOName: "id", label: "id do content", type: FormInputs.NONE, value: context.editContent?.id}

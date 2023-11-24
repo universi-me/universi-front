@@ -5,7 +5,7 @@ import { GroupContext, CATEGORY_SELECT_STYLES } from "@/pages/Group"
 import UniversimeApi from "@/services/UniversimeApi"
 import { arrayBufferToBase64 } from "@/utils/fileUtils"
 import Select, { CSSObjectWithLabel, GroupBase, StylesConfig } from "react-select"
-import CreatableSelect from "react-select"
+import CreatableSelect from "react-select/creatable"
 import { UniversiModal } from "../UniversiModal"
 import { Validation } from "./Validation/Validation"
 import { RequiredValidation } from "./Validation/RequiredValidation"
@@ -33,6 +33,7 @@ export type FormObject = {
     listObjects? : any[],
     validation? : Validation,
     listCanCreate? : boolean
+    onCreate? : undefined | ((value : any) =>any) 
 }
 
 export enum FormInputs {
@@ -220,26 +221,39 @@ export function UniversiForm(props : formProps){
     function getListInput(object : FormObject, index : number){
         if(!object.listObjects)
             return
+        const [optionsList, setOptionsList] = useState(object.listObjects);
+        
+        function createOption(inputValue : string){
+            if(!object.onCreate)
+                return
+            object.onCreate(inputValue)
+            .then((options : any)=>{
+                console.log(options)
+                setOptionsList(options)
+            })
+        }
+
         return(
             <div>
                 <legend>{object.label}</legend>
                 {
                     object.listCanCreate != undefined && object.listCanCreate ? 
-                        <CreatableSelect isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.isListMulti} options={object.listObjects}
+                        <CreatableSelect isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.isListMulti} options={optionsList}
                         onChange={(value) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
                         classNamePrefix="category-item"
                         styles={CATEGORY_SELECT_STYLES}
-                        defaultValue={object.value}
+                        defaultValue={Array.isArray(object.value)? optionsList.filter((item)=>object.value.includes(item.value)) : object.value != undefined ? optionsList.find((item)=> item.value == object.value) : null}
                         required={object.required}
+                        onCreateOption={createOption}
                     />
                     :
-                        <Select placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.isListMulti} options={object.listObjects}
+                        <Select placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.isListMulti} options={optionsList}
                         onChange={(value) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
                         classNamePrefix="category-item"
                         styles={CATEGORY_SELECT_STYLES}
-                        defaultValue={Array.isArray(object.value)? object.listObjects.filter((item)=>object.value.includes(item.value)) : object.value != undefined ? object.listObjects.find((item)=> item.value == object.value) : null}
+                        defaultValue={Array.isArray(object.value)? optionsList.filter((item)=>object.value.includes(item.value)) : object.value != undefined ? optionsList.find((item)=> item.value == object.value) : null}
                         required={object.required}
                         />
                 }
