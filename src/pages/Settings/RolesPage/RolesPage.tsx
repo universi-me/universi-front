@@ -12,7 +12,7 @@ import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import { type Profile } from "@/types/Profile";
-import { UserAccessLevelLabel, type UserAccessLevel } from "@/types/User";
+import { UserAccessLevelLabel, type UserAccessLevel, compareAccessLevel } from "@/types/User";
 import { type Optional } from "@/types/utils";
 import "./RolesPage.less";
 
@@ -35,7 +35,16 @@ export function RolesPage() {
         return null;
     }
 
-    const filteredParticipants = participants.filter(p => p.firstname?.toLocaleLowerCase().includes(filter.toLocaleLowerCase()));
+    const filteredParticipants = participants
+        .filter(p => p.firstname?.toLocaleLowerCase().includes(filter.toLocaleLowerCase()))
+        .toSorted((a, b) => {
+            if (a.user.accessLevel !== b.user.accessLevel) {
+                return compareAccessLevel(a.user.accessLevel!, b.user.accessLevel!);
+            }
+
+            return getFullName(a).localeCompare(getFullName(b));
+        });
+
     const CHANGE_ROLE_OPTIONS: OptionInMenu<Profile>[] = Object.entries(UserAccessLevelLabel).map(([role, label]) => ({
         text: label,
         onSelect(data) {
