@@ -53,8 +53,8 @@ export function RolesPage() {
         <SettingsTitle>Configurar administradores</SettingsTitle>
         {/* todo: put description */}
         <section id="search-submit-wrapper">
-            <input type="search" onChange={setStateAsValue(setFilter)} />
-            <button type="button" onClick={submitChanges} className="submit" disabled={!canSubmit}>Salvar mudanças</button>
+            <input type="search" placeholder="Pesquisar usuário" onChange={setStateAsValue(setFilter)} />
+            <button type="button" onClick={submitChanges} className="submit" disabled={!canSubmit} title={canSubmit ? undefined : "Faça uma alteração primeiro"}>Salvar mudanças</button>
         </section>
 
         <section id="participants-list">
