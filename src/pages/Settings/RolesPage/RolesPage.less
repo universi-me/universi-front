@@ -71,7 +71,11 @@
             }
 
             .info {
-                margin: .5em .5em;
+                @margin-y: .5rem;
+                margin-top: @margin-y;
+                margin-bottom: @margin-y;
+                margin-left: auto;
+                margin-right: 1rem;
             }
 
             .set-role-trigger {
@@ -87,6 +91,10 @@
                 padding: .5em;
 
                 cursor: pointer;
+
+                &:disabled {
+                    cursor: default;
+                }
 
                 .bi {
                     margin-left: .5em;

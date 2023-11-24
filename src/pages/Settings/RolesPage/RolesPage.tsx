@@ -68,6 +68,8 @@ export function RolesPage() {
 
         <section id="participants-list">
         { filteredParticipants.map(profile => {
+            const isOwnProfile = auth.profile!.id === profile.id;
+
             return <div className="profile-item" key={profile.id}>
                 <ProfileImage imageUrl={getProfileImageUrl(profile)} className="profile-image" />
                 <div className="info">
@@ -75,7 +77,7 @@ export function RolesPage() {
                     <p className="profile-bio">{profile.bio}</p>
                 </div>
                 <DropdownMenu.Root>
-                    <DropdownMenu.Trigger asChild>
+                    <DropdownMenu.Trigger asChild disabled={isOwnProfile} title={isOwnProfile ? "Você não pode alterar seu próprio nível de acesso" : undefined}>
                         <button type="button" className="set-role-trigger">
                             { UserAccessLevelLabel[profile.user.accessLevel!] }
                             <span className="bi"/>
