@@ -1,0 +1,211 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+@import url(/src/layouts/transitions.less);
+@import url(/src/layouts/border-radius.less);
+
+#email-filter-settings {
+    .create-new-filter {
+        width: fit-content;
+        margin-top: .5rem;
+    }
+
+    .email-filter-list {
+        margin-top: 1rem;
+
+        .email-filter-item {
+            &:not(:last-of-type) {
+                @margin-size: .75rem;
+
+                padding-bottom: @margin-size;
+                margin-bottom: @margin-size;
+                border-bottom: solid 1px @card-item-color;
+            }
+
+            .enabled-delete-wrapper {
+                display: flex;
+                flex-direction: row;
+                align-items: end;
+                justify-content: space-between;
+
+                margin-bottom: .5rem;
+
+                .enabled-wrapper {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+
+                    .filter-enabled-root {
+                        @radix-switch-width: 2.5rem;
+                        @radix-switch-height: 1.5rem;
+                        @radix-thumb-diameter: @radix-switch-height;
+
+                        width: @radix-switch-width;
+                        height: @radix-switch-height;
+                        margin-right: .5rem;
+
+                        border-radius: 9999px;
+                        border: none;
+                        outline: 2px solid @primary-color;
+
+                        box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+
+                        cursor: pointer;
+
+                        &:focus {
+                            outline: 2px solid @secondary-color;
+                        }
+
+                        &:not([data-state='checked']) {
+                            background-color: @card-background-color;
+                        }
+
+                        &[data-state='checked'] {
+                            background-color: @card-item-color;
+
+                            .filter-enabled-thumb {
+                                transform: translateX(calc(@radix-switch-width - @radix-thumb-diameter));
+                                background-color: @primary-color;
+                            }
+                        }
+
+                        .filter-enabled-thumb {
+                            display: block;
+                            width: @radix-thumb-diameter;
+                            height: @radix-thumb-diameter;
+                            background-color: #FFF;
+                            border-radius: 50%;
+                            outline: 2px solid @primary-color;
+
+                            transition: transform 100ms;
+                            will-change: transform;
+                        }
+                    }
+                }
+
+                .delete-button {
+                    background: transparent;
+                    border: none;
+
+                    color: @font-color-v2;
+                    font-size: 1.5rem;
+
+                    cursor: pointer;
+                    will-change: color;
+                    transition: @hover-transition-duration color;
+
+                    &:hover {
+                        color: @wrong-invalid-color;
+                    }
+                }
+            }
+
+            .filter-type-email-wrapper {
+                @email-font-size: 1rem;
+                @email-padding: .5rem;
+                @trigger-width: 9.25em;
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+
+                .filter-type-trigger {
+                    background-color: @card-item-color;
+
+                    border: none;
+                    border-radius: .625rem;
+                    padding: @email-padding;
+                    width: @trigger-width;
+
+                    font-size: @email-font-size;
+
+                    cursor: pointer;
+
+                    .bi {
+                        margin-left: .5em;
+                    }
+
+                    &[data-state="open"] {
+                        .bi::before {
+                            content: "\F286";
+                        }
+                    }
+                    
+                    &[data-state="closed"] {
+                        .bi::before {
+                            content: "\F282";
+                        }
+                    }
+                }
+
+                .filter-type-dropdown-menu {
+                    background-color: @card-item-color;
+                    border: solid 1px @card-background-color;
+
+                    border-radius: .625rem;
+
+                    overflow: hidden;
+
+                    .dropdown-options-item {
+                        padding: .5em 1rem;
+                        font-size: @email-font-size;
+
+                        cursor: pointer;
+
+                        &:hover {
+                            outline: none;
+                            background-color: @card-background-color;
+                        }
+                    }
+                }
+
+                .filter-email-input {
+                    font-size: @email-font-size;
+                    padding: @email-padding;
+
+                    background-color: @card-item-color;
+                    border: none;
+                    border-radius: .625rem;
+
+                    width: calc(100% - @trigger-width - 1em);
+                }
+            }
+        }
+    }
+
+    .buttons-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: end;
+
+        margin-top: 1rem;
+        width: 100%;
+
+        > button {
+            padding: .5em 1em;
+            border: none;
+
+            font-size: 1rem;
+            text-transform: uppercase;
+            font-weight: @font-weight-bold;
+
+            cursor: pointer;
+
+            & + button {
+                margin-left: 1rem;
+            }
+
+            &.submit {
+                color: @font-color-v1;
+                background-color: @primary-color;
+                border-radius: .625rem;
+
+                &[disabled] {
+                    background-color: @card-item-color;
+                    color: @font-color-v2;
+                }
+            }
+        }
+    }
+}
