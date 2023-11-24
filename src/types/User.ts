@@ -8,3 +8,9 @@ export type User = {
     needProfile:    boolean;
     accessLevel?:   UserAccessLevel;
 }
+
+export const UserAccessLevelLabel: { [k in UserAccessLevel]: string } = {
+    ROLE_ADMIN: "Administrador",
+    ROLE_DEV: "Desenvolvedor",
+    ROLE_USER: "Usuário",
+}
