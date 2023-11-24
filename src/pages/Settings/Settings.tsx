@@ -19,7 +19,7 @@ export function SettingsPage() {
         { outlet ?? <>
             <SettingsTitle>Configurações</SettingsTitle>
 
-            <SettingsMoveTo title="Administração" description="Gerenciar Níveis de acesso dos usuários da plataforma" to="roles" />
+            <SettingsMoveTo title="Administração" description="Gerenciar nível de acesso dos usuários da plataforma" to="roles" />
             <SettingsMoveTo title="Emails" description="Configurar emails que podem ser cadastrados no Universi.me" to="#" />
             <SettingsMoveTo title="Tema de cores" description="Configurar tema de cores da plataforma" to="#"/>
             <SettingsMoveTo title="Analytics" description="Ver detalhes do monitoramento com Google Analytics" to="#"/>
