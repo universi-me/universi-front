@@ -19,6 +19,14 @@ export type Group = {
     organization:      Group | null;
 };
 
+export type GroupEmailFilter = {
+    id:      string;
+    enabled: boolean;
+    regex:   boolean;
+    email:   string;
+    added:   string;
+};
+
 export type GroupType = "INSTITUTION" | "CAMPUS" | "COURSE" | "PROJECT" | "CLASSROOM" | "MONITORIA" | "LABORATORY"
                       | "ACADEMIC_CENTER" | "DEPARTMENT" | "STUDY_GROUP";
 
