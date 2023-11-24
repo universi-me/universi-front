@@ -4,7 +4,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
-import { SettingsTitle, type RolesPageLoaderResponse, RolesPageFetch } from "@/pages/Settings";
+import { SettingsTitle, type RolesPageLoaderResponse, RolesPageFetch, SettingsDescription } from "@/pages/Settings";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { getFullName, getProfileImageUrl } from "@/utils/profileUtils";
@@ -51,7 +51,7 @@ export function RolesPage() {
 
     return <div id="roles-settings">
         <SettingsTitle>Configurar administradores</SettingsTitle>
-        {/* todo: put description */}
+        <SettingsDescription>Configure os níveis de acesso dos usuários do Universi.me</SettingsDescription>
         <section id="search-submit-wrapper">
             <input type="search" placeholder="Pesquisar usuário" onChange={setStateAsValue(setFilter)} />
             <button type="button" onClick={submitChanges} className="submit" disabled={!canSubmit} title={canSubmit ? undefined : "Faça uma alteração primeiro"}>Salvar mudanças</button>
