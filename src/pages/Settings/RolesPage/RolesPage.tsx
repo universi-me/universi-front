@@ -37,7 +37,7 @@ export function RolesPage() {
 
     const filteredParticipants = participants
         .filter(p => p.firstname?.toLocaleLowerCase().includes(filter.toLocaleLowerCase()))
-        .toSorted((a, b) => {
+        .sort((a, b) => {
             if (a.user.accessLevel !== b.user.accessLevel) {
                 return compareAccessLevel(a.user.accessLevel!, b.user.accessLevel!);
             }
