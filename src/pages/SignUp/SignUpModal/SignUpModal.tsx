@@ -5,6 +5,7 @@ import ReCAPTCHA from "react-google-recaptcha-enterprise";
 import { UniversiModal } from "@/components/UniversiModal";
 import UniversimeApi from "@/services/UniversimeApi";
 import { isEmail } from "@/utils/regexUtils";
+import { setStateAsValue } from "@/utils/tsxUtils";
 import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
 import { enableSignUp } from "./helperFunctions";
 import * as SwalUtils from "@/utils/sweetalertUtils";
@@ -15,12 +16,16 @@ export type SignUpModalProps = {
     toggleModal: (state: boolean) => any;
 };
 
+const FIRST_NAME_MAX_LENGTH = 21;
+const LAST_NAME_MAX_LENGTH = 21;
 
 const USERNAME_CHAR_REGEX = /[a-z0-9_.-]/
 
 export function SignUpModal(props: SignUpModalProps) {
     const navigate = useNavigate();
 
+    const [firstname, setFirstname] = useState<string>("");
+    const [lastname, setLastname] = useState<string>("");
     const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -36,6 +41,8 @@ export function SignUpModal(props: SignUpModalProps) {
     const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
     const [recaptchaRef, setRecaptchaRef] = useState<any>(null);
 
+    const isFirstnameFull = (firstname.length) >= FIRST_NAME_MAX_LENGTH;
+    const isLastnameFull = (lastname.length) >= LAST_NAME_MAX_LENGTH;
 
     const canSignUp = enableSignUp(username, email, password);
 
@@ -88,6 +95,24 @@ export function SignUpModal(props: SignUpModalProps) {
                 </div>
 
                 <form>
+                <fieldset id="fieldset-name">
+                        <label className="legend" htmlFor="firstname">
+                            <span className="counter-wrapper">
+                                <legend className="required-input">Nome</legend>
+                                <span className={`counter ${isFirstnameFull ? 'full-counter' : ''}`}>{firstname.length} / {FIRST_NAME_MAX_LENGTH}</span>
+                            </span>
+                            <input type="text" name="firstname" id="firstname" placeholder="Insira seu nome" defaultValue={""} onChange={setStateAsValue(setFirstname)} required maxLength={FIRST_NAME_MAX_LENGTH} />
+                        </label>
+
+                        <label className="legend" htmlFor="lastname">
+                            <span className="counter-wrapper">
+                                <legend className="required-input">Sobrenome</legend>
+                                <span className={`counter ${isLastnameFull ? 'full-counter' : ''}`}>{lastname.length} / {LAST_NAME_MAX_LENGTH}</span>
+                            </span>
+
+                            <input type="text" name="lastname" id="lastname" placeholder="Insira seu sobrenome" defaultValue={""} onChange={setStateAsValue(setLastname)} required maxLength={LAST_NAME_MAX_LENGTH} />
+                        </label>
+                </fieldset>
                 <fieldset id="email-fieldset">
                         <legend>Email</legend>
                         <input type="text" name="email" maxLength={255}
@@ -166,7 +191,7 @@ export function SignUpModal(props: SignUpModalProps) {
 
     function createAccount(e: MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        UniversimeApi.User.signUp({ username, email, password, recaptchaToken })
+        UniversimeApi.User.signUp({ firstname, lastname, username, email, password, recaptchaToken })
             .then(res => {
                 if (!res.success) {
                     recaptchaRef.reset();

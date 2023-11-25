@@ -3,6 +3,8 @@ import { api } from "./api";
 import { Group } from "@/types/Group";
 
 export type UserSignUp_RequestDTO = {
+    firstname: string;
+    lastname:  string;
     username: string;
     email:    string;
     password: string;
@@ -38,6 +40,8 @@ export type UserOrganization_ResponseDTO = ApiResponse<{organization : Group | n
 
 export async function signUp(body: UserSignUp_RequestDTO) {
     return (await api.post<UserSignUp_ResponseDTO>("/signup", {
+        firstname: body.firstname,
+        lastname: body.lastname,
         username: body.username,
         email:    body.email,
         password: body.password,
