@@ -101,7 +101,7 @@ export function SignUpModal(props: SignUpModalProps) {
                                 <legend className="required-input">Nome</legend>
                                 <span className={`counter ${isFirstnameFull ? 'full-counter' : ''}`}>{firstname.length} / {FIRST_NAME_MAX_LENGTH}</span>
                             </span>
-                            <input type="text" name="firstname" id="firstname" defaultValue={""} onChange={setStateAsValue(setFirstname)} required maxLength={FIRST_NAME_MAX_LENGTH} />
+                            <input type="text" name="firstname" id="firstname" placeholder="Insira seu nome" defaultValue={""} onChange={setStateAsValue(setFirstname)} required maxLength={FIRST_NAME_MAX_LENGTH} />
                         </label>
 
                         <label className="legend" htmlFor="lastname">
@@ -110,7 +110,7 @@ export function SignUpModal(props: SignUpModalProps) {
                                 <span className={`counter ${isLastnameFull ? 'full-counter' : ''}`}>{lastname.length} / {LAST_NAME_MAX_LENGTH}</span>
                             </span>
 
-                            <input type="text" name="lastname" id="lastname" defaultValue={""} onChange={setStateAsValue(setLastname)} required maxLength={LAST_NAME_MAX_LENGTH} />
+                            <input type="text" name="lastname" id="lastname" placeholder="Insira seu sobrenome" defaultValue={""} onChange={setStateAsValue(setLastname)} required maxLength={LAST_NAME_MAX_LENGTH} />
                         </label>
                 </fieldset>
                 <fieldset id="email-fieldset">
