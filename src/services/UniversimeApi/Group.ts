@@ -1,4 +1,4 @@
-import type { Group, GroupType, GroupEmailFilter } from "@/types/Group";
+import type { Group, GroupType, GroupEmailFilter, GroupEmailFilterType } from "@/types/Group";
 import type { Profile } from "@/types/Profile";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
@@ -42,14 +42,14 @@ export type GroupIdOrPath_RequestDTO = {
 export type GroupEmailFilterAdd_RequestDTO = GroupIdOrPath_RequestDTO & {
     email:      string;
     isEnabled?: boolean;
-    isRegex?:   boolean;
+    type?:      GroupEmailFilterType;
 };
 
 export type GroupEmailFilterEdit_RequestDTO = GroupIdOrPath_RequestDTO & {
     emailFilterId: string;
     email?:        string;
     isEnabled?:    boolean;
-    isRegex?:      boolean;
+    type?:         GroupEmailFilterType;
 };
 
 export type GroupEmailFilterDelete_RequestDTO = GroupIdOrPath_RequestDTO & {
@@ -147,7 +147,7 @@ export async function addEmailFilter(body: GroupEmailFilterAdd_RequestDTO) {
         groupPath: body.groupPath,
         email: body.email,
         enabled: body.isEnabled,
-        isRegex: body.isRegex,
+        type: body.type,
     })).data;
 }
 
@@ -158,7 +158,7 @@ export async function editEmailFilter(body: GroupEmailFilterEdit_RequestDTO) {
         groupEmailFilterId: body.emailFilterId,
         email: body.email,
         enabled: body.isEnabled,
-        isRegex: body.isRegex,
+        type: body.type,
     })).data;
 }
 
