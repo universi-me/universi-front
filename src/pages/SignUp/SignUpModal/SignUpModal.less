@@ -85,6 +85,37 @@
                 font-weight: @font-weight-semibold;
             }
 
+            &#fieldset-name {
+                display: flex;
+                flex-direction: column;
+    
+    
+                label {
+                    display: flex;
+                    flex-direction: column;
+    
+                    &:not(:last-of-type) {
+                        margin-bottom: 1rem;
+                    }
+    
+                    input {
+                        width: 100%;
+                    }
+                }
+    
+                .counter-wrapper {
+                    display: flex;
+                    width: 100%;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: end;
+    
+                    .counter {
+                        font-size: .75em;
+                    }
+                }
+            }
+
             &.invalid-email {
                 input[name="email"] {
                     background-color: #F5E0E0;
