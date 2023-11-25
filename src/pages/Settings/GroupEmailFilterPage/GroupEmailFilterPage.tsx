@@ -11,7 +11,7 @@ import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import { type GroupEmailFilterLoaderResponse, GroupEmailFilterFetch } from "./GroupEmailFilterLoader";
-import { type GroupEmailFilter } from "@/types/Group";
+import { GroupEmailFilterTypeToLabel, type GroupEmailFilter, type GroupEmailFilterType } from "@/types/Group";
 import "./GroupEmailFilter.less";
 
 let NEW_FILTER_ID = 0;
@@ -38,18 +38,12 @@ export function GroupEmailFilterPage() {
     const currentEmailFilters = emailFilters.filter(f => f.state !== "DELETED");
     const canSave = undefined !== emailFilters.find(f => f.state !== undefined);
 
-    const FILTER_TYPE_OPTIONS: OptionInMenu<EmailFilterOnList>[] = [{
-        text: "Terminado em",
+    const FILTER_TYPE_OPTIONS: OptionInMenu<EmailFilterOnList>[] = Object.keys(GroupEmailFilterTypeToLabel).map(type => ({
+        text: GroupEmailFilterTypeToLabel[type as GroupEmailFilterType],
         onSelect(data) {
-            emailFiltersDispatch({ type: "EDIT", filter: {...data, regex: false} });
+            emailFiltersDispatch({ type: "EDIT", filter: { ...data, type: type as GroupEmailFilterType } });
         },
-    },
-    {
-        text: "Padrão RegEx",
-        onSelect(data) {
-            emailFiltersDispatch({ type: "EDIT", filter: {...data, regex: true} });
-        },
-    }]
+    }));
 
 
     return <div id="email-filter-settings">
@@ -81,7 +75,7 @@ export function GroupEmailFilterPage() {
                     <DropdownMenu.Root>
                         <DropdownMenu.Trigger asChild disabled={!filter.enabled}>
                             <button type="button" className="filter-type-trigger">
-                                { filter.regex ? "Padrão RegEx" : "Terminado em" }
+                                { GroupEmailFilterTypeToLabel[filter.type] }
                                 <span className="bi" />
                             </button>
                         </DropdownMenu.Trigger>
@@ -107,7 +101,7 @@ export function GroupEmailFilterPage() {
             return undefined;
 
         if (action.type === "CREATE") {
-            return [...state, { added: "", email: "@exemplo.com", enabled: true, id: (--NEW_FILTER_ID).toString(), regex: false, state: "NEW" }];
+            return [...state, { added: "", email: "@exemplo.com", enabled: true, id: (--NEW_FILTER_ID).toString(), type: "END_WITH", state: "NEW" }];
         }
 
         if (action.type === "DELETE") {
@@ -172,8 +166,8 @@ export function GroupEmailFilterPage() {
         const toDeleteResponses = emailFilters!.filter(f => f.state === "DELETED");
 
         Promise.all([
-            Promise.all(toCreateFilters.map(f => UniversimeApi.Group.addEmailFilter({ email: f.email, groupId: auth.organization!.id, isEnabled: f.enabled, isRegex: f.regex }))),
-            Promise.all(toEditFilters.map(f => UniversimeApi.Group.editEmailFilter({ emailFilterId: f.id, groupId: auth.organization!.id, email: f.email, isEnabled: f.enabled, isRegex: f.regex }))),
+            Promise.all(toCreateFilters.map(f => UniversimeApi.Group.addEmailFilter({ email: f.email, groupId: auth.organization!.id, isEnabled: f.enabled, type: f.type }))),
+            Promise.all(toEditFilters.map(f => UniversimeApi.Group.editEmailFilter({ emailFilterId: f.id, groupId: auth.organization!.id, email: f.email, isEnabled: f.enabled, type: f.type }))),
             Promise.all(toDeleteResponses.map(f => UniversimeApi.Group.deleteEmailFilter({ emailFilterId: f.id, groupId: auth.organization!.id }))),
         ]).then(([createRes, editRes, deleteRes]) => {
             const failedCreate = createRes.filter(f => !f.success);

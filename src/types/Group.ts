@@ -22,9 +22,20 @@ export type Group = {
 export type GroupEmailFilter = {
     id:      string;
     enabled: boolean;
-    regex:   boolean;
+    type:    GroupEmailFilterType;
     email:   string;
     added:   string;
+};
+
+export type GroupEmailFilterType = "END_WITH" | "START_WITH" | "CONTAINS" | "EQUALS" | "MASK" | "REGEX";
+
+export const GroupEmailFilterTypeToLabel = {
+    "END_WITH":     "Terminando em",
+    "START_WITH":   "Começando com",
+    "CONTAINS":     "Contendo",
+    "EQUALS":       "Igual a",
+    "MASK":         "Máscara ( * )",
+    "REGEX":        "Padrão RegEx",
 };
 
 export type GroupType = "INSTITUTION" | "CAMPUS" | "COURSE" | "PROJECT" | "CLASSROOM" | "MONITORIA" | "LABORATORY"
