@@ -1,0 +1,140 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+#roles-settings {
+    #search-submit-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        width: 100%;
+        margin-bottom: 1rem;
+
+        font-size: 1rem;
+
+        @submit-width: 11em;
+        @padding: .75em .25em;
+        @search-width: calc(100% - 1em - @submit-width);
+
+        input[type="search"] {
+            padding: @padding;
+            border-radius: .625rem;
+            border: none;
+
+            width: @search-width;
+
+            &:focus {
+                outline-color: @primary-color;
+            }
+        }
+
+        .submit {
+            padding: @padding;
+            border-radius: .625rem;
+            border: none;
+
+            width: @submit-width;
+
+            background-color: @primary-color;
+
+            color: @font-color-v1;
+            text-transform: uppercase;
+            font-weight: @font-weight-bold;
+
+            cursor: pointer;
+
+            &:disabled {
+                background-color: @card-item-color;
+                color: @font-color-v2;
+                cursor: default;
+            }
+        }
+    }
+
+    #participants-list {
+        .profile-item {
+            display: flex;
+            flex-direction: row;
+            align-items: start;
+
+            @image-width: 7.5rem;
+            @set-role-width: 9.5rem;
+            @role-font-size: 1rem;
+
+            &:not(:last-child) {
+                margin-bottom: 1.5rem;
+            }
+
+            .profile-image {
+                width: @image-width;
+            }
+
+            .info {
+                @margin: .5rem;
+                margin-top: @margin;
+                margin-bottom: @margin;
+                margin-left: @margin;
+                margin-right: 1rem;
+            }
+
+            .set-role-trigger {
+                width: @set-role-width;
+                font-size: @role-font-size;
+
+                margin-top: .5em;
+                margin-left: auto;
+
+                border: none;
+                border-radius: .625rem;
+                background-color: @card-item-color;
+                padding: .5em;
+
+                cursor: pointer;
+
+                &:disabled {
+                    cursor: default;
+                }
+
+                .bi {
+                    margin-left: .5em;
+                }
+
+                &[data-state="open"] .bi::before {
+                    content: "\F286";
+                }
+
+                &[data-state="closed"] .bi::before {
+                    content: "\F282";
+                }
+            }
+
+            .set-role-menu {
+                width: @set-role-width;
+                font-size: @role-font-size;
+
+                background-color: @card-item-color;
+                border-radius: .625rem;
+                border: solid 2px @card-background-color;
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                overflow: hidden;
+
+                .dropdown-options-item {
+                    width: @set-role-width;
+                    text-align: center;
+
+                    padding: .75em 0;
+                    cursor: pointer;
+
+                    &:hover{
+                        background-color: @card-background-color;
+                    }
+                }
+            }
+        }
+    }
+}
