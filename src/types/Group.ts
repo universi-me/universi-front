@@ -17,6 +17,7 @@ export type Group = {
     rootGroup:         boolean;
     bannerImage:       string | null;
     organization:      Group | null;
+    canEdit:           boolean;
 };
 
 export type GroupEmailFilter = {
