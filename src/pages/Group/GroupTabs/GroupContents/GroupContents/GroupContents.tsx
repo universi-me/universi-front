@@ -33,7 +33,7 @@ export function GroupContents() {
                 groupContext.setEditContent(data);
             },
             hidden() {
-                return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
+                return !groupContext?.group.canEdit;
             },
         },
         {
@@ -42,7 +42,7 @@ export function GroupContents() {
             className: "delete",
             onSelect: handleDeleteContent,
             hidden() {
-                return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
+                return !groupContext?.group.canEdit;
             },
         }
     ]
@@ -53,12 +53,10 @@ export function GroupContents() {
                 <div className="go-right">
                     <Filter setter={setFilterContents} placeholderMessage={`Buscar em Conteúdos ${groupContext.group.name}`}/>
                     {  
-                        authContext.profile?.id == groupContext.group.admin.id || authContext.profile?.id == groupContext.group.organization?.admin.id ?
+                        groupContext.group.canEdit &&
                         <ActionButton name="Criar conteúdo" buttonProps={{
                             onClick(){ groupContext.setEditContent(null); }
                         }} />
-                        :
-                        <></>
                     }
                 </div>
             </div>
