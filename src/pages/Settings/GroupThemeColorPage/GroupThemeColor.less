@@ -1,36 +1,31 @@
 #theme-color-settings {
-  max-width: 600px;
-  margin: 0 auto;
+  padding: 20px;
 }
 
 .theme-color-list {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 2rem; 
+  justify-content: space-around;
+  margin-top: 20px;
 }
 
 .theme-color-item {
-  width: 4rem; 
-  height: 4rem; 
-  margin-top: 2rem;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-
-  &:hover {
-    transform: scale(1.1);
-  }
+  margin: 0 10px;
 }
 
-.selected {
-  border: 0.2rem solid #fff; /* Adapte a borda conforme necessário */
+.theme-color-item.selected {
+  border: 2px solid #000;
 }
 
 .save-button {
   display: flex;
   justify-content: flex-end;
+  margin-top: 20px;
 }
 
-.spacer {
+.save-button .spacer {
   flex-grow: 1;
 }
