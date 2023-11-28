@@ -21,7 +21,7 @@ export function SettingsPage() {
 
             <SettingsMoveTo title="Administradores" description="Gerenciar administradores da plataforma" to="#" />
             <SettingsMoveTo title="Emails" description="Configurar emails que podem ser cadastrados no Universi.me" to="email-filter" />
-            <SettingsMoveTo title="Tema de cores" description="Configurar tema de cores da plataforma" to="#"/>
+            <SettingsMoveTo title="Tema de cores" description="Configurar tema de cores da plataforma" to="theme-color"/>
             <SettingsMoveTo title="Analytics" description="Ver detalhes do monitoramento com Google Analytics" to="#"/>
         </> }
         </div>

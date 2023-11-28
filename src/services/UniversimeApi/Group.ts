@@ -1,4 +1,4 @@
-import type { Group, GroupType, GroupEmailFilter } from "@/types/Group";
+import type { Group, GroupType, GroupEmailFilter, GroupThemeEdit } from "@/types/Group";
 import type { Profile } from "@/types/Profile";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
@@ -56,6 +56,32 @@ export type GroupEmailFilterDelete_RequestDTO = GroupIdOrPath_RequestDTO & {
     emailFilterId: string;
 };
 
+export type GroupThemeEdit_RequestDTO = GroupIdOrPath_RequestDTO & {
+    id: string;
+    primaryColor: string;
+    secondaryColor: string;
+    tertiaryColor: string;
+    backgroundColor: string;
+    cardBackgroundColor: string;
+    cardItemColor: string;
+    fontColorV1: string;
+    fontColorV2: string;
+    fontColorV3: string;
+    fontColorV4: string;
+    fontColorV5: string;
+    fontColorV6: string;
+    fontDisabledColor: string;
+    formsColor: string;
+    skills1Color: string;
+    waveColor: string;
+    buttonYellowHoverColor: string;
+    buttonHoverColor: string;
+    alertColor: string;
+    successColor: string;
+    wrongInvalidColor: string;
+    rankColor: string;
+};
+
 export type GroupGet_ResponseDTO =               ApiResponse<{ group: Group }>;
 export type GroupCreate_ResponseDTO =            ApiResponse;
 export type GroupUpdate_ResponseDTO =            ApiResponse;
@@ -69,6 +95,7 @@ export type GroupEmailFilterAdd_ResponseDTO =    ApiResponse;
 export type GroupEmailFilterEdit_ResponseDTO =   ApiResponse;
 export type GroupEmailFilterDelete_ResponseDTO = ApiResponse;
 export type GroupEmailFilterList_ResponseDTO =   ApiResponse<{ emailFilters: GroupEmailFilter[] }>;
+export type GroupThemeEdit_ResponseDTO = ApiResponse<{ themeEdit: GroupThemeEdit[] }>;
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
     return (await api.post<GroupGet_ResponseDTO>('/group/get', {
@@ -175,4 +202,8 @@ export async function listEmailFilter(body: GroupIdOrPath_RequestDTO) {
         groupId: body.groupId,
         groupPath: body.groupPath,
     })).data;
+}
+
+export async function editTheme(body: GroupThemeEdit_RequestDTO) {
+    return (await api.post<GroupThemeEdit_ResponseDTO>('group/settings/theme/edit', body)).data;
 }

@@ -1,0 +1,36 @@
+#theme-color-settings {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.theme-color-list {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem; 
+}
+
+.theme-color-item {
+  width: 4rem; 
+  height: 4rem; 
+  margin-top: 2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.selected {
+  border: 0.2rem solid #fff; /* Adapte a borda conforme necessário */
+}
+
+.buttons-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.spacer {
+  flex-grow: 1;
+}

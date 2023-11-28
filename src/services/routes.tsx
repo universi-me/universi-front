@@ -20,7 +20,7 @@ import Recovery from "@/pages/Recovery/Recovery";
 import NewPassword from "@/pages/NewPassword/NewPassword";
 import ManageProfilePage, { ManageProfileLoader } from "@/pages/ManageProfile";
 import Homepage from "@/pages/Homepage";
-import SettingsPage, { GroupEmailFilterPage, GroupEmailFilterLoader } from "@/pages/Settings";
+import SettingsPage, { GroupEmailFilterPage, GroupEmailFilterLoader, GroupThemeColorPage} from "@/pages/Settings";
 
 
 
@@ -105,6 +105,10 @@ export const router = createBrowserRouter([{
                 path: "email-filter",
                 element: <GroupEmailFilterPage />,
                 loader: GroupEmailFilterLoader,
+            },
+            {
+                path:"theme-color",
+                element: <GroupThemeColorPage />,
             }
         ],
     }
