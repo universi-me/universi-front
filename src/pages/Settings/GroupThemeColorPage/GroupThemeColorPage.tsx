@@ -40,7 +40,7 @@ export function GroupThemeColorPage() {
         ))}
       </div>
 
-      <div className="buttons-wrapper">
+      <div className="save-button">
         <div className="spacer" />
         <ActionButton name="Salvar" buttonProps={{ onClick: saveChanges }} />
       </div>
