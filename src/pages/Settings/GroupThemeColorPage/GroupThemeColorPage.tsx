@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import React, { useReducer } from "react";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
@@ -6,10 +6,9 @@ import UniversimeApi from "@/services/UniversimeApi";
 import type { GroupThemeEdit } from "@/types/Group";
 import "./GroupThemeColor.less";
 
-const themeColorMappings = {
+const themeColorMappings: Record<string, GroupThemeEdit> = {
   themeId1: {
     id: "themeId1",
-    name: "Tema 1",
     primaryColor: "#0091B9",
     secondaryColor: "#934588",
     tertiaryColor: "#FFFFFF",
@@ -35,7 +34,6 @@ const themeColorMappings = {
   },
   themeId2: {
     id: "themeId2",
-    name: "Tema 2",
     primaryColor: "#FF5733",
     secondaryColor: "#5E35B1",
     tertiaryColor: "#00C853",
@@ -61,7 +59,6 @@ const themeColorMappings = {
   },
   themeId3: {
     id: "themeId3",
-    name: "Tema 3",
     primaryColor: "#FFEB3B",
     secondaryColor: "#03A9F4",
     tertiaryColor: "#FFC107",
@@ -128,7 +125,7 @@ const showSuccessModal = (title: string, text: string) => {
   });
 };
 
-export function GroupThemeColorPage() {
+export function GroupThemeColorPage({ organizationId }: { organizationId: string }) {
   const [selectedTheme, themeDispatch] = useReducer(themeReducer, null);
 
   const saveChanges = async () => {
@@ -138,14 +135,16 @@ export function GroupThemeColorPage() {
     }
 
     try {
+      const groupId = organizationId;
       const themeMapping = themeColorMappings[selectedTheme.id];
-
       await UniversimeApi.Group.editTheme({
+        groupId,
         ...themeMapping,
       });
 
-      showSuccessModal("Alterações salvas!", `O tema foi atualizado para ${selectedTheme.name}.`);
-    } catch (error) {
+
+      showSuccessModal("Alterações salvas!", "O tema foi atualizado com sucesso");
+    } catch {
       showErrorModal("Erro ao salvar alterações", "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente.");
     }
   };
@@ -161,7 +160,7 @@ export function GroupThemeColorPage() {
             key={theme.id}
             theme={theme}
             isSelected={selectedTheme?.id === theme.id}
-            onClick={(selectedTheme) => themeDispatch({ type: "SELECT", theme })}
+            onClick={(selected) => themeDispatch({ type: "SELECT", theme: selected })}
           />
         ))}
       </div>

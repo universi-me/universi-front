@@ -95,7 +95,7 @@ export type GroupEmailFilterAdd_ResponseDTO =    ApiResponse;
 export type GroupEmailFilterEdit_ResponseDTO =   ApiResponse;
 export type GroupEmailFilterDelete_ResponseDTO = ApiResponse;
 export type GroupEmailFilterList_ResponseDTO =   ApiResponse<{ emailFilters: GroupEmailFilter[] }>;
-export type GroupThemeEdit_ResponseDTO = ApiResponse<{ themeEdit: GroupThemeEdit[] }>;
+export type GroupThemeEdit_ResponseDTO =         ApiResponse<{ themeEdit: GroupThemeEdit[] }>;
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
     return (await api.post<GroupGet_ResponseDTO>('/group/get', {
@@ -205,7 +205,7 @@ export async function listEmailFilter(body: GroupIdOrPath_RequestDTO) {
 }
 
 export async function editTheme(body: GroupThemeEdit_RequestDTO) {
-    return (await api.post<GroupThemeEdit_ResponseDTO>('group/settings/theme/edit', {
+    return (await api.post<GroupThemeEdit_ResponseDTO>('/group/settings/theme/edit', {
         groupId: body.groupId,
         groupPath: body.groupPath,
         id: body.id,
