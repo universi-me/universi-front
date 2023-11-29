@@ -1,11 +1,10 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import UniversimeApi from "@/services/UniversimeApi";
 import type { GroupThemeEdit } from "@/types/Group";
 import "./GroupThemeColor.less";
-
 const themeColorMappings: Record<string, GroupThemeEdit> = {
   themeId1: {
     id: "themeId1",
@@ -125,27 +124,45 @@ const showSuccessModal = (title: string, text: string) => {
   });
 };
 
-export function GroupThemeColorPage({ organizationId }: { organizationId: string }) {
+export function GroupThemeColorPage() {
+  const [organizationId, setOrganizationId] = useState<string | null>(null);
   const [selectedTheme, themeDispatch] = useReducer(themeReducer, null);
 
+  useEffect(() => {
+    const fetchOrganizationId = async () => {
+      try {
+        const org = await UniversimeApi.User.organization();
+        if (org.success && org.body?.organization) {
+          setOrganizationId(org.body.organization.id);
+        } else {
+          showErrorModal("Falha ao recuperar a organização.", "Tente novamente mais tarde");
+        }
+      } catch (error) {
+        showErrorModal("Erro ao buscar a organização", "Tente novamente mais tarde");
+      }
+    };
+
+    fetchOrganizationId();
+  }, []); 
   const saveChanges = async () => {
-    if (!selectedTheme) {
-      showErrorModal("Erro ao salvar alterações", "Selecione um tema antes de salvar.");
+    if (!selectedTheme || !organizationId) {
+      showErrorModal("Erro ao salvar alterações", "Selecione um tema e obtenha a organização antes de salvar.");
       return;
     }
 
     try {
-      const groupId = organizationId;
       const themeMapping = themeColorMappings[selectedTheme.id];
       await UniversimeApi.Group.editTheme({
-        groupId,
+        groupId: organizationId,
         ...themeMapping,
       });
 
-
       showSuccessModal("Alterações salvas!", "O tema foi atualizado com sucesso");
     } catch {
-      showErrorModal("Erro ao salvar alterações", "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente.");
+      showErrorModal(
+        "Erro ao salvar alterações",
+        "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente."
+      );
     }
   };
 
