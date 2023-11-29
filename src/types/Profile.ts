@@ -63,6 +63,13 @@ export class ProfileClass implements Profile {
     }
 
     /**
+     * Created date as `Date` instead of string;
+     */
+    get createdAt() {
+        return new Date(this.creationDate);
+    }
+
+    /**
      * Separates a full name into a first name and a last name.
      *
      * @param {string} fullname The full name to be separated.
