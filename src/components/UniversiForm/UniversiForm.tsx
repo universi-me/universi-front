@@ -10,6 +10,9 @@ import { UniversiModal } from "../UniversiModal"
 import { Validation } from "./Validation/Validation"
 import { RequiredValidation } from "./Validation/RequiredValidation"
 import { Category } from "@/types/Capacity"
+import { ValidationComposite } from "./Validation/ValidationComposite"
+import { object } from "prop-types"
+import { makeClassName } from "@/utils/tsxUtils"
 
 export type formProps = {
 
@@ -20,31 +23,61 @@ export type formProps = {
     
 }
 
-export type FormObject = {
+type FormObjectBase<FormType extends FormInputs, ValueType> = {
     DTOName : string,
     label : string,
-    type : FormInputs,
-    charLimit? : undefined | number,
-    fileType? : undefined | string,
-    value? : undefined | any | any[],
-    required? : undefined | boolean,
-    file?: undefined | any,
-    isListMulti? : true | undefined,
-    listObjects? : any[],
-    validation? : Validation,
-    listCanCreate? : boolean
-    onCreate? : undefined | ((value : any) =>any) 
+    type: FormType,
+
+    value?: ValueType,
+    required?: boolean,
+    validation?: ValidationComposite<ValueType>,
+};
+
+export type FormObjectText = FormObjectBase<FormInputs.TEXT | FormInputs.LONG_TEXT | FormInputs.URL, string> & {
+    charLimit?: number;
+};
+
+export type FormObjectNumber = FormObjectBase<FormInputs.NUMBER, number> & {
+    minValue?: number;
+    maxValue?: number;
+};
+
+export type FormObjectBoolean = FormObjectBase<FormInputs.BOOLEAN, boolean>;
+
+export type FormObjectImage = FormObjectBase<FormInputs.IMAGE, string> & {
+    defaultImageUrl?: string;
+};
+
+export type FormObjectFile = FormObjectBase<FormInputs.FILE, File> & {
+    fileType?: string;
+};
+
+export type FormObjectHidden<T> = FormObjectBase<FormInputs.HIDDEN, T>;
+
+export type FormObjectSelectSingle<T> = FormObjectBase<FormInputs.SELECT_SINGLE, T> & SelectProps<T> & { stylesConfig?: StylesConfig<SelectOption<T>, true, GroupBase<T & SelectOption<T>>> };
+export type FormObjectSelectMulti<T> = FormObjectBase<FormInputs.SELECT_MULTI, T[]> & SelectProps<T> & { stylesConfig?: StylesConfig<SelectOption<T>, true, GroupBase<T&SelectOption<T>>> };
+type SelectProps<T> = {
+    canCreate?: boolean,
+    onCreate?: (value : string) => any,
+    options?: SelectOption<T>[],
+};
+type SelectOption<T> = {
+    label: string,
+    value: T
 }
+
+export type FormObject<T = any> = FormObjectText | FormObjectNumber | FormObjectBoolean | FormObjectImage | FormObjectFile | FormObjectHidden<T> | FormObjectSelectSingle<T> | FormObjectSelectMulti<T>;
 
 export enum FormInputs {
     TEXT,
     LONG_TEXT,
-    FILE,
     URL,
-    LIST,
-    BOOLEAN,
+    FILE,
     IMAGE,
-    NONE,
+    SELECT_SINGLE,
+    SELECT_MULTI,
+    BOOLEAN,
+    HIDDEN,
     NUMBER
 }
 
@@ -61,12 +94,28 @@ export function UniversiForm(props : formProps){
 
     useEffect(()=>{
 
-        objects.forEach(obj => { 
-            if(obj.type in [FormInputs.TEXT, FormInputs.LONG_TEXT, FormInputs.URL] && !obj.charLimit){
-                obj.charLimit = obj.type == FormInputs.TEXT ? MAX_TEXT_LENGTH : obj.type == FormInputs.LONG_TEXT ? MAX_LONG_TEXT_LENGTH : MAX_URL_LENGTH;
+        objects.forEach(obj => {
+            if ((obj.type === FormInputs.TEXT || obj.type === FormInputs.LONG_TEXT || obj.type === FormInputs.URL)) {
+                if(!obj.charLimit){
+                    obj.charLimit = obj.type === FormInputs.TEXT
+                        ? MAX_TEXT_LENGTH
+                        : obj.type === FormInputs.LONG_TEXT
+                            ? MAX_LONG_TEXT_LENGTH
+                            : MAX_URL_LENGTH;
+                }
+                if(obj.value == undefined)
+                    obj.value = ""
             }
-            if(!obj.validation && obj.required)
-                obj.validation = new RequiredValidation
+
+            if (!obj.validation) {
+                obj.validation = ValidationComposite.generate(obj.type);
+            }
+
+            if (obj.required) {
+                obj.validation.addValidation(new RequiredValidation());
+            }
+
+
         })
 
     }, [])
@@ -91,11 +140,17 @@ export function UniversiForm(props : formProps){
             return updatedObjects
         })
     }
-    const handleFileChange = (index : number, newValue : any) => {
+    const handleFileChange = (index : number, newValue : File | undefined) => {
         setObjects((oldObjects) =>{
-            const updatedObjects = [...oldObjects]
-            updatedObjects[index].file = newValue;
-            return updatedObjects
+            const updatedObjects = [...oldObjects];
+            const updatedObject = updatedObjects[index];
+
+            if (updatedObject.type === FormInputs.IMAGE || updatedObject.type === FormInputs.FILE) {
+                updatedObject.value = newValue;
+                updatedObjects[index] = updatedObject;
+            }
+
+            return updatedObjects;
         })
     }
 
@@ -111,7 +166,7 @@ export function UniversiForm(props : formProps){
         return undefined;
     }
 
-    function getTextInput(object : FormObject, index : number){
+    function getTextInput(object : FormObjectText, index : number) {
         return (
             <>
                 <legend>
@@ -138,22 +193,57 @@ export function UniversiForm(props : formProps){
         )
     }
 
-    function getImageBuffer(object : FormObject){
-        if(object.value)
-            return "data:image/jpeg;base64,"+arrayBufferToBase64(object.file);
-        return DEFAULT_IMAGE_PATH
-    }
+    // function getImageBuffer(object : FormObjectImage) {
+    //     if(object.value)
+    //         return "data:image/jpeg;base64,"+arrayBufferToBase64(object.value);
+    //     return DEFAULT_IMAGE_PATH
+    // }
 
-    function getImageInput(object : FormObject, index : number){
+    function getImageInput(object : FormObjectImage, index : number){
+        const [imageFile, setImageFile] = useState<File>();
+        const [imageBuffer, setImageBuffer] = useState<ArrayBuffer>();
 
-        const imageBuffer = getImageBuffer(object)
+        useEffect(() => {
+            if (!imageFile) {
+                setImageBuffer(undefined);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onloadend = async function (this, ev) {
+                if (ev.target?.readyState == FileReader.DONE && ev.target.result) {
+                    setImageBuffer(ev.target.result as ArrayBuffer);
+
+                    if (!imageFile)
+                        return;
+
+                    const res = await UniversimeApi.Image.upload({image: imageFile})
+                    if(res.success && res.body)
+                        handleChange(index, res.body.link)
+                }
+            };
+
+            reader.readAsArrayBuffer(imageFile);
+
+        }, [imageFile]);
+
+        const renderedImageUrl = imageBuffer != undefined
+            ? "data:image/jpeg;base64, " + arrayBufferToBase64(imageBuffer)
+            : object.defaultImageUrl ? 
+                object.defaultImageUrl
+            : DEFAULT_IMAGE_PATH;
+
+        const className = makeClassName([
+            "image-preview",
+            imageBuffer ? "default-image" : undefined,
+        ]);
 
         return(
             <div className="image-wrapper">
-                <img src={imageBuffer} className={"image-preview "+((imageBuffer === DEFAULT_IMAGE_PATH) ? "default-image" : "")}/>
+                <img src={renderedImageUrl} className={className}/>
                 <fieldset className="label-button">
                     <legend>{object.label}</legend>
-                    <input type="file" style={{display: "none"}} id="file-input" accept="image/*" onChange={(e) =>{changeFile(e, index)}} required={object.required}/>
+                    <input type="file" style={{display: "none"}} id="file-input" accept="image/*" onChange={(e) =>{ setImageFile(e.currentTarget.files?.item(0) ?? undefined) }} required={object.required}/>
                     <label htmlFor="file-input" className="image-button">
                         Selecionar arquivo
                     </label>
@@ -163,30 +253,30 @@ export function UniversiForm(props : formProps){
 
     }
 
-    async function changeFile(e : ChangeEvent<HTMLInputElement>, index: number){
-        const imageFile = e.currentTarget.files?.item(0);
-        if(!imageFile){
-            handleFileChange(index, undefined);
-            return;
-        }
+    // async function changeFile(e : ChangeEvent<HTMLInputElement>, index: number){
+    //     const imageFile = e.currentTarget.files?.item(0);
+    //     if(!imageFile){
+    //         handleFileChange(index, undefined);
+    //         return;
+    //     }
 
-        const reader = new FileReader();
-        reader.onloadend = renderLoadedImage;
-        reader.readAsArrayBuffer(imageFile)
+    //     const reader = new FileReader();
+    //     reader.onloadend = renderLoadedImage;
+    //     reader.readAsArrayBuffer(imageFile)
 
-        async function renderLoadedImage(this: FileReader, ev: ProgressEvent<FileReader>){
-            if(ev.target?.readyState == FileReader.DONE && ev.target.result){
-                handleFileChange(index, ev.target.result as ArrayBuffer)
-                const imageFile = (document.getElementById("file-input") as HTMLInputElement).files?.item(0) 
-                if(imageFile){
-                    const res = await UniversimeApi.Image.upload({image: imageFile})
-                    if(res.success && res.body)
-                        handleChange(index, res.body.link)
-                }
+    //     async function renderLoadedImage(this: FileReader, ev: ProgressEvent<FileReader>){
+    //         if(ev.target?.readyState == FileReader.DONE && ev.target.result){
+    //             handleFileChange(index, ev.target.result as ArrayBuffer)
+    //             const imageFile = (document.getElementById("file-input") as HTMLInputElement).files?.item(0) 
+    //             if(imageFile){
+    //                 const res = await UniversimeApi.Image.upload({image: imageFile})
+    //                 if(res.success && res.body)
+    //                     handleChange(index, res.body.link)
+    //             }
                 
-            }
-        }
-    }
+    //         }
+    //     }
+    // }
 
     function getBooleanInput(object : FormObject, index : number){
 
@@ -203,25 +293,32 @@ export function UniversiForm(props : formProps){
     }
 
     const handleSelectChange = (index : number, newValue : any) => {
+        console.log(newValue)
         setObjects((oldObjects) =>{
-            const updatedObjects = [...oldObjects]
-            if(!updatedObjects[index].value && updatedObjects[index].isListMulti)
-                updatedObjects[index].value = []
-            if(updatedObjects[index].isListMulti){
-                newValue.forEach((value : any) =>{
-                updatedObjects[index].value.push(value.value);
-                })
+            const updatedObjects = [...oldObjects];
+            const updatedObject = updatedObjects[index];
+
+            if (updatedObject.type === FormInputs.SELECT_SINGLE) {
+                updatedObject.value = newValue.value;
             }
-            else
-                updatedObjects[index].value = newValue.value
+
+            if(updatedObject.type === FormInputs.SELECT_MULTI){
+                if(!updatedObject.value)
+                    updatedObject.value = []
+
+                updatedObject.value = updatedObject.value.concat(newValue.map((m: any) => m.value));
+            }
+
+            updatedObjects[index] = updatedObject;
             return updatedObjects
         })
     }
 
-    function getListInput(object : FormObject, index : number){
-        if(!object.listObjects)
+
+    function getListInput<T>(object : FormObjectSelectMulti<T> | FormObjectSelectSingle<T>, index : number){
+        if(!object.options && !object.canCreate)
             return
-        const [optionsList, setOptionsList] = useState(object.listObjects);
+        const [optionsList, setOptionsList] = useState(object.options);
         
         function createOption(inputValue : string){
             if(!object.onCreate)
@@ -233,27 +330,54 @@ export function UniversiForm(props : formProps){
             })
         }
 
+        function getDefaultValueMulti<T>(object : FormObjectSelectMulti<T>, optionsList : typeof object.options){
+            return Array.isArray(object.value)?
+                optionsList?.filter((option)=>
+                    object.value?.some((item) => Object.is(item, option.value))
+                ).map((item)=> ({value: item.value, label: item.label}))
+            :
+                undefined
+        }
+        function getDefaultValueSingle<T>(object : FormObjectSelectSingle<T>, optionsList : typeof object.options){
+            return Array.isArray(object.value) && object.value.every((item)=>'some' in item)?
+                optionsList?.filter((option)=>
+                    option.value == object.value
+                ).map((item)=>({value: item.value, label: item.label}))
+            :
+                undefined
+        }
+
         return(
             <div>
                 <legend>{object.label}</legend>
                 {
-                    object.listCanCreate != undefined && object.listCanCreate ? 
-                        <CreatableSelect isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.isListMulti} options={optionsList}
+                    object.canCreate != undefined && object.canCreate ? 
+                        <CreatableSelect isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
                         onChange={(value) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
                         classNamePrefix="category-item"
-                        styles={CATEGORY_SELECT_STYLES}
-                        defaultValue={Array.isArray(object.value)? optionsList.filter((item)=>object.value.includes(item.value)) : object.value != undefined ? optionsList.find((item)=> item.value == object.value) : null}
+                        styles={object.stylesConfig}
+                        defaultValue={
+                            object.type === FormInputs.SELECT_MULTI ? 
+                                getDefaultValueMulti(object, optionsList)
+                            :
+                                getDefaultValueSingle(object, optionsList)
+                        }
                         required={object.required}
                         onCreateOption={createOption}
                     />
                     :
-                        <Select placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.isListMulti} options={optionsList}
+                        <Select isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
                         onChange={(value) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
                         classNamePrefix="category-item"
-                        styles={CATEGORY_SELECT_STYLES}
-                        defaultValue={Array.isArray(object.value)? optionsList.filter((item)=>object.value.includes(item.value)) : object.value != undefined ? optionsList.find((item)=> item.value == object.value) : null}
+                        styles={object.stylesConfig}
+                        defaultValue={
+                            object.type === FormInputs.SELECT_MULTI ? 
+                                getDefaultValueMulti(object, optionsList)
+                            :
+                                getDefaultValueSingle(object, optionsList)
+                        }
                         required={object.required}
                         />
                 }
@@ -262,11 +386,11 @@ export function UniversiForm(props : formProps){
         )
     }
 
-    function getNumberInput(object : FormObject, index : number){
+    function getNumberInput(object : FormObjectNumber, index : number){
         return(
             <>
                 <legend>{object.label}</legend>
-                <input max={object.charLimit} type="number" value={object.value} className="field-input" onChange={(e) => {handleNumberChange(index, e.target.value)}} required={object.required}/>
+                <input max={object.maxValue} type="number" value={object.value} className="field-input" onChange={(e) => {handleNumberChange(index, e.target.value)}} required={object.required}/>
             </>
         )
     }
@@ -275,11 +399,13 @@ export function UniversiForm(props : formProps){
 
         const obj = objects[index]
 
-        if(!obj)
+        if(!obj || obj.type != FormInputs.NUMBER)
             return
 
-        if(obj.charLimit && newValue > obj.charLimit)
-            newValue = obj.charLimit
+        if(obj.maxValue && newValue > obj.maxValue)
+            newValue = obj.maxValue
+        if(obj.minValue && newValue < obj.minValue)
+            newValue = obj.minValue
 
         handleChange(index, newValue)
 
@@ -287,7 +413,7 @@ export function UniversiForm(props : formProps){
 
     function renderObjects() : ReactNode{
         return objects.map((object, index) =>(
-            object.type == FormInputs.NONE ? <></> : 
+            object.type == FormInputs.HIDDEN ? <></> : 
             <fieldset key={index}>
                 {
                     object.type == FormInputs.TEXT ||
@@ -298,7 +424,7 @@ export function UniversiForm(props : formProps){
                     getImageInput(object, index)
                     : object.type == FormInputs.BOOLEAN ? 
                     getBooleanInput(object, index)
-                    : object.type == FormInputs.LIST ?
+                    : object.type == FormInputs.SELECT_SINGLE || object.type == FormInputs.SELECT_MULTI?
                     getListInput(object, index)
                     : object.type == FormInputs.NUMBER ?
                     getNumberInput(object, index)

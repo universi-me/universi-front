@@ -14,6 +14,7 @@ import { TextValidation } from "@/components/UniversiForm/Validation/TextValidat
 import UniversimeApi from "@/services/UniversimeApi";
 import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdownMenuUtils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
 
 export function GroupGroups() {
     const groupContext = useContext(GroupContext);
@@ -69,17 +70,36 @@ export function GroupGroups() {
                 <UniversiForm
                     formTitle={groupContext.editGroup == null ? "Criar grupo" : "Editar grupo"}
                     objects={[
-                        {DTOName: "nickname", label: "Apelido do grupo", type: FormInputs.TEXT, value: groupContext.editGroup?.name, required: true, validation: new TextValidation},
-                        {DTOName: "name", label: "Nome do grupo", type: FormInputs.TEXT, value: groupContext.editGroup?.nickname, required: true, validation: new TextValidation},
-                        {DTOName: "description", label: "Descrição do grupo", type: FormInputs.LONG_TEXT, value: groupContext.editGroup?.description, required: true, validation: new TextValidation},
-                        {DTOName: "imageUrl", label: "Imagem do grupo", type: FormInputs.IMAGE, value: (groupContext.editGroup ? groupImageUrl(groupContext.editGroup) : undefined)},
-                        {DTOName: "groupType", label: "Tipo do grupo", type: FormInputs.LIST, value: groupContext.editGroup?.type, listObjects: groupTypes.map((t) => ({value: t[0], label: t[1]})), required: true, },
-                        {DTOName: "canHaveSubgroup", label: "Pode criar grupo", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.canCreateGroup},
-                        {DTOName: "isPublic", label: "Grupo público", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.publicGroup},
-                        {DTOName: "canJoin", label: "Usuários podem entrar", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.canEnter},
-                        {DTOName: "isRootGroup", label: "Grupo raiz", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.rootGroup},
-                        {DTOName: "parentGroupId", label: "Id do grupo pai (grupo atual)", type: FormInputs.NONE, value: groupContext.group.id},
-                        {DTOName: "groupPath", label: "path", type: FormInputs.NONE, value: groupContext.editGroup?.path},
+                        {
+                            DTOName: "nickname", label: "Apelido do grupo", type: FormInputs.TEXT, value: groupContext.editGroup?.name, required: true, 
+                            validation: new ValidationComposite<string>().addValidation(new TextValidation())
+                        }, {
+                            DTOName: "name", label: "Nome do grupo", type: FormInputs.TEXT, value: groupContext.editGroup?.nickname, required: true, 
+                            validation: new ValidationComposite<string>().addValidation(new TextValidation())
+                        }, {
+                            DTOName: "description", label: "Descrição do grupo", type: FormInputs.LONG_TEXT, value: groupContext.editGroup?.description, required: true, 
+                            validation: new ValidationComposite<string>().addValidation(new TextValidation())
+                        }, {
+                             DTOName: "imageUrl", label: "Imagem do grupo", type: FormInputs.IMAGE, value:undefined, 
+                             defaultImageUrl: groupContext.editGroup ? groupImageUrl(groupContext.editGroup) : undefined,
+                             required: false
+                        }, { 
+                            DTOName: "groupType", label: "Tipo do grupo", type: FormInputs.SELECT_SINGLE, 
+                            value: groupContext.editGroup ?  {value : groupContext.editGroup.type, label : groupContext.editGroup.type } : undefined, 
+                            options: groupTypes.map((t) => ({value: t[0], label: t[1]})), required: true
+                        }, {
+                            DTOName: "canHaveSubgroup", label: "Pode criar grupo", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.canCreateGroup
+                        }, {
+                            DTOName: "isPublic", label: "Grupo público", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.publicGroup
+                        }, {
+                            DTOName: "canJoin", label: "Usuários podem entrar", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.canEnter
+                        }, {
+                            DTOName: "isRootGroup", label: "Grupo raiz", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.rootGroup
+                        }, {
+                            DTOName: "parentGroupId", label: "Id do grupo pai (grupo atual)", type: FormInputs.HIDDEN, value: groupContext.group.id
+                        }, {
+                            DTOName: "groupPath", label: "path", type: FormInputs.HIDDEN, value: groupContext.editGroup?.path
+                        },
 
                     ]}
                     requisition={groupContext.editGroup ? UniversimeApi.Group.update : UniversimeApi.Group.create}

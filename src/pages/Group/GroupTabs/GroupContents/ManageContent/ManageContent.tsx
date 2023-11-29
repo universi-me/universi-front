@@ -79,14 +79,29 @@ export function ManageContent() {
     return<UniversiForm
         formTitle={context.editContent == null ? "Criar conteúdo" : "Editar conteúdo"}
         objects={[
-            {DTOName: "name", label: "Nome do conteúdo", type: FormInputs.TEXT, value: context.editContent?.name, required: true},
-            {DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: context.editContent?.description, required: true},
-            {DTOName: "image", label: "Imagem do conteúdo", type: FormInputs.IMAGE, value: context.editContent?.image},
-            {DTOName: "rating", label: "Rating do conteúdo", type: FormInputs.NUMBER, value: context.editContent?.rating, charLimit: 5},
-            {DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.LIST, value: context.editContent?.categories.map((t) => t.id), listObjects: availableCategories.map((t) => ({value: t.id, label: t.name})), isListMulti: true, listCanCreate: true, onCreate: handleCreateOption},
-            {DTOName: "groupId", label: "Id do grupo", type: FormInputs.NONE, value: context.group.id},
-            {DTOName: "groupPath", label: "Path do grupo", type: FormInputs.NONE, value: context.group.path},
-            {DTOName: "id", label: "id do content", type: FormInputs.NONE, value: context.editContent?.id}
+            {
+                DTOName: "name", label: "Nome do conteúdo", type: FormInputs.TEXT, value: context.editContent?.name, required: true, charLimit: 100,
+            }, {
+                DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: context.editContent?.description ?? undefined, required: true, charLimit: 200,
+            }, {
+                DTOName: "image", label: "Imagem do conteúdo", type: FormInputs.IMAGE, value: undefined, required: false,
+                defaultImageUrl: context.editContent?.image
+                    ? context.editContent.image.startsWith("/")
+                        ? import.meta.env.VITE_UNIVERSIME_API + context.editContent.image
+                        : context.editContent.image
+                    : undefined,
+            }, {
+                DTOName: "rating", label: "Rating do conteúdo", type: FormInputs.NUMBER, value: context.editContent?.rating, minValue: 0, maxValue: 5, required: true,
+            }, {
+                DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.SELECT_MULTI,
+                value: context.editContent?.categories.map(t => ({ label: t.name, value: t.id })) ?? [],
+                options: availableCategories.map(c => ({ label: c.name, value: c.id })),
+                canCreate: true, required: false, onCreate: handleCreateOption,
+            }, {
+                DTOName: "groupId", label: "Id do grupo", type: FormInputs.HIDDEN, value: context.group.id,
+            }, {
+                DTOName: "id", label: "Id do conteúdo", type: FormInputs.HIDDEN, value: context.editContent?.id,
+            },
         ]}
         requisition = {context.editContent ? UniversimeApi.Capacity.editFolder : UniversimeApi.Capacity.createFolder}
         callback={()=>{context.setEditContent(undefined); context.refreshData()}}
