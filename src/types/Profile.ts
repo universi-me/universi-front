@@ -1,5 +1,6 @@
 import type { User } from "@/types/User";
 import { type Nullable } from "@/types/utils";
+import { IMG_DEFAULT_PROFILE } from "@/utils/assets";
 
 export type Gender = "M" | "F" | "O";
 export const GenderOptions: {[k in Gender]: string} = {
@@ -56,7 +57,7 @@ export class ProfileClass implements Profile {
      */
     get imageUrl() {
         if (this.image === null)
-            return null;
+            return IMG_DEFAULT_PROFILE;
 
         return import.meta.env.VITE_UNIVERSIME_API + "/profile/image/" + this.id;
     }
