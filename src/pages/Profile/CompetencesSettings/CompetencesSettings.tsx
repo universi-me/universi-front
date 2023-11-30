@@ -18,25 +18,20 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
     return (
         profileContext === null ? null :
         <div id="competences-settings">
-            <div className="heading">Editar minhas competências</div>
+            <div className="heading">Adicionar competência</div>
             <div className="settings-form">
                 <div className="section competence-type">
                     <h2 className="section-heading">Tipo de Competência</h2>
                     <select name="competence-type" defaultValue={editCompetence?.competenceType.id ?? ""}>
                         <option disabled value={""}>Selecione o tipo da competência</option>
                         {
-                            profileContext.allCompetenceTypes.map(competenceType => {
+                            profileContext.allTypeCompetence.map(competeceType => {
                                 return (
-                                    <option value={competenceType.id} key={competenceType.id}>{competenceType.name}</option>
+                                    <option value={competeceType.id} key={competeceType.id}>{competeceType.name}</option>
                                 );
                             })
                         }
                     </select>
-                </div>
-
-                <div className="section description">
-                    <h2 className="section-heading">Descrição</h2>
-                    <textarea name="description" defaultValue={editCompetence?.description} maxLength={255} />
                 </div>
 
                 <div className="section level">
@@ -73,8 +68,8 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
     function saveCompetence() {
         const typeElement = document.querySelector('[name="competence-type"]') as HTMLSelectElement;
 
-        const descriptionElement = document.querySelector('[name="description"]') as HTMLTextAreaElement;
-        const description = descriptionElement.value;
+        const descriptionElement = document.querySelector('[name="description"]') as HTMLTextAreaElement | null;
+        const description = descriptionElement?.value || ""
 
         const levelElement = document.querySelector('[name="level"]') as HTMLSelectElement;
         const level = levelElement.value;
@@ -100,6 +95,7 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
                 throw new Error(r.message);
 
             profileContext?.reloadPage();
+            
         }).catch((reason: Error) => {
             SwalUtils.fireModal({
                 title: "Erro ao salvar competência",

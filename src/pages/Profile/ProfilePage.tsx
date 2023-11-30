@@ -24,18 +24,23 @@ export function ProfilePage() {
     const [showDiscardChanges, setShowDiscardChanges] = useState<boolean>(false);
 
     const profileContext = useMemo<ProfileContextType>(() => ({
-        accessingLoggedUser: loaderData.accessingLoggedUser,
-        allCompetenceTypes:  loaderData.allCompetenceTypes,
-        editCompetence:      null,
+        accessingLoggedUser:            loaderData.accessingLoggedUser,
+        allTypeCompetence:              loaderData.allTypeCompetence,
+        allInstitution:                 loaderData.allInstitution,
+        allTypeEducation:               loaderData.allTypeEducation,
+        allTypeExperience:              loaderData.allTypeExperience,
+        
         profile:             loaderData.profile!,
         profileListData: {
-            achievements:            loaderData.profileListData.achievements,
-            competences:             loaderData.profileListData.competences,
-            folders:                 loaderData.profileListData.folders,
-            groups:                  loaderData.profileListData.groups,
-            links:                   loaderData.profileListData.links,
-            recommendationsReceived: loaderData.profileListData.recommendationsReceived,
-            recommendationsSend:     loaderData.profileListData.recommendationsSend,
+            achievements:               loaderData.profileListData.achievements,
+            competences:                loaderData.profileListData.competences,
+            education:                  loaderData.profileListData.education,
+            experience:                 loaderData.profileListData.experience,
+            folders:                    loaderData.profileListData.folders,
+            groups:                     loaderData.profileListData.groups,
+            links:                      loaderData.profileListData.links,
+            recommendationsReceived:    loaderData.profileListData.recommendationsReceived,
+            recommendationsSend:        loaderData.profileListData.recommendationsSend,
         },
 
         reloadPage: () => {navigate(location.href)},

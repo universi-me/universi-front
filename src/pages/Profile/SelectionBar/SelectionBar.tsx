@@ -3,6 +3,7 @@ import {useState} from "react"
 import "./SelectionBar.css"
 import { ProfileContentListing } from "../ProfileContentListing/ProfileContentListing"
 import { ProfileGroupListing } from "../ProfileGroupListing/ProfileGroupListing"
+import { ProfileCurriculum } from "../ProfileCurriculum/ProfileCurriculum";
 
 export function SelectionBar(){
     const [currentTab, setCurrentTab] = useState("groups");
@@ -40,6 +41,10 @@ const TABS: TabDefinition[] = [
     //     value: "files",
     // },
     {
+        name: "Currículo",
+        value: "curriculum",
+    },
+    {
         name: "Grupos",
         value: "groups",
     },
@@ -53,4 +58,6 @@ function renderTab(tabValue : string){
         return <ProfileContentListing title="Arquivos"/>
     if(tabValue == "groups")
         return <ProfileGroupListing/>
+    if(tabValue == "curriculum")
+    return <ProfileCurriculum/>
 }
