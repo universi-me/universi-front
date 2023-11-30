@@ -94,7 +94,8 @@ export function UniversiForm(props : formProps){
 
     useEffect(()=>{
 
-        objects.forEach(obj => {
+
+        for(const obj of objects) {
             if ((obj.type === FormInputs.TEXT || obj.type === FormInputs.LONG_TEXT || obj.type === FormInputs.URL)) {
                 if(!obj.charLimit){
                     obj.charLimit = obj.type === FormInputs.TEXT
@@ -115,8 +116,15 @@ export function UniversiForm(props : formProps){
                 obj.validation.addValidation(new RequiredValidation());
             }
 
+            if(obj.type == FormInputs.SELECT_MULTI){
+                obj.value = (obj.value?.map((v : any) => v.value ? v.value : v))
+            }
 
-        })
+            if(obj.type == FormInputs.SELECT_SINGLE){
+                obj.value = obj.value.value
+            }
+
+        }
 
     }, [])
 
@@ -292,60 +300,140 @@ export function UniversiForm(props : formProps){
         )
     }
 
-    const handleSelectChange = (index : number, newValue : any) => {
-        console.log(newValue)
-        setObjects((oldObjects) =>{
-            const updatedObjects = [...oldObjects];
-            const updatedObject = updatedObjects[index];
-
-            if (updatedObject.type === FormInputs.SELECT_SINGLE) {
-                updatedObject.value = newValue.value;
-            }
-
-            if(updatedObject.type === FormInputs.SELECT_MULTI){
-                if(!updatedObject.value)
-                    updatedObject.value = []
-
-                updatedObject.value = updatedObject.value.concat(newValue.map((m: any) => m.value));
-            }
-
-            updatedObjects[index] = updatedObject;
-            return updatedObjects
-        })
-    }
-
 
     function getListInput<T>(object : FormObjectSelectMulti<T> | FormObjectSelectSingle<T>, index : number){
+
         if(!object.options && !object.canCreate)
             return
         const [optionsList, setOptionsList] = useState(object.options);
+
+        const [values, setDefaultValues] = useState<any>();
+
+        useEffect(() => {
+
+              if (object.type === FormInputs.SELECT_MULTI && optionsList && object.value) {
+
+                let defaultValuesArr: { value: any, label: string }[] = []
+                for (const option of optionsList) {
+                  if (object.value.includes(option.value))
+                    defaultValuesArr.push(option)
+                }
+
+                setDefaultValues(defaultValuesArr);
+
+              } else if(object.type === FormInputs.SELECT_SINGLE){
+
+                if(optionsList && object.value){
+                    for(const option of optionsList){
+                        console.log("Testando opção", option.value, "Com object.value: ", object.value)
+
+                        if(object.value === option.value){
+                            console.log("retornando: ", option);
+                            let values = [];
+                            values.push(option)
+                            setDefaultValues(values);
+                            break;
+                        }
+                    }
+                }
+
+              } else{
+                setDefaultValues(null)
+              }
         
+          }, [object.type, object.options, object.value, optionsList]);
+        
+
+        // useEffect(()=>{
+        //     if(object.type == FormInputs.SELECT_MULTI && object.options && object.value){
+        //         let defaultValuesArr : {value : any, label : string}[] = []
+        //         for(const option of object.options){
+        //             if(object.value.includes(option.value))
+        //                 defaultValuesArr.push(option)
+        //         }
+
+        //         setDefaultValues(defaultValuesArr)
+        //         console.log(".", defaultValues)
+        //         console.log(".", defaultValuesArr)
+
+        //     }
+        //     else
+        //         setDefaultValues(getDefaultValueSingle(object.value, optionsList))
+        // }, 
+        // [])
+
+        const handleSelectChange = (index : number, newValue : any) => {
+            console.log(newValue)
+            setDefaultValues(newValue)
+            setObjects((oldObjects) =>{
+                const updatedObjects = [...oldObjects];
+                const updatedObject = updatedObjects[index];
+
+                if (updatedObject.type === FormInputs.SELECT_SINGLE) {
+                    updatedObject.value = newValue?.value ?? null;
+                }
+
+                else if(updatedObject.type === FormInputs.SELECT_MULTI){
+                    if(!updatedObject.value)
+                        updatedObject.value = []
+
+                    updatedObject.value = newValue.map((n : any)=>n.value)
+                }
+
+                updatedObjects[index] = updatedObject;
+                return updatedObjects
+            })
+
+            console.log("objeto", object)
+
+        }
+
         function createOption(inputValue : string){
             if(!object.onCreate)
                 return
             object.onCreate(inputValue)
             .then((options : any)=>{
-                console.log(options)
                 setOptionsList(options)
             })
         }
 
         function getDefaultValueMulti<T>(object : FormObjectSelectMulti<T>, optionsList : typeof object.options){
-            return Array.isArray(object.value)?
-                optionsList?.filter((option)=>
-                    object.value?.some((item) => Object.is(item, option.value))
-                ).map((item)=> ({value: item.value, label: item.label}))
-            :
-                undefined
+            if(!Array.isArray(object.value) || optionsList === undefined){
+                console.log("primeiro return")
+                return undefined;
+            }
+
+            let defaultOptionsArr : {value : any, label: string}[]= []
+                
+            for(const option of optionsList){
+                if(object.value.includes(option.value))
+                    defaultOptionsArr.push(option)
+            }
+            console.log("A", defaultOptionsArr)
+            return defaultOptionsArr
+            // return Array.isArray(object.value)?
+            //     optionsList?.filter((option)=>
+            //         object.value?.includes(option.value)
+            //     ).map((item)=> ({value: item.value, label: item.label}))
+            // :
+            //     undefined
         }
         function getDefaultValueSingle<T>(object : FormObjectSelectSingle<T>, optionsList : typeof object.options){
-            return Array.isArray(object.value) && object.value.every((item)=>'some' in item)?
-                optionsList?.filter((option)=>
-                    option.value == object.value
-                ).map((item)=>({value: item.value, label: item.label}))
-            :
-                undefined
+            if(!optionsList || !object.value)
+                return undefined;
+            for(const option of optionsList){
+                console.log("Testando opção", option, "Com object.value: ", object.value)
+
+                if(object.value === option.value){
+                    console.log("retornando: ", option)
+                    return option
+                }
+            }
+            return undefined
         }
+        
+
+        console.log("A", values)
 
         return(
             <div>
@@ -357,14 +445,11 @@ export function UniversiForm(props : formProps){
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
                         classNamePrefix="category-item"
                         styles={object.stylesConfig}
-                        defaultValue={
-                            object.type === FormInputs.SELECT_MULTI ? 
-                                getDefaultValueMulti(object, optionsList)
-                            :
-                                getDefaultValueSingle(object, optionsList)
-                        }
                         required={object.required}
                         onCreateOption={createOption}
+                        value={
+                                values   
+                        }
                     />
                     :
                         <Select isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
@@ -372,11 +457,8 @@ export function UniversiForm(props : formProps){
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
                         classNamePrefix="category-item"
                         styles={object.stylesConfig}
-                        defaultValue={
-                            object.type === FormInputs.SELECT_MULTI ? 
-                                getDefaultValueMulti(object, optionsList)
-                            :
-                                getDefaultValueSingle(object, optionsList)
+                        value={
+                                values
                         }
                         required={object.required}
                         />
