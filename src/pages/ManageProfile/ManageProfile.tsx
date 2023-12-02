@@ -4,7 +4,6 @@ import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 import UniversimeApi from "@/services/UniversimeApi";
 import { ManageProfileLinks, ManageProfileLoaderResponse, ManageProfilePassword, ManageProfileImage, getManageLinks, getProfileImage } from "@/pages/ManageProfile";
 import { setStateAsValue } from "@/utils/tsxUtils";
-import { getProfileImageUrl } from "@/utils/profileUtils";
 import { AuthContext } from "@/contexts/Auth";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
@@ -38,7 +37,7 @@ export function ManageProfilePage() {
             <div id="left-side">
                 <form id="profile-edit" className="card">
                     <div className="image-name-container">
-                        <ManageProfileImage currentImage={getProfileImageUrl(profile)} />
+                        <ManageProfileImage currentImage={profile.imageUrl} />
 
                         <fieldset id="fieldset-name">
                             <legend>Altere seu nome</legend>
