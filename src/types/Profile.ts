@@ -3,7 +3,7 @@ import { type Nullable } from "@/types/utils";
 import { IMG_DEFAULT_PROFILE } from "@/utils/assets";
 
 export type Gender = "M" | "F" | "O";
-export const GenderOptions: {[k in Gender]: string} = {
+export const GENDER_OPTIONS: {[k in Gender]: string} = {
     M: "Masculino",
     F: "Feminino",
     O: "Outro",
@@ -46,7 +46,7 @@ export class ProfileClass implements Profile {
      */
     get genderName() {
         if (this.gender)
-            return GenderOptions[this.gender];
+            return GENDER_OPTIONS[this.gender];
 
         // todo: use a constant with this value
         return "Não informado";
