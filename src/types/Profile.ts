@@ -93,6 +93,13 @@ export class ProfileClass implements Profile {
         ];
     }
 
+    /**
+     * The same as `new ProfileClass(profile)`, but can be used as a callback function.
+     */
+    public static new(profile: Profile) {
+        return new ProfileClass(profile);
+    }
+
     /* Profile type getters and setters */
     get id() { return this.profile.id }
     set id(id: string) { this.profile.id = id }

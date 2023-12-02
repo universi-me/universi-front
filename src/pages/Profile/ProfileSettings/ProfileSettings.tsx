@@ -1,7 +1,8 @@
 import { ChangeEvent, MouseEvent, useContext, useMemo, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { Link, TypeLink, TypeLinkToBootstrapIcon, TypeLinkToLabel } from '@/types/Link';
-import { getFullName, separateFullName, GENDER_OPTIONS } from '@/utils/profileUtils';
+import { getFullName, separateFullName } from '@/utils/profileUtils';
+import { GENDER_OPTIONS } from "@/types/Profile";
 import { UniversimeApi } from '@/services/UniversimeApi';
 import './ProfileSettings.css'
 
