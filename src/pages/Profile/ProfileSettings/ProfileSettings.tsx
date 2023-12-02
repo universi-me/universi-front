@@ -1,8 +1,7 @@
 import { ChangeEvent, MouseEvent, useContext, useMemo, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { Link, TypeLink, TypeLinkToBootstrapIcon, TypeLinkToLabel } from '@/types/Link';
-import { getFullName, separateFullName } from '@/utils/profileUtils';
-import { GENDER_OPTIONS } from "@/types/Profile";
+import { GENDER_OPTIONS, ProfileClass } from "@/types/Profile";
 import { UniversimeApi } from '@/services/UniversimeApi';
 import './ProfileSettings.css'
 
@@ -32,7 +31,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
             <form action="" className="settings-form">
                 <div className="section name">
                     <h2>Nome</h2>
-                    <input id="name" type="text" placeholder='Insira seu nome e sobrenome' defaultValue={getFullName(profileContext.profile)} />
+                    <input id="name" type="text" placeholder='Insira seu nome e sobrenome' defaultValue={profileContext.profile.fullname ?? undefined} />
                 </div>
 
                 <div className="section biography">
@@ -184,7 +183,7 @@ export function ProfileSettings(props: ProfileSettingsProps) {
             ? (genderElement as HTMLSelectElement).value
             : '';
 
-        const [name, lastname] = separateFullName(fullname);
+        const [name, lastname] = ProfileClass.separateFullname(fullname);
 
         UniversimeApi.Profile.edit({
             profileId: profileContext.profile.id,
