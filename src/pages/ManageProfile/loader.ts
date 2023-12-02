@@ -1,6 +1,5 @@
 import UniversimeApi from "@/services/UniversimeApi";
-import { GENDER_OPTIONS } from "@/utils/profileUtils";
-import { Gender, Profile } from "@/types/Profile";
+import { type Gender, type Profile, GENDER_OPTIONS } from "@/types/Profile";
 import { Link, TypeLink, TypeLinkToLabel } from "@/types/Link";
 
 export type ManageProfileLoaderResponse = {
