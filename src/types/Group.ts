@@ -27,7 +27,7 @@ export type GroupEmailFilter = {
     added:   string;
 };
 
-export type GroupThemeEdit = {
+export type GroupThemeEdit ={
     id: string;
     primaryColor: string;
     secondaryColor: string;
