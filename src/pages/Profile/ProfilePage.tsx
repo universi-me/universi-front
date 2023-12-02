@@ -12,6 +12,7 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import { AuthContext } from "@/contexts/Auth";
 import { SelectionBar } from "./SelectionBar/SelectionBar";
 
+import { ProfileClass } from "@/types/Profile";
 import './Profile.css';
 
 export function ProfilePage() {
@@ -27,7 +28,7 @@ export function ProfilePage() {
         accessingLoggedUser: loaderData.accessingLoggedUser,
         allCompetenceTypes:  loaderData.allCompetenceTypes,
         editCompetence:      null,
-        profile:             loaderData.profile!,
+        profile:             new ProfileClass(loaderData.profile!),
         profileListData: {
             achievements:            loaderData.profileListData.achievements,
             competences:             loaderData.profileListData.competences,
