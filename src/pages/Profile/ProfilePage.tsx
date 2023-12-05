@@ -44,7 +44,7 @@ export function ProfilePage() {
         },
 
         reloadPage: () => {navigate(location.href)},
-    }), [loaderData]);
+    } as any), [loaderData]);
 
     useEffect(() => {
         if (auth.user === null) {

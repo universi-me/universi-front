@@ -17,8 +17,8 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
     return null;
   }
 
-  const sortedCompetences = profileContext.profileListData.competences
-    .toSorted((c1, c2) => new Date(c1.creationDate).getTime() - new Date(c2.creationDate).getTime());
+  const sortedCompetences = (profileContext.profileListData.competences as any)
+    .toSorted((c1 :any, c2 :any) => new Date(c1.creationDate).getTime() - new Date(c2.creationDate).getTime());
 
   const [selectedCompeteceId, setSelectedCompeteceId] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -94,7 +94,7 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
             </div>
             <div className="competence-list">
                     {profileContext.profileListData.competences.length > 0
-                        ? sortedCompetences.map(competence => {
+                        ? sortedCompetences.map((competence : any) => {
                             return (
                                 <div className="competence-item" key={competence.id}>
 
@@ -102,7 +102,7 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
                                     <h4 className="competence-type">{competence.competenceType.name}</h4>
                                 </div>
                                 <div className="level-container">
-                                    <h2 className="level-label">{LevelToLabel[competence.level]}</h2>
+                                    <h2 className="level-label">{(LevelToLabel as any)[competence.level]}</h2>
                                     <div className="level-bar">
                                         <div className="bar" style={{ width: `${calculateWidth(competence.level)}%` }}></div>
                                     </div>
