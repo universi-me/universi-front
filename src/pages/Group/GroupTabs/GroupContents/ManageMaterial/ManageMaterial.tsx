@@ -66,7 +66,7 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
                 }, {
                     DTOName: "description", label: "Descrição do material", type: FormInputs.TEXT, value: context.editMaterial?.description ?? "", required: true
                 }, {
-                    DTOName: "rating", label: "Rating do material", type: FormInputs.NUMBER, value: context.editMaterial?.rating
+                    DTOName: "rating", label: "Rating do material", type: FormInputs.HIDDEN, value: context.editMaterial ? context.editMaterial?.rating : 1
                 }, {
                     DTOName: "url", label: "Link do material", type: FormInputs.URL, value: context.editMaterial?.url, required: true
                 }, {

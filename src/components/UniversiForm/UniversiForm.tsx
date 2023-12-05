@@ -121,7 +121,7 @@ export function UniversiForm(props : formProps){
             }
 
             if(obj.type == FormInputs.SELECT_SINGLE){
-                obj.value = obj.value.value
+                obj.value = obj.value?.value
             }
 
         }

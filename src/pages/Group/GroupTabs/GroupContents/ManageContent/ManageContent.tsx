@@ -91,7 +91,7 @@ export function ManageContent() {
                         : context.editContent.image
                     : undefined,
             }, {
-                DTOName: "rating", label: "Rating do conteúdo", type: FormInputs.NUMBER, value: context.editContent?.rating, minValue: 0, maxValue: 5, required: true,
+                DTOName: "rating", label: "Rating do conteúdo", type: FormInputs.HIDDEN, value: context.editContent ?  context.editContent?.rating : 1,
             }, {
                 DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.SELECT_MULTI,
                 value: context.editContent?.categories.map(t => ({ label: t.name, value: t.id })) ?? [],
