@@ -16,5 +16,5 @@ export async function get(body: typeExperience_RequestDTO) {
 }
 
 export async function list() {
-    return (await api.get<TypeExperienceList_ResponseDTO>("/curriculum/typeExperience", {})).data;
+    return (await api.post<TypeExperienceList_ResponseDTO>("/curriculum/typeExperience/listar", {})).data;
 }
