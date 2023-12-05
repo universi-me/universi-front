@@ -1,4 +1,4 @@
-import { MouseEvent, FocusEvent, useState, useEffect } from "react";
+import { MouseEvent, FocusEvent, useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
@@ -6,6 +6,7 @@ import { UniversiModal } from "@/components/UniversiModal";
 import UniversimeApi from "@/services/UniversimeApi";
 import { isEmail } from "@/utils/regexUtils";
 import { setStateAsValue } from "@/utils/tsxUtils";
+import { AuthContext } from "@/contexts/Auth/AuthContext";
 import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
 import { enableSignUp } from "./helperFunctions";
 import * as SwalUtils from "@/utils/sweetalertUtils";
@@ -22,6 +23,7 @@ const LAST_NAME_MAX_LENGTH = 21;
 const USERNAME_CHAR_REGEX = /[a-z0-9_.-]/
 
 export function SignUpModal(props: SignUpModalProps) {
+    const auth = useContext(AuthContext);
     const navigate = useNavigate();
 
     const [firstname, setFirstname] = useState<string>("");
@@ -81,7 +83,8 @@ export function SignUpModal(props: SignUpModalProps) {
         return () => clearTimeout(delayDebounceFn)
     }, [email])
 
-    const ENABLE_RECAPTCHA = import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1";
+    const ENABLE_RECAPTCHA = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any).recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
+    const RECAPTCHA_SITE_KEY = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any).recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
     return (
         <UniversiModal>
@@ -173,7 +176,7 @@ export function SignUpModal(props: SignUpModalProps) {
                         !ENABLE_RECAPTCHA ? null :
                             <center>
                                 <br/>
-                                <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
+                                <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
                                 <br/>
                             </center>
                     }

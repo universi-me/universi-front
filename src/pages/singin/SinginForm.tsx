@@ -38,9 +38,10 @@ export default function SinginForm() {
     setShowPassword(!showPassword);
   };
 
-  const ENABLE_GOOGLE_LOGIN = import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1";
-  const ENABLE_RECAPTCHA = import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1";
-
+  const ENABLE_GOOGLE_LOGIN = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any).login_google_enabled ?? (import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1");
+  const ENABLE_RECAPTCHA = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any).recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
+  const RECAPTCHA_SITE_KEY = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any).recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  
   return (
   <>
   
@@ -85,7 +86,7 @@ export default function SinginForm() {
           !ENABLE_RECAPTCHA ? null :
             <center>
               <br/>
-              <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
+              <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
               <br/>
             </center>
         }

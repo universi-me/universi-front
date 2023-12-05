@@ -6,3 +6,4 @@ export * from "./SettingsDescription/SettingsDescription";
 export * from "./SettingsOptions/SettingsMoveTo";
 export * from "./GroupEmailFilterPage";
 export * from "./RolesPage";
+export * from "./EnvironmentsPage";
