@@ -16,5 +16,5 @@ export async function get(body:institutionGet_RequestDTO) {
 }
 
 export async function list() {
-    return (await api.get<InstitutionTypeList_ResponseDTO>("/curriculum/institution/listar")).data;
+    return (await api.post<InstitutionTypeList_ResponseDTO>("/curriculum/institution/listar", {})).data;
 }

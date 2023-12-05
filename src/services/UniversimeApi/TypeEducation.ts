@@ -17,5 +17,5 @@ export async function get(body: typeEducation_RequestDTO) {
 }
 
 export async function list() {
-    return (await api.get<TypeEducationList_ResponseDTO>("/curriculum/TypeEducation/listar", {})).data;
+    return (await api.post<TypeEducationList_ResponseDTO>("/curriculum/TypeEducation/listar", {})).data;
 }
