@@ -64,10 +64,10 @@ export async function ProfilePageLoader(args: LoaderFunctionArgs): Promise<Profi
     return {
         profile: fetchProfile.body.profile,
         accessingLoggedUser: fetchProfile.body.profile.user.ownerOfSession,
-        allTypeCompetence: fetchCompetenceTypes,
-        allTypeEducation: fetchEducationTypes,
-        allTypeExperience: fetchExperienceTypes,
-        allInstitution: fetchInstitutions,
+        allTypeCompetence: (fetchCompetenceTypes as any).body?.listar ?? [],
+        allTypeEducation: (fetchEducationTypes as any).body?.listar ?? [],
+        allTypeExperience: (fetchExperienceTypes as any).body?.listar ?? [],
+        allInstitution: (fetchInstitutions as any).body?.listar ?? [],
         
 
         profileListData: {
