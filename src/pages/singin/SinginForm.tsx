@@ -38,9 +38,11 @@ export default function SinginForm() {
     setShowPassword(!showPassword);
   };
 
-  const ENABLE_GOOGLE_LOGIN = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any).login_google_enabled ?? (import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1");
-  const ENABLE_RECAPTCHA = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any).recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
-  const RECAPTCHA_SITE_KEY = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any).recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  const organizationEnv = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any);
+  const SIGNUP_ENABLED = organizationEnv.signup_enabled ?? true;
+  const ENABLE_GOOGLE_LOGIN = organizationEnv.login_google_enabled ?? (import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1");
+  const ENABLE_RECAPTCHA = organizationEnv.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
+  const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
   
   return (
   <>
@@ -122,10 +124,11 @@ export default function SinginForm() {
             </button>
         </>
       }
-
+      { !SIGNUP_ENABLED ? null :
         <div className="container-line-form" style={{marginTop: "20px"}}>
             <Link to="/signup">Crie sua conta</Link>
         </div>
+      }
         <div className="container-line-form" style={{marginTop: "20px"}}>
             <Link to="/recovery">Esqueci minha senha</Link>
         </div>

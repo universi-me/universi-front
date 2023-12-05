@@ -83,8 +83,9 @@ export function SignUpModal(props: SignUpModalProps) {
         return () => clearTimeout(delayDebounceFn)
     }, [email])
 
-    const ENABLE_RECAPTCHA = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any).recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
-    const RECAPTCHA_SITE_KEY = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any).recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+    const organizationEnv = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any);
+    const ENABLE_RECAPTCHA = organizationEnv.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
+    const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
     return (
         <UniversiModal>
