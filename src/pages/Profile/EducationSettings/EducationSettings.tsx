@@ -22,6 +22,7 @@ export function EducationSettings(props: EducationSettingsProps) {
         if (e.target.checked) {
           setDateEnd("");
         }
+        setError(null)
     };
 
     return (
@@ -65,12 +66,12 @@ export function EducationSettings(props: EducationSettingsProps) {
                 <div className="section flex-direction dim-date">
                     <div className="section">
                         <h2 className="section-heading">Data de Inicio</h2>
-                        <input name="startDate" className="date-input" type="date" placeholder="Data Inicial" value={dateStart} onChange={(e) => setDateStart(e.target.value)}/>
+                        <input name="startDate" className="date-input" type="date" placeholder="Data Inicial" value={dateStart} onChange={(e) => {setDateStart(e.target.value); setError(null);}} />
                     </div>
                     {!isPresent && (
                     <div className="section ajust-date">
                         <h2 className="section-heading">Data de Termino</h2>
-                        <input name="endDate" className="date-input" type="date" placeholder="Data Final" value={dateEnd} onChange={(e) => setDateEnd(e.target.value)} />
+                        <input name="endDate" className="date-input" type="date" placeholder="Data Final" value={dateEnd} onChange={(e) => {setDateEnd(e.target.value); setError(null);}} />
                     </div>
                     )}
                 </div>
@@ -79,7 +80,7 @@ export function EducationSettings(props: EducationSettingsProps) {
                 </div>
                 <div className="section">
                     <input className="presentDate" name="presentDate" type="checkbox" checked={isPresent} onChange={handlePresentDateChange}/>
-                    Ainda não finalizei
+                    Exercendo Atualmente
                 </div>
                 
 

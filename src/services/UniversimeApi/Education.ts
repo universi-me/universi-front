@@ -30,7 +30,7 @@ export type EducationRemove_ResponseDTO = ApiResponse;
 export type EducationList_ResponseDTO = ApiResponse<{ lista: Education[] }>;
 
 export async function get(body:EducationId_RequestDTO) {
-    return (await api.post<EducationCreate_ResponseDTO>("/curriculum/education", {
+    return (await api.post<EducationCreate_ResponseDTO>("/curriculum/education/obter", {
         educationId: body.educationId,
     })).data;
 }
@@ -63,5 +63,5 @@ export async function remove(body:  EducationId_RequestDTO) {
 }
 
 export async function list() {
-    return (await api.post<EducationList_ResponseDTO>('/curriculum/education', {})).data
+    return (await api.post<EducationList_ResponseDTO>('/curriculum/education/listar', {})).data
 }

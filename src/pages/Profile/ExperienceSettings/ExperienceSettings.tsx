@@ -44,6 +44,7 @@ export function ExperienceSettings(props: ExperienceSettingsProps) {
                                 );
                             })
                         }
+                        
                     </select>
                 </div>
                 <div className="section">
@@ -105,7 +106,7 @@ export function ExperienceSettings(props: ExperienceSettingsProps) {
             const endDate = new Date(dateEnd);
 
             if (endDate < startDate) {
-                setError('( Erro: A data de término não pode ser menor que a data de início. )');
+                setError('Erro: A data de término não pode ser menor que a data de início.');
                 return;
             }
         }
