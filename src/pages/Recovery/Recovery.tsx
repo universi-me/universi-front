@@ -3,12 +3,14 @@ import "./Recovery.css"
 import { transform } from "@babel/core"
 import { Translate } from "phosphor-react"
 import "../singin/signinForm.css"
-import {useState} from "react"
+import {useState, useContext} from "react"
 import UniversimeApi from "@/services/UniversimeApi"
+import { AuthContext } from "@/contexts/Auth/AuthContext";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 export default function Recovery(){
+    const auth = useContext(AuthContext);
 
     const [username, setUsername] = useState("")
     const [msg, setMsg] = useState<null | string>(null)
@@ -31,7 +33,9 @@ export default function Recovery(){
         })
     }
 
-    const ENABLE_RECAPTCHA = import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1";
+    const organizationEnv = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any);
+    const ENABLE_RECAPTCHA = organizationEnv.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
+    const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
     return(
         <div>
@@ -57,7 +61,7 @@ export default function Recovery(){
                         !ENABLE_RECAPTCHA ? null :
                             <center>
                                 <br/>
-                                <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
+                                <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
                                 <br/>
                             </center>
                     }

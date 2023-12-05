@@ -71,7 +71,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (profile)
             updateOrganization();
         else
-            setOrganization(null);
+            updateOrganization();
+            //setOrganization(null);
 
         setFinishedLogin(true);
         return profile;

@@ -19,6 +19,7 @@ export function SettingsPage() {
         { outlet ?? <>
             <SettingsTitle>Configurações</SettingsTitle>
 
+            <SettingsMoveTo title="Variáveis Ambiente" description="Configurar as variáveis ambiente da plataforma" to="environments" />
             <SettingsMoveTo title="Administração" description="Gerenciar nível de acesso dos usuários da plataforma" to="roles" />
             <SettingsMoveTo title="Emails" description="Configurar emails que podem ser cadastrados no Universi.me" to="email-filter" />
             <SettingsMoveTo title="Tema de cores" description="Configurar tema de cores da plataforma" to="#"/>

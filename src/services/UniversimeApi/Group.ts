@@ -176,3 +176,11 @@ export async function listEmailFilter(body: GroupIdOrPath_RequestDTO) {
         groupPath: body.groupPath,
     })).data;
 }
+
+export async function editEnvironments(body: {}) {
+    return (await api.post<ApiResponse>("/group/settings/environments/edit", body)).data;
+}
+
+export async function listEnvironments(body: {}) {
+    return (await api.post<ApiResponse>("/group/settings/environments/list", body)).data;
+}
