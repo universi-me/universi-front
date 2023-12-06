@@ -1,18 +1,15 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import Select, { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select';
+import  { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select';
 
 import UniversimeApi from "@/services/UniversimeApi";
-import { UniversiModal } from "@/components/UniversiModal";
 import { GroupContext } from "@/pages/Group/GroupContext";
-import { setStateAsValue } from "@/utils/tsxUtils";
 import { arrayBufferToBase64 } from "@/utils/fileUtils";
 
 import type { FolderCreate_ResponseDTO, FolderEdit_ResponseDTO } from "@/services/UniversimeApi/Capacity";
 import type { Category } from "@/types/Capacity";
 import "./ManageContent.less";
+import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
-const MAX_NAME_LENGTH = 50;
-const MAX_DESC_LENGTH = 200;
 
 const DEFAULT_IMAGE_PATH = "/assets/imgs/default-content.png";
 
@@ -62,68 +59,53 @@ export function ManageContent() {
     const canSave = (name.length > 0) && (description.length > 0);
     const isNewContent = context.editContent === null;
 
-    return <UniversiModal>
-        <div id="manage-content">
+    function handleCreateOption(value:any){
+        return UniversimeApi.Capacity.createCategory({name: value, image: ""})
+        .then(createResponse =>{
+            if(createResponse.success){
+                return UniversimeApi.Capacity.categoryList()
+                .then(response =>{
+                    if (response.success && response.body) {
+                        setAvailableCategories(response.body.categories);
 
-            <div className="header">
-                <img src="/assets/imgs/create-content.png"/>
-                <h1 className="title">{isNewContent ? "Criar" : "Editar"} conteúdo</h1>
-            </div>
+                        const options = response.body.categories.map(t => ({ value: t.id, label: t.name }));
+                        return options;
+                    }
+                })
+            }
+        }) 
+    }
 
-            <div className="fields">
-            <fieldset>
-                <legend>
-                    Título do Conteúdo
-                    <div className="char-counter" style={name.length >= MAX_NAME_LENGTH-5 ? {color: "red"} : {}}>
-                        {name.length} / {MAX_NAME_LENGTH}
-                    </div>
-                </legend>
-                <input className="field-input" type="text" defaultValue={context.editContent?.name} onChange={setStateAsValue(setName)} maxLength={MAX_NAME_LENGTH}/>
-            </fieldset>
-
-            <fieldset>
-                <legend>
-                    Descrição
-                    <div className="char-counter" style={description.length >= MAX_DESC_LENGTH-5 ? {color: "red"} : {}}>
-                        {description.length} / {MAX_DESC_LENGTH}
-                    </div>
-                </legend>
-                <textarea className="field-input" defaultValue={context.editContent?.description ?? undefined} onChange={setStateAsValue(setDescription)} maxLength={MAX_DESC_LENGTH} />
-            </fieldset>
-
-            <div className="multiple-buttons">
-                <div className="label-button">
-                    <legend>Categorias</legend>
-                    <Select placeholder="Selecionar categorias..." className="field-input category-select" isMulti options={availableCategories}
-                        onChange={(value) => {setCategoriesIds(value.map(v => v.id))}}
-                        defaultValue={ availableCategories.filter(c => context.editContent?.categories.map(c => c.id).includes(c.id)) } noOptionsMessage={()=>"Categoria Não Encontrada"}
-                        getOptionLabel={c => c.name} getOptionValue={c => c.id} classNamePrefix="category-item" styles={CATEGORY_SELECT_STYLES}
-                    />
-                </div>
-                <div className="image-wrapper">
-                    <img src={imageRender} className={"image-preview" + (imageRender === DEFAULT_IMAGE_PATH ? " default-image" : "")} />
-
-                    <fieldset className="label-button">
-                        <legend>Imagem de conteúdo</legend>
-                        <input type="file" style={{display: "none"}} id="file-input" accept="image/*" onChange={changeImage}/>
-                        <label htmlFor="file-input" className="image-button">
-                            Selecionar arquivo
-                        </label>
-                    </fieldset>
-                </div>
-            </div>
-
-
-            <section className="operation-buttons">
-                <button type="button" className="finish-button cancel-button" onClick={() => {context.setEditContent(undefined)}}><i className="bi bi-x-circle-fill" />Cancelar</button>
-                <button type="button" className="finish-button submit-button" onClick={handleSaveContent} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
-                    <i className="bi bi-check-circle-fill"></i>
-                    { isNewContent ? "Criar" : "Salvar" }
-                </button>
-            </section>
-            </div>
-        </div>
-    </UniversiModal>
+    return<UniversiForm
+        formTitle={context.editContent == null ? "Criar conteúdo" : "Editar conteúdo"}
+        objects={[
+            {
+                DTOName: "name", label: "Nome do conteúdo", type: FormInputs.TEXT, value: context.editContent?.name, required: true, charLimit: 100,
+            }, {
+                DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: context.editContent?.description ?? undefined, required: true, charLimit: 200,
+            }, {
+                DTOName: "image", label: "Imagem do conteúdo", type: FormInputs.IMAGE, value: undefined, required: false,
+                defaultImageUrl: context.editContent?.image
+                    ? context.editContent.image.startsWith("/")
+                        ? import.meta.env.VITE_UNIVERSIME_API + context.editContent.image
+                        : context.editContent.image
+                    : undefined,
+            }, {
+                DTOName: "rating", label: "Rating do conteúdo", type: FormInputs.HIDDEN, value: context.editContent ?  context.editContent?.rating : 1,
+            }, {
+                DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.SELECT_MULTI,
+                value: context.editContent?.categories.map(t => ({ label: t.name, value: t.id })) ?? [],
+                options: availableCategories.map(c => ({ label: c.name, value: c.id })),
+                canCreate: true, required: false, onCreate: handleCreateOption,
+            }, {
+                DTOName: "groupId", label: "Id do grupo", type: FormInputs.HIDDEN, value: context.group.id,
+            }, {
+                DTOName: "id", label: "Id do conteúdo", type: FormInputs.HIDDEN, value: context.editContent?.id,
+            },
+        ]}
+        requisition = {context.editContent ? UniversimeApi.Capacity.editFolder : UniversimeApi.Capacity.createFolder}
+        callback={()=>{context.setEditContent(undefined); context.refreshData()}}
+        />
 
     async function handleSaveContent() {
         if (!context || context.editContent === undefined)

@@ -55,6 +55,7 @@ export function GroupContentMaterials() {
     return (
         <section id="materials" className="group-tab">
             <div className="heading top-container">
+                <div className="content-title">{groupContext.currentContent.name}</div>
                 <div className="go-right">
                     <Filter setter={setFilterMaterials} placeholderMessage={`Buscar em ${groupContext.group.name}`}/>
                         {  
@@ -187,12 +188,9 @@ export function GroupContentMaterials() {
     async function handleWatchedButton(material : Content, event : any){
 
         event.stopPropagation();
-        console.log(material)
 
         let nextStatus : ContentStatusEnum = material.contentStatus.status == "DONE"  ? "NOT_VIEWED" : "DONE"
 
-        console.log(nextStatus)
-        console.log(material.contentStatus.status)
 
 
         await UniversimeApi.Capacity.createContentStatus({contentId : material.id});
@@ -240,7 +238,6 @@ export function GroupContentMaterials() {
     function expand(id : string){
 
         let containers = getVideoContainers()
-        console.log(containers)
 
         containers.popupContainer?.classList.remove("mini-player")
         containers.popupContainer?.classList.add("popup-container")

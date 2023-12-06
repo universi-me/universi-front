@@ -238,7 +238,6 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                 const nameElement = itemBox
                     .querySelector(`[name="link-name"]`) as HTMLInputElement;
 
-                console.log("create-name", nameElement);
 
                 return {
                     ...l,
@@ -263,7 +262,6 @@ export function ProfileSettings(props: ProfileSettingsProps) {
                 const urlElement = linkItem
                     .querySelector(`[name="link-url"]`) as HTMLInputElement;
 
-                console.log("update-name", nameElement);
 
                 return {
                     id: nameAttr,
