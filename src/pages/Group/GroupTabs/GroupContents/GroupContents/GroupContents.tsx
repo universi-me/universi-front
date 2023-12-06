@@ -12,11 +12,13 @@ import "./GroupContents.less";
 import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { AuthContext } from "@/contexts/Auth";
+import { UniversiModal } from "@/components/UniversiModal";
 
 export function GroupContents() {
     const groupContext = useContext(GroupContext);
     const authContext = useContext(AuthContext);
     const [filterContents, setFilterContents] = useState<string>("");
+    const [assignContent, setAssignContent] = useState(false)
 
     if (!groupContext)
         return null;
@@ -35,6 +37,17 @@ export function GroupContents() {
             hidden() {
                 return !groupContext?.group.canEdit;
             },
+        },
+        {
+            text: "Atribuir",
+            biIcon: "send-fill",
+            onSelect(data) {
+                groupContext.setCurrentContent(data);
+                setAssignContent(true);
+            },
+            hidden() {
+                return !groupContext?.group.canEdit;
+            }
         },
         {
             text: "Excluir",
@@ -64,6 +77,13 @@ export function GroupContents() {
             <div className="content-list tab-list"> { makeContentList(groupContext.folders, filterContents) } </div>
 
             <ManageContent />
+            {
+                assignContent 
+                ?
+                    <></>
+                :
+                    <></>
+            }
         </section>
     );
 
