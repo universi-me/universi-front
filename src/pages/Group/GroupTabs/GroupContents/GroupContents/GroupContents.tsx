@@ -13,13 +13,65 @@ import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { AuthContext } from "@/contexts/Auth";
 import { UniversiModal } from "@/components/UniversiModal";
-import Select from "react-select/dist/declarations/src/Select";
+import { Profile } from "@/types/Profile";
+import Select from "react-select"
+
+function SelectPeople(){
+
+    const [selectedPeople, setSelectedPeople] = useState<{value: string, label: string}[] | null>(null)
+    const groupContext = useContext(GroupContext)
+
+    return(
+        <UniversiModal>
+            <div id="universi-form-container">
+                <div className="universi-form-container fields">
+
+                    <div className="header">
+                        <img src="/assets/imgs/create-content.png" />
+                        <h1 className="title">Atribuir Conteúdo </h1>
+                    </div>
+
+                    <fieldset>
+                        <legend>Pessoas</legend>
+                        <Select
+                            isMulti
+                            name="pessoas"
+                            options={groupContext?.participants.map((t)=>({value: t.id, label: t.firstname+" "+t.lastname}))}
+                            className="category-select"
+                            value={selectedPeople}
+                            onChange={(options)=>{setSelectedPeople(options)}}
+                        />
+                    </fieldset>
+                    <section className="operation-buttons">
+                        <button type="button" className="submit-button"
+                        style={{width: "auto", padding: "0.75rem"}}
+                        onClick={()=>{
+                            setSelectedPeople(groupContext?.participants.map((p)=>({value: p.id, label: p.firstname+" "+p.lastname})) ?? null)
+                        }}>
+                            Todas as pessoas do grupo
+                        </button>
+                    </section>
+
+                    <section className="operation-buttons">
+                        <button type="button" className="cancel-button" onClick={ () => groupContext?.setAssignFolder(undefined)}>
+                            <i className="bi bi-x-circle-fill" />
+                            Cancelar
+                        </button>
+                        {/* <button type="button" className="submit-button" onClick={makeRequest} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
+                            <i className="bi bi-check-circle-fill" />
+                            Salvar
+                        </button> */}
+                    </section>
+                </div>
+            </div>
+        </UniversiModal>
+    )
+}
 
 export function GroupContents() {
     const groupContext = useContext(GroupContext);
     const authContext = useContext(AuthContext);
     const [filterContents, setFilterContents] = useState<string>("");
-    const [assignContent, setAssignContent] = useState<Folder | undefined>(undefined)
 
     if (!groupContext)
         return null;
@@ -43,7 +95,7 @@ export function GroupContents() {
             text: "Atribuir",
             biIcon: "send-fill",
             onSelect(data) {
-                setAssignContent(data);
+                groupContext.setAssignFolder(data)
             },
             hidden() {
                 return !groupContext?.group.canEdit;
@@ -78,51 +130,16 @@ export function GroupContents() {
 
             <ManageContent />
             {
-                assignContent 
+                groupContext.assignFolder
+
                 ?
-                    // selectPeople(assignContent)
-                    <></>
+                <SelectPeople/>
                 :
-                    <></>
+                <></>
             }
         </section>
     );
 
-    function selectPeople(data : Folder | undefined){
-        return(
-            <UniversiModal>
-                <div id="universi-form-container">
-                    <div className="universi-form-container fields">
-
-                        <div className="header">
-                            <img src="/assets/imgs/create-content.png" />
-                            <h1 className="title">Atribuir Conteúdo </h1>
-                        </div>
-
-                        <fieldset>
-                            <legend>Pessoas</legend>
-                            {/* <Select
-                                isClearable
-                                placeholder="Selecionar pessoas para atribuir o conteúdo" className="category-select" isMulti={true}
-                                options={assignContent?.participants}
-                            ></Select> */}
-                        </fieldset>
-
-                        <section className="operation-buttons">
-                            <button type="button" className="cancel-button" onClick={ () => setAssignContent(undefined)}>
-                                <i className="bi bi-x-circle-fill" />
-                                Cancelar
-                            </button>
-                            {/* <button type="button" className="submit-button" onClick={makeRequest} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
-                                <i className="bi bi-check-circle-fill" />
-                                Salvar
-                            </button> */}
-                        </section>
-                    </div>
-                </div>
-            </UniversiModal>
-        )
-    }
 
     function makeContentList(contents: Folder[], filter: string) {
         if (contents.length === 0) {
