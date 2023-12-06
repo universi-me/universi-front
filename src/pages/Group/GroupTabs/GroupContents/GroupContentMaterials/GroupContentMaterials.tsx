@@ -38,7 +38,7 @@ export function GroupContentMaterials() {
                 groupContext.setEditMaterial(data);
             },
             hidden() {
-                return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
+                return !groupContext?.group.canEdit;
             },
         },
         {
@@ -47,7 +47,7 @@ export function GroupContentMaterials() {
             className: "delete",
             onSelect: handleDeleteMaterial,
             hidden() {
-                return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
+                return !groupContext?.group.canEdit;
             },
         }
     ];
@@ -59,10 +59,8 @@ export function GroupContentMaterials() {
                 <div className="go-right">
                     <Filter setter={setFilterMaterials} placeholderMessage={`Buscar em ${groupContext.group.name}`}/>
                         {  
-                            groupContext.loggedData.profile.id == groupContext.group.admin.id || groupContext.loggedData.profile?.id == groupContext.group.organization?.admin.id ?
+                            groupContext.group.canEdit &&
                             <ActionButton name="Criar material" buttonProps={{onClick(){groupContext.setEditMaterial(null)}}}/>
-                            :
-                            <></>
                         }
                 </div>
             </div>

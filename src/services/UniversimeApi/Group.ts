@@ -1,4 +1,4 @@
-import type { Group, GroupType } from "@/types/Group";
+import type { Group, GroupType, GroupEmailFilter, GroupEmailFilterType } from "@/types/Group";
 import type { Profile } from "@/types/Profile";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
@@ -39,15 +39,36 @@ export type GroupIdOrPath_RequestDTO = {
     groupPath?: string;
 };
 
-export type GroupGet_ResponseDTO =              ApiResponse<{ group: Group }>;
-export type GroupCreate_ResponseDTO =           ApiResponse;
-export type GroupUpdate_ResponseDTO =           ApiResponse;
-export type GroupAvailableParents_ResponseDTO = ApiResponse<{ groups: Group[] }>;
-export type GroupSubgroups_ResponseDTO =        ApiResponse<{ subgroups: Group[] }>;
-export type GroupParticipants_ResponseDTO =     ApiResponse<{ participants: Profile[] }>;
-export type GroupJoin_ResponseDTO =             ApiResponse;
-export type GroupExit_ResponseDTO =             ApiResponse;
-export type GroupFolders_ResponseDTO =          ApiResponse<{ folders: Folder[] }>;
+export type GroupEmailFilterAdd_RequestDTO = GroupIdOrPath_RequestDTO & {
+    email:      string;
+    isEnabled?: boolean;
+    type?:      GroupEmailFilterType;
+};
+
+export type GroupEmailFilterEdit_RequestDTO = GroupIdOrPath_RequestDTO & {
+    emailFilterId: string;
+    email?:        string;
+    isEnabled?:    boolean;
+    type?:         GroupEmailFilterType;
+};
+
+export type GroupEmailFilterDelete_RequestDTO = GroupIdOrPath_RequestDTO & {
+    emailFilterId: string;
+};
+
+export type GroupGet_ResponseDTO =               ApiResponse<{ group: Group }>;
+export type GroupCreate_ResponseDTO =            ApiResponse;
+export type GroupUpdate_ResponseDTO =            ApiResponse;
+export type GroupAvailableParents_ResponseDTO =  ApiResponse<{ groups: Group[] }>;
+export type GroupSubgroups_ResponseDTO =         ApiResponse<{ subgroups: Group[] }>;
+export type GroupParticipants_ResponseDTO =      ApiResponse<{ participants: Profile[] }>;
+export type GroupJoin_ResponseDTO =              ApiResponse;
+export type GroupExit_ResponseDTO =              ApiResponse;
+export type GroupFolders_ResponseDTO =           ApiResponse<{ folders: Folder[] }>;
+export type GroupEmailFilterAdd_ResponseDTO =    ApiResponse;
+export type GroupEmailFilterEdit_ResponseDTO =   ApiResponse;
+export type GroupEmailFilterDelete_ResponseDTO = ApiResponse;
+export type GroupEmailFilterList_ResponseDTO =   ApiResponse<{ emailFilters: GroupEmailFilter[] }>;
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
     return (await api.post<GroupGet_ResponseDTO>('/group/get', {
@@ -118,4 +139,48 @@ export async function folders(body: GroupIdOrPath_RequestDTO) {
         groupId: body.groupId,
         groupPath: body.groupPath,
     })).data;
+}
+
+export async function addEmailFilter(body: GroupEmailFilterAdd_RequestDTO) {
+    return (await api.post<GroupEmailFilterAdd_ResponseDTO>("/group/settings/email-filter/add", {
+        groupId: body.groupId,
+        groupPath: body.groupPath,
+        email: body.email,
+        enabled: body.isEnabled,
+        type: body.type,
+    })).data;
+}
+
+export async function editEmailFilter(body: GroupEmailFilterEdit_RequestDTO) {
+    return (await api.post<GroupEmailFilterEdit_ResponseDTO>("/group/settings/email-filter/edit", {
+        groupId: body.groupId,
+        groupPath: body.groupPath,
+        groupEmailFilterId: body.emailFilterId,
+        email: body.email,
+        enabled: body.isEnabled,
+        type: body.type,
+    })).data;
+}
+
+export async function deleteEmailFilter(body: GroupEmailFilterDelete_RequestDTO) {
+    return (await api.post<GroupEmailFilterDelete_ResponseDTO>("/group/settings/email-filter/delete", {
+        groupId: body.groupId,
+        groupPath: body.groupPath,
+        groupEmailFilterId: body.emailFilterId,
+    })).data;
+}
+
+export async function listEmailFilter(body: GroupIdOrPath_RequestDTO) {
+    return (await api.post<GroupEmailFilterList_ResponseDTO>("/group/settings/email-filter/list", {
+        groupId: body.groupId,
+        groupPath: body.groupPath,
+    })).data;
+}
+
+export async function editEnvironments(body: {}) {
+    return (await api.post<ApiResponse>("/group/settings/environments/edit", body)).data;
+}
+
+export async function listEnvironments(body: {}) {
+    return (await api.post<ApiResponse>("/group/settings/environments/list", body)).data;
 }

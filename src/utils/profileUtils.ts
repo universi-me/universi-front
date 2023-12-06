@@ -30,7 +30,11 @@ export function getGenderName(gender: Gender | null | undefined): string {
 }
 
 export function getProfileImageUrl(profile: Profile): string | null {
-    return profile.image && profile.image.startsWith("/")
+    if (!profile.image) {
+        return "/assets/imgs/default_avatar.png";
+    }
+
+    return profile.image.startsWith("/")
         ? `${import.meta.env.VITE_UNIVERSIME_API}${profile.image}`
         : profile.image;
 }

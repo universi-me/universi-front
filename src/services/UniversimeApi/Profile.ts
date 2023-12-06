@@ -14,6 +14,7 @@ export type ProfileEdit_RequestDTO = {
     bio?:      string;
     gender?:   string;
     imageUrl?: string;
+    rawPassword?: string;
 };
 
 export type ProfileIdAndUsername_RequestDTO = {
