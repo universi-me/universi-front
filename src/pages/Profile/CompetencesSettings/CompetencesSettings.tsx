@@ -94,7 +94,7 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
             if (!r.success)
                 throw new Error(r.message);
 
-            profileContext?.reloadPage();
+            window.location.reload();
             
         }).catch((reason: Error) => {
             SwalUtils.fireModal({
