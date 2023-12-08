@@ -1,5 +1,5 @@
 import { useContext, type ReactElement, useState, useEffect } from "react";
-import { GroupContents, GroupContext, GroupGroups, GroupPeople, GroupFeed} from "@/pages/Group";
+import { GroupContents, GroupContext, GroupGroups, GroupPeople,GroupFeed} from "@/pages/Group";
 import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
@@ -90,11 +90,6 @@ export const EMPTY_LIST_CLASS = "empty-text";
 
 const TABS: GroupTabDefinition[] = [
     {
-        name: 'Feed',
-        value: 'feed',
-        renderer: GroupFeed,
-    },
-    {
         name: 'Conteúdos',
         value: "contents",
         renderer: GroupContents,
@@ -113,5 +108,10 @@ const TABS: GroupTabDefinition[] = [
         name: "Pessoas",
         value: "people",
         renderer: GroupPeople,
+    },
+    {
+        name: 'Feed',
+        value: 'feed',
+        renderer: GroupFeed,
     },
 ];

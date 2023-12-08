@@ -69,6 +69,7 @@ export function GroupPage() {
 
         return {
             folders: data.folders,
+            posts: data.posts,
             group: data.group!,
             loggedData: {
                 isParticipant: data.loggedData?.isParticipant!,
@@ -97,6 +98,11 @@ export function GroupPage() {
             editGroup: undefined,
             setEditGroup(c) {
                 setContext({...this, editGroup: c});
+            },
+
+            editPost: undefined,
+            setEditPost(c){
+                setContext({...this, editPost: c})
             },
 
             refreshData: refreshGroupData,

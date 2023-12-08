@@ -2,28 +2,26 @@ import { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
 import {GroupPost} from "@/types/Feed"
  
-export type CreateGroupPostRequestDTO = {
+export type CreateGroupPost_RequestDTO = {
     content: string;
+    groupId : string
 };
+
+export type GetGroupPost_RequestDTO = {
+    groupId : string;
+}
 
 
 export type CreateGroupPostResponseDTO = ApiResponse<GroupPost>; 
-export type GetGroupPostsResponseDTO = ApiResponse<GroupPost[]>; 
+export type GetGroupPostsResponseDTO = ApiResponse<{posts: GroupPost[]}>; 
 
-export async function getGroupPosts(groupId: string): Promise<GetGroupPostsResponseDTO> {
-    try {
-        const response = await api.get<GetGroupPostsResponseDTO>(`/api/feed/groups/${groupId}/posts`);
-        return response.data;
-    } catch (error) {
-        console.error("Erro ao obter posts do grupo:", error);
-        throw error;
-    }
+export async function getGroupPosts(body : GetGroupPost_RequestDTO): Promise<GetGroupPostsResponseDTO> {
+        return (await api.get<GetGroupPostsResponseDTO>(`/feed/groups/${body.groupId}/posts`)).data;
 }
 
-export async function createGroupPost(groupId: string, body: CreateGroupPostRequestDTO): Promise<CreateGroupPostResponseDTO> {
+export async function createGroupPost(body: CreateGroupPost_RequestDTO): Promise<CreateGroupPostResponseDTO> {
     try {
-        const response = await api.post<CreateGroupPostResponseDTO>(`/api/feed/groups/${groupId}/posts`, body);
-        return response.data;
+        return await (await api.post<CreateGroupPostResponseDTO>(`/feed/groups/${body.groupId}/posts`, body)).data;
     } catch (error) {
         console.error("Erro ao criar post no grupo:", error);
         throw error;
