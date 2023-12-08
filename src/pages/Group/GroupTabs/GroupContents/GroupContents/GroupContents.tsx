@@ -21,6 +21,12 @@ function SelectPeople(){
     const [selectedPeople, setSelectedPeople] = useState<{value: string, label: string}[] | null>(null)
     const groupContext = useContext(GroupContext)
 
+    function makeRequest(){
+        if(groupContext?.assignFolder == undefined || selectedPeople == undefined)
+            return;
+        UniversimeApi.Capacity.assignContent({folderId: groupContext?.assignFolder?.id, profilesIds: selectedPeople?.map((p)=>(p.value))})
+    }
+
     return(
         <UniversiModal>
             <div id="universi-form-container">
@@ -57,10 +63,10 @@ function SelectPeople(){
                             <i className="bi bi-x-circle-fill" />
                             Cancelar
                         </button>
-                        {/* <button type="button" className="submit-button" onClick={makeRequest} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
+                        <button type="button" className="submit-button" onClick={makeRequest} disabled={selectedPeople==undefined} title={selectedPeople==undefined ? undefined : "Preencha os dados antes de salvar"}>
                             <i className="bi bi-check-circle-fill" />
                             Salvar
-                        </button> */}
+                        </button>
                     </section>
                 </div>
             </div>
