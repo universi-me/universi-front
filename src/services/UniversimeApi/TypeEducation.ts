@@ -8,7 +8,7 @@ export type typeEducation_RequestDTO = {
 }
 
 export type TypeEducationGet_ResponseDTO = ApiResponse<{ typeEducation: TypeEducation }>;
-export type TypeEducationList_ResponseDTO = TypeEducation[];
+export type TypeEducationList_ResponseDTO = ApiResponse<{lista: TypeEducation[]}>;
 
 export async function get(body: typeEducation_RequestDTO) {
     return (await api.post<TypeEducationGet_ResponseDTO>("/curriculum/TypeEducation/obter", {

@@ -7,7 +7,7 @@ export type institutionGet_RequestDTO = {
 }
 
 export type InstitutionTypeGet_ResponseDTO = ApiResponse<{ institution: Institution }>;
-export type InstitutionTypeList_ResponseDTO = Institution[];
+export type InstitutionTypeList_ResponseDTO = ApiResponse<{ lista: Institution[] }>;
 
 export async function get(body:institutionGet_RequestDTO) {
     return (await api.post<InstitutionTypeGet_ResponseDTO>("/curriculum/institution/obter", {

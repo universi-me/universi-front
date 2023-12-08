@@ -7,7 +7,7 @@ export type CompetenceTypeGet_RequestDTO = {
 };
 
 export type CompetenceTypeGet_ResponseDTO =  ApiResponse<{ competenceType: CompetenceType }>;
-export type CompetenceTypeList_ResponseDTO = CompetenceType[];
+export type CompetenceTypeList_ResponseDTO = ApiResponse<{ list: CompetenceType[] }>;
 
 export async function get(body: CompetenceTypeGet_RequestDTO) {
     return (await api.post<CompetenceTypeGet_ResponseDTO>("/competencetype/get", {

@@ -7,7 +7,7 @@ export type typeExperience_RequestDTO = {
 }
 
 export type TypeExperienceGet_ResponseDTO = ApiResponse<{ typeEducation: TypeExperience }>;
-export type TypeExperienceList_ResponseDTO = TypeExperience[];
+export type TypeExperienceList_ResponseDTO = ApiResponse<{ lista: TypeExperience[] }>;
 
 export async function get(body: typeExperience_RequestDTO) {
     return (await api.post<TypeExperienceGet_ResponseDTO>("/curriculum/typeExperience", {
