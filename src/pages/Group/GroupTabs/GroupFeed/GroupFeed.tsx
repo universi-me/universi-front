@@ -1,39 +1,45 @@
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { Filter } from "@/components/Filter/Filter";
+import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { RequiredValidation } from "@/components/UniversiForm/Validation/RequiredValidation";
 import { TextValidation } from "@/components/UniversiForm/Validation/TextValidation";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
 import UniversimeApi from "@/services/UniversimeApi";
 import { GroupPost } from "@/types/Feed";
+import { getProfileImageUrl } from "@/utils/profileUtils";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { GroupContext } from "../../GroupContext";
+import "./GroupFeed.less";
 
 export function GroupFeed(){
 
     const [filterPosts, setFilterPosts] = useState<string>("");
     const groupContext = useContext(GroupContext);
 
-    console.log(groupContext)
 
     if(groupContext == null)
         return <></>
 
     return(
-        <section id="groups" className="group-tab">
+        <section id="feed" className="group-tab">
             <div className="heading top-container">
                 <div className="go-right">
                     <Filter setter={setFilterPosts} placeholderMessage={`Buscar posts em ${groupContext.group.name}`}/>
                     {
-                        <ActionButton name="Novo Post" buttonProps={{onClick(){groupContext.setEditPost(null)}}}/>
+                        groupContext.participants.some(p => p.id == groupContext.loggedData.profile.id)
+                        ?
+                        <ActionButton name="Criar publicação" buttonProps={{onClick(){groupContext.setEditPost(null)}}}/>
+                        :
+                        <></>
                     }
                 </div>
             </div>
 
-            <div className="group-list tab-list"> 
+            <div className="feed-list tab-list"> 
             { 
-                groupContext.posts.map(renderPost)
+                groupContext.posts.slice().reverse().map(renderPost)
             } 
             </div>
             {
@@ -45,13 +51,13 @@ export function GroupFeed(){
                         {
                             DTOName: "groupId", label: "", type: FormInputs.HIDDEN, value: groupContext.group.id
                         }, {
-                            DTOName: "title", label: "Título do post", type: FormInputs.TEXT, validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
+                            DTOName: "authorId", label: "", type: FormInputs.HIDDEN, value: groupContext.loggedData.profile.id
                         }, {
                             DTOName: "content", label: "Mensagem do post", type: FormInputs.LONG_TEXT, validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
                         }
                     ]}
                     requisition={groupContext.editPost ? UniversimeApi.Feed.createGroupPost : UniversimeApi.Feed.createGroupPost}
-                    callback={()=>{groupContext.setEditGroup(undefined); groupContext.refreshData()}}
+                    callback={groupContext.refreshData}
                 />
                 :
                 <></>
@@ -59,28 +65,7 @@ export function GroupFeed(){
         </section>
     )
 
-    // function makePostList(){
-    //     if(groupContext?.group == undefined)
-    //         return <></>
-    //     UniversimeApi.Feed.getGroupPosts({groupId : groupContext?.group.id})
-    //     .then((response)=>{
-    //         if(response.success){
-    //             setGroupPosts(response.body);
-    //         }
-    //     })
-
-    //     return renderPost({content: "Testando uma postagem de um post no universi.me, teoricamente isso seria uma request da API",
-    //                        title: "Teste de post",
-    //                         author: groupContext.loggedData.profile})
-    // }
-
-    function renderPosts(posts: GroupPost[]){
-        return(posts.map(renderPost))
-    }
-
     function renderPost(post : GroupPost){
-        // const linkToProfile = `/profile/${post.author.user}`
-        console.log("renderPost")
 
         if(filterPosts != "" && 
         !post.content.toLowerCase().includes(filterPosts.toLowerCase()))
@@ -88,10 +73,15 @@ export function GroupFeed(){
 
 
         return(
-            <div className="group-item tab-item">
-                <Link to={"/"}>
-                    <img className="group-image" src={"/assets/imgs/default_avatar.png"} />
-                </Link>
+            <div className="feed-item tab-item">
+                {
+                    post.author
+                    ?
+                        <Link to={`/profile/${post.author?.user.name}`}>
+                            <img className="feed-image" src={getProfileImageUrl(post.author)??"/assets/imgs/default_avatar.png"} />
+                        </Link>
+                    : <></>
+                }
 
                 <div className="info">
                     <p className="group-description">{post.content}</p>

@@ -4,7 +4,8 @@ import {GroupPost} from "@/types/Feed"
  
 export type CreateGroupPost_RequestDTO = {
     content: string;
-    groupId : string
+    groupId : string;
+    authorId : string;
 };
 
 export type GetGroupPost_RequestDTO = {

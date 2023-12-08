@@ -9,12 +9,12 @@ import "./Group.less";
 export function GroupPage() {
     const page = useLoaderData() as GroupPageLoaderResponse;
     const authContext = useContext(AuthContext);
-    const [currentTab, setCurrentTab] = useState<AvailableTabs>("contents");
+    const [currentTab, setCurrentTab] = useState<AvailableTabs>("feed");
 
     const [context, setContext] = useState(makeContext(page));
     useEffect(() => {
         setContext(makeContext(page));
-        setCurrentTab("contents");
+        setCurrentTab("feed");
     }, [page]);
 
     if (!page.loggedData || !page.group) {
