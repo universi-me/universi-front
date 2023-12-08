@@ -18,19 +18,19 @@ export type CompetenceType = {
     name: string;
 };
 
-export type Level = "LEARNING" | "BEGINNER" | "EXPERIENCED" | "VERY_EXPERIENCED" | "MASTER";
+export type Level = "NO_EXPERIENCE" | "LITTLE_EXPERIENCE" | "EXPERIENCED" | "VERY_EXPERIENCED" | "MASTER";
 
-export const LevelToLabel = {
-    "LEARNING":                    "Aprendendo",
-    "BEGINNER":                    "Iniciante na Área",
-    "EXPERIENCED":                 "Experiente",
-    "VERY_EXPERIENCED":            "Muito Experiente",
-    "MASTER":                      "Master",
+export const LevelToLabel: {[l in Level]: string} = {
+    "NO_EXPERIENCE":     "Aprendendo",
+    "LITTLE_EXPERIENCE": "Iniciante na Área",
+    "EXPERIENCED":       "Experiente",
+    "VERY_EXPERIENCED":  "Muito Experiente",
+    "MASTER":            "Master",
 };
 
-export const LevelToNumber = {
-    "LEARNING":          0,
-    "BEGINNER":          1,
+export const LevelToNumber: {[l in Level]: number} = {
+    "NO_EXPERIENCE":     0,
+    "LITTLE_EXPERIENCE": 1,
     "EXPERIENCED":       2,
     "VERY_EXPERIENCED":  3,
     "MASTER":            4,

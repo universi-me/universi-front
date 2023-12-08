@@ -1,6 +1,6 @@
 import { useContext, MouseEvent, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
-import { LevelToLabel, LevelToNumber } from '@/types/Competence';
+import { Level, LevelToLabel, LevelToNumber } from '@/types/Competence';
 import { ICON_DELETE_BLACK, ICON_EDIT_BLACK } from '@/utils/assets';
 import './CurriculumAbility.css';
 import { remove } from '@/services/UniversimeApi/Competence';
@@ -54,11 +54,11 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
     });
   };
 
-  function calculateWidth(level: string) {
+  function calculateWidth(level: Level) {
     switch (level) {
-      case "LEARNING":
+      case "NO_EXPERIENCE":
         return 10;
-      case "BEGINNER":
+      case "LITTLE_EXPERIENCE":
         return 25;
       case "EXPERIENCED":
         return 50;
