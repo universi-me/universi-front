@@ -1,14 +1,13 @@
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { Filter } from "@/components/Filter/Filter";
-import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { RequiredValidation } from "@/components/UniversiForm/Validation/RequiredValidation";
 import { TextValidation } from "@/components/UniversiForm/Validation/TextValidation";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
 import UniversimeApi from "@/services/UniversimeApi";
 import { GroupPost } from "@/types/Feed";
-import { getProfileImageUrl } from "@/utils/profileUtils";
-import { useContext, useEffect, useState } from "react";
+import { ProfileClass } from "@/types/Profile";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { GroupContext } from "../../GroupContext";
 import "./GroupFeed.less";
@@ -70,15 +69,20 @@ export function GroupFeed(){
         if(filterPosts != "" && 
         !post.content.toLowerCase().includes(filterPosts.toLowerCase()))
             return <></>
+        
+        if(!post.author)
+            return <></>
+
+        const author : ProfileClass = new ProfileClass(post.author);
 
 
         return(
             <div className="feed-item tab-item">
                 {
-                    post.author
+                    author
                     ?
-                        <Link to={`/profile/${post.author?.user.name}`}>
-                            <img className="feed-image" src={getProfileImageUrl(post.author)??"/assets/imgs/default_avatar.png"} />
+                        <Link to={`/profile/${author?.user.name}`}>
+                            <img className="feed-image" src={author.imageUrl} />
                         </Link>
                     : <></>
                 }
