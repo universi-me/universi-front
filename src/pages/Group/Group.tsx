@@ -5,6 +5,7 @@ import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageDa
 import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
 import { AuthContext } from "@/contexts/Auth";
 import "./Group.less";
+import { ProfileClass } from "@/types/Profile";
 
 export function GroupPage() {
     const page = useLoaderData() as GroupPageLoaderResponse;
@@ -73,11 +74,11 @@ export function GroupPage() {
             group: data.group!,
             loggedData: {
                 isParticipant: data.loggedData?.isParticipant!,
-                profile: data.loggedData?.profile!,
+                profile: new ProfileClass(data.loggedData?.profile!),
                 links: data.loggedData?.links ?? [],
                 groups: data.loggedData?.groups ?? [],
             },
-            participants: data.participants,
+            participants: data.participants.map(ProfileClass.new),
             subgroups: data.subGroups,
 
             currentContent: undefined,

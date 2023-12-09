@@ -3,7 +3,6 @@ import { Link, redirect, useNavigate } from "react-router-dom";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { AuthContext } from "@/contexts/Auth";
 import "./WelcomeUser.less"
-import { getProfileImageUrl } from "@/utils/profileUtils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 
 export function WelcomeUser() {
@@ -20,7 +19,7 @@ export function WelcomeUser() {
 
     return( !isLogged ? null
         :<div className="image-container">
-            <ProfileImage className="logged-user-image" imageUrl={auth.profile ? getProfileImageUrl(auth.profile) : undefined} noImageColor="var(--card-background-color)" onClick={() => {setProfileClicked(!profileClicked)}}/>
+            <ProfileImage className="logged-user-image" imageUrl={auth.profile ? auth.profile.imageUrl : undefined} noImageColor="var(--card-background-color)" onClick={() => {setProfileClicked(!profileClicked)}}/>
             {
                 profileClicked 
                 ?

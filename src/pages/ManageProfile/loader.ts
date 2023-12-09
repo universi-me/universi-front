@@ -1,10 +1,9 @@
 import UniversimeApi from "@/services/UniversimeApi";
-import { GENDER_OPTIONS } from "@/utils/profileUtils";
-import { Gender, Profile } from "@/types/Profile";
+import { type Gender, ProfileClass, GENDER_OPTIONS } from "@/types/Profile";
 import { Link, TypeLink, TypeLinkToLabel } from "@/types/Link";
 
 export type ManageProfileLoaderResponse = {
-    profile: Profile | null;
+    profile: ProfileClass | null;
     links: Link[];
 
     genderOptions: {
@@ -46,7 +45,7 @@ export async function ManageProfileLoader(): Promise<ManageProfileLoaderResponse
         : [];
 
     return {
-        profile,
+        profile: profile ? new ProfileClass(profile) : null,
         links,
         genderOptions,
         typeLinks,

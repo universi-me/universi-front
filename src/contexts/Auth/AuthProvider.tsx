@@ -1,12 +1,12 @@
 import { ReactNode, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
-import { Profile } from "@/types/Profile";
+import { ProfileClass } from "@/types/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi";
 import { goTo } from "@/services/routes";
 import type { Group } from "@/types/Group";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<ProfileClass | null>(null);
   const [organization, setOrganization] = useState<Group | null>(null);
   const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
   const user = profile?.user ?? null;
@@ -91,5 +91,9 @@ async function getLoggedProfile() {
     if(!await UniversimeApi.Auth.validateToken()) {
         return null;
     }
-    return (await UniversimeApi.Profile.profile()).body?.profile ?? null;
+
+    const responseProfile = (await UniversimeApi.Profile.profile()).body?.profile;
+    return responseProfile
+        ? new ProfileClass(responseProfile)
+        : null;
 }
