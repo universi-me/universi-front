@@ -1,14 +1,16 @@
 import { createContext } from "react";
 import { Group } from "@/types/Group";
-import { Profile } from "@/types/Profile";
+import { type ProfileClass } from "@/types/Profile";
 import type { Content, Folder } from "@/types/Capacity";
 import { Link } from "@/types/Link";
+import { GroupPost } from "@/types/Feed";
 
 export type GroupContextType = null | {
     group:         Group;
     subgroups:     Group[];
-    participants:  Profile[];
+    participants:  ProfileClass[];
     folders:       Folder[];
+    posts:         GroupPost[];
 
     currentContent: Folder | undefined;
     setCurrentContent(content: Folder | undefined): any;
@@ -40,9 +42,18 @@ export type GroupContextType = null | {
     editGroup: Group | null | undefined;
     setEditGroup(group: Group | null | undefined) : any;
 
+    /**
+     * The post being edited/created.
+     *
+     * If `null`, should handle creation of a post. If has a value, should handle
+     * post edit. If `undefined`, no post is being edited nor created.
+     */
+    editPost: GroupPost | null | undefined;
+    setEditPost(post: GroupPost | null | undefined) : any;
+
     loggedData: {
         isParticipant: boolean;
-        profile:       Profile;
+        profile:       ProfileClass;
         links:         Link[];
         groups:        Group[];
     };
