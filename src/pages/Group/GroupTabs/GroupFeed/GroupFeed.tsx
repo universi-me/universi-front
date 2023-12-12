@@ -29,9 +29,9 @@ export function GroupFeed(){
                     {
                         groupContext.participants.some(p => p.id == groupContext.loggedData.profile.id)
                         ?
-                        <ActionButton name="Criar publicação" buttonProps={{onClick(){groupContext.setEditPost(null)}}}/>
+                            <ActionButton name="Criar publicação" buttonProps={{onClick(){groupContext.setEditPost(null)}}}/>
                         :
-                        <></>
+                            <></>
                     }
                 </div>
             </div>
