@@ -21,20 +21,10 @@ export async function getGroupPosts(body : GetGroupPost_RequestDTO): Promise<Get
 }
 
 export async function createGroupPost(body: CreateGroupPost_RequestDTO): Promise<CreateGroupPostResponseDTO> {
-    try {
         return await (await api.post<CreateGroupPostResponseDTO>(`/feed/groups/${body.groupId}/posts`, body)).data;
-    } catch (error) {
-        console.error("Erro ao criar post no grupo:", error);
-        throw error;
-    }
 }
 
 export async function deleteGroupPost(groupId: string, postId: string): Promise<ApiResponse<string>> {
-    try {
         const response = await api.delete<ApiResponse<string>>(`/api/feed/groups/${groupId}/posts/${postId}`);
         return response.data;
-    } catch (error) {
-        console.error("Erro ao excluir post do grupo:", error);
-        throw error;
-    }
 }
