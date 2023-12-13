@@ -56,8 +56,9 @@ export function GroupGroups() {
                 <div className="go-right">
                     <Filter setter={setFilterGroups} placeholderMessage={`Buscar grupos em ${groupContext.group.name}`}/>
                     {
-                        (groupContext.loggedData.profile.id == groupContext.group.admin.id || groupContext.loggedData.profile.id == groupContext.group.organization?.admin.id) && (groupContext.group.canCreateGroup) ? 
-                        <ActionButton name="Criar grupo" buttonProps={{onClick(){groupContext.setEditGroup(null)}}}/>
+                        (groupContext.group.canEdit || groupContext.group.canCreateGroup)
+                        ?
+                            <ActionButton name="Criar grupo" buttonProps={{onClick(){groupContext.setEditGroup(null)}}}/>
                         : <></>
                     }
                 </div>
