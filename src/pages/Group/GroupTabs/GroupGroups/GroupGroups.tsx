@@ -57,8 +57,10 @@ export function GroupGroups() {
                     <Filter setter={setFilterGroups} placeholderMessage={`Buscar grupos em ${groupContext.group.name}`}/>
                     {
                         (groupContext.group.canEdit || groupContext.group.canCreateGroup)
-                        ?
+                        ?<>
                             <ActionButton name="Criar grupo" buttonProps={{onClick(){groupContext.setEditGroup(null)}}}/>
+                            <ActionButton name="Editar este grupo" buttonProps={{onClick(){groupContext.setEditGroup(groupContext.group); console.log(groupContext.group)}}}/>
+                        </>
                         : <></>
                     }
                 </div>
@@ -98,6 +100,8 @@ export function GroupGroups() {
                             DTOName: "isRootGroup", label: "Grupo raiz", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.rootGroup
                         }, {
                             DTOName: "parentGroupId", label: "Id do grupo pai (grupo atual)", type: FormInputs.HIDDEN, value: groupContext.group.id
+                        }, {
+                           DTOName: "everyoneCanPost", label: "Todos usuários podem postar", type: FormInputs.BOOLEAN, value: groupContext.group.everyoneCanPost
                         }, {
                             DTOName: "groupPath", label: "path", type: FormInputs.HIDDEN, value: groupContext.editGroup?.path
                         },

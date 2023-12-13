@@ -12,6 +12,11 @@ export type GetGroupPost_RequestDTO = {
     groupId : string;
 }
 
+export type DeleteGroup_RequestDTO = {
+        postId : string;
+        groupId : string;
+}
+
 
 export type CreateGroupPostResponseDTO = ApiResponse<GroupPost>; 
 export type GetGroupPostsResponseDTO = ApiResponse<{posts: GroupPost[]}>; 
@@ -24,7 +29,7 @@ export async function createGroupPost(body: CreateGroupPost_RequestDTO): Promise
         return await (await api.post<CreateGroupPostResponseDTO>(`/feed/groups/${body.groupId}/posts`, body)).data;
 }
 
-export async function deleteGroupPost(groupId: string, postId: string): Promise<ApiResponse<string>> {
-        const response = await api.delete<ApiResponse<string>>(`/api/feed/groups/${groupId}/posts/${postId}`);
+export async function deleteGroupPost(body: DeleteGroup_RequestDTO): Promise<ApiResponse<string>> {
+        const response = await api.delete<ApiResponse<string>>(`/feed/groups/${body.groupId}/posts/${body.postId}`);
         return response.data;
 }
