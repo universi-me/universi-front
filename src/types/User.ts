@@ -7,6 +7,7 @@ export type User = {
     ownerOfSession: boolean;
     needProfile:    boolean;
     accessLevel?:   UserAccessLevel;
+    hasPassword?:   boolean;
 }
 
 export const UserAccessLevelLabel: { [k in UserAccessLevel]: string } = {
