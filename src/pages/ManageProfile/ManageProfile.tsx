@@ -109,7 +109,8 @@ export function ManageProfilePage() {
             }
         }
 
-        const { value: password, isConfirmed } = await SwalUtils.fireModal({
+        let hasPassword = authContext.user?.hasPassword ?? false;
+        const { value: password, isConfirmed } = !hasPassword ? {value: null, isConfirmed: true} : await SwalUtils.fireModal({
             title: "Edição de perfil",
             input: "password",
             inputLabel: "Inserir senha para salvar as alterações",
