@@ -24,7 +24,7 @@ export function GroupFeed(){
 
     const OPTIONS_DEFINITION: OptionInMenu<GroupPost>[] = [
         {
-            text: "Editar",
+            text: "Editar publicação",
             biIcon: "pencil-fill",
             onSelect(data) {
                 groupContext.setEditPost(data);
@@ -34,7 +34,7 @@ export function GroupFeed(){
             },
         },
         {
-            text: "Excluir",
+            text: "Excluir publicação",
             biIcon: "trash-fill",
             className: "delete",
             onSelect: handleDeletePost,
@@ -56,6 +56,12 @@ export function GroupFeed(){
         else if(!groupContext?.group.everyoneCanPost && groupContext?.group.canEdit)
             return true;
         return false;
+    }
+
+    function canSeeMenu(post : GroupPost){
+        if(groupContext?.loggedData.profile.id != groupContext?.group.admin.id && groupContext?.loggedData.profile.id != post.author?.id)
+            return false;
+        return true;
     }
 
 
@@ -134,7 +140,7 @@ export function GroupFeed(){
 
                 <div className="info">
                     <p className="group-description">{post.content}</p>
-                        { !hasAvailableOption(OPTIONS_DEFINITION) ? null :
+                        { !hasAvailableOption(OPTIONS_DEFINITION) || !canSeeMenu(post) ? null :
                             <DropdownMenu.Root>
                                 <DropdownMenu.Trigger asChild>
                                     <button className="options-button">
@@ -144,9 +150,9 @@ export function GroupFeed(){
 
                                 <DropdownMenu.Content className="options" side="left">
                                     { OPTIONS_DEFINITION.map(def => {
-                                        if(def.text == "Editar" && post.author?.id == groupContext?.loggedData.profile.id)
+                                        if(def.text == "Editar publicação" && post.author?.id == groupContext?.loggedData.profile.id)
                                             return renderOption(post, def)
-                                        else if(def.text == "Editar")
+                                        else if(def.text == "Editar publicação")
                                             return null
                                         else
                                             return renderOption(post, def)
