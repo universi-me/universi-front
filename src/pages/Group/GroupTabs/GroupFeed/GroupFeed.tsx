@@ -7,15 +7,63 @@ import { ValidationComposite } from "@/components/UniversiForm/Validation/Valida
 import UniversimeApi from "@/services/UniversimeApi";
 import { GroupPost } from "@/types/Feed";
 import { ProfileClass } from "@/types/Profile";
+import { hasAvailableOption, OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { GroupContext } from "../../GroupContext";
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import "./GroupFeed.less";
 
 export function GroupFeed(){
 
     const [filterPosts, setFilterPosts] = useState<string>("");
     const groupContext = useContext(GroupContext);
+
+    if(!groupContext)
+        return null;
+
+    const OPTIONS_DEFINITION: OptionInMenu<GroupPost>[] = [
+        {
+            text: "Editar publicação",
+            biIcon: "pencil-fill",
+            onSelect(data) {
+                groupContext.setEditPost(data);
+            },
+            hidden(){
+                return false;
+            },
+        },
+        {
+            text: "Excluir publicação",
+            biIcon: "trash-fill",
+            className: "delete",
+            onSelect: handleDeletePost,
+            hidden() {
+                return !groupContext?.group.canEdit;
+            },
+        }
+    ]
+
+    function handleDeletePost(post: GroupPost){
+        console.log(post)
+        UniversimeApi.Feed.deleteGroupPost({postId: post.postId, groupId: post.groupId});
+        groupContext?.refreshData();
+    }
+
+    function canCreatePost(){
+        if(groupContext?.group.everyoneCanPost && groupContext.participants.some(p => p.id == groupContext.loggedData.profile.id))
+            return true;
+        else if(!groupContext?.group.everyoneCanPost && groupContext?.group.canEdit)
+            return true;
+        return false;
+    }
+
+    function canSeeMenu(post : GroupPost){
+        if(groupContext?.loggedData.profile.id != groupContext?.group.admin.id && groupContext?.loggedData.profile.id != post.author?.id)
+            return false;
+        return true;
+    }
+
 
 
     if(groupContext == null)
@@ -27,7 +75,7 @@ export function GroupFeed(){
                 <div className="go-right">
                     <Filter setter={setFilterPosts} placeholderMessage={`Buscar posts em ${groupContext.group.name}`}/>
                     {
-                        groupContext.participants.some(p => p.id == groupContext.loggedData.profile.id)
+                        canCreatePost()
                         ?
                             <ActionButton name="Criar publicação" buttonProps={{onClick(){groupContext.setEditPost(null)}}}/>
                         :
@@ -52,7 +100,10 @@ export function GroupFeed(){
                         }, {
                             DTOName: "authorId", label: "", type: FormInputs.HIDDEN, value: groupContext.loggedData.profile.id
                         }, {
-                            DTOName: "content", label: "Mensagem do post", type: FormInputs.LONG_TEXT, validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
+                            DTOName: "content", label: "Mensagem do post", type: FormInputs.LONG_TEXT,
+                            charLimit: 3000,
+                            value: groupContext.editPost ? groupContext.editPost.content : ""
+                            ,validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
                         }
                     ]}
                     requisition={groupContext.editPost ? UniversimeApi.Feed.createGroupPost : UniversimeApi.Feed.createGroupPost}
@@ -89,6 +140,28 @@ export function GroupFeed(){
 
                 <div className="info">
                     <p className="group-description">{post.content}</p>
+                        { !hasAvailableOption(OPTIONS_DEFINITION) || !canSeeMenu(post) ? null :
+                            <DropdownMenu.Root>
+                                <DropdownMenu.Trigger asChild>
+                                    <button className="options-button">
+                                        <i className="bi bi-three-dots-vertical" />
+                                    </button>
+                                </DropdownMenu.Trigger>
+
+                                <DropdownMenu.Content className="options" side="left">
+                                    { OPTIONS_DEFINITION.map(def => {
+                                        if(def.text == "Editar publicação" && post.author?.id == groupContext?.loggedData.profile.id)
+                                            return renderOption(post, def)
+                                        else if(def.text == "Editar publicação")
+                                            return null
+                                        else
+                                            return renderOption(post, def)
+
+                                    }) }
+                                    <DropdownMenu.Arrow className="options-arrow" height=".5rem" width="1rem" />
+                                </DropdownMenu.Content>
+                            </DropdownMenu.Root>
+                        }
                 </div>
             </div>
         )
