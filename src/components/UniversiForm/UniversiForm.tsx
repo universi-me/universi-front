@@ -160,7 +160,9 @@ export function UniversiForm(props : formProps){
 
 
     function getCharLimit(object : FormObject){
-        if(object.type == FormInputs.TEXT)
+        if(object.charLimit)
+            return object.charLimit;
+        else if(object.type == FormInputs.TEXT)
             return MAX_TEXT_LENGTH;
         else if(object.type == FormInputs.LONG_TEXT)
             return MAX_LONG_TEXT_LENGTH
