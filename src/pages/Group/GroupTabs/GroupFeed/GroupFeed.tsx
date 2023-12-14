@@ -131,15 +131,12 @@ export function GroupFeed(){
             <div className="feed-item tab-item">
                 {
                     author
-                    ?
-                        <Link to={`/profile/${author?.user.name}`}>
+                    ?   
+                    <>
+                        <Link to={`/profile/${author?.user.name}`} className="feed-user-info">
                             <img className="feed-image" src={author.imageUrl} />
+                            <p>{post.author.firstname} {post.author.lastname}</p>
                         </Link>
-                    : <></>
-                }
-
-                <div className="info">
-                    <p className="group-description">{post.content}</p>
                         { !hasAvailableOption(OPTIONS_DEFINITION) || !canSeeMenu(post) ? null :
                             <DropdownMenu.Root>
                                 <DropdownMenu.Trigger asChild>
@@ -162,6 +159,12 @@ export function GroupFeed(){
                                 </DropdownMenu.Content>
                             </DropdownMenu.Root>
                         }
+                    </>
+                    : <></>
+                }
+
+                <div className="info">
+                    <p className="feed-description">{post.content}</p>
                 </div>
             </div>
         )

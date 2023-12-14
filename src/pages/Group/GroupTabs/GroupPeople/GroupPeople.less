@@ -2,18 +2,18 @@
 @import url(/src/layouts/fonts.less);
 
 #group-page #people .people-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     row-gap: 1.5rem;
-    row-gap: 1rem;
-    column-gap: .5rem;
+    column-gap: 1.5rem;
+    justify-content: center;
 
     .person-item {
         display: flex;
         flex-direction: row;
-        align-items: start;
 
-        width: 95%;
+        width: 25rem;
 
         text-align: center;
 

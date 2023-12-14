@@ -12,7 +12,10 @@ export type ProfileGroupsProps = {
 export function ProfileGroups(props: ProfileGroupsProps) {
     return (
         <div className="profile-groups-component">
-            <h1 className="groups-name">Meus grupos</h1>
+            <div className="header-container">
+                <img src="/assets/imgs/group2.png" className="group-background-image"></img>
+                <h1 className="groups-name">Meus grupos</h1>
+            </div>
             <div className="items-wrapper">
                 {
                     props.groups.length <= 0
