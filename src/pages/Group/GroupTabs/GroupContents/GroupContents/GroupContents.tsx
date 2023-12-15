@@ -25,6 +25,7 @@ function SelectPeople(){
         if(groupContext?.assignFolder == undefined || selectedPeople == undefined)
             return;
         UniversimeApi.Capacity.assignContent({folderId: groupContext?.assignFolder?.id, profilesIds: selectedPeople?.map((p)=>(p.value))})
+        groupContext.setAssignFolder(undefined)
     }
 
     return(
@@ -59,7 +60,7 @@ function SelectPeople(){
                     </section>
 
                     <section className="operation-buttons">
-                        <button type="button" className="cancel-button" onClick={ () => groupContext?.setAssignFolder(undefined)}>
+                        <button type="button" className="cancel-button" onClick={() => groupContext?.setAssignFolder(undefined)}>
                             <i className="bi bi-x-circle-fill" />
                             Cancelar
                         </button>
@@ -136,8 +137,7 @@ export function GroupContents() {
 
             <ManageContent />
             {
-                groupContext.assignFolder
-
+                groupContext.assignFolder !== undefined
                 ?
                 <SelectPeople/>
                 :
