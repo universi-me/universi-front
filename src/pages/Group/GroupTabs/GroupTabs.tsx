@@ -1,11 +1,11 @@
 import { useContext, type ReactElement, useState, useEffect } from "react";
-import { GroupContents, GroupContext, GroupGroups, GroupPeople } from "@/pages/Group";
+import { GroupContents, GroupContext, GroupGroups, GroupPeople,GroupFeed} from "@/pages/Group";
 import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
 import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 
-export type AvailableTabs = "contents" | "files" | "groups" | "people";
+export type AvailableTabs = "feed" | "contents" | "files" | "groups" | "people";
 
 export type GroupTabDefinition = {
     name: string,
@@ -89,6 +89,11 @@ export function GroupTabRenderer({tab}: { tab: AvailableTabs }) {
 export const EMPTY_LIST_CLASS = "empty-text";
 
 const TABS: GroupTabDefinition[] = [
+    {
+        name: 'Feed',
+        value: 'feed',
+        renderer: GroupFeed,
+    },
     {
         name: 'Conteúdos',
         value: "contents",

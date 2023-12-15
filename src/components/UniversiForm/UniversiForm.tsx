@@ -1,17 +1,13 @@
-import { ReactNode, useState, useContext, ChangeEvent, useEffect } from "react"
+import { ReactNode, useState, useEffect } from "react"
 
 import "./UniversiForm.less"
-import { GroupContext, CATEGORY_SELECT_STYLES } from "@/pages/Group"
 import UniversimeApi from "@/services/UniversimeApi"
 import { arrayBufferToBase64 } from "@/utils/fileUtils"
-import Select, { CSSObjectWithLabel, GroupBase, StylesConfig } from "react-select"
+import Select, { GroupBase, StylesConfig } from "react-select"
 import CreatableSelect from "react-select/creatable"
 import { UniversiModal } from "../UniversiModal"
-import { Validation } from "./Validation/Validation"
 import { RequiredValidation } from "./Validation/RequiredValidation"
-import { Category } from "@/types/Capacity"
 import { ValidationComposite } from "./Validation/ValidationComposite"
-import { object } from "prop-types"
 import { makeClassName } from "@/utils/tsxUtils"
 
 export type formProps = {
@@ -89,7 +85,6 @@ export function UniversiForm(props : formProps){
     const MAX_LONG_TEXT_LENGTH = 150
     const MAX_URL_LENGTH = 100
 
-    const context = useContext(GroupContext)
     const DEFAULT_IMAGE_PATH = "/assets/imgs/default-content.png";
 
     useEffect(()=>{

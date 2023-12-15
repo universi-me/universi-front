@@ -7,11 +7,10 @@ import { AuthContext } from "@/contexts/Auth";
 import { SettingsTitle, type RolesPageLoaderResponse, RolesPageFetch, SettingsDescription } from "@/pages/Settings";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { setStateAsValue } from "@/utils/tsxUtils";
-import { getFullName, getProfileImageUrl } from "@/utils/profileUtils";
 import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
-import { type Profile } from "@/types/Profile";
+import { ProfileClass, type Profile } from "@/types/Profile";
 import { UserAccessLevelLabel, type UserAccessLevel, compareAccessLevel } from "@/types/User";
 import { type Optional } from "@/types/utils";
 import "./RolesPage.less";
@@ -21,7 +20,7 @@ export function RolesPage() {
     const navigate = useNavigate();
     const auth = useContext(AuthContext);
 
-    const [participants, participantsDispatch] = useReducer(participantsReducer, data.success ? data.participants : undefined);
+    const [participants, participantsDispatch] = useReducer(participantsReducer, data.success ? data.participants.map(ProfileClass.new) : undefined);
     const [filter, setFilter] = useState("");
 
     if (!participants) {
@@ -42,7 +41,7 @@ export function RolesPage() {
                 return compareAccessLevel(a.user.accessLevel!, b.user.accessLevel!);
             }
 
-            return getFullName(a).localeCompare(getFullName(b));
+            return (a.fullname ?? "").localeCompare(b.fullname ?? "");
         });
 
     const CHANGE_ROLE_OPTIONS: OptionInMenu<Profile>[] = Object.entries(UserAccessLevelLabel).map(([role, label]) => ({
@@ -71,9 +70,9 @@ export function RolesPage() {
             const isOwnProfile = auth.profile!.id === profile.id;
 
             return <div className="profile-item" key={profile.id}>
-                <ProfileImage imageUrl={getProfileImageUrl(profile)} className="profile-image" />
+                <ProfileImage imageUrl={profile.imageUrl} className="profile-image" />
                 <div className="info">
-                    <h2 className="profile-name">{getFullName(profile)}</h2>
+                    <h2 className="profile-name">{profile.fullname}</h2>
                     <p className="profile-bio">{profile.bio}</p>
                 </div>
                 <DropdownMenu.Root>
@@ -105,18 +104,11 @@ export function RolesPage() {
             if (p.id !== action.profileId)
                 return p;
 
-            const unchanging = data.participants
+            const originalRole = data.participants
                 .find(p => p.id === action.profileId)!
-                .user.accessLevel === action.setRole;
+                .user.accessLevel!;
 
-            return {
-                ...p,
-                changed: unchanging ? undefined : true,
-                user: {
-                    ...p.user,
-                    accessLevel: action.setRole,
-                }
-            }
+            return new ProfileOnList(p, originalRole, action.setRole);
         });
     }
 
@@ -124,7 +116,7 @@ export function RolesPage() {
         const response = await RolesPageFetch(auth.organization!.id);
         participantsDispatch({
             type: "SET_ALL",
-            setParticipants: response.success ? response.participants : undefined,
+            setParticipants: response.success ? response.participants.map(ProfileClass.new) : undefined,
         });
     }
 
@@ -154,7 +146,17 @@ export function RolesPage() {
     }
 }
 
-type ProfileOnList = Profile & { changed?: true };
+class ProfileOnList extends ProfileClass {
+    public changed?: true;
+
+    constructor(profile: Profile, originalRole: UserAccessLevel, newRole: UserAccessLevel) {
+        super(profile);
+        this.user.accessLevel = newRole;
+        this.changed = originalRole === newRole
+            ? true
+            : undefined;
+    }
+}
 
 type ParticipantsReducerAction = {
     type: "SET_ROLE";

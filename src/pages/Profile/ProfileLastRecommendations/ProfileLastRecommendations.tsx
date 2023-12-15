@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ProfileContext } from '@/pages/Profile';
-import { getFullName, getProfileImageUrl } from '@/utils/profileUtils';
 import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
 import './ProfileLastRecommendations.css'
+import { ProfileClass } from '@/types/Profile';
 
 const MAX_RECOMMENDATIONS_QUANTITY = 3;
 
@@ -12,13 +12,15 @@ export function ProfileLastRecommendations() {
     if (profileContext === null)
         return null;
 
+    const recommendationsReceived = profileContext.profileListData.recommendationsReceived.map(r => ({ ...r, origin: new ProfileClass(r.origin), destiny: new ProfileClass(r.destiny) }));
+
     return (
         <div className="last-recommendations">
             <h2 className="heading">Últimas Recomendações</h2>
-            { profileContext.profileListData.recommendationsReceived.length > 0 ?
+            { recommendationsReceived.length > 0 ?
                 <div className="list">
                     {
-                        profileContext.profileListData.recommendationsReceived.map((recommendation, i) => {
+                        recommendationsReceived.map((recommendation, i) => {
                             if (i >= MAX_RECOMMENDATIONS_QUANTITY)
                                 return null;
 
@@ -26,11 +28,11 @@ export function ProfileLastRecommendations() {
                             return (
                                 <div className="recommendation" key={recommendation.id}>
                                     <Link to={originUrl} target='_blank'>
-                                    <ProfileImage className="image" imageUrl={getProfileImageUrl(recommendation.origin)} noImageColor='#8A8A8A' />
+                                    <ProfileImage className="image" imageUrl={recommendation.origin.imageUrl} noImageColor='#8A8A8A' />
                                     </Link>
 
                                     <div className="box">
-                                        <Link to={originUrl} target='_blank' className="user-name">{getFullName(recommendation.origin)}</Link>
+                                        <Link to={originUrl} target='_blank' className="user-name">{recommendation.origin.fullname}</Link>
                                         <h3 className="recommended-by">Recomendou pela competência:</h3>
                                         <h3 className="competence-name">{recommendation.competenceType.name}</h3>
                                     </div>
