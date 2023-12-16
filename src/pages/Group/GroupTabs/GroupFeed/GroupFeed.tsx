@@ -8,7 +8,7 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { GroupPost } from "@/types/Feed";
 import { ProfileClass } from "@/types/Profile";
 import { hasAvailableOption, OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { GroupContext } from "../../GroupContext";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
@@ -86,7 +86,7 @@ export function GroupFeed(){
 
             <div className="feed-list tab-list"> 
             { 
-                groupContext.posts.slice().reverse().map(renderPost)
+                groupContext.posts.slice().reverse().map((post, index) =>(renderPost(post, index)))
             } 
             </div>
             {
@@ -117,7 +117,25 @@ export function GroupFeed(){
         </section>
     )
 
-    function renderPost(post : GroupPost){
+    function renderPost(post : GroupPost, index : number){
+
+
+        function getNumberOfLines() : number{
+            const postElement = document.getElementById(index.toString())
+            if(postElement === null)
+                return 0;
+            const lineHeight = parseFloat(getComputedStyle(postElement).lineHeight);
+            const numberOfLines = Math.ceil(postElement.clientHeight / lineHeight);
+            console.log("number of lines", numberOfLines)
+            
+            return numberOfLines;
+          };
+
+        function showReadMore(){
+            const postElement = document.getElementById(index.toString())
+            return postElement?.innerHTML.replaceAll("</span>", "").replaceAll("<span>", "").replaceAll("<br>", "\n") !== post.content
+        }
+        
 
         if(filterPosts != "" && 
         !post.content.toLowerCase().includes(filterPosts.toLowerCase()))
@@ -127,7 +145,6 @@ export function GroupFeed(){
             return <></>
 
         const author : ProfileClass = new ProfileClass(post.author);
-
 
         return(
             <div className="feed-item tab-item">
@@ -165,8 +182,35 @@ export function GroupFeed(){
                     : <></>
                 }
 
-                <div className="info">
-                    <p className="feed-description">{post.content}</p>
+                <div className="info" id={`${index.toString()}-info`}>
+                    <>
+                    <p className="feed-description" id={index.toString()} >
+                        {post.content.split("\n").map((p)=>(
+                            p.trim() != "" && p.trim() != "\n"?
+                            <>
+                                <span>{p}</span>
+                                <br></br>
+                            </>
+                            : <></>
+                        ))
+                        }
+                    </p>
+                    {
+                        getNumberOfLines() >= 3 && !document.getElementById(index.toString())?.classList.contains("show-full-text") && showReadMore()
+                        ?
+                        <p className="ler-button" id={`${index.toString()}-ler`} onClick={(e) => {
+                            const targetElement = document.getElementById(index.toString());
+                            const eventElement = document.getElementById(index.toString()+"-ler");
+                            if (targetElement) {
+                                targetElement.classList.toggle('show-full-text');
+                                eventElement!.innerHTML = targetElement.classList.contains('show-full-text') ? 'Ler menos' : 'Ler mais';
+                            }
+                        }}
+                      >Ler mais</p>
+                        :
+                        <></>
+                    }
+                    </>
                 </div>
             </div>
         )

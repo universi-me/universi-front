@@ -6,4 +6,5 @@ export type GroupPost = {
     content : string;
     authorId : string;
     author : ProfileClass | undefined;
+    showFullText? : boolean;
 }
