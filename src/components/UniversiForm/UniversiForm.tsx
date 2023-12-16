@@ -11,13 +11,23 @@ import { ValidationComposite } from "./Validation/ValidationComposite"
 import { makeClassName } from "@/utils/tsxUtils"
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
+export type cancelPopup = {
+    confirmCancel? : boolean,
+    title? : string,
+    message? : string,
+    cancelButtonMessage? : string,
+    confirmButtonMessage? : string,
+    confirmButtonColor? : string,
+    cancelButtonColor? : string,
+}
+
 export type formProps = {
 
     objects: FormObject[],
     requisition : any,
     callback : () => void,
     formTitle : string,
-    confirmCancel? : boolean,
+    cancelProps? : cancelPopup,
 }
 
 type FormObjectBase<FormType extends FormInputs, ValueType> = {
@@ -530,7 +540,7 @@ export function UniversiForm(props : formProps){
     }
 
     function handleCancel(){
-        if(props.confirmCancel == undefined || props.confirmCancel == true)
+        if(props.cancelProps?.confirmCancel == undefined || props.cancelProps.confirmCancel == true)
             cancelPopup()
         else
             props.callback()
@@ -539,13 +549,13 @@ export function UniversiForm(props : formProps){
 
     function cancelPopup(){
             SwalUtils.fireModal({
-                title: "Deseja cancelar esta ação?",
-                text: "Todos os campos preenchidos serão perdidos.",
+                title: props.cancelProps?.title  ?? "Deseja cancelar esta ação?",
+                text: props.cancelProps?.message ?? "Todos os campos preenchidos serão perdidos.",
 
                 showCancelButton: true,
-                cancelButtonText: "Cancelar",
-                confirmButtonText: "Ok",
-                confirmButtonColor: "var(--wrong-invalid-color)"
+                cancelButtonText: props.cancelProps?.cancelButtonMessage   ?? "Cancelar",
+                confirmButtonText: props.cancelProps?.confirmButtonMessage ?? "Ok",
+                confirmButtonColor: props.cancelProps?.confirmButtonColor  ?? "var(--wrong-invalid-color)"
             }).then(response =>{
                 if(response.isConfirmed){
                     props.callback();

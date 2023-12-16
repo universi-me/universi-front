@@ -93,6 +93,15 @@ export function GroupFeed(){
 
                 <UniversiForm
                     formTitle={groupContext.editGroup == null ? "Criar publicação" : "Editar publicação"}
+                    cancelProps = {
+                        {
+                            title : "Descartar publicação?",
+                            message: "Tem certeza? Esta ação é irreversível", 
+                            confirmButtonMessage: "Sim",
+                            cancelButtonMessage: "Não"
+                        }
+
+                    }
                     objects={[
                         {
                             DTOName: "groupId", label: "", type: FormInputs.HIDDEN, value: groupContext.group.id
