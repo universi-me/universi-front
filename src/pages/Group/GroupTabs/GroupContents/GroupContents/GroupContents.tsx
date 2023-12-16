@@ -13,8 +13,7 @@ import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { AuthContext } from "@/contexts/Auth";
 import { UniversiModal } from "@/components/UniversiModal";
-import { Profile } from "@/types/Profile";
-import Select from "react-select"
+import Select, { MultiValue } from "react-select"
 
 function SelectPeople(){
 
@@ -26,6 +25,10 @@ function SelectPeople(){
             return;
         UniversimeApi.Capacity.assignContent({folderId: groupContext?.assignFolder?.id, profilesIds: selectedPeople?.map((p)=>(p.value))})
         groupContext.setAssignFolder(undefined)
+    }
+
+    function handleAssignChange(option : MultiValue<{value : string, label : string}>){
+        setSelectedPeople(option.map(({value, label}) => ({value, label})));
     }
 
     return(
@@ -46,7 +49,7 @@ function SelectPeople(){
                             options={groupContext?.participants.map((t)=>({value: t.id, label: t.firstname+" "+t.lastname}))}
                             className="category-select"
                             value={selectedPeople}
-                            onChange={(options)=>{setSelectedPeople(options)}}
+                            onChange={(option)=>{handleAssignChange(option)}}
                         />
                     </fieldset>
                     <section className="operation-buttons">
