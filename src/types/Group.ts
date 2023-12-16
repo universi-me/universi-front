@@ -18,6 +18,7 @@ export type Group = {
     bannerImage:       string | null;
     organization:      Group | null;
     canEdit:           boolean;
+    everyoneCanPost:   boolean;
 };
 
 export type GroupEmailFilter = {
