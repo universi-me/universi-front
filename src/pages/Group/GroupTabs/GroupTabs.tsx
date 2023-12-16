@@ -90,7 +90,7 @@ export const EMPTY_LIST_CLASS = "empty-text";
 
 const TABS: GroupTabDefinition[] = [
     {
-        name: 'Feed',
+        name: 'Publicações',
         value: 'feed',
         renderer: GroupFeed,
     },
