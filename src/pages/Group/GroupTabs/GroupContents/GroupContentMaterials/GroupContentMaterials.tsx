@@ -208,7 +208,10 @@ export function GroupContentMaterials() {
 
     function handleVideoClick(id : string, material : Content){
         if(playingVideo == id){
-            showMiniature(id)
+            if(document.getElementsByClassName("fullscreen"))
+                showMiniature(id)
+            else
+                expand(id)
         }
         else{
             setIsMiniature(false)
@@ -245,8 +248,6 @@ export function GroupContentMaterials() {
         containers.iframeContainer?.classList.add("iframe-container")
         containers.videoContainer?.classList.add("fullscreen")
 
-        let modal = document.getElementsByClassName("universi-modal-overlay")[0] as HTMLElement
-        modal.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
 
         if(containers.close){
             containers.close.innerHTML = "✖";
@@ -267,8 +268,6 @@ export function GroupContentMaterials() {
         containers.iframeContainer?.classList.add("mini-iframe")
         containers.videoContainer?.classList.remove("fullscreen")
 
-        let modal = document.getElementsByClassName("universi-modal-overlay")[0] as HTMLElement
-        modal.style.backgroundColor = "transparent";
 
         if(containers.close){
             containers.close.innerHTML = "&#x26F6;"
