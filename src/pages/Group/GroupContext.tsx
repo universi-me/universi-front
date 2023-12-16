@@ -51,6 +51,12 @@ export type GroupContextType = null | {
     editPost: GroupPost | null | undefined;
     setEditPost(post: GroupPost | null | undefined) : any;
 
+    /**
+     * The Folder being assigned to someone
+     */
+    assignFolder: Folder | undefined;
+    setAssignFolder(group: Folder | undefined) : any;
+
     loggedData: {
         isParticipant: boolean;
         profile:       ProfileClass;

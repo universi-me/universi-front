@@ -106,6 +106,11 @@ export function GroupPage() {
                 setContext({...this, editPost: c})
             },
 
+            assignFolder: undefined,
+            setAssignFolder(c) {
+                setContext({...this, assignFolder: c})
+            },
+
             refreshData: refreshGroupData,
         };
     }

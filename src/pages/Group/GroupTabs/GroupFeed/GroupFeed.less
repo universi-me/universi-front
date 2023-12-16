@@ -8,17 +8,29 @@
             display: flex;
             flex-direction: row;
             align-items: start;
+            flex-wrap: wrap;
+            justify-content: space-between;
 
             height: fit-content;
 
             width: 100%;
+            
+            .feed-user-info{
+                text-decoration: none;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                color: var(--font-color-v2);
+                gap: 1rem;
+                font-weight: bold;
+            }
 
             &:not(:last-of-type) {
                 margin-bottom: 1.5rem;
             }
 
             .feed-image {
-                @side: 8rem !important;
+                @side: 3em !important;
                 width: @side;
                 height: @side;
                 aspect-ratio: 1;
@@ -28,9 +40,14 @@
             }
 
             .info {
-                margin-left: 3rem;
 
                 color: @font-color-v2;
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 1rem;
+
                 .group-name {
                     color: inherit;
                     text-decoration: none;
@@ -38,12 +55,12 @@
                     font-size: 1.5rem;
                 }
 
-                .group-description {
+                .feed-description {
                     margin-top: .75rem;
-                    text-align: justify;
+                    text-align: left;
                 }
             }
-            .group-options-button {
+            .options-button {
                 margin-right: 1rem;
                 margin-left: auto;
 
@@ -68,14 +85,14 @@
                 }
             }
 
-            .group-options {
+            .options {
                 background-color: @card-background-color;
                 border-radius: .625rem;
                 padding: .25rem .5rem;
 
                 min-width: 7rem;
 
-                .group-options-arrow {
+                .options-arrow {
                     fill: @card-background-color;
                 }
 

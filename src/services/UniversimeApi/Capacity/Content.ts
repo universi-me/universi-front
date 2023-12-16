@@ -40,6 +40,11 @@ export type ContentStatusEdit_RequestDTO={
     contentStatusType    : string;
 }
 
+export type AssignContent_RequestDTO = {
+    folderId : string;
+    profilesIds : string[];
+}
+
 export type ContentGet_ResponseDTO =    ApiResponse<{content: Content}>;
 export type ContentCreate_ResponseDTO = ApiResponse;
 export type ContentEdit_ResponseDTO =   ApiResponse;
@@ -100,5 +105,11 @@ export async function editContentStatus(body : ContentStatusEdit_RequestDTO){
             contentId : body.contentId,
             contentStatusType : body.contentStatusType,
         })
+    ).data;
+}
+
+export async function assignContent(body : AssignContent_RequestDTO){
+    return(
+        await api.post<AssignContent_RequestDTO>("/capacity/folder/assign", body)
     ).data;
 }
