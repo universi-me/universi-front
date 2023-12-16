@@ -166,28 +166,6 @@ export function GroupFeed(){
 
                 <div className="info">
                     <p className="feed-description">{post.content}</p>
-                        { !hasAvailableOption(OPTIONS_DEFINITION) || !canSeeMenu(post) ? null :
-                            <DropdownMenu.Root>
-                                <DropdownMenu.Trigger asChild>
-                                    <button className="options-button">
-                                        <i className="bi bi-three-dots-vertical" />
-                                    </button>
-                                </DropdownMenu.Trigger>
-
-                                <DropdownMenu.Content className="options" side="left">
-                                    { OPTIONS_DEFINITION.map(def => {
-                                        if(def.text == "Editar publicação" && post.author?.id == groupContext?.loggedData.profile.id)
-                                            return renderOption(post, def)
-                                        else if(def.text == "Editar publicação")
-                                            return null
-                                        else
-                                            return renderOption(post, def)
-
-                                    }) }
-                                    <DropdownMenu.Arrow className="options-arrow" height=".5rem" width="1rem" />
-                                </DropdownMenu.Content>
-                            </DropdownMenu.Root>
-                        }
                 </div>
             </div>
         )
