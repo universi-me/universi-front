@@ -45,7 +45,6 @@ export function GroupFeed(){
     ]
 
     function handleDeletePost(post: GroupPost){
-        console.log(post)
         UniversimeApi.Feed.deleteGroupPost({postId: post.postId, groupId: post.groupId});
         groupContext?.refreshData();
     }
