@@ -34,8 +34,7 @@ export type ProfilePageLoaderResponse = {
     };
 };
 
-export async function ProfilePageLoader(args: LoaderFunctionArgs): Promise<ProfilePageLoaderResponse> {
-    const username = args.params["id"];
+export async function fetchProfilePageData(username: string | undefined): Promise<ProfilePageLoaderResponse> {
     if (username === undefined)
         return FAILED_TO_LOAD;
 
@@ -82,6 +81,11 @@ export async function ProfilePageLoader(args: LoaderFunctionArgs): Promise<Profi
             recommendationsSend: fetchRecommendations.body?.recomendationsSend ?? [],
         },
     };
+}
+
+export async function ProfilePageLoader(args: LoaderFunctionArgs): Promise<ProfilePageLoaderResponse> {
+    const username = args.params["id"];
+    return fetchProfilePageData(username);
 }
 
 const FAILED_TO_LOAD: ProfilePageLoaderResponse = {

@@ -40,7 +40,7 @@ export type ProfileContextType = null | {
     setEditCompetence(competence: Competence | null): any;
     setEditEducation(education: Education | null): any;
     setEditExperience(experience: Experience | null): any;
-    reloadPage: () => void | Promise<void>;
+    reloadPage: () => Promise<ProfileContextType>;
 }
 
 export const ProfileContext = createContext<ProfileContextType>(null);
