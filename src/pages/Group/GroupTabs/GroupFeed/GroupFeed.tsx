@@ -46,6 +46,7 @@ export function GroupFeed(){
 
                 <UniversiForm
                     formTitle={groupContext.editGroup == null ? "Criar post" : "Editar grupo"}
+                    confirmCancel ={false}
                     objects={[
                         {
                             DTOName: "groupId", label: "", type: FormInputs.HIDDEN, value: groupContext.group.id
