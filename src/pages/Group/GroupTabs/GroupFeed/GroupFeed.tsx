@@ -45,7 +45,6 @@ export function GroupFeed(){
     ]
 
     function handleDeletePost(post: GroupPost){
-        console.log(post)
         UniversimeApi.Feed.deleteGroupPost({postId: post.postId, groupId: post.groupId});
         groupContext?.refreshData();
     }
@@ -104,10 +103,12 @@ export function GroupFeed(){
                             charLimit: 3000,
                             value: groupContext.editPost ? groupContext.editPost.content : ""
                             ,validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
+                        }, {
+                            DTOName : "postId", label : "", type : FormInputs.HIDDEN, value : groupContext.editPost?.postId
                         }
                     ]}
-                    requisition={groupContext.editPost ? UniversimeApi.Feed.createGroupPost : UniversimeApi.Feed.createGroupPost}
-                    callback={() =>{groupContext.refreshData()}}
+                    requisition={groupContext.editPost ? UniversimeApi.Feed.editGroupPost : UniversimeApi.Feed.createGroupPost}
+                    callback={() => {groupContext.refreshData()}}
                 />
                 :
                 <></>
@@ -165,6 +166,28 @@ export function GroupFeed(){
 
                 <div className="info">
                     <p className="feed-description">{post.content}</p>
+                        { !hasAvailableOption(OPTIONS_DEFINITION) || !canSeeMenu(post) ? null :
+                            <DropdownMenu.Root>
+                                <DropdownMenu.Trigger asChild>
+                                    <button className="options-button">
+                                        <i className="bi bi-three-dots-vertical" />
+                                    </button>
+                                </DropdownMenu.Trigger>
+
+                                <DropdownMenu.Content className="options" side="left">
+                                    { OPTIONS_DEFINITION.map(def => {
+                                        if(def.text == "Editar publicação" && post.author?.id == groupContext?.loggedData.profile.id)
+                                            return renderOption(post, def)
+                                        else if(def.text == "Editar publicação")
+                                            return null
+                                        else
+                                            return renderOption(post, def)
+
+                                    }) }
+                                    <DropdownMenu.Arrow className="options-arrow" height=".5rem" width="1rem" />
+                                </DropdownMenu.Content>
+                            </DropdownMenu.Root>
+                        }
                 </div>
             </div>
         )
