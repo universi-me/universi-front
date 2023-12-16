@@ -82,7 +82,7 @@ export function GroupTabRenderer({tab}: { tab: AvailableTabs }) {
     const renderedTab = TABS.find(t => t.value === tab);
 
     return renderedTab
-        ? renderedTab.renderer()
+        ? <renderedTab.renderer />
         : null;
 }
 

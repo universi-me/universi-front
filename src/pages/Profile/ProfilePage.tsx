@@ -113,7 +113,7 @@ export function ProfilePage() {
             allTypeCompetence: data.allTypeCompetence,
             allTypeEducation: data.allTypeEducation,
             allTypeExperience: data.allTypeExperience,
-            profile: data.profile!,
+            profile: new ProfileClass(data.profile!),
             profileListData: data.profileListData,
 
             reloadPage: refreshProfileData,
