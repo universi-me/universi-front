@@ -5,16 +5,17 @@ import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageDa
 import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
 import { AuthContext } from "@/contexts/Auth";
 import "./Group.less";
+import { ProfileClass } from "@/types/Profile";
 
 export function GroupPage() {
     const page = useLoaderData() as GroupPageLoaderResponse;
     const authContext = useContext(AuthContext);
-    const [currentTab, setCurrentTab] = useState<AvailableTabs>("contents");
+    const [currentTab, setCurrentTab] = useState<AvailableTabs>("feed");
 
     const [context, setContext] = useState(makeContext(page));
     useEffect(() => {
         setContext(makeContext(page));
-        setCurrentTab("contents");
+        setCurrentTab("feed");
     }, [page]);
 
     if (!page.loggedData || !page.group) {
@@ -69,14 +70,15 @@ export function GroupPage() {
 
         return {
             folders: data.folders,
+            posts: data.posts,
             group: data.group!,
             loggedData: {
                 isParticipant: data.loggedData?.isParticipant!,
-                profile: data.loggedData?.profile!,
+                profile: new ProfileClass(data.loggedData?.profile!),
                 links: data.loggedData?.links ?? [],
                 groups: data.loggedData?.groups ?? [],
             },
-            participants: data.participants,
+            participants: data.participants.map(ProfileClass.new),
             subgroups: data.subGroups,
 
             currentContent: undefined,
@@ -92,6 +94,21 @@ export function GroupPage() {
             editMaterial: undefined,
             setEditMaterial(c) {
                 setContext({...this, editMaterial: c});
+            },
+
+            editGroup: undefined,
+            setEditGroup(c) {
+                setContext({...this, editGroup: c});
+            },
+
+            editPost: undefined,
+            setEditPost(c){
+                setContext({...this, editPost: c})
+            },
+
+            assignFolder: undefined,
+            setAssignFolder(c) {
+                setContext({...this, assignFolder: c})
             },
 
             refreshData: refreshGroupData,

@@ -12,6 +12,7 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import { AuthContext } from "@/contexts/Auth";
 import { SelectionBar } from "./SelectionBar/SelectionBar";
 
+import { ProfileClass } from "@/types/Profile";
 import './Profile.css';
 
 export function ProfilePage() {

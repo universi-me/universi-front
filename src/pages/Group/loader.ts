@@ -5,12 +5,14 @@ import type { Profile } from "@/types/Profile";
 import type { Group } from "@/types/Group";
 import type { Folder } from "@/types/Capacity";
 import { Link } from "@/types/Link";
+import { GroupPost } from "@/types/Feed";
 
 export type GroupPageLoaderResponse = {
     group: Group | undefined;
     subGroups: Group[];
     participants: Profile[];
     folders: Folder[];
+    posts: GroupPost[];
 
     loggedData: undefined | {
         profile: Profile;
@@ -32,12 +34,13 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     const group = groupRes.body.group;
     const profile = profileRes.body.profile;
     
-    const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes] = await Promise.all([
+    const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes, groupPostsRes] = await Promise.all([
         UniversimeApi.Group.subgroups({groupId: group.id}),
         UniversimeApi.Group.participants({groupId: group.id}),
         UniversimeApi.Group.folders({groupId: group.id}),
         UniversimeApi.Profile.groups({profileId: profile.id}),
         UniversimeApi.Profile.links({profileId: profile.id}),
+        UniversimeApi.Feed.getGroupPosts({groupId: group.id}),
     ]);
     
     return {
@@ -45,6 +48,7 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
         folders: foldersRes.body?.folders ?? [],
         participants: participantsRes.body?.participants ?? [],
         subGroups: subgroupsRes.body?.subgroups ?? [],
+        posts: groupPostsRes.body?.posts ?? [],
         loggedData: {
             profile: profile,
             groups: profileGroupsRes.body?.groups ?? [],
@@ -65,5 +69,6 @@ const FAILED_TO_LOAD: GroupPageLoaderResponse = {
     loggedData: undefined,
     folders: [],
     participants: [],
-    subGroups: []
+    subGroups: [],
+    posts: []
 };

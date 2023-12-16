@@ -38,7 +38,7 @@ export function GroupContentMaterials() {
                 groupContext.setEditMaterial(data);
             },
             hidden() {
-                return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
+                return !groupContext?.group.canEdit;
             },
         },
         {
@@ -47,7 +47,7 @@ export function GroupContentMaterials() {
             className: "delete",
             onSelect: handleDeleteMaterial,
             hidden() {
-                return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
+                return !groupContext?.group.canEdit;
             },
         }
     ];
@@ -55,13 +55,12 @@ export function GroupContentMaterials() {
     return (
         <section id="materials" className="group-tab">
             <div className="heading top-container">
+                <div className="content-title">{groupContext.currentContent.name}</div>
                 <div className="go-right">
                     <Filter setter={setFilterMaterials} placeholderMessage={`Buscar em ${groupContext.group.name}`}/>
                         {  
-                            groupContext.loggedData.profile.id == groupContext.group.admin.id || groupContext.loggedData.profile?.id == groupContext.group.organization?.admin.id ?
+                            groupContext.group.canEdit &&
                             <ActionButton name="Criar material" buttonProps={{onClick(){groupContext.setEditMaterial(null)}}}/>
-                            :
-                            <></>
                         }
                 </div>
             </div>
@@ -189,12 +188,9 @@ export function GroupContentMaterials() {
     async function handleWatchedButton(material : Content, event : any){
 
         event.stopPropagation();
-        console.log(material)
 
         let nextStatus : ContentStatusEnum = material.contentStatus.status == "DONE"  ? "NOT_VIEWED" : "DONE"
 
-        console.log(nextStatus)
-        console.log(material.contentStatus.status)
 
 
         await UniversimeApi.Capacity.createContentStatus({contentId : material.id});
@@ -212,7 +208,10 @@ export function GroupContentMaterials() {
 
     function handleVideoClick(id : string, material : Content){
         if(playingVideo == id){
-            showMiniature(id)
+            if(document.getElementsByClassName("fullscreen"))
+                showMiniature(id)
+            else
+                expand(id)
         }
         else{
             setIsMiniature(false)
@@ -242,7 +241,6 @@ export function GroupContentMaterials() {
     function expand(id : string){
 
         let containers = getVideoContainers()
-        console.log(containers)
 
         containers.popupContainer?.classList.remove("mini-player")
         containers.popupContainer?.classList.add("popup-container")
@@ -250,8 +248,6 @@ export function GroupContentMaterials() {
         containers.iframeContainer?.classList.add("iframe-container")
         containers.videoContainer?.classList.add("fullscreen")
 
-        let modal = document.getElementsByClassName("universi-modal-overlay")[0] as HTMLElement
-        modal.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
 
         if(containers.close){
             containers.close.innerHTML = "✖";
@@ -272,8 +268,6 @@ export function GroupContentMaterials() {
         containers.iframeContainer?.classList.add("mini-iframe")
         containers.videoContainer?.classList.remove("fullscreen")
 
-        let modal = document.getElementsByClassName("universi-modal-overlay")[0] as HTMLElement
-        modal.style.backgroundColor = "transparent";
 
         if(containers.close){
             containers.close.innerHTML = "&#x26F6;"

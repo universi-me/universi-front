@@ -1,5 +1,6 @@
-export const IMG_UNIVERSI_LOGO = "/assets/imgs/universi-me2.png";
-export const IMG_DCX_LOGO =      "/assets/imgs/dcx-png 1.png";
+export const IMG_UNIVERSI_LOGO =   "/assets/imgs/universi-me2.png";
+export const IMG_DCX_LOGO =        "/assets/imgs/dcx-png 1.png";
+export const IMG_DEFAULT_PROFILE = "/assets/imgs/default_avatar.png";
 
 export const ICON_CHEVRON_DOWN =     "/assets/icons/chevron-down-1.svg";
 export const ICON_CHEVRON_UP_BLACK = "/assets/icons/chevron-up-black.svg";

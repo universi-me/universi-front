@@ -12,6 +12,71 @@ import "./GroupContents.less";
 import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { AuthContext } from "@/contexts/Auth";
+import { UniversiModal } from "@/components/UniversiModal";
+import Select, { MultiValue } from "react-select"
+
+function SelectPeople(){
+
+    const [selectedPeople, setSelectedPeople] = useState<{value: string, label: string}[] | null>(null)
+    const groupContext = useContext(GroupContext)
+
+    function makeRequest(){
+        if(groupContext?.assignFolder == undefined || selectedPeople == undefined)
+            return;
+        UniversimeApi.Capacity.assignContent({folderId: groupContext?.assignFolder?.id, profilesIds: selectedPeople?.map((p)=>(p.value))})
+        groupContext.setAssignFolder(undefined)
+    }
+
+    function handleAssignChange(option : MultiValue<{value : string, label : string}>){
+        setSelectedPeople(option.map(({value, label}) => ({value, label})));
+    }
+
+    return(
+        <UniversiModal>
+            <div id="universi-form-container">
+                <div className="universi-form-container fields">
+
+                    <div className="header">
+                        <img src="/assets/imgs/create-content.png" />
+                        <h1 className="title">Atribuir Conteúdo </h1>
+                    </div>
+
+                    <fieldset>
+                        <legend>Pessoas</legend>
+                        <Select
+                            isMulti
+                            name="pessoas"
+                            options={groupContext?.participants.map((t)=>({value: t.id, label: t.firstname+" "+t.lastname}))}
+                            className="category-select"
+                            value={selectedPeople}
+                            onChange={(option)=>{handleAssignChange(option)}}
+                        />
+                    </fieldset>
+                    <section className="operation-buttons">
+                        <button type="button" className="submit-button"
+                        style={{width: "auto", padding: "0.75rem"}}
+                        onClick={()=>{
+                            setSelectedPeople(groupContext?.participants.map((p)=>({value: p.id, label: p.firstname+" "+p.lastname})) ?? null)
+                        }}>
+                            Todas as pessoas do grupo
+                        </button>
+                    </section>
+
+                    <section className="operation-buttons">
+                        <button type="button" className="cancel-button" onClick={() => groupContext?.setAssignFolder(undefined)}>
+                            <i className="bi bi-x-circle-fill" />
+                            Cancelar
+                        </button>
+                        <button type="button" className="submit-button" onClick={makeRequest} disabled={selectedPeople==undefined} title={selectedPeople==undefined ? undefined : "Preencha os dados antes de salvar"}>
+                            <i className="bi bi-check-circle-fill" />
+                            Salvar
+                        </button>
+                    </section>
+                </div>
+            </div>
+        </UniversiModal>
+    )
+}
 
 export function GroupContents() {
     const groupContext = useContext(GroupContext);
@@ -33,8 +98,18 @@ export function GroupContents() {
                 groupContext.setEditContent(data);
             },
             hidden() {
-                return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
+                return !groupContext?.group.canEdit;
             },
+        },
+        {
+            text: "Atribuir",
+            biIcon: "send-fill",
+            onSelect(data) {
+                groupContext.setAssignFolder(data)
+            },
+            hidden() {
+                return !groupContext?.group.canEdit;
+            }
         },
         {
             text: "Excluir",
@@ -42,7 +117,7 @@ export function GroupContents() {
             className: "delete",
             onSelect: handleDeleteContent,
             hidden() {
-                return groupContext?.group.admin.id !== groupContext?.loggedData.profile.id;
+                return !groupContext?.group.canEdit;
             },
         }
     ]
@@ -53,12 +128,10 @@ export function GroupContents() {
                 <div className="go-right">
                     <Filter setter={setFilterContents} placeholderMessage={`Buscar em Conteúdos ${groupContext.group.name}`}/>
                     {  
-                        authContext.profile?.id == groupContext.group.admin.id || authContext.profile?.id == groupContext.group.organization?.admin.id ?
+                        groupContext.group.canEdit &&
                         <ActionButton name="Criar conteúdo" buttonProps={{
                             onClick(){ groupContext.setEditContent(null); }
                         }} />
-                        :
-                        <></>
                     }
                 </div>
             </div>
@@ -66,8 +139,16 @@ export function GroupContents() {
             <div className="content-list tab-list"> { makeContentList(groupContext.folders, filterContents) } </div>
 
             <ManageContent />
+            {
+                groupContext.assignFolder !== undefined
+                ?
+                <SelectPeople/>
+                :
+                <></>
+            }
         </section>
     );
+
 
     function makeContentList(contents: Folder[], filter: string) {
         if (contents.length === 0) {

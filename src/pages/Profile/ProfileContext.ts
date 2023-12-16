@@ -1,5 +1,5 @@
 import { createContext } from "react"
-import type { Profile } from "@/types/Profile";
+import type { ProfileClass } from "@/types/Profile";
 import type { Group } from "@/types/Group";
 import type { Competence, CompetenceType, Level } from "@/types/Competence";
 import type { Recommendation } from "@/types/Recommendation";
@@ -15,7 +15,7 @@ import { TypeExperience } from "@/types/TypeExperience";
 export type ProfileContextType = null | {
     accessingLoggedUser: boolean;
 
-    profile:        Profile;
+    profile:        ProfileClass;
     editCompetence: Competence | null;
     editEducation:  Education | null;
     editExperience: Experience | null;
