@@ -32,6 +32,7 @@ export type GroupUpdate_RequestDTO = {
     canHaveSubgroup?: boolean;
     isPublic?:        boolean;
     canJoin?:         boolean;
+    everyoneCanPost?: boolean;
 };
 
 export type GroupIdOrPath_RequestDTO = {
@@ -94,15 +95,16 @@ export async function create(body: GroupCreate_RequestDTO) {
 
 export async function update(body: GroupUpdate_RequestDTO) {
     return (await api.post<GroupUpdate_ResponseDTO>("/group/update", {
-        groupId:        body.groupId,
-        groupPath:      body.groupPath,
-        name:           body.name,
-        description:    body.description,
-        type:           body.groupType,
-        imageUrl:       body.imageUrl,
-        canCreateGroup: body.canHaveSubgroup,
-        publicGroup:    body.isPublic,
-        canEnter:       body.canJoin,
+        groupId:         body.groupId,
+        groupPath:       body.groupPath,
+        name:            body.name,
+        description:     body.description,
+        type:            body.groupType,
+        imageUrl:        body.imageUrl,
+        canCreateGroup:  body.canHaveSubgroup,
+        publicGroup:     body.isPublic,
+        canEnter:        body.canJoin,
+        everyoneCanPost: body.everyoneCanPost,
     })).data;
 }
 
