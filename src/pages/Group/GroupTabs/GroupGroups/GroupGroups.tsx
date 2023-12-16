@@ -32,7 +32,7 @@ export function GroupGroups() {
                 groupContext.setEditGroup(data);
             },
             hidden() {
-                return (groupContext?.group.admin.id !== groupContext?.loggedData.profile.id && groupContext.loggedData.profile.id == groupContext.group.organization?.admin.id);
+                return !(groupContext.group.canEdit);
             },
         }
     ];
