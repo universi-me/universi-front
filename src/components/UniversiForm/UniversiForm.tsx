@@ -9,14 +9,25 @@ import { UniversiModal } from "../UniversiModal"
 import { RequiredValidation } from "./Validation/RequiredValidation"
 import { ValidationComposite } from "./Validation/ValidationComposite"
 import { makeClassName } from "@/utils/tsxUtils"
+import * as SwalUtils from "@/utils/sweetalertUtils";
+
+export type cancelPopup = {
+    confirmCancel? : boolean,
+    title? : string,
+    message? : string,
+    cancelButtonMessage? : string,
+    confirmButtonMessage? : string,
+    confirmButtonColor? : string,
+    cancelButtonColor? : string,
+}
 
 export type formProps = {
 
     objects: FormObject[],
     requisition : any,
     callback : () => void,
-    formTitle : string
-    
+    formTitle : string,
+    cancelProps? : cancelPopup,
 }
 
 type FormObjectBase<FormType extends FormInputs, ValueType> = {
@@ -528,6 +539,30 @@ export function UniversiForm(props : formProps){
             props.callback()
     }
 
+    function handleCancel(){
+        if(props.cancelProps?.confirmCancel == undefined || props.cancelProps.confirmCancel == true)
+            cancelPopup()
+        else
+            props.callback()
+
+    }
+
+    function cancelPopup(){
+            SwalUtils.fireModal({
+                title: props.cancelProps?.title  ?? "Deseja cancelar esta ação?",
+                text: props.cancelProps?.message ?? "Todos os campos preenchidos serão perdidos.",
+
+                showCancelButton: true,
+                cancelButtonText: props.cancelProps?.cancelButtonMessage   ?? "Cancelar",
+                confirmButtonText: props.cancelProps?.confirmButtonMessage ?? "Ok",
+                confirmButtonColor: props.cancelProps?.confirmButtonColor  ?? "var(--wrong-invalid-color)"
+            }).then(response =>{
+                if(response.isConfirmed){
+                    props.callback();
+                }
+            })
+    }
+
     return(        
     <UniversiModal>
         <div id="universi-form-container">
@@ -543,7 +578,7 @@ export function UniversiForm(props : formProps){
                 }   
 
                 <section className="operation-buttons">
-                    <button type="button" className="cancel-button" onClick={props.callback}>
+                    <button type="button" className="cancel-button" onClick={handleCancel}>
                         <i className="bi bi-x-circle-fill" />
                         Cancelar
                     </button>
