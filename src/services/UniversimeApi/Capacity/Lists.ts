@@ -8,15 +8,15 @@ export type FolderList_ResponseDTO =   ApiResponse<{ folders: Folder[] }>;
 export type ContentType_ResponseDTO =  ApiResponse<{ tipos: string[] }>;
 
 export async function contentList() {
-    return (await api.get<ContentList_ResponseDTO>("/capacity/contents")).data;
+    return (await api.get<ContentList_ResponseDTO>("/capacity/content/all")).data;
 }
 
 export async function categoryList() {
-    return (await api.get<CategoryList_ResponseDTO>("/capacity/categories")).data;
+    return (await api.get<CategoryList_ResponseDTO>("/capacity/category/all")).data;
 }
 
 export async function folderList() {
-    return (await api.get<FolderList_ResponseDTO>("/capacity/folders")).data;
+    return (await api.get<FolderList_ResponseDTO>("/capacity/folder/all")).data;
 }
 
 export async function typeList(){
