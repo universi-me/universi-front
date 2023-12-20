@@ -3,9 +3,9 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import UniversimeApi from "@/services/UniversimeApi";
-import type { GroupThemeEdit } from "@/types/Group";
+import type { GroupTheme } from "@/types/Group";
 import "./GroupThemeColor.less";
-const themeColorMappings: Record<string, GroupThemeEdit> = {
+const themeColorMappings: Record<string, GroupTheme> = {
   themeId1: {
     id: "themeId1",
     primaryColor: "#0091B9",
@@ -84,9 +84,9 @@ const themeColorMappings: Record<string, GroupThemeEdit> = {
 };
 
 interface ThemeColorItemProps {
-  theme: GroupThemeEdit;
+  theme: GroupTheme;
   isSelected: boolean;
-  onClick: (theme: GroupThemeEdit) => void;
+  onClick: (theme: GroupTheme) => void;
 }
 
 function ThemeColorItem({ theme, isSelected, onClick }: ThemeColorItemProps) {
@@ -99,7 +99,7 @@ function ThemeColorItem({ theme, isSelected, onClick }: ThemeColorItemProps) {
   );
 }
 
-function themeReducer(state: GroupThemeEdit | null, action: { type: "SELECT"; theme: GroupThemeEdit }) {
+function themeReducer(state: GroupTheme | null, action: { type: "SELECT"; theme: GroupTheme }) {
   if (action.type === "SELECT") {
     return action.theme;
   }
@@ -124,7 +124,7 @@ const showSuccessModal = (title: string, text: string) => {
   });
 };
 
-const applyThemeStyles = (themeMapping : GroupThemeEdit) => {
+const applyThemeStyles = (themeMapping : GroupTheme) => {
   const styleProperties = {
     '--primary-color': themeMapping.primaryColor,
     '--secondary-color': themeMapping.secondaryColor,
@@ -173,8 +173,25 @@ export function GroupThemeColorPage() {
       }
     };
 
+    const fetchGroupTheme = async () => {
+      try {
+        const groupThemeResponse = await UniversimeApi.Group.getTheme(organizationId);
+        if (groupThemeResponse.success && groupThemeResponse.body) {
+          applyThemeStyles(groupThemeResponse.body);
+          themeDispatch({ type: "SELECT", theme: groupThemeResponse.body });
+        }
+      } catch (error) {
+        showErrorModal("Erro ao buscar o tema do grupo", "Tente novamente mais tarde");
+      }
+    };
+
     fetchOrganizationId();
-  }, []); 
+
+    if (organizationId) {
+      fetchGroupTheme();
+    }
+  }, [organizationId]); 
+
   const saveChanges = async () => {
     if (!selectedTheme || !organizationId) {
       showErrorModal("Erro ao salvar alterações", "Selecione um tema e obtenha a organização antes de salvar.");
