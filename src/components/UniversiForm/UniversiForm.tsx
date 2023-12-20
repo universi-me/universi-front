@@ -10,6 +10,8 @@ import { RequiredValidation } from "./Validation/RequiredValidation"
 import { ValidationComposite } from "./Validation/ValidationComposite"
 import { makeClassName } from "@/utils/tsxUtils"
 import * as SwalUtils from "@/utils/sweetalertUtils";
+import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
 
 export type cancelPopup = {
     confirmCancel? : boolean,
@@ -40,7 +42,7 @@ type FormObjectBase<FormType extends FormInputs, ValueType> = {
     validation?: ValidationComposite<ValueType>,
 };
 
-export type FormObjectText = FormObjectBase<FormInputs.TEXT | FormInputs.LONG_TEXT | FormInputs.URL, string> & {
+export type FormObjectText = FormObjectBase<FormInputs.TEXT | FormInputs.FORMATED_TEXT | FormInputs.LONG_TEXT | FormInputs.URL, string> & {
     charLimit?: number;
 };
 
@@ -85,7 +87,8 @@ export enum FormInputs {
     SELECT_MULTI,
     BOOLEAN,
     HIDDEN,
-    NUMBER
+    NUMBER,
+    FORMATED_TEXT
 }
 
 export function UniversiForm(props : formProps){
@@ -183,6 +186,17 @@ export function UniversiForm(props : formProps){
     }
 
     function getTextInput(object : FormObjectText, index : number) {
+
+        const [valueState, setValueState] = useState(object.value ?? "")
+
+        useEffect(() => {
+            handleContentChange()
+        },[valueState])
+
+        function handleContentChange(){
+            handleChange(index, valueState)
+        }
+
         return (
             <>
                 <legend>
@@ -202,18 +216,14 @@ export function UniversiForm(props : formProps){
                 {
                     object.type == FormInputs.LONG_TEXT ? 
                         <textarea className="field-input" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)} required={object.required}/>
+                    : object.type == FormInputs.FORMATED_TEXT ?
+                        <ReactQuill theme="snow" value={valueState} onChange={setValueState}/>
                     :
                         <input className="field-input" type="text" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)} required={object.required}/>
                 }
             </>
         )
     }
-
-    // function getImageBuffer(object : FormObjectImage) {
-    //     if(object.value)
-    //         return "data:image/jpeg;base64,"+arrayBufferToBase64(object.value);
-    //     return DEFAULT_IMAGE_PATH
-    // }
 
     function getImageInput(object : FormObjectImage, index : number){
         const [imageFile, setImageFile] = useState<File>();
@@ -268,31 +278,6 @@ export function UniversiForm(props : formProps){
         )
 
     }
-
-    // async function changeFile(e : ChangeEvent<HTMLInputElement>, index: number){
-    //     const imageFile = e.currentTarget.files?.item(0);
-    //     if(!imageFile){
-    //         handleFileChange(index, undefined);
-    //         return;
-    //     }
-
-    //     const reader = new FileReader();
-    //     reader.onloadend = renderLoadedImage;
-    //     reader.readAsArrayBuffer(imageFile)
-
-    //     async function renderLoadedImage(this: FileReader, ev: ProgressEvent<FileReader>){
-    //         if(ev.target?.readyState == FileReader.DONE && ev.target.result){
-    //             handleFileChange(index, ev.target.result as ArrayBuffer)
-    //             const imageFile = (document.getElementById("file-input") as HTMLInputElement).files?.item(0) 
-    //             if(imageFile){
-    //                 const res = await UniversimeApi.Image.upload({image: imageFile})
-    //                 if(res.success && res.body)
-    //                     handleChange(index, res.body.link)
-    //             }
-                
-    //         }
-    //     }
-    // }
 
     function getBooleanInput(object : FormObject, index : number){
 
@@ -508,6 +493,7 @@ export function UniversiForm(props : formProps){
                 {
                     object.type == FormInputs.TEXT ||
                     object.type == FormInputs.LONG_TEXT ||
+                    object.type == FormInputs.FORMATED_TEXT ||
                     object.type == FormInputs.URL ?
                     getTextInput(object, index)
                     : object.type == FormInputs.IMAGE ?
