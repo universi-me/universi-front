@@ -179,7 +179,7 @@ export function GroupFeed(){
                 }
 
                 <div className="info">
-                    <div className="feed-description" dangerouslySetInnerHTML={{ __html: getPostContent()}}></div>
+                    <div className="feed-description ql-editor" dangerouslySetInnerHTML={{ __html: getPostContent()}}></div>
                 </div>
             </div>
         )
