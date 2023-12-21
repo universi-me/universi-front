@@ -1,10 +1,13 @@
-import React, { useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import UniversimeApi from "@/services/UniversimeApi";
 import type { GroupTheme } from "@/types/Group";
+import { AuthContext } from "@/contexts/Auth/AuthContext";
 import "./GroupThemeColor.less";
+
+
 const themeColorMappings: Record<string, GroupTheme> = {
   themeId1: {
     id: "themeId1",
@@ -158,9 +161,11 @@ const applyThemeStyles = (themeMapping : GroupTheme) => {
 export function GroupThemeColorPage() {
   const [organizationId, setOrganizationId] = useState<string | null>(null);
   const [selectedTheme, themeDispatch] = useReducer(themeReducer, null);
+  const auth = useContext(AuthContext);
+  console.log((((auth.organization ?? {} as any).groupSettings ?? {} as any).theme ?? {} as any));
 
   useEffect(() => {
-    const fetchOrganizationId = async () => {
+    const fetchOrganizationAndGroupTheme = async () => {
       try {
         const org = await UniversimeApi.User.organization();
         if (org.success && org.body?.organization) {
@@ -175,22 +180,24 @@ export function GroupThemeColorPage() {
 
     const fetchGroupTheme = async () => {
       try {
-        const groupThemeResponse = await UniversimeApi.Group.getTheme(organizationId);
-        if (groupThemeResponse.success && groupThemeResponse.body) {
-          applyThemeStyles(groupThemeResponse.body);
-          themeDispatch({ type: "SELECT", theme: groupThemeResponse.body });
+        const organizationEnv = (((auth.organization ?? {} as any).groupSettings ?? {} as any).theme ?? {} as any);
+        const groupThemeResponse = organizationEnv && themeColorMappings[organizationEnv.id];
+
+        if (groupThemeResponse) {
+          applyThemeStyles(groupThemeResponse);
+          themeDispatch({ type: "SELECT", theme: groupThemeResponse });
         }
       } catch (error) {
-        showErrorModal("Erro ao buscar o tema do grupo", "Tente novamente mais tarde");
+        showErrorModal("Erro ao buscar o tema do grupo" , "Tente novamente mais tarde");
       }
     };
 
-    fetchOrganizationId();
+    fetchOrganizationAndGroupTheme();
 
     if (organizationId) {
       fetchGroupTheme();
     }
-  }, [organizationId]); 
+  }, [organizationId]);
 
   const saveChanges = async () => {
     if (!selectedTheme || !organizationId) {
