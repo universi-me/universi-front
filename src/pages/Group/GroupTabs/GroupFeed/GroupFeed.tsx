@@ -12,6 +12,7 @@ import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { GroupContext } from "../../GroupContext";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import DOMPurify from "dompurify"
 import "./GroupFeed.less";
 
 export function GroupFeed(){
@@ -108,7 +109,7 @@ export function GroupFeed(){
                         }, {
                             DTOName: "authorId", label: "", type: FormInputs.HIDDEN, value: groupContext.loggedData.profile.id
                         }, {
-                            DTOName: "content", label: "Publicação", type: FormInputs.LONG_TEXT,
+                            DTOName: "content", label: "Publicação", type: FormInputs.FORMATED_TEXT,
                             charLimit: 3000,
                             value: groupContext.editPost ? groupContext.editPost.content : ""
                             ,validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
@@ -135,6 +136,10 @@ export function GroupFeed(){
             return <></>
 
         const author : ProfileClass = new ProfileClass(post.author);
+
+        function getPostContent(){
+            return DOMPurify.sanitize(post.content)
+        }
 
 
         return(
@@ -174,7 +179,7 @@ export function GroupFeed(){
                 }
 
                 <div className="info">
-                    <p className="feed-description">{post.content}</p>
+                    <div className="feed-description ql-editor" dangerouslySetInnerHTML={{ __html: getPostContent()}}></div>
                 </div>
             </div>
         )
