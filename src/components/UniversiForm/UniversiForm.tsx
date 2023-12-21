@@ -223,11 +223,11 @@ export function UniversiForm(props : formProps){
                         object.charLimit != undefined
                         ?
                         <div className="char-counter">
-                            {object.value?.length}/{object.charLimit}
+                            {object.value?.length ?? 0}/{object.charLimit}
                         </div>
                         :
                         <div className="char-counter">
-                            {object.value?.length}/{object.type == FormInputs.TEXT ? MAX_TEXT_LENGTH : object.type === FormInputs.LONG_TEXT ? MAX_LONG_TEXT_LENGTH : MAX_URL_LENGTH}
+                            {object.value?.length ?? 0}/{object.type == FormInputs.TEXT ? MAX_TEXT_LENGTH : object.type === FormInputs.LONG_TEXT ? MAX_LONG_TEXT_LENGTH : MAX_URL_LENGTH}
                         </div>
                     }
                 </legend>
