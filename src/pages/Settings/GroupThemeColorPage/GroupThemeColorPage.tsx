@@ -162,7 +162,6 @@ export function GroupThemeColorPage() {
   const [organizationId, setOrganizationId] = useState<string | null>(null);
   const [selectedTheme, themeDispatch] = useReducer(themeReducer, null);
   const auth = useContext(AuthContext);
-  console.log((((auth.organization ?? {} as any).groupSettings ?? {} as any).theme ?? {} as any));
 
   useEffect(() => {
     const fetchOrganizationAndGroupTheme = async () => {

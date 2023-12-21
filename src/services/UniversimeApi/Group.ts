@@ -209,7 +209,7 @@ export async function editTheme(body: GroupThemeEdit_RequestDTO) {
     return (await api.post<GroupThemeEdit_ResponseDTO>('/group/settings/theme/edit', {
         groupId: body.groupId,
         groupPath: body.groupPath,
-        id: body.id,
+        
         primaryColor: body.primaryColor,
         secondaryColor: body.secondaryColor,
         tertiaryColor: body.tertiaryColor,
