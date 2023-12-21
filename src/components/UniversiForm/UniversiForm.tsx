@@ -193,8 +193,26 @@ export function UniversiForm(props : formProps){
             handleContentChange()
         },[valueState])
 
+        function validHtml(value : string){
+            
+            let validValue = ""
+
+            if(value.trim() == "")
+                return
+
+            for(let line of value.split("<p>")){
+                for(let line1 of line.split("</p>")){
+                    if(line1.trim() != "<br>" && line1.trim() != ""){
+                        validValue+="<p>"+line
+                    }
+                }
+            }
+
+            return validValue
+        }
+
         function handleContentChange(){
-            handleChange(index, valueState)
+                handleChange(index, validHtml(valueState))
         }
 
         return (
