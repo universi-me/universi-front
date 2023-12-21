@@ -163,40 +163,24 @@ export function GroupThemeColorPage() {
   const [selectedTheme, themeDispatch] = useReducer(themeReducer, null);
   const auth = useContext(AuthContext);
 
-  useEffect(() => {
-    const fetchOrganizationAndGroupTheme = async () => {
-      try {
-        const org = await UniversimeApi.User.organization();
-        if (org.success && org.body?.organization) {
-          setOrganizationId(org.body.organization.id);
-        } else {
-          showErrorModal("Falha ao recuperar a organização.", "Tente novamente mais tarde");
+  const fetchOrganizationAndGroupTheme = async () => {
+    try {
+      const org = await UniversimeApi.User.organization();
+      if (org.success && org.body?.organization) {
+        setOrganizationId(org.body.organization.id);
+        const organizationTheme = (((auth.organization ?? {} as any).groupSettings ?? {} as any).theme ?? {} as any);
+
+        if (organizationTheme) {
+          applyThemeStyles(organizationTheme);
+            themeDispatch({ type: "SELECT", theme:organizationTheme});
         }
-      } catch (error) {
-        showErrorModal("Erro ao buscar a organização", "Tente novamente mais tarde");
+      } else {
+        showErrorModal("Falha ao recuperar a organização.", "Tente novamente mais tarde");
       }
-    };
-
-    const fetchGroupTheme = async () => {
-      try {
-        const organizationEnv = (((auth.organization ?? {} as any).groupSettings ?? {} as any).theme ?? {} as any);
-        const groupThemeResponse = organizationEnv && themeColorMappings[organizationEnv.id];
-
-        if (groupThemeResponse) {
-          applyThemeStyles(groupThemeResponse);
-          themeDispatch({ type: "SELECT", theme: groupThemeResponse });
-        }
-      } catch (error) {
-        showErrorModal("Erro ao buscar o tema do grupo" , "Tente novamente mais tarde");
-      }
-    };
-
-    fetchOrganizationAndGroupTheme();
-
-    if (organizationId) {
-      fetchGroupTheme();
+    } catch (error) {
+      showErrorModal("Erro ao buscar a organização", "Tente novamente mais tarde");
     }
-  }, [organizationId]);
+  };
 
   const saveChanges = async () => {
     if (!selectedTheme || !organizationId) {
@@ -219,6 +203,14 @@ export function GroupThemeColorPage() {
       );
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchOrganizationAndGroupTheme();
+    };
+
+    fetchData();
+  }, [organizationId]);
 
   return (
     <div id="theme-color-settings">
