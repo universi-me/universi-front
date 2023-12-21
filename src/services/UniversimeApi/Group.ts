@@ -57,29 +57,29 @@ export type GroupEmailFilterDelete_RequestDTO = GroupIdOrPath_RequestDTO & {
 };
 
 export type GroupThemeEdit_RequestDTO = GroupIdOrPath_RequestDTO & {
-    id: string;
-    primaryColor: string;
-    secondaryColor: string;
-    tertiaryColor: string;
-    backgroundColor: string;
-    cardBackgroundColor: string;
-    cardItemColor: string;
-    fontColorV1: string;
-    fontColorV2: string;
-    fontColorV3: string;
-    fontColorV4: string;
-    fontColorV5: string;
-    fontColorV6: string;
-    fontDisabledColor: string;
-    formsColor: string;
-    skills1Color: string;
-    waveColor: string;
+    id:                     string;     
+    primaryColor:           string;
+    secondaryColor:         string;
+    tertiaryColor:          string;
+    backgroundColor:        string;
+    cardBackgroundColor:    string;
+    cardItemColor:          string;
+    fontColorV1:            string;
+    fontColorV2:            string;
+    fontColorV3:            string;
+    fontColorV4:            string;
+    fontColorV5:            string;
+    fontColorV6:            string;
+    fontDisabledColor:      string;
+    formsColor:             string;
+    skills1Color:           string;
+    waveColor:              string;
     buttonYellowHoverColor: string;
-    buttonHoverColor: string;
-    alertColor: string;
-    successColor: string;
-    wrongInvalidColor: string;
-    rankColor: string;
+    buttonHoverColor:       string;
+    alertColor:             string;
+    successColor:           string;
+    wrongInvalidColor:      string;
+    rankColor:              string;
 };
 
 
@@ -96,7 +96,7 @@ export type GroupEmailFilterAdd_ResponseDTO =    ApiResponse;
 export type GroupEmailFilterEdit_ResponseDTO =   ApiResponse;
 export type GroupEmailFilterDelete_ResponseDTO = ApiResponse;
 export type GroupEmailFilterList_ResponseDTO =   ApiResponse<{ emailFilters: GroupEmailFilter[] }>;
-export type GroupThemeEdit_ResponseDTO =         ApiResponse<{ themeEdit: GroupTheme[] }>;
+export type GroupThemeEdit_ResponseDTO =         ApiResponse<{ theme: GroupTheme[] }>;
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
     return (await api.post<GroupGet_ResponseDTO>('/group/get', {
@@ -207,30 +207,30 @@ export async function listEmailFilter(body: GroupIdOrPath_RequestDTO) {
 
 export async function editTheme(body: GroupThemeEdit_RequestDTO) {
     return (await api.post<GroupThemeEdit_ResponseDTO>('/group/settings/theme/edit', {
-        groupId:                body.groupId,
-        groupPath:              body.groupPath,
+        groupId:                    body.groupId,
+        groupPath:                  body.groupPath,
 
-        primaryColor:           body.primaryColor,
-        secondaryColor:         body.secondaryColor,
-        tertiaryColor:          body.tertiaryColor,
-        backgroundColor:        body.backgroundColor,
-        cardBackgroundColor:    body.cardBackgroundColor,
-        cardItemColor:          body.cardItemColor,
-        fontColorV1:            body.fontColorV1,
-        fontColorV2:            body.fontColorV2,
-        fontColorV3:            body.fontColorV3,
-        fontColorV4:            body.fontColorV4,
-        fontColorV5:            body.fontColorV5,
-        fontColorV6:            body.fontColorV6,
-        fontDisabledColor:      body.fontDisabledColor,
-        formsColor:             body.formsColor,
-        skills1Color:           body.skills1Color,
-        waveColor:              body.waveColor,
-        buttonYellowHoverColor: body.buttonYellowHoverColor,
-        buttonHoverColor:       body.buttonHoverColor,
-        alertColor:             body.alertColor,
-        successColor:           body.successColor,
-        wrongInvalidColor:      body.wrongInvalidColor,
-        rankColor:              body.rankColor,
+        primary_Color:              body.primaryColor,
+        secondary_Color:            body.secondaryColor,
+        tertiary_Color:             body.tertiaryColor,
+        background_Color:           body.backgroundColor,
+        card_Background_Color:      body.cardBackgroundColor,
+        card_Item_Color:            body.cardItemColor,
+        font_Color_V1:              body.fontColorV1,
+        font_Color_V2:              body.fontColorV2,
+        font_Color_V3:              body.fontColorV3,
+        font_Color_V4:              body.fontColorV4,
+        font_Color_V5:              body.fontColorV5,
+        font_Color_V6:              body.fontColorV6,
+        font_Disabled_Color:        body.fontDisabledColor,
+        forms_Color:                body.formsColor,
+        skills_1_Color:            body.skills1Color,
+        wave_Color:                 body.waveColor,
+        button_Yellow_Hover_Color:  body.buttonYellowHoverColor,
+        button_Hover_Color:         body.buttonHoverColor,
+        alert_Color:                body.alertColor,
+        success_Color:              body.successColor,
+        wrong_Invalid_Color:        body.wrongInvalidColor,
+        rank_Color:                 body.rankColor,
     })).data;
 }
