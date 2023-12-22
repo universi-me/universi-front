@@ -212,7 +212,7 @@ export function UniversiForm(props : formProps){
         }
 
         function handleContentChange(){
-                handleChange(index, validHtml(valueState))
+                handleChange(index, object.type == FormInputs.FORMATED_TEXT ? validHtml(valueState) : valueState)
         }
 
         return (
