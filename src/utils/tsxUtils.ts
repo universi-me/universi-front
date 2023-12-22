@@ -6,7 +6,7 @@ export function setStateAsValue(setter: Dispatch<SetStateAction<string>>) {
     }
 }
 
-export function makeClassName(...names: (string | (string | undefined)[] | undefined)[]) {
+export function makeClassName(...names: (string | (string | undefined)[] | undefined | false)[]) {
     const flatNames = names.flat();
     return [...new Set(flatNames)]
         .filter(n => !!n)
