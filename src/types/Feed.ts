@@ -1,10 +1,9 @@
-import { ProfileClass } from "./Profile";
+import { type Profile } from "./Profile";
 
 export type GroupPost = {
     postId: string;
     groupId: string;
     content : string;
     authorId : string;
-    author : ProfileClass | undefined;
-    showFullText? : boolean;
+    author : Profile;
 }
