@@ -8,5 +8,8 @@ export function groupBannerUrl(group: Group) {
 }
 
 export function groupImageUrl(group: Group) {
+    if(!group.image)
+        return "/assets/imgs/group.png"
+
     return `${import.meta.env.VITE_UNIVERSIME_API}/group/image/${group.id}`;
 }
