@@ -7,6 +7,7 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { makeClassName } from "@/utils/tsxUtils";
 import { GroupContext } from "@/pages/Group";
 import { ProfileClass } from "@/types/Profile";
+import { hasAvailableOption, renderOption, type OptionInMenu } from "@/utils/dropdownMenuUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import { type GroupPost } from "@/types/Feed";
@@ -45,13 +46,35 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
 
     const author = new ProfileClass(post.author);
 
+    const OPTIONS_DEFINITION: OptionInMenu<GroupPost>[] = [
+        {
+            text: "Editar publicação",
+            biIcon: "pencil-fill",
+            onSelect(data) {
+                groupContext.setEditPost(data);
+            },
+            hidden(data) {
+                return !data.author.user.ownerOfSession;
+            },
+        },
+        {
+            text: "Excluir publicação",
+            biIcon: "trash-fill",
+            className: "delete",
+            onSelect: handleDeletePost,
+            hidden() {
+                return !groupContext.group.canEdit;
+            },
+        }
+    ]
+
     return <div className="feed-item tab-item">
         <Link to={`/profile/${author.user.name}`} className="feed-user-info">
             <img src={author.imageUrl} alt="" className="feed-image" />
             <p>{author.fullname}</p>
         </Link>
 
-        { groupContext.group.canEdit && <DropdownMenu.Root>
+        { hasAvailableOption(OPTIONS_DEFINITION, post) && <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
                 <button className="options-button">
                     <i className="bi bi-three-dots-vertical" />
@@ -59,13 +82,8 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             </DropdownMenu.Trigger>
 
             <DropdownMenu.Content className="options" side="left">
-                <DropdownMenu.Item className="dropdown-options-item" onSelect={() => groupContext.setEditPost(post)} hidden={!post.author.user.ownerOfSession}>
-                    Editar publicação <i className="bi bi-pencil-fill right-slot" />
-                </DropdownMenu.Item>
+                { OPTIONS_DEFINITION.map(def => renderOption(post, def)) }
 
-                <DropdownMenu.Item className="dropdown-options-item" onSelect={handleDeletePost} hidden={!post.author.user.ownerOfSession}>
-                    Excluir publicação <i className="bi bi-trash-fill right-slot" />
-                </DropdownMenu.Item>
                 <DropdownMenu.Arrow className="options-arrow" height=".5rem" width="1rem" />
             </DropdownMenu.Content>
         </DropdownMenu.Root> }
