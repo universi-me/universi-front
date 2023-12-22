@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import DOMPurify from "dompurify";
 
 import UniversimeApi from "@/services/UniversimeApi";
 import { makeClassName } from "@/utils/tsxUtils";
@@ -61,7 +62,7 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
         </DropdownMenu.Root> }
 
         <div className="info">
-            <p className={makeClassName("feed-description", "ql-editor", isExpanded && EXPANDED_CLASS)} dangerouslySetInnerHTML={{ __html: post.content }} id={feedDescriptionId} />
+            <p className={makeClassName("feed-description", "ql-editor", isExpanded && EXPANDED_CLASS)} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }} id={feedDescriptionId} />
             { readMore !== "NOT_SHOW" && <p className="ler-button" onClick={toggleReadMore}>
                 { readMore === "SHOW_MORE" ? "Ler mais" : "Ler menos" }
             </p> }
