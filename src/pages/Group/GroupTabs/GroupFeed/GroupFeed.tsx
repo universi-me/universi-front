@@ -38,7 +38,7 @@ export function GroupFeed(){
         <section id="feed" className="group-tab">
             <div className="heading top-container">
                 <div className="go-right">
-                    <Filter setter={setFilterPosts} placeholderMessage={`Buscar posts em ${groupContext.group.name}`}/>
+                    <Filter setter={setFilterPosts} placeholderMessage={`Buscar publicação em ${groupContext.group.name}`}/>
                     {
                         canCreatePost()
                         ?
@@ -62,14 +62,23 @@ export function GroupFeed(){
                 groupContext.editPost !== undefined ?
 
                 <UniversiForm
-                    formTitle={groupContext.editGroup == null ? "Criar post" : "Editar grupo"}
+                    formTitle={groupContext.editGroup == null ? "Criar publicação" : "Editar publicação"}
+                    cancelProps = {
+                        {
+                            title : "Descartar publicação?",
+                            message: "Tem certeza? Esta ação é irreversível", 
+                            confirmButtonMessage: "Sim",
+                            cancelButtonMessage: "Não"
+                        }
+
+                    }
                     objects={[
                         {
                             DTOName: "groupId", label: "", type: FormInputs.HIDDEN, value: groupContext.group.id
                         }, {
                             DTOName: "authorId", label: "", type: FormInputs.HIDDEN, value: groupContext.loggedData.profile.id
                         }, {
-                            DTOName: "content", label: "Mensagem do post", type: FormInputs.LONG_TEXT,
+                            DTOName: "content", label: "Publicação", type: FormInputs.FORMATED_TEXT,
                             charLimit: 3000,
                             value: groupContext.editPost ? groupContext.editPost.content : ""
                             ,validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
@@ -78,7 +87,7 @@ export function GroupFeed(){
                         }
                     ]}
                     requisition={groupContext.editPost ? UniversimeApi.Feed.editGroupPost : UniversimeApi.Feed.createGroupPost}
-                    callback={groupContext.refreshData}
+                    callback={() => {groupContext.refreshData()}}
                 />
                 :
                 <></>

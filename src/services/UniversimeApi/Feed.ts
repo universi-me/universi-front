@@ -12,6 +12,7 @@ export type GetGroupPost_RequestDTO = {
     groupId : string;
 }
 
+
 export type DeleteGroupPost_RequestDTO = {
         postId  : string;
         groupId : string;
