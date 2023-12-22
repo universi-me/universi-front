@@ -62,8 +62,8 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             biIcon: "trash-fill",
             className: "delete",
             onSelect: handleDeletePost,
-            hidden() {
-                return !groupContext.group.canEdit;
+            hidden(data) {
+                return !groupContext.group.canEdit && !data.author.user.ownerOfSession;
             },
         }
     ]
