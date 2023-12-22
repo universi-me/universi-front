@@ -21,15 +21,24 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
 
     const groupContext = useContext(GroupContext);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
-    const [readMore, setReadMore] = useState("NOT_SHOW");
+    const [readMore, setReadMore] = useState<"NOT_SHOW" | "SHOW_MORE" | "SHOW_LESS">("NOT_SHOW");
 
     useEffect(() => {
         const state = descriptionState();
         if (!state) return;
 
+        // is omitting lines
         if (state.fullHeight > state.shownHeight)
             setReadMore("SHOW_MORE");
-    }, [feedDescriptionElement]);
+
+        // is not omitting lines and not expanded, so it's smaller then the un-expanded limit
+        else if (!state.isExpanded)
+            setReadMore("NOT_SHOW");
+
+        // is expanded
+        else
+            setReadMore("SHOW_LESS")
+    }, [feedDescriptionElement, post.content]);
 
     if (!groupContext)
         return null;
