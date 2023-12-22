@@ -157,7 +157,7 @@ export function GroupContentMaterials() {
                     <p className="material-description">{material.description}</p>
                 </div>
 
-            { !hasAvailableOption(OPTIONS_DEFINITION) ? null :
+            { !hasAvailableOption(OPTIONS_DEFINITION, material) ? null :
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild>
                         <button className="material-options-button">

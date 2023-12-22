@@ -188,7 +188,7 @@ export function GroupContents() {
                     <div className="content-name-wrapper">
                         <h2 className="content-name" onClick={() => groupContext?.setCurrentContent(content)}>{content.name}</h2>
 
-                        { !hasAvailableOption(OPTIONS_DEFINITION) ? null :
+                        { !hasAvailableOption(OPTIONS_DEFINITION, content) ? null :
                         <DropdownMenu.Root>
                             <DropdownMenu.Trigger asChild>
                                 <button className="content-options-button">

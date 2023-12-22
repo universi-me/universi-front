@@ -7,16 +7,16 @@ export type OptionInMenu<T> = {
     className?: string;
 
     onSelect?: (data: T) => any;
-    disabled?: () => boolean;
-    hidden?:   () => boolean;
+    disabled?: (data: T) => boolean;
+    hidden?:   (data: T) => boolean;
 };
 
 export function renderOption<T>(data: T, option: OptionInMenu<T>) {
-    if (isHidden(option))
+    if (isHidden(option, data))
         return null;
 
     const className = "dropdown-options-item" + (option.className ? ` ${option.className}` : "");
-    const disabled = isDisabled(option);
+    const disabled = isDisabled(option, data);
     const key = option.text.toString();
     const onSelect = function() {
         if (!disabled && option.onSelect)
@@ -29,15 +29,15 @@ export function renderOption<T>(data: T, option: OptionInMenu<T>) {
     </DropdownMenu.Item>
 }
 
-export function hasAvailableOption(options: OptionInMenu<any>[]) {
+export function hasAvailableOption<T>(options: OptionInMenu<T>[], data: T) {
     return undefined !== options
-        .find(o => !isDisabled(o) && !isHidden(o));
+        .find(o => !isDisabled(o, data) && !isHidden(o, data));
 }
 
-function isHidden(option: OptionInMenu<any>) {
-    return option.hidden ? option.hidden() : false;
+function isHidden<T>(option: OptionInMenu<T>, data: T) {
+    return option.hidden ? option.hidden(data) : false;
 }
 
-function isDisabled(option: OptionInMenu<any>) {
-    return option.disabled ? option.disabled() : false;
+function isDisabled<T>(option: OptionInMenu<T>, data: T) {
+    return option.disabled ? option.disabled(data) : false;
 }

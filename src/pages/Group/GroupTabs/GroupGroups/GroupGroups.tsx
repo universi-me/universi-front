@@ -145,7 +145,7 @@ export function GroupGroups() {
                     <Link to={linkToGroup} className="group-name">{group.name}</Link>
                     <p className="group-description">{group.description}</p>
                 </div>
-                { !hasAvailableOption(OPTIONS_DEFINITION) ? null :
+                { !hasAvailableOption(OPTIONS_DEFINITION, group) ? null :
                     <DropdownMenu.Root>
                         <DropdownMenu.Trigger asChild>
                             <button className="group-options-button">
