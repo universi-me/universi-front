@@ -224,7 +224,7 @@ export async function editTheme(body: GroupThemeEdit_RequestDTO) {
         font_Color_V6:              body.fontColorV6,
         font_Disabled_Color:        body.fontDisabledColor,
         forms_Color:                body.formsColor,
-        skills_1_Color:            body.skills1Color,
+        skills_1_Color:             body.skills1Color,
         wave_Color:                 body.waveColor,
         button_Yellow_Hover_Color:  body.buttonYellowHoverColor,
         button_Hover_Color:         body.buttonHoverColor,

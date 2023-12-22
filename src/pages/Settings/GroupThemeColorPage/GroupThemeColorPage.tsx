@@ -103,10 +103,7 @@ function ThemeColorItem({ theme, isSelected, onClick }: ThemeColorItemProps) {
 }
 
 function themeReducer(state: GroupTheme | null, action: { type: "SELECT"; theme: GroupTheme }) {
-  if (action.type === "SELECT") {
-    return action.theme;
-  }
-  return state;
+  return action.type === "SELECT" ? action.theme : state;
 }
 
 const showErrorModal = (title: string, text: string) => {
@@ -127,7 +124,7 @@ const showSuccessModal = (title: string, text: string) => {
   });
 };
 
-const applyThemeStyles = (themeMapping : GroupTheme) => {
+const applyThemeStyles = (themeMapping: GroupTheme) => {
   const styleProperties = {
     '--primary-color': themeMapping.primaryColor,
     '--secondary-color': themeMapping.secondaryColor,
@@ -172,7 +169,7 @@ export function GroupThemeColorPage() {
 
         if (organizationTheme) {
           applyThemeStyles(organizationTheme);
-            themeDispatch({ type: "SELECT", theme:organizationTheme});
+          themeDispatch({ type: "SELECT", theme: organizationTheme });
         }
       } else {
         showErrorModal("Falha ao recuperar a organização.", "Tente novamente mais tarde");
