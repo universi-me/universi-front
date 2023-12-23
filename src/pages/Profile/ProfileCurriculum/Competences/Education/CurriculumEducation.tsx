@@ -65,11 +65,13 @@ export function CurriculumEducation() {
             </div>
           </button>
         ) : null}
-        <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
-          <div className={`icon-edit ${isEditing ? 'active' : ''}`}>
-            <i className="bi bi-pencil-fill" />
-          </div>
-        </button>
+        { profileContext.accessingLoggedUser &&
+            <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
+            <div className={`icon-edit ${isEditing ? 'active' : ''}`}>
+                <i className="bi bi-pencil-fill" />
+            </div>
+            </button>
+        }
       </div>
       <div className="education-list">
         {profileContext.profileListData.education &&

@@ -82,11 +82,13 @@ export function CurriculumAbility() {
                         </button>
                     : null
                 }
-                <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
-                    <div className={`icon-edit ${isEditing ? 'active' : ''}`}>
-                        <i className="bi bi-pencil-fill" />
-                    </div>
-                </button>
+                { profileContext.accessingLoggedUser &&
+                    <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
+                        <div className={`icon-edit ${isEditing ? 'active' : ''}`}>
+                            <i className="bi bi-pencil-fill" />
+                        </div>
+                    </button>
+                }
             </div>
             <div className="competence-list">
                     {profileContext.profileListData.competences.length > 0

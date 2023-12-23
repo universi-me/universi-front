@@ -72,11 +72,13 @@ export function CurriculumExperience() {
             </div>
         </button>
         ) : null}
-        <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
-          <div className={`icon-edit ${isEditing ? 'active' : ''}`}>
-            <i className="bi bi-pencil-fill" />
-          </div>
-        </button>
+        { profileContext.accessingLoggedUser &&
+            <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
+            <div className={`icon-edit ${isEditing ? 'active' : ''}`}>
+                <i className="bi bi-pencil-fill" />
+            </div>
+            </button>
+        }
       </div>
       <div className="experience-list">
         {profileContext.profileListData.experience &&

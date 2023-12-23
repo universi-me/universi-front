@@ -20,10 +20,6 @@ export function ProfilePage() {
     const navigate = useNavigate();
     const loaderData = useLoaderData() as ProfilePageLoaderResponse;
 
-    const [showProfileSettings, setShowProfileSettings] = useState<boolean>(false);
-    const [showCompetencesSettings, setShowCompetencesSettings] = useState<boolean>(false);
-    const [showDiscardChanges, setShowDiscardChanges] = useState<boolean>(false);
-
     const [profileContext, setProfileContext] = useState<ProfileContextType>(makeContext(loaderData));
     useEffect(() => setProfileContext(makeContext(loaderData)), [ loaderData.profile?.id ]);
 
@@ -58,47 +54,12 @@ export function ProfilePage() {
                 <SelectionBar/>
                 <ProfileRecommendSettingsButton />
             </ProfileInfo>
-
-            {
-                showProfileSettings &&
-                <UniversiModal>
-                    <ProfileSettings
-                        cancelChanges={() => {setShowDiscardChanges(true)}}
-                        toggleModal={setShowProfileSettings}
-                    />
-                </UniversiModal>
-            }
-
-            {
-                showCompetencesSettings &&
-                <UniversiModal>
-                    <CompetencesSettings
-                        cancelChanges={()=>{setShowDiscardChanges(true)}}
-                    />
-                </UniversiModal>
-            }
-
-            {
-                (showProfileSettings || showCompetencesSettings) && showDiscardChanges &&
-                <UniversiModal>
-                    <ProfileDiscardChanges
-                        onDiscard={discardChanges}
-                        onCancel={()=>{setShowDiscardChanges(false);}}
-                    />
-                </UniversiModal>
-            }
         </div>
         </ProfileContext.Provider>
     );
 
-    function discardChanges() {
-        setShowCompetencesSettings(false);
-        setShowProfileSettings(false);
-        setShowDiscardChanges(false);
-    }
-
     async function refreshProfileData() {
-        const data = await fetchProfilePageData(auth.user?.name)
+        const data = await fetchProfilePageData(profileContext!.profile.user.name)
         const newContext = makeContext(data);
         setProfileContext(newContext);
         return newContext;
