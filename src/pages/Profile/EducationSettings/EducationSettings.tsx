@@ -5,12 +5,9 @@ import { UniversimeApi } from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import './EducationSetting.less'
+import { setStateAsValue } from "@/utils/tsxUtils";
 
-export type EducationSettingsProps = {
-    cancelChanges: () => any;
-};
-
-export function EducationSettings(props: EducationSettingsProps) {
+export function EducationSettings() {
     const profileContext = useContext(ProfileContext)
     const editEducation = profileContext?.editEducation ?? null;
     const [dateStart, setDateStart] = useState("");
@@ -93,7 +90,7 @@ export function EducationSettings(props: EducationSettingsProps) {
                     }
 
                     <div className="submit">
-                        <button type="button" className="cancel-button" onClick={props.cancelChanges}>Cancelar alterações</button>
+                        <button type="button" className="cancel-button" onClick={discardEducation}>Cancelar alterações</button>
                         <button type="button" className="submit-button" onClick={saveEducation}>Salvar alterações</button>
                     </div>
                 </div>
@@ -149,7 +146,7 @@ export function EducationSettings(props: EducationSettingsProps) {
         apiOperation.then((r) => {
             if (!r.success)
                 throw new Error(r.message);
-            window.location.reload();
+            profileContext?.reloadPage();
         }).catch((reason: Error) => {
             SwalUtils.fireModal({
                 title: "Erro ao salvar a Formação",
@@ -176,6 +173,25 @@ export function EducationSettings(props: EducationSettingsProps) {
                     icon: "error",
                 })
             });
+    }
+
+    function discardEducation() {
+        if (!profileContext)
+            return;
+
+        SwalUtils.fireModal({
+            showCancelButton: true,
+            showConfirmButton: true,
+
+            title : editEducation == null ? "Descartar formação?" : "Descartar alterações?",
+            text: "Tem certeza? Esta ação é irreversível", 
+            confirmButtonText: "Sim",
+            cancelButtonText: "Não"
+        }).then((value) => {
+            if (value.isConfirmed) {
+                profileContext.setEditEducation(undefined);
+            }
+        });
     }
 }
 

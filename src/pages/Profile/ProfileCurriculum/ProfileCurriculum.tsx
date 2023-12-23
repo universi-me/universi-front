@@ -51,7 +51,7 @@ export function ProfileCurriculum() {
         {
             showEducationSettings &&
             <UniversiModal>
-                <EducationSettings cancelChanges={() => {}} />
+                <EducationSettings />
             </UniversiModal>
         }
 
