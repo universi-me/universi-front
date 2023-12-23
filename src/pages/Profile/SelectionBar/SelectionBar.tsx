@@ -1,14 +1,18 @@
-import {useState} from "react"
+import {useContext, useEffect, useState} from "react"
 
 import "./SelectionBar.css"
-import { ProfileContentListing } from "../ProfileContentListing/ProfileContentListing"
-import { ProfileGroupListing } from "../ProfileGroupListing/ProfileGroupListing"
-import { ProfileCurriculum } from "../ProfileCurriculum/ProfileCurriculum";
+import { ProfileContext, ProfileContentListing, ProfileGroupListing, ProfileCurriculum } from "@/pages/Profile";
 import { makeClassName } from "@/utils/tsxUtils";
 
+const INITIAL_TAB: AvailableTabs = "groups";
 export function SelectionBar(){
-    const [currentTab, setCurrentTab] = useState("groups");
+    const profileContext = useContext(ProfileContext);
+    const [currentTab, setCurrentTab] = useState<AvailableTabs>(INITIAL_TAB);
     const renderTabs = TABS.length > 1;
+
+    useEffect(() => {
+        setCurrentTab(INITIAL_TAB);
+    }, [profileContext?.profile.user.name]);
 
     return(
         <>
@@ -27,9 +31,11 @@ export function SelectionBar(){
     )
 }
 
+export type AvailableTabs = "groups" | "curriculum";
+
 type TabDefinition = {
     name: string;
-    value: string;
+    value: AvailableTabs;
 };
 
 const TABS: TabDefinition[] = [
