@@ -207,7 +207,7 @@ export function GroupThemeColorPage() {
     };
 
     fetchData();
-  }, [organizationId]);
+  }, [auth.organization]);
 
   return (
     <div id="theme-color-settings">
