@@ -39,7 +39,7 @@ export async function create(body:EducationCreate_RequestDTO) {
     return (await api.post<EducationCreate_ResponseDTO>("/curriculum/education/criar", {
         typeEducationId: body.typeEducationId,
         institutionId:   body.institutionId,
-        starDate:        body.startDate,
+        startDate:        body.startDate,
         endDate:         body.endDate,
         presentDate:     body.presentDate,
     })).data;
