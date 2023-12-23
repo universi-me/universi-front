@@ -1,16 +1,13 @@
 import { useContext, MouseEvent, useState } from 'react';
-import { ProfileContext } from '@/pages/Profile';
+import { CompetencesSettings, ProfileContext } from '@/pages/Profile';
+import { UniversiModal } from '@/components/UniversiModal';
 import { Level, LevelToLabel, LevelToNumber } from '@/types/Competence';
 import { ICON_DELETE_BLACK, ICON_EDIT_BLACK } from '@/utils/assets';
 import './CurriculumAbility.css';
-import { remove } from '@/services/UniversimeApi/Competence';
+import UniversimeApi from '@/services/UniversimeApi';
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
-export type ProfileCompetencesProps = {
-  openCompetenceSettings: (e: MouseEvent) => void;
-};
-
-export function CurriculumAbility(props: ProfileCompetencesProps) {
+export function CurriculumAbility() {
   const profileContext = useContext(ProfileContext);
 
   if (profileContext === null) {
@@ -29,20 +26,19 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
   };
 
   const addCompetence = (e: MouseEvent<HTMLButtonElement>) => {
-    profileContext.setEditCompetence;
-    props.openCompetenceSettings(e);
+    profileContext.setEditCompetence(null);
   };
 
-  const deleteCompetece = (competenceId: string) => {
+  const deleteCompetence = (competenceId: string) => {
     setDeleteConfirmation(false);
     setSelectedCompeteceId('');
   
-    remove({ competenceId })
+    UniversimeApi.Competence.remove({ competenceId })
     .then((response) => {
         if (!response.success) {
             throw new Error(response.message);
         } else {
-          window.location.reload();
+          profileContext.reloadPage();
         }
     })
     .catch((reason: Error) => {
@@ -111,7 +107,7 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
                         <div className="config-button-ability">
                             <button
                                 className="config-button-icon"
-                                onClick={() => deleteCompetece(competence.id)}
+                                onClick={() => deleteCompetence(competence.id)}
                                 title="Configurações"
                                 >
                                 <img src={ICON_DELETE_BLACK} />
@@ -124,6 +120,12 @@ export function CurriculumAbility(props: ProfileCompetencesProps) {
                 : <p className="empty-competences">Nenhuma competência cadastrada.</p>
                 }
             </div>
+
+            { profileContext.editCompetence !== undefined &&
+                <UniversiModal>
+                    <CompetencesSettings />
+                </UniversiModal>
+            }
         </div>
   );
 }

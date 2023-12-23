@@ -14,25 +14,12 @@ import { ExperienceSettings } from "../ExperienceSettings/ExperienceSettings";
 export function ProfileCurriculum() {
     const profileContext = useContext(ProfileContext);
 
-    const [showCompetencesSettings, setShowCompetencesSettings] = useState<boolean>(false);
-    const [showEducationSettings, setShowEducationSetting] = useState<boolean>(false);
-    const [showExperienceSettings, setShowExperienceSetting] = useState<boolean>(false);
-    const [showDiscardChanges, setShowDiscardChanges] = useState<boolean>(false);
-
     if (!profileContext)
         return null;
 
-    const discardChanges = () => {
-        setShowCompetencesSettings(false);
-        setShowEducationSetting(false);
-        setShowExperienceSetting(false);
-        
-        profileContext.setEditCompetence(null);
-        profileContext.setEditEducation(null);
-        profileContext.setEditExperience(null);
-        
-        setShowDiscardChanges(false);
-    };
+    const showCompetencesSettings = profileContext.editCompetence !== undefined;
+    const showEducationSettings = profileContext.editEducation !== undefined;
+    const showExperienceSettings = profileContext.editExperience !== undefined;
 
     return (
         <>
@@ -42,43 +29,36 @@ export function ProfileCurriculum() {
                 </div>
 
                 <div id="item-competence">
-                    <CurriculumAbility openCompetenceSettings={() => setShowCompetencesSettings(true)} />
+                    <CurriculumAbility />
                 </div>
 
                 <div id="item-competence">
-                    <CurriculumEducation openEducationSettings={() => setShowEducationSetting(true)} />
+                    <CurriculumEducation />
                 </div>
 
                 <div id="item-competence">
-                    <CurriculumExperience openExperienceSettings={() => setShowExperienceSetting(true)} />
+                    <CurriculumExperience />
                 </div>
             </div>
 
         {
             showCompetencesSettings &&
             <UniversiModal>
-                <CompetencesSettings cancelChanges={() => setShowDiscardChanges(true)} />
+                <CompetencesSettings />
             </UniversiModal>
         }
 
         {
             showEducationSettings &&
             <UniversiModal>
-                <EducationSettings cancelChanges={() => setShowDiscardChanges(true)} />
+                <EducationSettings cancelChanges={() => {}} />
             </UniversiModal>
         }
 
         {
             showExperienceSettings &&
             <UniversiModal>
-                <ExperienceSettings cancelChanges={() => setShowDiscardChanges(true)} />
-            </UniversiModal>
-        }
-
-        {
-            (showCompetencesSettings || showEducationSettings || showExperienceSettings) && showDiscardChanges &&
-            <UniversiModal>
-            <ProfileDiscardChanges onDiscard={discardChanges} onCancel={() => setShowDiscardChanges(false)} />
+                <ExperienceSettings cancelChanges={() => {}} />
             </UniversiModal>
         }
     </>

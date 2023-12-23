@@ -1,19 +1,20 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import { ProfileContext } from "@/pages/Profile";
-import { LevelToLabel } from "@/types/Competence";
+import { Level, LevelToLabel } from "@/types/Competence";
 import { UniversimeApi } from "@/services/UniversimeApi";
+import { setStateAsValue } from "@/utils/tsxUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import './CompetencesSettings.less'
 
-export type CompetencesSettingsProps = {
-    cancelChanges: () => any;
-};
-
-export function CompetencesSettings(props: CompetencesSettingsProps) {
+export function CompetencesSettings() {
     const profileContext = useContext(ProfileContext)
     const editCompetence = profileContext?.editCompetence ?? null;
+
+    const [competenceTypeId, setCompetenceTypeId] = useState<string>(editCompetence?.competenceType.id ?? "");
+    const [competenceLevel, setCompetenceLevel] = useState<Level | "">(editCompetence?.level ?? "");
+    const [description, setDescription] = useState<string>(editCompetence?.description ?? "");
 
     return (
         profileContext === null ? null :
@@ -22,12 +23,12 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
             <div className="settings-form">
                 <div className="section competence-type">
                     <h2 className="section-heading">Tipo de Competência</h2>
-                    <select name="competence-type" defaultValue={editCompetence?.competenceType.id ?? ""}>
+                    <select name="competence-type" defaultValue={editCompetence?.competenceType.id ?? ""} onChange={setStateAsValue(setCompetenceTypeId)}>
                         <option disabled value={""}>Selecione o tipo da competência</option>
                         {
-                            profileContext.allTypeCompetence.map(competeceType => {
+                            profileContext.allTypeCompetence.map(competenceType => {
                                 return (
-                                    <option value={competeceType.id} key={competeceType.id}>{competeceType.name}</option>
+                                    <option value={competenceType.id} key={competenceType.id}>{competenceType.name}</option>
                                 );
                             })
                         }
@@ -36,7 +37,7 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
 
                 <div className="section level">
                     <h2 className="section-heading">Nível de Experiência</h2>
-                    <select name="level" defaultValue={editCompetence?.level ?? ""}>
+                    <select name="level" defaultValue={editCompetence?.level ?? ""} onChange={(e) => setCompetenceLevel(e.currentTarget.value as Level | "")}>
                         <option disabled value={""}>Selecione o nível de experiência</option>
                         {
                             Object.entries(LevelToLabel).map(([level, label]) => {
@@ -57,7 +58,7 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
                     }
 
                     <div className="submit">
-                        <button type="button" className="cancel-button" onClick={props.cancelChanges}>Cancelar alterações</button>
+                        <button type="button" className="cancel-button" onClick={discardCompetence}>Cancelar alterações</button>
                         <button type="button" className="submit-button" onClick={saveCompetence}>Salvar alterações</button>
                     </div>
                 </div>
@@ -66,36 +67,27 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
     );
 
     function saveCompetence() {
-        const typeElement = document.querySelector('[name="competence-type"]') as HTMLSelectElement;
-
-        const descriptionElement = document.querySelector('[name="description"]') as HTMLTextAreaElement | null;
-        const description = descriptionElement?.value || ""
-
-        const levelElement = document.querySelector('[name="level"]') as HTMLSelectElement;
-        const level = levelElement.value;
-
         const competenceId = profileContext?.editCompetence?.id ?? null;
 
         const apiOperation = competenceId === null
             ? UniversimeApi.Competence.create({
-                competenceTypeId: typeElement.value,
+                competenceTypeId,
                 description,
-                level,
+                level: competenceLevel,
             })
 
             : UniversimeApi.Competence.update({
                 competenceId,
-                competenceTypeId: typeElement.value,
+                competenceTypeId,
                 description,
-                level,
+                level: competenceLevel,
             });
 
         apiOperation.then((r) => {
             if (!r.success)
                 throw new Error(r.message);
 
-            window.location.reload();
-            
+            profileContext?.reloadPage();
         }).catch((reason: Error) => {
             SwalUtils.fireModal({
                 title: "Erro ao salvar competência",
@@ -106,7 +98,7 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
     }
 
     function removeCompetence() {
-        if (!profileContext || !profileContext.editCompetence)
+        if (!profileContext?.editCompetence)
             return;
 
         UniversimeApi.Competence.remove({competenceId: profileContext.editCompetence.id})
@@ -122,5 +114,24 @@ export function CompetencesSettings(props: CompetencesSettingsProps) {
                     icon: "error",
                 })
             });
+    }
+
+    function discardCompetence() {
+        if (!profileContext)
+            return;
+
+        SwalUtils.fireModal({
+            showCancelButton: true,
+            showConfirmButton: true,
+
+            title : editCompetence == null ? "Descartar competência?" : "Descartar alterações?",
+            text: "Tem certeza? Esta ação é irreversível", 
+            confirmButtonText: "Sim",
+            cancelButtonText: "Não"
+        }).then((value) => {
+            if (value.isConfirmed) {
+                profileContext.setEditCompetence(undefined);
+            }
+        });
     }
 }

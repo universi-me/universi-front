@@ -118,9 +118,9 @@ export function ProfilePage() {
 
             reloadPage: refreshProfileData,
 
-            editCompetence: null,
-            editEducation: null,
-            editExperience: null,
+            editCompetence: undefined,
+            editEducation: undefined,
+            editExperience: undefined,
             setEditCompetence(c) {
                 setProfileContext({...this, editCompetence: c});
             },

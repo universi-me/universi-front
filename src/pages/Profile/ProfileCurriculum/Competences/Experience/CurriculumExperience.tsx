@@ -5,11 +5,7 @@ import './CurriculumExperience.css'
 import { remove } from '@/services/UniversimeApi/Experience';
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
-export type ProfileExperienceProps = {
-    openExperienceSettings: (e: MouseEvent) => void;
-};
-
-export function CurriculumExperience(props: ProfileExperienceProps) {
+export function CurriculumExperience() {
     const profileContext = useContext(ProfileContext);
 
   if (profileContext === null) {
@@ -33,8 +29,7 @@ export function CurriculumExperience(props: ProfileExperienceProps) {
   };
 
   const addExperience = (e: MouseEvent<HTMLButtonElement>) => {
-    profileContext.setEditExperience;
-    props.openExperienceSettings(e);
+    profileContext.setEditExperience(null);
   };
 
   const deleteExperience = (profileExperienceId: string) => {

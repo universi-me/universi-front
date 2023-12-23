@@ -5,11 +5,7 @@ import './CurriculumEducation.css'
 import { remove } from '@/services/UniversimeApi/Education';
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
-export type ProfileEducationProps = {
-    openEducationSettings: (e: MouseEvent) => void;
-};
-
-export function CurriculumEducation(props: ProfileEducationProps) {
+export function CurriculumEducation() {
     const profileContext = useContext(ProfileContext);
 
   if (profileContext === null) {
@@ -33,8 +29,7 @@ export function CurriculumEducation(props: ProfileEducationProps) {
   };
 
   const addEducation = (e: MouseEvent<HTMLButtonElement>) => {
-    profileContext.setEditEducation;
-    props.openEducationSettings(e);
+    profileContext.setEditEducation(null);
   };
 
   const deleteEducation = (educationId: string) => {

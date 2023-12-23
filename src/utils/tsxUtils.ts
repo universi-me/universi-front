@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 
-export function setStateAsValue(setter: Dispatch<SetStateAction<string>>) {
-    return function(event: {currentTarget: {value: string}}) {
+export function setStateAsValue<T>(setter: Dispatch<SetStateAction<T>>) {
+    return function(event: {currentTarget: {value: T}}) {
         setter(event.currentTarget.value);
     }
 }
