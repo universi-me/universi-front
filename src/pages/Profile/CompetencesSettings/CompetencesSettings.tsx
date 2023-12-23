@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { ProfileContext } from "@/pages/Profile";
 import { Level, LevelToLabel } from "@/types/Competence";
 import { UniversimeApi } from "@/services/UniversimeApi";
-import { setStateAsValue } from "@/utils/tsxUtils";
+import { deactivateButtonWhile, setStateAsValue } from "@/utils/tsxUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import './CompetencesSettings.less'
@@ -59,7 +59,7 @@ export function CompetencesSettings() {
 
                     <div className="submit">
                         <button type="button" className="cancel-button" onClick={discardCompetence}>Cancelar alterações</button>
-                        <button type="button" className="submit-button" onClick={saveCompetence}>Salvar alterações</button>
+                        <button type="button" className="submit-button" onClick={deactivateButtonWhile(saveCompetence)}>Salvar alterações</button>
                     </div>
                 </div>
             </div>

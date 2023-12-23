@@ -2,10 +2,10 @@ import { useContext, useState } from "react";
 
 import { ProfileContext } from "@/pages/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi";
+import { deactivateButtonWhile } from "@/utils/tsxUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import './EducationSetting.less'
-import { setStateAsValue } from "@/utils/tsxUtils";
 
 export function EducationSettings() {
     const profileContext = useContext(ProfileContext)
@@ -91,7 +91,7 @@ export function EducationSettings() {
 
                     <div className="submit">
                         <button type="button" className="cancel-button" onClick={discardEducation}>Cancelar alterações</button>
-                        <button type="button" className="submit-button" onClick={saveEducation}>Salvar alterações</button>
+                        <button type="button" className="submit-button" onClick={deactivateButtonWhile(saveEducation)}>Salvar alterações</button>
                     </div>
                 </div>
             </div>

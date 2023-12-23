@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 
 import { ProfileContext } from "@/pages/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi";
+import { deactivateButtonWhile } from "@/utils/tsxUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import './ExperienceSetting.less'
@@ -88,7 +89,7 @@ export function ExperienceSettings() {
 
                     <div className="submit">
                         <button type="button" className="cancel-button" onClick={discardExperience}>Cancelar alterações</button>
-                        <button type="button" className="submit-button" onClick={saveEducation}>Salvar alterações</button>
+                        <button type="button" className="submit-button" onClick={deactivateButtonWhile(saveEducation)}>Salvar alterações</button>
                     </div>
                 </div>
             </div>
