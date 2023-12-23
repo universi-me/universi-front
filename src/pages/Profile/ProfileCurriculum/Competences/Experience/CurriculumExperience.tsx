@@ -42,7 +42,7 @@ export function CurriculumExperience() {
         if (!response.success) {
             throw new Error(response.message);
         } else {
-          window.location.reload();
+            profileContext.reloadPage();
         }
     })
     .catch((reason: Error) => {

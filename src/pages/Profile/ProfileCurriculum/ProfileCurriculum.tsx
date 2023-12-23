@@ -58,7 +58,7 @@ export function ProfileCurriculum() {
         {
             showExperienceSettings &&
             <UniversiModal>
-                <ExperienceSettings cancelChanges={() => {}} />
+                <ExperienceSettings />
             </UniversiModal>
         }
     </>

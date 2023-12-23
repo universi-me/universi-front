@@ -6,11 +6,7 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import './ExperienceSetting.less'
 
-export type ExperienceSettingsProps = {
-    cancelChanges: () => any;
-};
-
-export function ExperienceSettings(props: ExperienceSettingsProps) {
+export function ExperienceSettings() {
     const profileContext = useContext(ProfileContext)
     const editExperience = profileContext?.editExperience ?? null;
     const [dateStart, setDateStart] = useState("");
@@ -91,7 +87,7 @@ export function ExperienceSettings(props: ExperienceSettingsProps) {
                     }
 
                     <div className="submit">
-                        <button type="button" className="cancel-button" onClick={props.cancelChanges}>Cancelar alterações</button>
+                        <button type="button" className="cancel-button" onClick={discardExperience}>Cancelar alterações</button>
                         <button type="button" className="submit-button" onClick={saveEducation}>Salvar alterações</button>
                     </div>
                 </div>
@@ -154,7 +150,7 @@ export function ExperienceSettings(props: ExperienceSettingsProps) {
             if (!r.success)
                 throw new Error(r.message);
 
-            window.location.reload();
+            profileContext!.reloadPage();
         }).catch((reason: Error) => {
             SwalUtils.fireModal({
                 title: "Erro ao salvar a Formação",
@@ -181,6 +177,25 @@ export function ExperienceSettings(props: ExperienceSettingsProps) {
                     icon: "error",
                 })
             });
+    }
+
+    function discardExperience() {
+        if (!profileContext)
+            return;
+
+        SwalUtils.fireModal({
+            showCancelButton: true,
+            showConfirmButton: true,
+
+            title : editExperience == null ? "Descartar formação?" : "Descartar alterações?",
+            text: "Tem certeza? Esta ação é irreversível", 
+            confirmButtonText: "Sim",
+            cancelButtonText: "Não"
+        }).then((value) => {
+            if (value.isConfirmed) {
+                profileContext.setEditExperience(undefined);
+            }
+        });
     }
 }
 
