@@ -2,7 +2,7 @@ import { useContext, MouseEvent, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { ICON_DELETE_BLACK, ICON_EDIT_BLACK } from '@/utils/assets';
 import './CurriculumEducation.css'
-import { remove } from '@/services/UniversimeApi/Education';
+import UniversimeApi from '@/services/UniversimeApi';
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 export function CurriculumEducation() {
@@ -21,8 +21,6 @@ export function CurriculumEducation() {
   : [];
 
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedEducationId, setSelectedEducationId] = useState('');
-  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   const toggleEditing = () => {
     setIsEditing((prevEditing) => !prevEditing);
@@ -33,24 +31,37 @@ export function CurriculumEducation() {
   };
 
   const deleteEducation = (educationId: string) => {
-    setDeleteConfirmation(false);
-    setSelectedEducationId('');
-  
-    remove({ educationId })
-    .then((response) => {
-        if (!response.success) {
-            throw new Error(response.message);
-        } else {
-          profileContext.reloadPage();
-        }
-    })
-    .catch((reason: Error) => {
-        SwalUtils.fireModal({
-            title: "Erro ao remover a Formação",
-            text: reason.message,
-            icon: "error",
+    SwalUtils.fireModal({
+        icon: "warning",
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonColor: "var(--alert-color)",
+
+        title : "Excluir formação?",
+        text: "Tem certeza? Esta ação é irreversível", 
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não"
+    }).then(response => {
+        if (!response.isConfirmed)
+            return;
+
+        UniversimeApi.Education.remove({ educationId })
+        .then((response) => {
+            if (!response.success) {
+                throw new Error(response.message);
+            } else {
+              profileContext.reloadPage();
+            }
+        })
+        .catch((reason: Error) => {
+            SwalUtils.fireModal({
+                title: "Erro ao remover a Formação",
+                text: reason.message,
+                icon: "error",
+            });
         });
-    });
+    })
+  
   };
 
   return (

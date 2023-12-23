@@ -17,9 +17,7 @@ export function CurriculumAbility() {
   const sortedCompetences = [...profileContext.profileListData.competences]
     .sort((c1, c2) => new Date(c1.creationDate).getTime() - new Date(c2.creationDate).getTime());
 
-  const [selectedCompeteceId, setSelectedCompeteceId] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   const toggleEditing = () => {
     setIsEditing((prevEditing) => !prevEditing);
@@ -30,22 +28,34 @@ export function CurriculumAbility() {
   };
 
   const deleteCompetence = (competenceId: string) => {
-    setDeleteConfirmation(false);
-    setSelectedCompeteceId('');
-  
-    UniversimeApi.Competence.remove({ competenceId })
-    .then((response) => {
-        if (!response.success) {
-            throw new Error(response.message);
-        } else {
-          profileContext.reloadPage();
-        }
-    })
-    .catch((reason: Error) => {
-        SwalUtils.fireModal({
-            title: "Erro ao remover a experiência",
-            text: reason.message,
-            icon: "error",
+    SwalUtils.fireModal({
+        icon: "warning",
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonColor: "var(--alert-color)",
+
+        title : "Excluir competência?",
+        text: "Tem certeza? Esta ação é irreversível", 
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não"
+    }).then(response => {
+        if (!response.isConfirmed)
+            return;
+
+        UniversimeApi.Competence.remove({ competenceId })
+        .then((response) => {
+            if (!response.success) {
+                throw new Error(response.message);
+            } else {
+                profileContext.reloadPage();
+            }
+        })
+        .catch((reason: Error) => {
+            SwalUtils.fireModal({
+                title: "Erro ao remover a experiência",
+                text: reason.message,
+                icon: "error",
+            });
         });
     });
   };

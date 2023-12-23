@@ -2,7 +2,7 @@ import { useContext, MouseEvent, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { ICON_DELETE_BLACK, ICON_EDIT_BLACK } from '@/utils/assets';
 import './CurriculumExperience.css'
-import { remove } from '@/services/UniversimeApi/Experience';
+import UniversimeApi from '@/services/UniversimeApi';
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 export function CurriculumExperience() {
@@ -21,8 +21,6 @@ export function CurriculumExperience() {
   : [];
 
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedExperienceId, setSelectedExperienceId] = useState('');
-  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   const toggleEditing = () => {
     setIsEditing((prevEditing) => !prevEditing);
@@ -33,23 +31,35 @@ export function CurriculumExperience() {
   };
 
   const deleteExperience = (profileExperienceId: string) => {
-    setDeleteConfirmation(false);
-    setSelectedExperienceId('');
-  
-    remove({ profileExperienceId })
-    .then((response) => {
-      console.log(profileExperienceId)
-        if (!response.success) {
-            throw new Error(response.message);
-        } else {
-            profileContext.reloadPage();
-        }
-    })
-    .catch((reason: Error) => {
-        SwalUtils.fireModal({
-            title: "Erro ao remover a experiência",
-            text: reason.message,
-            icon: "error",
+    SwalUtils.fireModal({
+        icon: "warning",
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonColor: "var(--alert-color)",
+
+        title : "Excluir experiência?",
+        text: "Tem certeza? Esta ação é irreversível", 
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não"
+    }).then(response => {
+        if (!response.isConfirmed)
+            return;
+
+        UniversimeApi.Experience.remove({ profileExperienceId })
+        .then((response) => {
+            console.log(profileExperienceId)
+            if (!response.success) {
+                throw new Error(response.message);
+            } else {
+                profileContext.reloadPage();
+            }
+        })
+        .catch((reason: Error) => {
+            SwalUtils.fireModal({
+                title: "Erro ao remover a experiência",
+                text: reason.message,
+                icon: "error",
+            });
         });
     });
   };
