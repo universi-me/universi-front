@@ -4,6 +4,7 @@ import "./SelectionBar.css"
 import { ProfileContentListing } from "../ProfileContentListing/ProfileContentListing"
 import { ProfileGroupListing } from "../ProfileGroupListing/ProfileGroupListing"
 import { ProfileCurriculum } from "../ProfileCurriculum/ProfileCurriculum";
+import { makeClassName } from "@/utils/tsxUtils";
 
 export function SelectionBar(){
     const [currentTab, setCurrentTab] = useState("groups");
@@ -16,7 +17,7 @@ export function SelectionBar(){
                 <div className="selection-bar">
                     {
                         TABS.map((tab) => {
-                            return <div key={tab.value} className="select-element" onClick={() => setCurrentTab(tab.value)}>{tab.name}</div>
+                            return <div key={tab.value} className={makeClassName("select-element", currentTab === tab.value && "current-tab")} onClick={() => setCurrentTab(tab.value)}>{tab.name}</div>
                         })
                     }
                 </div>
@@ -41,12 +42,12 @@ const TABS: TabDefinition[] = [
     //     value: "files",
     // },
     {
-        name: "Currículo",
-        value: "curriculum",
-    },
-    {
         name: "Grupos",
         value: "groups",
+    },
+    {
+        name: "Currículo",
+        value: "curriculum",
     },
 ];
 

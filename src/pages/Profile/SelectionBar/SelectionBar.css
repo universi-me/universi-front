@@ -15,3 +15,7 @@
     font-weight: 500;
     cursor: pointer;
 }
+
+.select-element.current-tab {
+    text-decoration: underline;
+}
