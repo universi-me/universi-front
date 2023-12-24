@@ -86,6 +86,10 @@ export function GroupTabRenderer({tab}: { tab: AvailableTabs }) {
         : null;
 }
 
+export function isTabAvailable(tab: string): boolean {
+    return TABS.find(t => t.value === tab) !== undefined;
+}
+
 export const EMPTY_LIST_CLASS = "empty-text";
 
 const TABS: GroupTabDefinition[] = [

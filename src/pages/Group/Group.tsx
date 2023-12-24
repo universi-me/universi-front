@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
-import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, type GroupContextType, type GroupPageLoaderResponse, RefreshGroupOptions } from "@/pages/Group";
+import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, isTabAvailable, type GroupContextType, type GroupPageLoaderResponse, RefreshGroupOptions } from "@/pages/Group";
 import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
 import { AuthContext } from "@/contexts/Auth";
 import "./Group.less";
@@ -20,10 +20,8 @@ export function GroupPage() {
         let tabName = tabNameSplit.length > 0 ? tabNameSplit[0] : null;
         let contentId = null;
 
-        if (tabName === "feed" || tabName === "contents" || tabName === "groups" || tabName === "people") {
-            setCurrentTab(tabName);
-        } else {
-            setCurrentTab("feed");
+        if (isTabAvailable(tabName as string)) {
+            setCurrentTab(tabName as AvailableTabs);
         }
         if(tabNameSplit.length > 1) {
             contentId = tabNameSplit[1];
