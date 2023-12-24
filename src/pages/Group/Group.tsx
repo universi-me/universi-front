@@ -15,7 +15,21 @@ export function GroupPage() {
     const [context, setContext] = useState(makeContext(page));
     useEffect(() => {
         setContext(makeContext(page));
-        setCurrentTab("feed");
+
+        let tabNameSplit : string[] = window.location.hash.substring(1).split('/') ?? [];
+        let tabName = tabNameSplit.length > 0 ? tabNameSplit[0] : null;
+        let contentId = null;
+
+        if (tabName === "feed" || tabName === "contents" || tabName === "groups" || tabName === "people") {
+            setCurrentTab(tabName);
+        } else {
+            setCurrentTab("feed");
+        }
+        if(tabNameSplit.length > 1) {
+            contentId = tabNameSplit[1];
+            refreshGroupData({currentContentId: contentId});
+        }
+
     }, [page]);
 
     if (!page.loggedData || !page.group) {

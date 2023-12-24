@@ -169,6 +169,11 @@ export function GroupContents() {
             .map(renderContent);
     }
 
+    function selectContent(content: Folder) {
+        groupContext?.setCurrentContent(content)
+        window.location.hash = "contents" + "/" + content.id;
+    }
+
     function renderContent(content: Folder) {
         const imageUrl = content.image?.startsWith("/")
             ? `${import.meta.env.VITE_UNIVERSIME_API}${content.image}`
@@ -179,14 +184,14 @@ export function GroupContents() {
                 {
                     imageUrl
                     ?
-                    <ProfileImage imageUrl={imageUrl} className="content-image" onClick={() => groupContext?.setCurrentContent(content)} />
+                    <ProfileImage imageUrl={imageUrl} className="content-image" onClick={() => selectContent(content)} />
                     :
-                    <ProfileImage imageUrl={"/assets/imgs/default-content.png"} className="content-image default-image" onClick={() => groupContext?.setCurrentContent(content)} />
+                    <ProfileImage imageUrl={"/assets/imgs/default-content.png"} className="content-image default-image" onClick={() => selectContent(content)} />
                 }
 
                 <div className="info">
                     <div className="content-name-wrapper">
-                        <h2 className="content-name" onClick={() => groupContext?.setCurrentContent(content)}>{content.name}</h2>
+                        <h2 className="content-name" onClick={() => selectContent(content)}>{content.name}</h2>
 
                         { !hasAvailableOption(OPTIONS_DEFINITION, content) ? null :
                         <DropdownMenu.Root>
