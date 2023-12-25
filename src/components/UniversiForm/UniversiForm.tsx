@@ -405,6 +405,14 @@ export function UniversiForm(props : formProps){
             object.onCreate(inputValue)
             .then((options : any)=>{
                 setOptionsList(options)
+
+                // select created value in options preserving selected values
+                for(const option of options) {
+                    if(option.label == inputValue) {
+                        handleSelectChange(index, object.type === FormInputs.SELECT_MULTI ? [...values, option] : option)
+                        break
+                    }
+                }
             })
         }
 
@@ -454,6 +462,7 @@ export function UniversiForm(props : formProps){
                         <CreatableSelect isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
                         onChange={(value) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
+                        formatCreateLabel={(value) => `Criar "${value}"`}
                         classNamePrefix="category-item"
                         styles={object.stylesConfig}
                         required={object.required}
