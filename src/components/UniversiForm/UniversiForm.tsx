@@ -554,7 +554,9 @@ export function UniversiForm(props : formProps){
                 props.callback()
         } catch {
         }
-        setIsSubmitting(false);
+        setTimeout(() => {
+            setIsSubmitting(false);
+        }, 1000);
     }
 
     async function makeRequest() {
