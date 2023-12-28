@@ -95,6 +95,8 @@ export function UniversiForm(props : formProps){
 
     const [objects, setObjects] = useState<FormObject[]>(props.objects);
     const [canSave, setCanSave] = useState<boolean>(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
     const MAX_TEXT_LENGTH = 50
     const MAX_LONG_TEXT_LENGTH = 150
     const MAX_URL_LENGTH = 100
@@ -546,17 +548,22 @@ export function UniversiForm(props : formProps){
         }, {} as Record<string, any>);
     };
 
-    function handleCallback(){
-        if(props.callback)
-            props.callback()
+    function handleCallback() {
+        try {
+            if(props.callback)
+                props.callback()
+        } catch {
+        }
+        setIsSubmitting(false);
     }
 
-    function makeRequest(){
-        props.requisition(convertToDTO(objects))?.then (() => {
-            handleCallback()
-        })?.catch(() => {
-            handleCallback()
-        })
+    async function makeRequest() {
+        try {
+          setIsSubmitting(true);
+          await props.requisition(convertToDTO(objects));
+        } catch {
+        }
+        handleCallback();
     }
 
     function handleCancel(){
@@ -602,7 +609,7 @@ export function UniversiForm(props : formProps){
                         <i className="bi bi-x-circle-fill" />
                         Cancelar
                     </button>
-                    <button type="button" className="submit-button" onClick={makeRequest} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
+                    <button type="button" className="submit-button" onClick={makeRequest} disabled={isSubmitting || !canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
                         <i className="bi bi-check-circle-fill" />
                         Salvar
                     </button>
