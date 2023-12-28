@@ -1,7 +1,7 @@
 import { useContext, MouseEvent, useState } from 'react';
 import { CompetencesSettings, ProfileContext } from '@/pages/Profile';
 import { UniversiModal } from '@/components/UniversiModal';
-import { Level, LevelToLabel, LevelToNumber } from '@/types/Competence';
+import { Competence, Level, LevelToLabel, LevelToNumber } from '@/types/Competence';
 import { ICON_DELETE_BLACK, ICON_EDIT_BLACK } from '@/utils/assets';
 import './CurriculumAbility.css';
 import UniversimeApi from '@/services/UniversimeApi';
@@ -25,6 +25,10 @@ export function CurriculumAbility() {
 
   const addCompetence = (e: MouseEvent<HTMLButtonElement>) => {
     profileContext.setEditCompetence(null);
+  };
+
+  const editCompetence = (competence: Competence) => {
+    profileContext.setEditCompetence(competence);
   };
 
   const deleteCompetence = (competenceId: string) => {
@@ -120,9 +124,16 @@ export function CurriculumAbility() {
                             <button
                                 className="config-button-icon"
                                 onClick={() => deleteCompetence(competence.id)}
-                                title="Configurações"
+                                title="Apagar"
                                 >
                                 <img src={ICON_DELETE_BLACK} />
+                            </button>
+                            <button
+                                className="config-button-icon"
+                                onClick={() => editCompetence(competence)}
+                                title="Editar"
+                                >
+                                <i className="bi bi-pencil-fill" />
                             </button>
                         </div>
                     ) : null}

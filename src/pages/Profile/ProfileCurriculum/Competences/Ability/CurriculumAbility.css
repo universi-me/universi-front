@@ -148,6 +148,10 @@
     cursor: pointer;
 }
 
+.config-button-icon + .config-button-icon {
+    margin-left: 20px;
+}
+
 #item-competence .competence .edit-button {
     display: flex;
     align-items: center;
