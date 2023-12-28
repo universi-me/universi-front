@@ -6,8 +6,6 @@ import { UniversimeApi } from "@/services/UniversimeApi";
 import { deactivateButtonWhile, setStateAsValue } from "@/utils/tsxUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
-import { TextValidation } from "@/components/UniversiForm/Validation/TextValidation";
-import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
 
 import './CompetencesSettings.less'
 
@@ -26,13 +24,13 @@ export function CompetencesSettings() {
             objects={[
                 {
                     DTOName: "competenceTypeId", label: "Tipo de Competência", type: FormInputs.SELECT_SINGLE, 
-                    value: competenceTypeId,
+                    value: editCompetence?.competenceType ? {value: editCompetence?.competenceType.id, label: editCompetence?.competenceType.name } : undefined,
                     options: profileContext.allTypeCompetence.map((t) => ({value: t.id, label: t.name})),
-                    required: true,
+                    required: true
                 },
                 {
                     DTOName: "level", label: "Nível de Experiência", type: FormInputs.SELECT_SINGLE, 
-                    value: competenceLevel,
+                    value: editCompetence?.level ? {value: editCompetence?.level , label: editCompetence?.level } : undefined,
                     options: Object.entries(LevelToLabel).map(([level, label]) => ({value: level, label })),
                     required: true
                 },
@@ -40,7 +38,7 @@ export function CompetencesSettings() {
                     DTOName: "description", label: "description", type: FormInputs.HIDDEN, value: description
                 },
                 {
-                    DTOName: "competenceId", label: "competenceId", type: FormInputs.HIDDEN, value: profileContext?.editCompetence?.id
+                    DTOName: "competenceId", label: "competenceId", type: FormInputs.HIDDEN, value: editCompetence?.id
                 }
             ]}
             requisition={ editCompetence?.id ? UniversimeApi.Competence.update : UniversimeApi.Competence.create }
