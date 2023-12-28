@@ -546,17 +546,24 @@ export function UniversiForm(props : formProps){
         }, {} as Record<string, any>);
     };
 
-    function makeRequest(){
-        props.requisition(convertToDTO(objects))
+    function handleCallback(){
         if(props.callback)
             props.callback()
+    }
+
+    function makeRequest(){
+        props.requisition(convertToDTO(objects))?.then (() => {
+            handleCallback()
+        })?.catch(() => {
+            handleCallback()
+        })
     }
 
     function handleCancel(){
         if(props.cancelProps?.confirmCancel == undefined || props.cancelProps.confirmCancel == true)
             cancelPopup()
         else
-            props.callback()
+            handleCallback()
 
     }
 
@@ -571,7 +578,7 @@ export function UniversiForm(props : formProps){
                 confirmButtonColor: props.cancelProps?.confirmButtonColor  ?? "var(--wrong-invalid-color)"
             }).then(response =>{
                 if(response.isConfirmed){
-                    props.callback();
+                    handleCallback()
                 }
             })
     }
