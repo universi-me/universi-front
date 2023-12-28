@@ -6,7 +6,7 @@ export class RequiredValidation implements Validation<any> {
         if(!object.required)
             return true
 
-        if (object.value === undefined)
+        if (object.value === undefined || object.value === null || object.value?.length === 0)
             return false;
 
         return true;
