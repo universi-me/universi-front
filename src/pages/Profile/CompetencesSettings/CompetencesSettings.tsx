@@ -5,6 +5,9 @@ import { Level, LevelToLabel } from "@/types/Competence";
 import { UniversimeApi } from "@/services/UniversimeApi";
 import { deactivateButtonWhile, setStateAsValue } from "@/utils/tsxUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
+import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
+import { TextValidation } from "@/components/UniversiForm/Validation/TextValidation";
+import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
 
 import './CompetencesSettings.less'
 
@@ -18,120 +21,31 @@ export function CompetencesSettings() {
 
     return (
         profileContext === null ? null :
-        <div id="competences-settings">
-            <div className="heading">Adicionar competência</div>
-            <div className="settings-form">
-                <div className="section competence-type">
-                    <h2 className="section-heading">Tipo de Competência</h2>
-                    <select name="competence-type" defaultValue={editCompetence?.competenceType.id ?? ""} onChange={setStateAsValue(setCompetenceTypeId)}>
-                        <option disabled value={""}>Selecione o tipo da competência</option>
-                        {
-                            profileContext.allTypeCompetence.map(competenceType => {
-                                return (
-                                    <option value={competenceType.id} key={competenceType.id}>{competenceType.name}</option>
-                                );
-                            })
-                        }
-                    </select>
-                </div>
-
-                <div className="section level">
-                    <h2 className="section-heading">Nível de Experiência</h2>
-                    <select name="level" defaultValue={editCompetence?.level ?? ""} onChange={(e) => setCompetenceLevel(e.currentTarget.value as Level | "")}>
-                        <option disabled value={""}>Selecione o nível de experiência</option>
-                        {
-                            Object.entries(LevelToLabel).map(([level, label]) => {
-                                return (
-                                    <option value={level} key={level}>{label}</option>
-                                );
-                            })
-                        }
-                    </select>
-                </div>
-
-                <div className="buttons">
-                    {
-                        profileContext.editCompetence?.id === undefined ? null :
-                        <button type="button" className="remove-button" onClick={removeCompetence} title="Remover competência">
-                            <i className="bi bi-trash-fill" />
-                        </button>
-                    }
-
-                    <div className="submit">
-                        <button type="button" className="cancel-button" onClick={discardCompetence}>Cancelar alterações</button>
-                        <button type="button" className="submit-button" onClick={deactivateButtonWhile(saveCompetence)}>Salvar alterações</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <UniversiForm
+            formTitle={editCompetence?.id ? "Editar competência" : "Adicionar competência"}
+            objects={[
+                {
+                    DTOName: "competenceTypeId", label: "Tipo de Competência", type: FormInputs.SELECT_SINGLE, 
+                    value: competenceTypeId,
+                    options: profileContext.allTypeCompetence.map((t) => ({value: t.id, label: t.name})),
+                    required: true,
+                },
+                {
+                    DTOName: "level", label: "Nível de Experiência", type: FormInputs.SELECT_SINGLE, 
+                    value: competenceLevel,
+                    options: Object.entries(LevelToLabel).map(([level, label]) => ({value: level, label })),
+                    required: true
+                },
+                {
+                    DTOName: "description", label: "description", type: FormInputs.HIDDEN, value: description
+                },
+                {
+                    DTOName: "competenceId", label: "competenceId", type: FormInputs.HIDDEN, value: profileContext?.editCompetence?.id
+                }
+            ]}
+            requisition={ editCompetence?.id ? UniversimeApi.Competence.update : UniversimeApi.Competence.create }
+            callback={()=>{ profileContext?.reloadPage() }}
+        />
     );
-
-    function saveCompetence() {
-        const competenceId = profileContext?.editCompetence?.id ?? null;
-
-        const apiOperation = competenceId === null
-            ? UniversimeApi.Competence.create({
-                competenceTypeId,
-                description,
-                level: competenceLevel,
-            })
-
-            : UniversimeApi.Competence.update({
-                competenceId,
-                competenceTypeId,
-                description,
-                level: competenceLevel,
-            });
-
-        apiOperation.then((r) => {
-            if (!r.success)
-                throw new Error(r.message);
-
-            profileContext?.reloadPage();
-        }).catch((reason: Error) => {
-            SwalUtils.fireModal({
-                title: "Erro ao salvar competência",
-                text: reason.message,
-                icon: "error",
-            });
-        })
-    }
-
-    function removeCompetence() {
-        if (!profileContext?.editCompetence)
-            return;
-
-        UniversimeApi.Competence.remove({competenceId: profileContext.editCompetence.id})
-            .then((r) => {
-                if (!r.success)
-                    throw new Error(r.message);
-
-                profileContext?.reloadPage();
-            }).catch((reason: Error) => {
-                SwalUtils.fireModal({
-                    title: "Erro ao remover competência",
-                    text: reason.message,
-                    icon: "error",
-                })
-            });
-    }
-
-    function discardCompetence() {
-        if (!profileContext)
-            return;
-
-        SwalUtils.fireModal({
-            showCancelButton: true,
-            showConfirmButton: true,
-
-            title : editCompetence == null ? "Descartar competência?" : "Descartar alterações?",
-            text: "Tem certeza? Esta ação é irreversível", 
-            confirmButtonText: "Sim",
-            cancelButtonText: "Não"
-        }).then((value) => {
-            if (value.isConfirmed) {
-                profileContext.setEditCompetence(undefined);
-            }
-        });
-    }
+    
 }

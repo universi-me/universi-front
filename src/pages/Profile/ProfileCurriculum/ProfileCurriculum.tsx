@@ -43,9 +43,7 @@ export function ProfileCurriculum() {
 
         {
             showCompetencesSettings &&
-            <UniversiModal>
-                <CompetencesSettings />
-            </UniversiModal>
+            <CompetencesSettings />
         }
 
         {
