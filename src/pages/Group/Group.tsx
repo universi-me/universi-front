@@ -20,12 +20,16 @@ export function GroupPage() {
         let tabName = tabNameSplit.length > 0 ? tabNameSplit[0] : null;
         let contentId = null;
 
-        if (isTabAvailable(tabName as string)) {
-            setCurrentTab(tabName as AvailableTabs);
-        }
-        if(tabNameSplit.length > 1) {
-            contentId = tabNameSplit[1];
-            refreshGroupData({currentContentId: contentId});
+        if(tabName) {
+            if (isTabAvailable(tabName as string)) {
+                setCurrentTab(tabName as AvailableTabs);
+            }
+            if(tabNameSplit.length > 1) {
+                contentId = tabNameSplit[1];
+                refreshGroupData({currentContentId: contentId});
+            }
+        } else {
+            setCurrentTab("feed");
         }
 
     }, [page]);
