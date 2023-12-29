@@ -16,6 +16,7 @@ export type Group = {
     publicGroup:       boolean;
     rootGroup:         boolean;
     bannerImage:       string | null;
+    headerImage:       string | null;
     organization:      Group | null;
     canEdit:           boolean;
     everyoneCanPost:   boolean;
