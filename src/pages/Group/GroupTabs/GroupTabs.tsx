@@ -58,7 +58,7 @@ export  function GroupTabs(props: GroupTabsProps){
                 const isCurrentTab = t.value === props.currentTab;
 
                 return (
-                    <button className={`group-tab-button`} value={t.value} key={t.value} onClick={_ => props.changeTab(t.value)} data-current-tab={isCurrentTab ? "" : undefined}>
+                    <button className={`group-tab-button`} value={t.value} key={t.value} onClick={() => { window.location.hash = t.value; props.changeTab(t.value); }} data-current-tab={isCurrentTab ? "" : undefined}>
                         {t.name}
                     </button>
                 );
@@ -84,6 +84,10 @@ export function GroupTabRenderer({tab}: { tab: AvailableTabs }) {
     return renderedTab
         ? <renderedTab.renderer />
         : null;
+}
+
+export function isTabAvailable(tab: string): boolean {
+    return TABS.find(t => t.value === tab) !== undefined;
 }
 
 export const EMPTY_LIST_CLASS = "empty-text";

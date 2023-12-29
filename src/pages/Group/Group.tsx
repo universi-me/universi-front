@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
-import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, type GroupContextType, type GroupPageLoaderResponse, RefreshGroupOptions } from "@/pages/Group";
+import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, isTabAvailable, type GroupContextType, type GroupPageLoaderResponse, RefreshGroupOptions } from "@/pages/Group";
 import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
 import { AuthContext } from "@/contexts/Auth";
 import "./Group.less";
@@ -15,7 +15,19 @@ export function GroupPage() {
     const [context, setContext] = useState(makeContext(page));
     useEffect(() => {
         setContext(makeContext(page));
-        setCurrentTab("feed");
+
+        let tabNameSplit : string[] = window.location.hash.substring(1).split('/') ?? [];
+        let tabName = tabNameSplit.length > 0 ? tabNameSplit[0] : null;
+        let contentId = null;
+
+        if (isTabAvailable(tabName as string)) {
+            setCurrentTab(tabName as AvailableTabs);
+        }
+        if(tabNameSplit.length > 1) {
+            contentId = tabNameSplit[1];
+            refreshGroupData({currentContentId: contentId});
+        }
+
     }, [page]);
 
     if (!page.loggedData || !page.group) {
