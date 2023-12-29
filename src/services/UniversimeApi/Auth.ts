@@ -18,7 +18,7 @@ export type LogOut_ResponseDTO =     ApiResponse;
 
 export async function validateToken() {
     const response = await api.get<GetAccount_ResponseDTO>('/account');
-    return response.data.body;
+    return response.data.body?.user ?? null;
 }
 
 export async function signin({ username, password, recaptchaToken }: SignIn_RequestDTO) {
