@@ -95,6 +95,8 @@ export function UniversiForm(props : formProps){
 
     const [objects, setObjects] = useState<FormObject[]>(props.objects);
     const [canSave, setCanSave] = useState<boolean>(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
     const MAX_TEXT_LENGTH = 50
     const MAX_LONG_TEXT_LENGTH = 150
     const MAX_URL_LENGTH = 100
@@ -130,7 +132,7 @@ export function UniversiForm(props : formProps){
             }
 
             if(obj.type == FormInputs.SELECT_SINGLE){
-                obj.value = obj.value?.value
+                obj.value = obj.value?.value ?? obj.value
             }
 
         }
@@ -546,17 +548,31 @@ export function UniversiForm(props : formProps){
         }, {} as Record<string, any>);
     };
 
-    function makeRequest(){
-        props.requisition(convertToDTO(objects))
-        if(props.callback)
-            props.callback()
+    function handleCallback() {
+        try {
+            if(props.callback)
+                props.callback()
+        } catch {
+        }
+        setTimeout(() => {
+            setIsSubmitting(false);
+        }, 1000);
+    }
+
+    async function makeRequest() {
+        try {
+          setIsSubmitting(true);
+          await props.requisition(convertToDTO(objects));
+        } catch {
+        }
+        handleCallback();
     }
 
     function handleCancel(){
         if(props.cancelProps?.confirmCancel == undefined || props.cancelProps.confirmCancel == true)
             cancelPopup()
         else
-            props.callback()
+            handleCallback()
 
     }
 
@@ -571,7 +587,7 @@ export function UniversiForm(props : formProps){
                 confirmButtonColor: props.cancelProps?.confirmButtonColor  ?? "var(--wrong-invalid-color)"
             }).then(response =>{
                 if(response.isConfirmed){
-                    props.callback();
+                    handleCallback()
                 }
             })
     }
@@ -595,7 +611,7 @@ export function UniversiForm(props : formProps){
                         <i className="bi bi-x-circle-fill" />
                         Cancelar
                     </button>
-                    <button type="button" className="submit-button" onClick={makeRequest} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
+                    <button type="button" className="submit-button" onClick={makeRequest} disabled={isSubmitting || !canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
                         <i className="bi bi-check-circle-fill" />
                         Salvar
                     </button>
