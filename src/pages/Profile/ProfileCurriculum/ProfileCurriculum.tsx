@@ -53,9 +53,7 @@ export function ProfileCurriculum() {
 
         {
             showExperienceSettings &&
-            <UniversiModal>
-                <ExperienceSettings />
-            </UniversiModal>
+            <ExperienceSettings />
         }
     </>
     );
