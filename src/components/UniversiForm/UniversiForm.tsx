@@ -63,6 +63,8 @@ export type FormObjectFile = FormObjectBase<FormInputs.FILE, File> & {
 
 export type FormObjectHidden<T> = FormObjectBase<FormInputs.HIDDEN, T>;
 
+export type FormObjectDate = FormObjectBase<FormInputs.DATE, string>;
+
 export type FormObjectSelectSingle<T> = FormObjectBase<FormInputs.SELECT_SINGLE, T> & SelectProps<T> & { stylesConfig?: StylesConfig<SelectOption<T>, true, GroupBase<T & SelectOption<T>>> };
 export type FormObjectSelectMulti<T> = FormObjectBase<FormInputs.SELECT_MULTI, T[]> & SelectProps<T> & { stylesConfig?: StylesConfig<SelectOption<T>, true, GroupBase<T&SelectOption<T>>> };
 type SelectProps<T> = {
@@ -75,7 +77,7 @@ type SelectOption<T> = {
     value: T
 }
 
-export type FormObject<T = any> = FormObjectText | FormObjectNumber | FormObjectBoolean | FormObjectImage | FormObjectFile | FormObjectHidden<T> | FormObjectSelectSingle<T> | FormObjectSelectMulti<T>;
+export type FormObject<T = any> = FormObjectText | FormObjectNumber | FormObjectBoolean | FormObjectImage | FormObjectDate | FormObjectFile | FormObjectHidden<T> | FormObjectSelectSingle<T> | FormObjectSelectMulti<T>;
 
 export enum FormInputs {
     TEXT,
@@ -88,7 +90,8 @@ export enum FormInputs {
     BOOLEAN,
     HIDDEN,
     NUMBER,
-    FORMATED_TEXT
+    FORMATED_TEXT,
+    DATE
 }
 
 export function UniversiForm(props : formProps){
@@ -214,7 +217,7 @@ export function UniversiForm(props : formProps){
         }
 
         function handleContentChange(){
-                handleChange(index, object.type == FormInputs.FORMATED_TEXT ? validHtml(valueState) : valueState)
+            handleChange(index, object.type == FormInputs.FORMATED_TEXT ? validHtml(valueState) : valueState)
         }
 
         return (
@@ -499,6 +502,15 @@ export function UniversiForm(props : formProps){
         )
     }
 
+    function getDateInput(object : FormObjectDate, index : number){
+        return(
+            <>
+                <legend>{object.label}</legend>
+                <input type="date" value={object.value} className="field-input" onChange={(e) => {handleChange(index, e.target.value)}} required={object.required}/>
+            </>
+        )
+    }
+
     function handleNumberChange(index : number, newValue : any){
 
         const obj = objects[index]
@@ -533,6 +545,8 @@ export function UniversiForm(props : formProps){
                     getListInput(object, index)
                     : object.type == FormInputs.NUMBER ?
                     getNumberInput(object, index)
+                    : object.type == FormInputs.DATE ?
+                    getDateInput(object, index)
                     : <></>
 
                 }
