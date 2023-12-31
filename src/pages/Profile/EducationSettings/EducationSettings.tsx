@@ -29,16 +29,16 @@ export function EducationSettings() {
                 },
                 {
                     DTOName: "startDate", label: "Data de Inicio", type: FormInputs.DATE,
-                    value: profileContext?.editEducation?.startDate as string,
+                    value: profileContext?.editEducation?.startDate,
                     required: true
                 },
                 {
                     DTOName: "endDate", label: "Data de Término", type: FormInputs.DATE,
-                    value: profileContext?.editEducation?.endDate as string
+                    value: profileContext?.editEducation?.endDate
                 },
                 {
                     DTOName: "presentDate", label: "Exercendo Atualmente", type: FormInputs.BOOLEAN,
-                    value: profileContext?.editEducation?.presentDate as boolean | undefined ?? false
+                    value: profileContext?.editEducation?.presentDate ?? false
                 },
                 {
                     DTOName: "educationId", label: "educationId", type: FormInputs.HIDDEN,

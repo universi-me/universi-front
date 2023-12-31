@@ -115,7 +115,7 @@ export function CurriculumExperience() {
                   <h4 className="title">Data de Término</h4>
                   <h4 className="learning experience-date">
                     {experience.endDate !== null
-                      ? (experience.endDate === '0002-11-30' ? 'Atuando' : formatDate(experience.endDate))
+                      ? (experience.presentDate ? 'Atuando' : formatDate(experience.endDate))
                       : 'Data não disponível'}
                   </h4>
                 </div>

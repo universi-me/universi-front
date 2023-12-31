@@ -9,6 +9,6 @@ export type Experience = {
     description:        string;
     startDate:          string;
     endDate:        string | null;
-    presentDate:    string;
+    presentDate:    boolean;
     creationDate:   string;
 }
