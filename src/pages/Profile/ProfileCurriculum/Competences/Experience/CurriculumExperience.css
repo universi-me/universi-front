@@ -224,14 +224,25 @@
 
 .config-button-experience {
     position: fixed;
-    display: flex;
+
     align-items: center;
-    right: 50px;
+
+    display: flex;
+    flex-direction: column;
+
+    vertical-align: middle;
+
+    right: 45px;
 }
 
 .config-button-icon {
     border: none;
     cursor: pointer;
+}
+
+.experience-item .config-button-icon + .config-button-icon {
+    margin-top: 15px;
+    margin-left: 0px;
 }
 
 #item-competence .experience .edit-button {

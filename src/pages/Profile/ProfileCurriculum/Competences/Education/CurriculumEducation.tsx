@@ -30,6 +30,10 @@ export function CurriculumEducation() {
     profileContext.setEditEducation(null);
   };
 
+  const editEducation = (education: any) => {
+    profileContext.setEditEducation(education);
+  };
+
   const deleteEducation = (educationId: string) => {
     SwalUtils.fireModal({
         icon: "warning",
@@ -114,6 +118,13 @@ export function CurriculumEducation() {
                                 title="Configurações"
                                 >
                                 <img src={ICON_DELETE_BLACK} />
+                            </button>
+                            <button
+                                className="config-button-icon"
+                                onClick={() => editEducation(education)}
+                                title="Editar"
+                                >
+                                <i className="bi bi-pencil-fill" />
                             </button>
                         </div>
                     ) : null}

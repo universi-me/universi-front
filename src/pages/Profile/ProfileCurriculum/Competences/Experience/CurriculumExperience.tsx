@@ -30,6 +30,10 @@ export function CurriculumExperience() {
     profileContext.setEditExperience(null);
   };
 
+  const editExperience = (experience: any) => {
+    profileContext.setEditExperience(experience);
+  };
+
   const deleteExperience = (profileExperienceId: string) => {
     SwalUtils.fireModal({
         icon: "warning",
@@ -124,9 +128,16 @@ export function CurriculumExperience() {
                             <button
                                 className="config-button-icon"
                                 onClick={() => deleteExperience(experience.id)}
-                                title="Configurações"
+                                title="Apagar"
                                 >
                                 <img src={ICON_DELETE_BLACK} />
+                            </button>
+                            <button
+                                className="config-button-icon"
+                                onClick={() => editExperience(experience)}
+                                title="Editar"
+                                >
+                                <i className="bi bi-pencil-fill" />
                             </button>
                         </div>
                     ) : null}

@@ -202,6 +202,7 @@
 .config-button-education {
     position: fixed;
     display: flex;
+    flex-direction: column;
     align-items: center;
     right: 50px;
 }
@@ -209,6 +210,11 @@
 .config-button-icon {
     border: none;
     cursor: pointer;
+}
+
+.education-item .config-button-icon + .config-button-icon {
+    margin-top: 15px;
+    margin-left: 0px;
 }
 
 #item-competence .education .edit-button {
