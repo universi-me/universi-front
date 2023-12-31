@@ -68,6 +68,12 @@ export function CurriculumEducation() {
   
   };
 
+  const formatDate = (dateString: string) => {
+    const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+    const formattedDate = new Date(dateString).toLocaleDateString("pt-BR");
+    return formattedDate;
+  };
+
   return (
     <div className="education">
       <div className="heading">
@@ -100,14 +106,14 @@ export function CurriculumEducation() {
                 </div>
                 <div className="direction-dateStart">
                   <h4 className="title-date">Data de Inicio</h4>
-                  <h4 className="learning education-date">{education.startDate}</h4>
+                  <h4 className="learning education-date">{ formatDate(education.startDate) }</h4>
                 </div>
                 <div className="direction-dateEnd">
                   <h4 className="title-date">Data de Término</h4>
                   <h4 className="learning education-date">
-                    {education.endDate === '0002-11-30'
-                      ? (education.presentDate = 'Atuando')
-                      : education.endDate}
+                    {education.endDate !== null
+                      ? (education.presentDate ? 'Atuando' : formatDate(education.endDate))
+                      : 'Data não disponível'}
                   </h4>
                 </div>
                 {isEditing ? (
@@ -115,7 +121,7 @@ export function CurriculumEducation() {
                             <button
                                 className="config-button-icon"
                                 onClick={() => deleteEducation(education.id)}
-                                title="Configurações"
+                                title="Apagar"
                                 >
                                 <img src={ICON_DELETE_BLACK} />
                             </button>

@@ -8,9 +8,9 @@ export type Education = {
     profile:        Profile;
     typeEducation:  TypeEducation;
     institution:     Institution;
-    startDate:      string | null;
-    endDate:        string | null;
-    presentDate:    string | null;
+    startDate:      string;
+    endDate:        string;
+    presentDate:    boolean;
     creationDate:   string;
 };
 
