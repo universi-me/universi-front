@@ -8,7 +8,7 @@ export type Experience = {
     local:              string;
     description:        string;
     startDate:          string;
-    endDate:        string | null;
+    endDate:        string;
     presentDate:    boolean;
     creationDate:   string;
 }

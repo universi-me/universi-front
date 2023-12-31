@@ -2,7 +2,6 @@ import { useContext, useState } from "react";
 
 import { ProfileContext } from "@/pages/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi";
-import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import './EducationSetting.less'
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
@@ -44,50 +43,12 @@ export function EducationSettings() {
                     DTOName: "educationId", label: "educationId", type: FormInputs.HIDDEN,
                     value: profileContext?.editEducation?.id
                 }
-
             ]}
             requisition={ profileContext?.editEducation?.id ? UniversimeApi.Education.update : UniversimeApi.Education.create }
             callback={()=>{ profileContext?.reloadPage() }}
         />
     );
 
-    function removeEducation() {
-        if (!profileContext || !profileContext.editEducation)
-            return;
-
-        UniversimeApi.Competence.remove({competenceId: profileContext.editEducation.id})
-            .then((r) => {
-                if (!r.success)
-                    throw new Error(r.message);
-
-                profileContext?.reloadPage();
-            }).catch((reason: Error) => {
-                SwalUtils.fireModal({
-                    title: "Erro ao remover a Formação",
-                    text: reason.message,
-                    icon: "error",
-                })
-            });
-    }
-
-    function discardEducation() {
-        if (!profileContext)
-            return;
-
-        SwalUtils.fireModal({
-            showCancelButton: true,
-            showConfirmButton: true,
-
-            title : profileContext.editEducation == null ? "Descartar formação?" : "Descartar alterações?",
-            text: "Tem certeza? Esta ação é irreversível", 
-            confirmButtonText: "Sim",
-            cancelButtonText: "Não"
-        }).then((value) => {
-            if (value.isConfirmed) {
-                profileContext.setEditEducation(undefined);
-            }
-        });
-    }
 }
 
 
