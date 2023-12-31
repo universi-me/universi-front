@@ -143,12 +143,6 @@ export function CurriculumAbility() {
                 : <p className="empty-competences">Nenhuma competência cadastrada.</p>
                 }
             </div>
-
-            { profileContext.editCompetence !== undefined &&
-                <UniversiModal>
-                    <CompetencesSettings />
-                </UniversiModal>
-            }
         </div>
   );
 }

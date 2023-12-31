@@ -3,8 +3,6 @@ import { useContext, useState } from "react";
 import { ProfileContext } from "@/pages/Profile";
 import { Level, LevelToLabel } from "@/types/Competence";
 import { UniversimeApi } from "@/services/UniversimeApi";
-import { deactivateButtonWhile, setStateAsValue } from "@/utils/tsxUtils";
-import * as SwalUtils from "@/utils/sweetalertUtils";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
 import './CompetencesSettings.less'
@@ -13,12 +11,8 @@ export function CompetencesSettings() {
     const profileContext = useContext(ProfileContext)
     const editCompetence = profileContext?.editCompetence ?? null;
 
-    const [competenceTypeId, setCompetenceTypeId] = useState<string>(editCompetence?.competenceType.id ?? "");
-    const [competenceLevel, setCompetenceLevel] = useState<Level | "">(editCompetence?.level ?? "");
-    const [description, setDescription] = useState<string>(editCompetence?.description ?? "");
-
     return (
-        profileContext === null ? null :
+        profileContext &&
         <UniversiForm
             formTitle={editCompetence?.id ? "Editar competência" : "Adicionar competência"}
             objects={[
@@ -35,10 +29,12 @@ export function CompetencesSettings() {
                     required: true
                 },
                 {
-                    DTOName: "description", label: "description", type: FormInputs.HIDDEN, value: description
+                    DTOName: "description", label: "description", type: FormInputs.HIDDEN,
+                    value: editCompetence?.description ?? ""
                 },
                 {
-                    DTOName: "competenceId", label: "competenceId", type: FormInputs.HIDDEN, value: editCompetence?.id
+                    DTOName: "competenceId", label: "competenceId", type: FormInputs.HIDDEN,
+                    value: editCompetence?.id
                 }
             ]}
             requisition={ editCompetence?.id ? UniversimeApi.Competence.update : UniversimeApi.Competence.create }
