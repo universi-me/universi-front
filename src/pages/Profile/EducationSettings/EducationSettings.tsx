@@ -6,6 +6,7 @@ import { deactivateButtonWhile } from "@/utils/tsxUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import './EducationSetting.less'
+import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
 export function EducationSettings() {
     const profileContext = useContext(ProfileContext)
@@ -23,6 +24,47 @@ export function EducationSettings() {
     };
 
     return (
+        profileContext &&
+        <UniversiForm
+            formTitle={profileContext?.editEducation?.id ? "Editar Formação" : "Adicionar Formação"}
+            objects={[
+                {
+                    DTOName: "institutionId", label: "Insituição", type: FormInputs.SELECT_SINGLE, 
+                    value: profileContext?.editEducation?.institution ? {value: profileContext?.editEducation?.institution.id, label: profileContext?.editEducation?.institution.name } : undefined,
+                    options: profileContext.allInstitution.map((t) => ({value: t.id, label: t.name})),
+                    required: true
+                },
+                {
+                    DTOName: "typeEducationId", label: "Tipo de Formação", type: FormInputs.SELECT_SINGLE, 
+                    value: profileContext?.editEducation?.typeEducation ? {value: profileContext?.editEducation?.typeEducation.id, label: profileContext?.editEducation?.typeEducation.name } : undefined,
+                    options: profileContext.allTypeEducation.map((t) => ({value: t.id, label: t.name})),
+                    required: true
+                },
+                {
+                    DTOName: "startDate", label: "Data de Inicio", type: FormInputs.DATE,
+                    value: profileContext?.editEducation?.startDate as string,
+                    required: true
+                },
+                {
+                    DTOName: "endDate", label: "Data de Término", type: FormInputs.DATE,
+                    value: profileContext?.editEducation?.endDate as string
+                },
+                {
+                    DTOName: "presentDate", label: "Exercendo Atualmente", type: FormInputs.BOOLEAN,
+                    value: profileContext?.editEducation?.presentDate as boolean | undefined ?? false
+                },
+                {
+                    DTOName: "educationId", label: "educationId", type: FormInputs.HIDDEN,
+                    value: profileContext?.editEducation?.id
+                }
+
+            ]}
+            requisition={ profileContext?.editEducation?.id ? UniversimeApi.Education.update : UniversimeApi.Education.create }
+            callback={()=>{ profileContext?.reloadPage() }}
+        />
+    );
+
+    return (
         profileContext === null ? null :
         <div id="competences-settings">
             <div className="heading">Adicionar Formação</div>
@@ -35,7 +77,7 @@ export function EducationSettings() {
                     <select name="institution-type" defaultValue={editEducation?.institution.id ?? ""}>
                         <option disabled value={""}>Selecione a Insituição</option>
                         {
-                            profileContext.allInstitution.map(institutionType => {
+                            profileContext?.allInstitution.map(institutionType => {
                                 return (
                                     <option value={institutionType.id} key={institutionType.id}>{institutionType.name}</option>
                                 );
@@ -52,7 +94,7 @@ export function EducationSettings() {
                     <select name="education-type" defaultValue={editEducation?.typeEducation.id ?? ""}>
                         <option disabled value={""}>Selecione o tipo de Formação</option>
                         {
-                            profileContext.allTypeEducation.map(typeEducation => {
+                            profileContext?.allTypeEducation.map(typeEducation => {
                                 return (
                                     <option value={typeEducation.id} key={typeEducation.id}>{typeEducation.name}</option>
                                 );
@@ -83,7 +125,7 @@ export function EducationSettings() {
 
                 <div className="buttons">
                     {
-                        profileContext.editEducation?.id === undefined ? null :
+                        profileContext?.editEducation?.id === undefined ? null :
                         <button type="button" className="remove-button" onClick={removeEducation} title="Remover competência">
                             <i className="bi bi-trash-fill" />
                         </button>

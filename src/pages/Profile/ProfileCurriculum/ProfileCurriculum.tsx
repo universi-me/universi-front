@@ -48,9 +48,7 @@ export function ProfileCurriculum() {
 
         {
             showEducationSettings &&
-            <UniversiModal>
-                <EducationSettings />
-            </UniversiModal>
+            <EducationSettings />
         }
 
         {
