@@ -10,20 +10,6 @@ import { ValidationComposite } from "@/components/UniversiForm/Validation/Valida
 export function ExperienceSettings() {
     const profileContext = useContext(ProfileContext)
 
-    function createTypeExperience(value: any) {
-        return UniversimeApi.TypeExperience.create({name: value}).then(response => {
-            if (response.success) {
-                // return updated type experience
-                return UniversimeApi.TypeExperience.list().then(response => {
-                    if (response.success && response.body) {
-                        let options = response.body.lista.map(t => ({ value: t.id, label: t.name }));
-                        return options;
-                    }
-                })
-            }
-        })
-    }
-
     return (
         profileContext &&
         <UniversiForm
@@ -35,7 +21,17 @@ export function ExperienceSettings() {
                     options: profileContext.allTypeExperience.map((t) => ({value: t.id, label: t.name})),
                     required: true,
                     canCreate: true,
-                    onCreate: createTypeExperience
+                    onCreate: (value: any) => UniversimeApi.TypeExperience.create({name: value}).then(response => {
+                        if (response.success) {
+                            // return updated type experience
+                            return UniversimeApi.TypeExperience.list().then(response => {
+                                if (response.success && response.body) {
+                                    let options = response.body.lista.map(t => ({ value: t.id, label: t.name }));
+                                    return options;
+                                }
+                            })
+                        }
+                    })
                 },
                 {
                     DTOName: "description", label: "Descrição", type: FormInputs.LONG_TEXT,

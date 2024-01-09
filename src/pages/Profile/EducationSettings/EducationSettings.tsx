@@ -19,13 +19,37 @@ export function EducationSettings() {
                     DTOName: "institutionId", label: "Insituição", type: FormInputs.SELECT_SINGLE, 
                     value: profileContext?.editEducation?.institution ? {value: profileContext?.editEducation?.institution.id, label: profileContext?.editEducation?.institution.name } : undefined,
                     options: profileContext.allInstitution.map((t) => ({value: t.id, label: t.name})),
-                    required: true
+                    required: true,
+                    canCreate: true,
+                    onCreate: (value: any) => UniversimeApi.Institution.create({name: value, description: value}).then(response => {
+                        if (response.success) {
+                            // return updated institution
+                            return UniversimeApi.Institution.list().then(response => {
+                                if (response.success && response.body) {
+                                    let options = response.body.lista.map(t => ({ value: t.id, label: t.name }));
+                                    return options;
+                                }
+                            })
+                        }
+                    })
                 },
                 {
                     DTOName: "typeEducationId", label: "Tipo de Formação", type: FormInputs.SELECT_SINGLE, 
                     value: profileContext?.editEducation?.typeEducation ? {value: profileContext?.editEducation?.typeEducation.id, label: profileContext?.editEducation?.typeEducation.name } : undefined,
                     options: profileContext.allTypeEducation.map((t) => ({value: t.id, label: t.name})),
-                    required: true
+                    required: true,
+                    canCreate: true,
+                    onCreate: (value: any) => UniversimeApi.TypeEducation.create({name: value}).then(response => {
+                        if (response.success) {
+                            // return updated type education
+                            return UniversimeApi.TypeEducation.list().then(response => {
+                                if (response.success && response.body) {
+                                    let options = response.body.lista.map(t => ({ value: t.id, label: t.name }));
+                                    return options;
+                                }
+                            })
+                        }
+                    })
                 },
                 {
                     DTOName: "startDate", label: "Data de Inicio", type: FormInputs.DATE,
