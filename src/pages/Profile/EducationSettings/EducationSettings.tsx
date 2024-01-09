@@ -5,6 +5,7 @@ import { UniversimeApi } from "@/services/UniversimeApi";
 
 import './EducationSetting.less'
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
+import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
 
 export function EducationSettings() {
     const profileContext = useContext(ProfileContext)
@@ -34,15 +35,26 @@ export function EducationSettings() {
                 {
                     DTOName: "endDate", label: "Data de Término", type: FormInputs.DATE,
                     value: profileContext?.editEducation?.endDate,
-                    disabled: (objects) => {
-                        let ret = false
-                        objects.forEach((obj : any) => {
-                            if(obj.DTOName == "presentDate") {
-                                ret = obj.value ?? false
+                    disabled: (objects) => objects.find((obj) => obj.DTOName == "presentDate")?.value ?? false,
+                    validation: new ValidationComposite<any>().addValidation({
+                        validate(object: any, objects: any[]) {
+                            const endDateDisabled = objects.find((obj) => obj.DTOName == "presentDate")?.value ?? false
+                            if(endDateDisabled) {
+                                return true;
+                            } else if (!object.value) {
+                                return false;
                             }
-                        })
-                        return ret
-                    }
+                            // check if start date is before end date
+                            const startDate = objects.find((obj) => obj.DTOName == "startDate")?.value
+                            const endDate = object.value 
+                            if (startDate && endDate) {
+                                if (startDate > endDate) {
+                                    return false;
+                                }
+                            }
+                            return true;
+                        }
+                    })
                 },
                 {
                     DTOName: "presentDate", label: "Exercendo Atualmente", type: FormInputs.BOOLEAN,

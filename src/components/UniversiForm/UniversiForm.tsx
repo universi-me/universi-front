@@ -40,7 +40,7 @@ type FormObjectBase<FormType extends FormInputs, ValueType> = {
     value?: ValueType,
     required?: boolean,
     validation?: ValidationComposite<ValueType>,
-    disabled?: (objects : any) => boolean,
+    disabled?: (objects : FormObject[]) => boolean,
 };
 
 export type FormObjectText = FormObjectBase<FormInputs.TEXT | FormInputs.FORMATED_TEXT | FormInputs.LONG_TEXT | FormInputs.URL, string> & {
@@ -148,7 +148,7 @@ export function UniversiForm(props : formProps){
         let isValid = true
 
         objects.forEach(obj => {
-            if(obj.validation && !obj.validation.validate(obj)) {
+            if(obj.validation && !obj.validation.validate(obj, objects)) {
                 isValid = false
             }
         });
