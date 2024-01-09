@@ -11,6 +11,20 @@ export function CompetencesSettings() {
     const profileContext = useContext(ProfileContext)
     const editCompetence = profileContext?.editCompetence ?? null;
 
+    function createCompetenceType(value: any) {
+        return UniversimeApi.CompetenceType.create({name: value}).then(response => {
+            if (response.success) {
+                // return updated competence types
+                return UniversimeApi.CompetenceType.list().then(response => {
+                    if (response.success && response.body) {
+                        let options = response.body.list.map(t => ({ value: t.id, label: t.name }));
+                        return options;
+                    }
+                })
+            }
+        })
+    }
+
     return (
         profileContext &&
         <UniversiForm
@@ -20,7 +34,9 @@ export function CompetencesSettings() {
                     DTOName: "competenceTypeId", label: "Tipo de Competência", type: FormInputs.SELECT_SINGLE, 
                     value: editCompetence?.competenceType ? {value: editCompetence?.competenceType.id, label: editCompetence?.competenceType.name } : undefined,
                     options: profileContext.allTypeCompetence.map((t) => ({value: t.id, label: t.name})),
-                    required: true
+                    required: true,
+                    canCreate: true,
+                    onCreate: createCompetenceType
                 },
                 {
                     DTOName: "level", label: "Nível de Experiência", type: FormInputs.SELECT_SINGLE, 

@@ -410,7 +410,7 @@ export function UniversiForm(props : formProps){
                 return
             object.onCreate(inputValue)
             .then((options : any)=>{
-                setOptionsList(options)
+                setOptionsList(options??optionsList)
 
                 // select created value in options preserving selected values
                 for(const option of options) {

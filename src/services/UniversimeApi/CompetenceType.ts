@@ -6,12 +6,23 @@ export type CompetenceTypeGet_RequestDTO = {
     competenceTypeId: string;
 };
 
+export type CompetenceTypeCreate_RequestDTO = {
+    name:   string;
+};
+
 export type CompetenceTypeGet_ResponseDTO =  ApiResponse<{ competenceType: CompetenceType }>;
 export type CompetenceTypeList_ResponseDTO = ApiResponse<{ list: CompetenceType[] }>;
+export type CompetenceTypeCreate_ResponseDTO = ApiResponse<{ }>;
 
 export async function get(body: CompetenceTypeGet_RequestDTO) {
     return (await api.post<CompetenceTypeGet_ResponseDTO>("/competencetype/get", {
         competenceTypeId: body.competenceTypeId,
+    })).data;
+}
+
+export async function create(body: CompetenceTypeCreate_RequestDTO) {
+    return (await api.post<CompetenceTypeCreate_ResponseDTO>("/competencetype/create", {
+        name:         body.name,
     })).data;
 }
 
