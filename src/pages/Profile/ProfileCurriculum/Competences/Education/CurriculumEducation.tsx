@@ -111,9 +111,9 @@ export function CurriculumEducation() {
                 <div className="direction-dateEnd">
                   <h4 className="title-date">Data de Término</h4>
                   <h4 className="learning education-date">
-                    {education.endDate !== null
-                      ? (education.presentDate ? 'Atuando' : formatDate(education.endDate))
-                      : 'Data não disponível'}
+                    {
+                      education.presentDate ? 'Atuando' : education.endDate !== null ? formatDate(education.endDate) : 'Data não disponível'
+                    }
                   </h4>
                 </div>
                 {isEditing ? (

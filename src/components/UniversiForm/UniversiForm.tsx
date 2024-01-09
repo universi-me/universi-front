@@ -239,7 +239,7 @@ export function UniversiForm(props : formProps){
                 </legend>
                 {
                     object.type == FormInputs.LONG_TEXT ? 
-                        <textarea className="field-input" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)} required={object.required}/>
+                        <textarea rows={5} className="field-input" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)} required={object.required}/>
                     : object.type == FormInputs.FORMATED_TEXT ?
                         <ReactQuill theme="snow" value={valueState} onChange={setValueState}/>
                     :

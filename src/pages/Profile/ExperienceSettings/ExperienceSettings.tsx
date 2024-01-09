@@ -10,6 +10,20 @@ import { ValidationComposite } from "@/components/UniversiForm/Validation/Valida
 export function ExperienceSettings() {
     const profileContext = useContext(ProfileContext)
 
+    function createTypeExperience(value: any) {
+        return UniversimeApi.TypeExperience.create({name: value}).then(response => {
+            if (response.success) {
+                // return updated type experience
+                return UniversimeApi.TypeExperience.list().then(response => {
+                    if (response.success && response.body) {
+                        let options = response.body.lista.map(t => ({ value: t.id, label: t.name }));
+                        return options;
+                    }
+                })
+            }
+        })
+    }
+
     return (
         profileContext &&
         <UniversiForm
@@ -19,7 +33,9 @@ export function ExperienceSettings() {
                     DTOName: "typeExperienceId", label: "Tipo de Experiência", type: FormInputs.SELECT_SINGLE, 
                     value: profileContext?.editExperience?.typeExperience ? {value: profileContext?.editExperience?.typeExperience.id, label: profileContext?.editExperience?.typeExperience.name } : undefined,
                     options: profileContext.allTypeExperience.map((t) => ({value: t.id, label: t.name})),
-                    required: true
+                    required: true,
+                    canCreate: true,
+                    onCreate: createTypeExperience
                 },
                 {
                     DTOName: "description", label: "Descrição", type: FormInputs.LONG_TEXT,
@@ -27,7 +43,7 @@ export function ExperienceSettings() {
                     required: true
                 },
                 {
-                    DTOName: "local", label: "Local", type: FormInputs.LONG_TEXT,
+                    DTOName: "local", label: "Local", type: FormInputs.TEXT,
                     value: profileContext?.editExperience?.local,
                     charLimit: 30,
                     required: true
