@@ -40,6 +40,7 @@ type FormObjectBase<FormType extends FormInputs, ValueType> = {
     value?: ValueType,
     required?: boolean,
     validation?: ValidationComposite<ValueType>,
+    disabled?: (objects : any) => boolean,
 };
 
 export type FormObjectText = FormObjectBase<FormInputs.TEXT | FormInputs.FORMATED_TEXT | FormInputs.LONG_TEXT | FormInputs.URL, string> & {
@@ -529,9 +530,18 @@ export function UniversiForm(props : formProps){
 
     }
 
+    // lets remove the item from form if it is disabled
+    function isFormObjectDisabled(object : FormObject) : boolean{ 
+        try {
+            return (object.disabled && object.disabled(objects)) ?? false;
+        } catch {
+            return false;
+        }
+    }
+
     function renderObjects() : ReactNode{
         return objects.map((object, index) =>(
-            object.type == FormInputs.HIDDEN ? <></> : 
+            object.type == FormInputs.HIDDEN || isFormObjectDisabled(object) ? <></> : 
             <fieldset key={index}>
                 {
                     object.type == FormInputs.TEXT ||
@@ -559,7 +569,9 @@ export function UniversiForm(props : formProps){
 
     const convertToDTO = (formObjects: FormObject[]) => {
         return formObjects.reduce((formData, currentObject) => {
-            formData[currentObject.DTOName] = currentObject.value;
+            if(!isFormObjectDisabled(currentObject)) {
+                formData[currentObject.DTOName] = currentObject.value;
+            }
             return formData;
         }, {} as Record<string, any>);
     };

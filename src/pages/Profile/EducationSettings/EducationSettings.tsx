@@ -33,7 +33,16 @@ export function EducationSettings() {
                 },
                 {
                     DTOName: "endDate", label: "Data de Término", type: FormInputs.DATE,
-                    value: profileContext?.editEducation?.endDate
+                    value: profileContext?.editEducation?.endDate,
+                    disabled: (objects) => {
+                        let ret = false
+                        objects.forEach((obj : any) => {
+                            if(obj.DTOName == "presentDate") {
+                                ret = obj.value ?? false
+                            }
+                        })
+                        return ret
+                    }
                 },
                 {
                     DTOName: "presentDate", label: "Exercendo Atualmente", type: FormInputs.BOOLEAN,
