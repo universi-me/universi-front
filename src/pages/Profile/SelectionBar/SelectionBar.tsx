@@ -3,9 +3,10 @@ import {useState} from "react"
 import "./SelectionBar.css"
 import { ProfileContentListing } from "../ProfileContentListing/ProfileContentListing"
 import { ProfileGroupListing } from "../ProfileGroupListing/ProfileGroupListing"
+import { makeClassName } from "@/utils/tsxUtils";
 
 export function SelectionBar(){
-    const [currentTab, setCurrentTab] = useState("groups");
+    const [currentTab, setCurrentTab] = useState<AvailableTabs>("groups");
     const renderTabs = TABS.length > 1;
 
     return(
@@ -15,7 +16,8 @@ export function SelectionBar(){
                 <div className="selection-bar">
                     {
                         TABS.map((tab) => {
-                            return <div key={tab.value} className="select-element" onClick={() => setCurrentTab(tab.value)}>{tab.name}</div>
+                            const className = makeClassName("select-element", tab.value === currentTab && "current-tab")
+                            return <button key={tab.value} className={className} onClick={() => setCurrentTab(tab.value)}>{tab.name}</button>
                         })
                     }
                 </div>
@@ -25,32 +27,28 @@ export function SelectionBar(){
     )
 }
 
+export type AvailableTabs = "groups" | "contents";
+
 type TabDefinition = {
     name: string;
-    value: string;
+    value: AvailableTabs;
 };
 
 const TABS: TabDefinition[] = [
-    // {
-    //     name: "Conteúdos",
-    //     value: "content",
-    // },
-    // {
-    //     name: "Arquivos",
-    //     value: "files",
-    // },
     {
         name: "Grupos",
         value: "groups",
     },
+    {
+        name: "Conteúdos",
+        value: "contents",
+    },
 ];
 
-
-function renderTab(tabValue : string){
-    if(tabValue == "content")
-        return <ProfileContentListing title="Conteúdos"/>
-    if(tabValue == "files")
-        return <ProfileContentListing title="Arquivos"/>
-    if(tabValue == "groups")
-        return <ProfileGroupListing/>
+function renderTab(tab: AvailableTabs) {
+    switch (tab) {
+        case "contents": return <ProfileContentListing />;
+        case "groups":   return <ProfileGroupListing />;
+        default: return null;
+    }
 }
