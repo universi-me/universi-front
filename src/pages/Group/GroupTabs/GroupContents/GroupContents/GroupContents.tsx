@@ -24,7 +24,10 @@ function SelectPeople(){
         if(groupContext?.assignFolder == undefined || selectedPeople == undefined)
             return;
         UniversimeApi.Capacity.assignContent({folderId: groupContext?.assignFolder?.id, profilesIds: selectedPeople?.map((p)=>(p.value))})
-        groupContext.setAssignFolder(undefined)
+        .then(res => {
+            groupContext.setAssignFolder(undefined);
+            groupContext.refreshData();
+        })
     }
 
     function handleAssignChange(option : MultiValue<{value : string, label : string}>){
@@ -110,6 +113,36 @@ export function GroupContents() {
             hidden() {
                 return !groupContext?.group.canEdit;
             }
+        },
+        {
+            text: "Favoritar",
+            biIcon: "star-fill",
+            onSelect(data) {
+                UniversimeApi.Capacity.assignContent({ folderId: data.id, profilesIds: groupContext.loggedData.profile.id })
+                .then(res => groupContext.refreshData());
+            },
+            hidden(data) {
+                return data.assignedBy !== undefined;
+            },
+        },
+        {
+            text: "Desfavoritar",
+            biIcon: "star-half",
+            hidden(data) {
+                return data.assignedBy === undefined;
+            },
+            disabled(data) {
+                return data.assignedBy?.id !== groupContext.loggedData.profile.id;
+            },
+            onSelect(data) {
+                UniversimeApi.Capacity.unassignContent({ folderId: data.id, profilesIds: groupContext.loggedData.profile.id })
+                .then(res => groupContext.refreshData());
+            },
+            title(data) {
+                return this.disabled!(data)
+                    ? "Apenas quem atribuiu pode desatribuir um conteúdo"
+                    : undefined;
+            },
         },
         {
             text: "Excluir",

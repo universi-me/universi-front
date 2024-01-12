@@ -40,4 +40,5 @@ export type Folder = {
     author:              Profile;
     publicFolder:        boolean;
     grantedAccessGroups: Group[];
+    assignedBy?:         Profile;
 };
