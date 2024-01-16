@@ -74,7 +74,7 @@ export function ExperienceSettings() {
                     })
                 },
                 {
-                    DTOName: "presentDate", label: "Exercendo Atualmente", type: FormInputs.BOOLEAN,
+                    DTOName: "presentDate", label: "Em andamento", type: FormInputs.BOOLEAN,
                     value: profileContext?.editExperience?.presentDate ?? false
                 },
                 {
