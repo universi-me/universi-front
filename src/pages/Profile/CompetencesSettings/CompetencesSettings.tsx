@@ -1,7 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo } from "react";
 
 import { ProfileContext } from "@/pages/Profile";
-import { Level, LevelToLabel } from "@/types/Competence";
+import { LevelToLabel } from "@/types/Competence";
 import { UniversimeApi } from "@/services/UniversimeApi";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
@@ -11,6 +11,13 @@ export function CompetencesSettings() {
     const profileContext = useContext(ProfileContext)
     const editCompetence = profileContext?.editCompetence ?? null;
 
+    const competenceTypeOptions = useMemo(() => {
+        return profileContext?.allTypeCompetence
+            .slice()
+            .sort((c1, c2) => c1.name.localeCompare(c2.name))
+            .map((t) => ({value: t.id, label: t.name})) ?? [];
+    }, [profileContext?.allTypeCompetence]);
+
     return (
         profileContext &&
         <UniversiForm
@@ -19,7 +26,7 @@ export function CompetencesSettings() {
                 {
                     DTOName: "competenceTypeId", label: "Tipo de Competência", type: FormInputs.SELECT_SINGLE, 
                     value: editCompetence?.competenceType ? {value: editCompetence?.competenceType.id, label: editCompetence?.competenceType.name } : undefined,
-                    options: profileContext.allTypeCompetence.map((t) => ({value: t.id, label: t.name})),
+                    options: competenceTypeOptions,
                     required: true,
                     canCreate: true,
                     onCreate: (value: any) => UniversimeApi.CompetenceType.create({name: value}).then(response => {
