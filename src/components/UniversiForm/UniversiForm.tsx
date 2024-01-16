@@ -53,6 +53,7 @@ export type FormObjectNumber = FormObjectBase<FormInputs.NUMBER, number> & {
 };
 
 export type FormObjectBoolean = FormObjectBase<FormInputs.BOOLEAN, boolean>;
+export type FormObjectRadio<T = string | number>  = FormObjectBase<FormInputs.RADIO, T> & {options : {label : string, value : T}[]};
 
 export type FormObjectImage = FormObjectBase<FormInputs.IMAGE, string> & {
     defaultImageUrl?: string;
@@ -78,7 +79,7 @@ type SelectOption<T> = {
     value: T
 }
 
-export type FormObject<T = any> = FormObjectText | FormObjectNumber | FormObjectBoolean | FormObjectImage | FormObjectDate | FormObjectFile | FormObjectHidden<T> | FormObjectSelectSingle<T> | FormObjectSelectMulti<T>;
+export type FormObject<T = any> = FormObjectText | FormObjectNumber | FormObjectBoolean | FormObjectImage | FormObjectDate | FormObjectFile | FormObjectHidden<T> | FormObjectSelectSingle<T> | FormObjectSelectMulti<T> | FormObjectRadio<T> ;
 
 export enum FormInputs {
     TEXT,
@@ -92,7 +93,8 @@ export enum FormInputs {
     HIDDEN,
     NUMBER,
     FORMATED_TEXT,
-    DATE
+    DATE,
+    RADIO
 }
 
 export function UniversiForm(props : formProps){
@@ -314,6 +316,25 @@ export function UniversiForm(props : formProps){
                 </fieldset>
             </div>
 
+        )
+    }
+
+    function getRadioInput(object : FormObjectRadio<string | number>, index : number){
+        return (
+            <div className="radio-input">
+                <fieldset>
+                    <legend>{object.label}</legend>
+                    {
+                        object.options.map((item, mapIndex) =>(
+                            <label key={mapIndex}>
+                                <input type={"radio"} name={`radio-${index}`} value={item.value} onChange={(e) => {handleChange(index, e.target.value)}} required={object.required}/>
+                                {item.label}
+                            </label>
+                        ))
+                    }
+                    {/* <input id={index.toString()} name={index.toString()} checked={object.value} type="checkbox" className="field-input checkbox" onChange={(e) =>{handleChange(index, e.target.checked)}} required={object.required}></input> */}
+                </fieldset>
+            </div>
         )
     }
 
@@ -559,6 +580,8 @@ export function UniversiForm(props : formProps){
                     getNumberInput(object, index)
                     : object.type == FormInputs.DATE ?
                     getDateInput(object, index)
+                    : object.type == FormInputs.RADIO ?
+                    getRadioInput(object, index)
                     : <></>
 
                 }

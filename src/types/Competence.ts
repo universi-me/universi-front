@@ -21,10 +21,10 @@ export type CompetenceType = {
 export type Level = "NO_EXPERIENCE" | "LITTLE_EXPERIENCE" | "EXPERIENCED" | "VERY_EXPERIENCED" | "MASTER";
 
 export const LevelToLabel: {[l in Level]: string} = {
-    "NO_EXPERIENCE":     "Aprendendo",
-    "LITTLE_EXPERIENCE": "Iniciante na Área",
-    "EXPERIENCED":       "Experiente",
-    "VERY_EXPERIENCED":  "Muito Experiente",
+    "NO_EXPERIENCE":     "Aprendiz📚",
+    "LITTLE_EXPERIENCE": "Iniciante🌱",
+    "EXPERIENCED":       "Intermediário🛠️",
+    "VERY_EXPERIENCED":  "Experiente💪",
     "MASTER":            "Master",
 };
 
