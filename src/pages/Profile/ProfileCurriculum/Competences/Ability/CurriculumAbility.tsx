@@ -1,7 +1,7 @@
 import { useContext, MouseEvent, useState } from 'react';
 import { CompetencesSettings, ProfileContext } from '@/pages/Profile';
 import { UniversiModal } from '@/components/UniversiModal';
-import { Competence, Level, LevelToLabel, LevelToNumber } from '@/types/Competence';
+import { Competence, Level, LevelToLabel} from '@/types/Competence';
 import { ICON_DELETE_BLACK, ICON_EDIT_BLACK } from '@/utils/assets';
 import './CurriculumAbility.css';
 import UniversimeApi from '@/services/UniversimeApi';
@@ -65,20 +65,7 @@ export function CurriculumAbility() {
   };
 
   function calculateWidth(level: Level) {
-    switch (level) {
-      case "NO_EXPERIENCE":
-        return 10;
-      case "LITTLE_EXPERIENCE":
-        return 25;
-      case "EXPERIENCED":
-        return 50;
-      case "VERY_EXPERIENCED":
-        return 75;
-      case "MASTER":
-        return 100;
-      default:
-        return 0;
-    }
+    return 25*(level+1)
   };
   
 
