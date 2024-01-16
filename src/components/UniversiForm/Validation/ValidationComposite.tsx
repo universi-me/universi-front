@@ -13,9 +13,9 @@ export class ValidationComposite<ValueType> {
         return this;
     }
 
-    validate(object : FormObject<any>) {
+    validate(object : FormObject<any>, objects: FormObject<any>[]) {
         for(const v of this.validations) {
-            const isValid = v.validate(object);
+            const isValid = v.validate(object, objects);
             if (!isValid) return false;
         }
 

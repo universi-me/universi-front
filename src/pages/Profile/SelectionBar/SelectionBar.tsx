@@ -1,12 +1,18 @@
-import {useState} from "react"
+import {useContext, useEffect, useState} from "react"
 
 import "./SelectionBar.css"
-import { ProfileContentListing } from "../ProfileContentListing/ProfileContentListing"
-import { ProfileGroupListing } from "../ProfileGroupListing/ProfileGroupListing"
+import { ProfileContext, ProfileContentListing, ProfileGroupListing, ProfileCurriculum } from "@/pages/Profile";
+import { makeClassName } from "@/utils/tsxUtils";
 
+const INITIAL_TAB: AvailableTabs = "groups";
 export function SelectionBar(){
-    const [currentTab, setCurrentTab] = useState("groups");
+    const profileContext = useContext(ProfileContext);
+    const [currentTab, setCurrentTab] = useState<AvailableTabs>(INITIAL_TAB);
     const renderTabs = TABS.length > 1;
+
+    useEffect(() => {
+        setCurrentTab(INITIAL_TAB);
+    }, [profileContext?.profile.user.name]);
 
     return(
         <>
@@ -15,7 +21,7 @@ export function SelectionBar(){
                 <div className="selection-bar">
                     {
                         TABS.map((tab) => {
-                            return <div key={tab.value} className="select-element" onClick={() => setCurrentTab(tab.value)}>{tab.name}</div>
+                            return <div key={tab.value} className={makeClassName("select-element", currentTab === tab.value && "current-tab")} onClick={() => setCurrentTab(tab.value)}>{tab.name}</div>
                         })
                     }
                 </div>
@@ -25,9 +31,11 @@ export function SelectionBar(){
     )
 }
 
+export type AvailableTabs = "groups" | "curriculum";
+
 type TabDefinition = {
     name: string;
-    value: string;
+    value: AvailableTabs;
 };
 
 const TABS: TabDefinition[] = [
@@ -43,6 +51,10 @@ const TABS: TabDefinition[] = [
         name: "Grupos",
         value: "groups",
     },
+    {
+        name: "Currículo",
+        value: "curriculum",
+    },
 ];
 
 
@@ -53,4 +65,6 @@ function renderTab(tabValue : string){
         return <ProfileContentListing title="Arquivos"/>
     if(tabValue == "groups")
         return <ProfileGroupListing/>
+    if(tabValue == "curriculum")
+    return <ProfileCurriculum/>
 }
