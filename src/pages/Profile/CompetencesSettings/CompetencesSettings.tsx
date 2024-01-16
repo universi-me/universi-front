@@ -35,7 +35,7 @@ export function CompetencesSettings() {
                     })
                 },
                 {
-                    DTOName: "level", label: "Nível de Experiência", type: FormInputs.SELECT_SINGLE, 
+                    DTOName: "level", label: "Nível de Experiência", type: FormInputs.RADIO, 
                     value: editCompetence?.level ? {value: editCompetence?.level , label: editCompetence?.level } : undefined,
                     options: Object.entries(LevelToLabel).map(([level, label]) => ({value: level, label })),
                     required: true
