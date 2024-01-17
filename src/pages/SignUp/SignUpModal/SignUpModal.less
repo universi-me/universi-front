@@ -2,12 +2,19 @@
 @import url(/src/layouts/fonts.less);
 @import url(/src/layouts/transitions.less);
 
+
+.universi-modal-content{
+    overflow: hidden;
+    border-radius: 1.25rem;
+}
+
 #sign-up-modal {
     width: 50vw;
     height: fit-content;
     
     border-radius: 1.25rem;
-    overflow: hidden;
+    overflow: auto;
+    max-height: 95vh;
 
     background: @card-background-color;
 
@@ -144,8 +151,7 @@
 
                     cursor: pointer;
 
-                    position: absolute;
-                    right: calc(@form-horizontal-padding + .75em);
+                    transform: translate(-2rem, 0rem);
                 }
             }
         }
