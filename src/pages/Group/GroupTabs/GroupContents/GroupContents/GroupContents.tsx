@@ -118,30 +118,22 @@ export function GroupContents() {
             text: "Favoritar",
             biIcon: "star-fill",
             onSelect(data) {
-                UniversimeApi.Capacity.assignContent({ folderId: data.id, profilesIds: groupContext.loggedData.profile.id })
-                .then(res => groupContext.refreshData());
+                UniversimeApi.Capacity.favoriteFolder({ folderId: data.id })
+                .then(res => {res.success && groupContext.refreshData()});
             },
             hidden(data) {
-                return data.assignedBy !== undefined;
+                return !!data.favorite;
             },
         },
         {
             text: "Desfavoritar",
             biIcon: "star-half",
             hidden(data) {
-                return data.assignedBy === undefined;
-            },
-            disabled(data) {
-                return data.assignedBy?.id !== groupContext.loggedData.profile.id;
+                return !data.favorite;
             },
             onSelect(data) {
-                UniversimeApi.Capacity.unassignContent({ folderId: data.id, profilesIds: groupContext.loggedData.profile.id })
-                .then(res => groupContext.refreshData());
-            },
-            title(data) {
-                return this.disabled!(data)
-                    ? "Apenas quem atribuiu pode desatribuir um conteúdo"
-                    : undefined;
+                UniversimeApi.Capacity.unfavoriteFolder({ folderId: data.id })
+                .then(res => {res.success && groupContext.refreshData()});
             },
         },
         {

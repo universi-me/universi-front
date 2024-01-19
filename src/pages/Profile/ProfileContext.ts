@@ -22,6 +22,7 @@ export type ProfileContextType = null | {
         recommendationsReceived: Recommendation[];
         achievements:            Achievements[];
         folders:                 Folder[];
+        favorites:               Folder[];
     };
 
     reloadPage: () => void | Promise<void>;

@@ -33,6 +33,7 @@ export function ProfilePage() {
             achievements:            loaderData.profileListData.achievements,
             competences:             loaderData.profileListData.competences,
             folders:                 loaderData.profileListData.folders,
+            favorites:               loaderData.profileListData.favorites,
             groups:                  loaderData.profileListData.groups,
             links:                   loaderData.profileListData.links,
             recommendationsReceived: loaderData.profileListData.recommendationsReceived,

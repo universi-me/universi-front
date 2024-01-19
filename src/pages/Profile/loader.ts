@@ -21,6 +21,7 @@ export type ProfilePageLoaderResponse = {
         recommendationsReceived: Recommendation[];
         achievements:            Achievements[];
         folders:                 Folder[];
+        favorites:               Folder[];
     };
 };
 
@@ -42,7 +43,7 @@ export async function ProfilePageLoader(args: LoaderFunctionArgs): Promise<Profi
         UniversimeApi.Profile.competences({username}),
         UniversimeApi.Profile.links({username}),
         UniversimeApi.Profile.recommendations({username}),
-        UniversimeApi.Profile.folders({username, assignedOnly: true}),
+        UniversimeApi.Profile.folders({username}),
     ]);
 
     return {
@@ -54,6 +55,7 @@ export async function ProfilePageLoader(args: LoaderFunctionArgs): Promise<Profi
             achievements: [], // todo: fetch achievements,
             competences: fetchCompetences.body?.competences ?? [],
             folders: fetchFolders.body?.folders ?? [],
+            favorites: fetchFolders.body?.favorites ?? [],
             groups: fetchGroups.body?.groups ?? [],
             links: fetchLinks.body?.links ?? [],
             recommendationsReceived: fetchRecommendations.body?.recomendationsReceived ?? [],
@@ -70,6 +72,7 @@ const FAILED_TO_LOAD: ProfilePageLoaderResponse = {
         achievements: [],
         competences: [],
         folders: [],
+        favorites: [],
         groups: [],
         links: [],
         recommendationsReceived: [],

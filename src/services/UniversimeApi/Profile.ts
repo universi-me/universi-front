@@ -35,7 +35,7 @@ export type ProfileRecommendations_ResponseDTO = ApiResponse<{
     recomendationsSend: Recommendation[];
     recomendationsReceived: Recommendation[]
 }>;
-export type ProfileFolders_ResponseDTO         = ApiResponse<{ folders: Folder[] }>;
+export type ProfileFolders_ResponseDTO         = ApiResponse<{ folders: Folder[], favorites: Folder[] }>;
 
 export async function profile() {
     return (await api.get<ProfileGet_ResponseDTO>('/profile', {})).data

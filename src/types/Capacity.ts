@@ -41,4 +41,5 @@ export type Folder = {
     publicFolder:        boolean;
     grantedAccessGroups: Group[];
     assignedBy?:         Profile;
+    favorite?:          true;
 };
