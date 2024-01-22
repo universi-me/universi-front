@@ -80,7 +80,7 @@ export function GroupGroups() {
                             DTOName: "name", label: "Nome do grupo", type: FormInputs.TEXT, value: groupContext.editGroup?.nickname, required: true, 
                             validation: new ValidationComposite<string>().addValidation(new TextValidation())
                         }, {
-                            DTOName: "description", label: "Descrição do grupo", type: FormInputs.LONG_TEXT, value: groupContext.editGroup?.description, required: true, 
+                            DTOName: "description", label: "Descrição do grupo", type: FormInputs.LONG_TEXT, value: groupContext.editGroup?.description, required: true, charLimit: 200,
                             validation: new ValidationComposite<string>().addValidation(new TextValidation())
                         }, {
                              DTOName: "imageUrl", label: "Imagem do grupo", type: FormInputs.IMAGE, value:undefined, 
