@@ -64,7 +64,7 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
                 {
                     DTOName: "title", label: "Nome do material", type: FormInputs.TEXT, value: context.editMaterial?.title, required: true
                 }, {
-                    DTOName: "description", label: "Descrição do material", type: FormInputs.TEXT, value: context.editMaterial?.description ?? "", required: true
+                    DTOName: "description", label: "Descrição do material", type: FormInputs.TEXT, value: context.editMaterial?.description ?? "", required: false,
                 }, {
                     DTOName: "rating", label: "Rating do material", type: FormInputs.HIDDEN, value: context.editMaterial ? context.editMaterial?.rating : 1
                 }, {
