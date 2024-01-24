@@ -34,7 +34,7 @@ export function ExperienceSettings() {
                     })
                 },
                 {
-                    DTOName: "description", label: "Descrição", type: FormInputs.LONG_TEXT,
+                    DTOName: "description", label: "Descrição", type: FormInputs.LONG_TEXT, charLimit: 200,
                     value: profileContext?.editExperience?.description,
                     required: true
                 },
