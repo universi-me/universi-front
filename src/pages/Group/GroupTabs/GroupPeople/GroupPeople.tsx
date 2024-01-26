@@ -1,20 +1,52 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
-import { setStateAsValue } from "@/utils/tsxUtils";
+import { EMPTY_LIST_CLASS, GroupContext, GroupContextType } from "@/pages/Group";
 import { ProfileClass } from "@/types/Profile";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
 import "./GroupPeople.less";
 import { Filter } from "@/components/Filter/Filter";
-import { AuthContext } from "@/contexts/Auth";
-import { ActionButton } from "@/components/ActionButton/ActionButton";
+import Select from 'react-select'
+import { CompetenceType, LevelToLabel, Level, intToLevel } from "@/types/Competence";
+import UniversimeApi from "@/services/UniversimeApi";
+
+type competenceSearch = {
+    typeId?: string,
+    level?: Level,
+    label?: string
+}
 
 export function GroupPeople() {
     const groupContext = useContext(GroupContext);
     const [filterPeople, setFilterPeople] = useState<string>("");
-    const authContext = useContext(AuthContext);
+    const [allTypeCompetence, setAllTypeCompetence] = useState<CompetenceType[] | undefined>()
+    const [currentCompetence, setCurrentCompetence] = useState<competenceSearch>()
+    const [addedCompetences, setAddedCompetences] = useState<competenceSearch[]>([])
+    const [matchEveryCompetence, setMatchEveryCompetence] = useState<boolean>(false)
+    const [showAdvancedSearch, setShowAdvancedSearch] = useState<boolean>(false)
+
+    useEffect(()=>{
+        UniversimeApi.CompetenceType.list().then((response)=>{
+            if(response.success)
+                return response.body.list
+        })
+        .then((list)=>{
+            setAllTypeCompetence(list)
+        })
+    }, [])
+
+
+    const competenceTypeOptions = useMemo(() => {
+        return orderByName(allTypeCompetence ?? [])
+    }, [allTypeCompetence]);
+
+    function orderByName(competences : CompetenceType[]){
+        return competences
+            .slice()
+            .sort((c1,c2) => c1.name.localeCompare(c2.name))
+            .map((t)=> ({value: t.id, label: t.name})) ?? [];
+    }
 
     if (!groupContext)
         return null;
@@ -22,15 +54,201 @@ export function GroupPeople() {
     return (
         <section id="people" className="group-tab">
             <div className="heading top-container">
-                <div className="go-right">
+                <div className="go-right go-right-people">
                     <Filter setter={setFilterPeople} placeholderMessage={`Buscar em participantes de ${groupContext.group.name}`}/>
+                    <div className="advanced-button-container" onClick={()=>{setShowAdvancedSearch(!showAdvancedSearch)}}>
+                        <i className="bi bi-sliders2"></i>
+                    </div>
+
+                    {
+                        showAdvancedSearch 
+                        ? renderAdvancedSearch()
+                        : <></>
+                    }
+
+                </div>
+            </div>
+            
+            <div className="search-criteria hidden" id="search-criteria">
+                <p className="clear-search" onClick={()=>{
+                    let searchCriteriaText = document.getElementById("search-criteria")
+                    if(searchCriteriaText) searchCriteriaText.classList.add("hidden")
+                    clearFilteredPeople();
+                }}>Limpar busca</p>
+                <div className="search-criteria-text" id="search-criteria-text">
                 </div>
             </div>
 
-            <div className="people-list tab-list"> { makePeopleList(groupContext.participants, filterPeople) } </div>
+            <div className="people-list tab-list"> { 
+                makePeopleList(groupContext.participants, filterPeople)
+            } </div>
         </section>
     );
+
+    function renderAdvancedSearch(){
+        return(
+            <div id="advanced-search" className="advanced-search">
+                <Select
+                    options={competenceTypeOptions}
+                    value={{value: currentCompetence?.typeId?.toString(), label: currentCompetence?.label}}
+                    onChange={(option)=>{
+                        if(!option || !option.value) return
+                        let currentCompetence_old : competenceSearch;
+                        if(currentCompetence){
+                            currentCompetence_old = currentCompetence
+                            currentCompetence_old.typeId = option.value
+                            currentCompetence_old.label = option.label
+                        }
+                        else
+                            currentCompetence_old = {
+                                typeId: option.value,
+                                label: option.label
+                            }
+                        setCurrentCompetence(currentCompetence_old)
+                    }}
+                    placeholder={"nome da competência"}
+                />
+                {
+                    makeRadioSelectLevel()
+                }
+
+
+                <div className="add-competence-button" onClick={()=>{
+                    if(!currentCompetence || currentCompetence.level == undefined || !currentCompetence.label || !currentCompetence.typeId) return
+
+                    currentCompetence.label += ": " + LevelToLabel[currentCompetence.level]
+                    setAddedCompetences([...addedCompetences, currentCompetence]);
+
+                    let radio = document.getElementById(`radio${currentCompetence.level}`) as HTMLInputElement
+
+                    radio.checked = false
+                    setCurrentCompetence(undefined)
+                }
+                }>
+                    Adicionar competência à busca
+                </div>
+
+                <div className="levels-div checkbox">
+                    <label htmlFor="matchEveryCompetence">Exigir todas as competências</label>
+                    <input
+                        type="checkbox"
+                        name="matchEveryCompetence"
+                        checked={matchEveryCompetence}
+                        onChange={()=>{setMatchEveryCompetence(!matchEveryCompetence)}}
+                    />
+                </div>
+
+                <div className="added-competences-container">
+                    {
+                        addedCompetences.map((competence)=>(
+                            <div className="added-competence" key={competence.typeId??"" + competence.level}>
+                                {competence.label}
+                                <i className="bi bi-x" onClick={()=>{
+                                    setAddedCompetences((addedCompetences) => addedCompetences.filter((element) => !(element.typeId === competence.typeId && element.level === competence.level)))
+                                }}></i>
+                            </div>
+                        ))
+                    }
+                </div>
+
+                <div className="search-button" onClick={() => {
+                        clearFilteredPeople();
+                        showOnlyFilteredPeople(addedCompetences, matchEveryCompetence)
+                        let searchCriteriaText = document.getElementById("search-criteria-text");
+                        let searchCriteria = document.getElementById("search-criteria");
+                        if(searchCriteriaText){
+                            searchCriteriaText.innerHTML = "Pesquisa realizada: <br>"
+                            searchCriteria?.classList.remove("hidden")
+                            addedCompetences.map((c)=>{
+                                if(searchCriteriaText)
+                                    searchCriteriaText.innerHTML+=c.label+"<br>";
+                            });
+                            searchCriteriaText.innerHTML += matchEveryCompetence ? "Exigindo todas as competências"  : "Exigindo apenas uma das competências"
+                        } 
+                    }}>
+                    Pesquisar
+                </div>
+
+            </div>
+    
+        )
+    }
+
+    function showOnlyFilteredPeople(searchCompetence : competenceSearch[], matchEveryCompetence : boolean){
+            UniversimeApi.Group.filterParticipants({
+                competences: searchCompetence.map((c) => ({ id: c.typeId ?? "", level: c.level ?? 0 })),
+                matchEveryCompetence: matchEveryCompetence,
+                groupId: groupContext?.group.id,
+                groupPath: groupContext?.group.path
+            }).then((response) => {
+                if (response.data.success) {
+                    return response.data.body?.filteredParticipants;
+                } 
+            }).then((participants) => {
+                if (participants) {
+                    let participantsIds = participants.map((p) => p.id);
+                    let allParticipants = document.getElementsByClassName("person-item");
+                    Array.from(allParticipants).forEach((element) => {
+                        if (element.id && !participantsIds.includes(element.id)) {
+                            element.classList.add("hidden")
+                        }
+                    });
+                }
+            }).catch((error) => {
+                console.error(error);
+        });
+    }
+
+    function clearFilteredPeople(){
+        let participantsCards = document.getElementsByClassName("person-item")
+        Array.from(participantsCards).forEach(participantCard =>{
+            participantCard.classList.remove("hidden")
+        })
+    }
+
+    function makeRadioSelectLevel(){
+        const levels = Object.entries(LevelToLabel)
+        return (
+            <div className="levels-div">
+            {
+                levels.map((level)=>(
+                    <label>
+                        <input
+                            type="radio"
+                            name="level"
+                            value={level[0]}
+                            id={`radio${level[0]}`}
+                            onChange={(event)=>{
+                                let currentCompetence_old : competenceSearch;
+                                if(currentCompetence){
+                                    currentCompetence_old = currentCompetence
+                                    currentCompetence.level = intToLevel(parseInt(event.target.value))
+                                }
+                                else
+                                    currentCompetence_old = {
+                                        level: intToLevel(parseInt(event.target.value))
+                                    }
+                                setCurrentCompetence(currentCompetence_old)
+                                event.target.checked=currentCompetence?.level != undefined && currentCompetence?.level == parseInt(level[0])
+                            }}
+                        />
+                        {level[1]}
+                    </label>
+                ))
+            }
+            </div>
+        )
+    }
 }
+
+
+// function toggleAdvancedSearch(){
+//     let searchDiv = document.getElementById("advanced-search");
+//     if(searchDiv?.style.display != "none")
+//         searchDiv?.style.setProperty("display", "none")
+//     else
+//         searchDiv?.style.setProperty("display", "")
+// }
 
 function makePeopleList(people: ProfileClass[], filter: string) {
     if (people.length === 0) {
@@ -49,6 +267,7 @@ function makePeopleList(people: ProfileClass[], filter: string) {
     return filteredPeople
         .filter(p => !p.user.needProfile)
         .map(renderPerson);
+    
 }
 
 function renderPerson(person: ProfileClass) {
@@ -59,7 +278,7 @@ function renderPerson(person: ProfileClass) {
         : person.image;
 
     return (
-        <div className="person-item tab-item" key={person.id}>
+        <div className="person-item tab-item" key={person.id} id={person.id}>
             <Link to={linkToProfile}>
                 <ProfileImage imageUrl={imageUrl} className="person-image" />
             </Link>

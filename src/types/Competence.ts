@@ -21,6 +21,10 @@ export type CompetenceType = {
 
 export type Level = 0 | 1 | 2 | 3 ;
 
+export function intToLevel(int : number) : Level {
+    return int%4 as Level;
+}
+
 export const LevelToLabel: {[l in Level]: string} = {
     0 : "Aprendiz📚",
     1 : "Iniciante🌱",
