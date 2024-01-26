@@ -45,6 +45,7 @@ type FormObjectBase<FormType extends FormInputs, ValueType> = {
 
 export type FormObjectText = FormObjectBase<FormInputs.TEXT | FormInputs.FORMATED_TEXT | FormInputs.LONG_TEXT | FormInputs.URL, string> & {
     charLimit?: number;
+    renderCharCounter?: boolean;
 };
 
 export type FormObjectNumber = FormObjectBase<FormInputs.NUMBER, number> & {
@@ -105,7 +106,8 @@ export function UniversiForm(props : formProps){
 
     const MAX_TEXT_LENGTH = 50
     const MAX_LONG_TEXT_LENGTH = 150
-    const MAX_URL_LENGTH = 100
+    const MAX_URL_LENGTH = 2048;
+    const MAX_FORMATED_TEXT_LENGTH = 2048;
 
     const DEFAULT_IMAGE_PATH = "/assets/imgs/default-content.png";
 
@@ -182,20 +184,26 @@ export function UniversiForm(props : formProps){
 
 
     function getCharLimit(object : FormObjectText){
-        if(object.charLimit)
+        if (object.charLimit)
             return object.charLimit;
-        if(object.type == FormInputs.TEXT)
+
+        switch (object.type) {
+        case FormInputs.TEXT:
             return MAX_TEXT_LENGTH;
-        else if(object.type == FormInputs.LONG_TEXT)
-            return MAX_LONG_TEXT_LENGTH
-        else
-            return MAX_URL_LENGTH
-        return undefined;
+        case FormInputs.LONG_TEXT:
+            return MAX_LONG_TEXT_LENGTH;
+        case FormInputs.URL:
+            return MAX_URL_LENGTH;
+        case FormInputs.FORMATED_TEXT:
+            return MAX_FORMATED_TEXT_LENGTH;
+        }
     }
 
     function getTextInput(object : FormObjectText, index : number) {
 
         const [valueState, setValueState] = useState(object.value ?? "")
+        const charLimit = getCharLimit(object);
+        const renderCharCounter = object.renderCharCounter ?? object.type !== FormInputs.URL;
 
         useEffect(() => {
             handleContentChange()
@@ -228,14 +236,9 @@ export function UniversiForm(props : formProps){
                 <legend>
                     {object.label}
                     {
-                        object.charLimit != undefined
-                        ?
+                        renderCharCounter &&
                         <div className="char-counter">
-                            {object.value?.length ?? 0}/{object.charLimit}
-                        </div>
-                        :
-                        <div className="char-counter">
-                            {object.value?.length ?? 0}/{object.type == FormInputs.TEXT ? MAX_TEXT_LENGTH : object.type === FormInputs.LONG_TEXT ? MAX_LONG_TEXT_LENGTH : MAX_URL_LENGTH}
+                            {object.value?.length ?? 0}/{charLimit}
                         </div>
                     }
                 </legend>
