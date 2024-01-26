@@ -82,7 +82,7 @@ export function ManageContent() {
             {
                 DTOName: "name", label: "Nome do conteúdo", type: FormInputs.TEXT, value: context.editContent?.name, required: true, charLimit: 100,
             }, {
-                DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: context.editContent?.description ?? undefined, required: true, charLimit: 200,
+                DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: context.editContent?.description ?? undefined, required: false, charLimit: 200,
             }, {
                 DTOName: "image", label: "Imagem do conteúdo", type: FormInputs.IMAGE, value: undefined, required: false,
                 defaultImageUrl: context.editContent?.image
