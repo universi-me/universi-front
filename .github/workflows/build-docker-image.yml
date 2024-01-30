@@ -56,5 +56,5 @@ jobs:
           -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:$tag_name \
           -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:${{ github.sha }} \
           --push \
-          --build-arg REACT_BUILD_FILES=./* \
+          --build-arg REACT_BUILD_FILES=./ \
           .
