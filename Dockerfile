@@ -1,11 +1,9 @@
 FROM node:18-alpine
 
-WORKDIR /opt/app
-
 ENV NODE_ENV production
 
-COPY . /opt/app
+ARG REACT_BUILD_FILES=./*
 
-RUN npm install --include=dev
+COPY ${REACT_BUILD_FILES} /*
 
-ENTRYPOINT ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "8088"]
+ENTRYPOINT ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "8088"]
