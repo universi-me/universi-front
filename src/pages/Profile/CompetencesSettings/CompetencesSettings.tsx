@@ -1,130 +1,68 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 
 import { ProfileContext } from "@/pages/Profile";
-import { LevelToLabel } from "@/types/Competence";
+import { CompetenceType, LevelToLabel } from "@/types/Competence";
 import { UniversimeApi } from "@/services/UniversimeApi";
-import * as SwalUtils from "@/utils/sweetalertUtils";
+import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
 import './CompetencesSettings.less'
 
-export type CompetencesSettingsProps = {
-    cancelChanges: () => any;
-};
-
-export function CompetencesSettings(props: CompetencesSettingsProps) {
+export function CompetencesSettings() {
     const profileContext = useContext(ProfileContext)
     const editCompetence = profileContext?.editCompetence ?? null;
 
+    const competenceTypeOptions = useMemo(() => {
+        return orderByName(profileContext?.allTypeCompetence ?? [])
+    }, [profileContext?.allTypeCompetence]);
+
+    function orderByName(competences : CompetenceType[]){
+        return competences
+            .slice()
+            .sort((c1,c2) => c1.name.localeCompare(c2.name))
+            .map((t)=> ({value: t.id, label: t.name})) ?? [];
+    }
+
     return (
-        profileContext === null ? null :
-        <div id="competences-settings">
-            <div className="heading">Editar minhas competências</div>
-            <div className="settings-form">
-                <div className="section competence-type">
-                    <h2 className="section-heading">Tipo de Competência</h2>
-                    <select name="competence-type" defaultValue={editCompetence?.competenceType.id ?? ""}>
-                        <option disabled value={""}>Selecione o tipo da competência</option>
-                        {
-                            profileContext.allCompetenceTypes.map(competenceType => {
-                                return (
-                                    <option value={competenceType.id} key={competenceType.id}>{competenceType.name}</option>
-                                );
+        profileContext &&
+        <UniversiForm
+            formTitle={editCompetence?.id ? "Editar competência" : "Adicionar competência"}
+            objects={[
+                {
+                    DTOName: "competenceTypeId", label: "Tipo de Competência", type: FormInputs.SELECT_SINGLE, 
+                    value: editCompetence?.competenceType ? {value: editCompetence?.competenceType.id, label: editCompetence?.competenceType.name } : undefined,
+                    options: competenceTypeOptions,
+                    required: true,
+                    canCreate: true,
+                    onCreate: (value: any) => UniversimeApi.CompetenceType.create({name: value}).then(response => {
+                        if (response.success) {
+                            // return updated competence types
+                            return UniversimeApi.CompetenceType.list().then(response => {
+                                if (response.success && response.body) {
+                                    let options = orderByName(response.body.list)
+                                    return options;
+                                }
                             })
                         }
-                    </select>
-                </div>
-
-                <div className="section description">
-                    <h2 className="section-heading">Descrição</h2>
-                    <textarea name="description" defaultValue={editCompetence?.description} maxLength={255} />
-                </div>
-
-                <div className="section level">
-                    <h2 className="section-heading">Nível de Experiência</h2>
-                    <select name="level" defaultValue={editCompetence?.level ?? ""}>
-                        <option disabled value={""}>Selecione o nível de experiência</option>
-                        {
-                            Object.entries(LevelToLabel).map(([level, label]) => {
-                                return (
-                                    <option value={level} key={level}>{label}</option>
-                                );
-                            })
-                        }
-                    </select>
-                </div>
-
-                <div className="buttons">
-                    {
-                        profileContext.editCompetence?.id === undefined ? null :
-                        <button type="button" className="remove-button" onClick={removeCompetence} title="Remover competência">
-                            <i className="bi bi-trash-fill" />
-                        </button>
-                    }
-
-                    <div className="submit">
-                        <button type="button" className="cancel-button" onClick={props.cancelChanges}>Cancelar alterações</button>
-                        <button type="button" className="submit-button" onClick={saveCompetence}>Salvar alterações</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    })
+                },
+                {
+                    DTOName: "level", label: "Nível de Experiência", type: FormInputs.RADIO, 
+                    value: editCompetence?.level ? {value: editCompetence?.level , label: editCompetence?.level } : undefined,
+                    options: Object.entries(LevelToLabel).map(([level, label]) => ({value: level, label })),
+                    required: true
+                },
+                {
+                    DTOName: "description", label: "description", type: FormInputs.HIDDEN,
+                    value: editCompetence?.description ?? ""
+                },
+                {
+                    DTOName: "competenceId", label: "competenceId", type: FormInputs.HIDDEN,
+                    value: editCompetence?.id
+                }
+            ]}
+            requisition={ editCompetence?.id ? UniversimeApi.Competence.update : UniversimeApi.Competence.create }
+            callback={()=>{ profileContext?.reloadPage() }}
+        />
     );
-
-    function saveCompetence() {
-        const typeElement = document.querySelector('[name="competence-type"]') as HTMLSelectElement;
-
-        const descriptionElement = document.querySelector('[name="description"]') as HTMLTextAreaElement;
-        const description = descriptionElement.value;
-
-        const levelElement = document.querySelector('[name="level"]') as HTMLSelectElement;
-        const level = levelElement.value;
-
-        const competenceId = profileContext?.editCompetence?.id ?? null;
-
-        const apiOperation = competenceId === null
-            ? UniversimeApi.Competence.create({
-                competenceTypeId: typeElement.value,
-                description,
-                level,
-            })
-
-            : UniversimeApi.Competence.update({
-                competenceId,
-                competenceTypeId: typeElement.value,
-                description,
-                level,
-            });
-
-        apiOperation.then((r) => {
-            if (!r.success)
-                throw new Error(r.message);
-
-            profileContext?.reloadPage();
-        }).catch((reason: Error) => {
-            SwalUtils.fireModal({
-                title: "Erro ao salvar competência",
-                text: reason.message,
-                icon: "error",
-            });
-        })
-    }
-
-    function removeCompetence() {
-        if (!profileContext || !profileContext.editCompetence)
-            return;
-
-        UniversimeApi.Competence.remove({competenceId: profileContext.editCompetence.id})
-            .then((r) => {
-                if (!r.success)
-                    throw new Error(r.message);
-
-                profileContext?.reloadPage();
-            }).catch((reason: Error) => {
-                SwalUtils.fireModal({
-                    title: "Erro ao remover competência",
-                    text: reason.message,
-                    icon: "error",
-                })
-            });
-    }
+    
 }

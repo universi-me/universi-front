@@ -1,10 +1,10 @@
 import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
-import { useContext, useState, useEffect, useMemo } from "react";
+import { useContext, useState, useEffect } from "react";
 
 import {
     ProfileRecommendSettingsButton,
     ProfileSettings, CompetencesSettings, ProfileDiscardChanges, ProfileContext,
-    type ProfileContextType, type ProfilePageLoaderResponse
+    type ProfileContextType, type ProfilePageLoaderResponse, fetchProfilePageData
 } from '@/pages/Profile';
 import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
 import { UniversiModal } from "@/components/UniversiModal";
@@ -20,28 +20,8 @@ export function ProfilePage() {
     const navigate = useNavigate();
     const loaderData = useLoaderData() as ProfilePageLoaderResponse;
 
-    const [showProfileSettings, setShowProfileSettings] = useState<boolean>(false);
-    const [showCompetencesSettings, setShowCompetencesSettings] = useState<boolean>(false);
-    const [showDiscardChanges, setShowDiscardChanges] = useState<boolean>(false);
-
-    const profileContext = useMemo<ProfileContextType>(() => ({
-        accessingLoggedUser: loaderData.accessingLoggedUser,
-        allCompetenceTypes:  loaderData.allCompetenceTypes,
-        editCompetence:      null,
-        profile:             new ProfileClass(loaderData.profile!),
-        profileListData: {
-            achievements:            loaderData.profileListData.achievements,
-            competences:             loaderData.profileListData.competences,
-            folders:                 loaderData.profileListData.folders,
-            favorites:               loaderData.profileListData.favorites,
-            groups:                  loaderData.profileListData.groups,
-            links:                   loaderData.profileListData.links,
-            recommendationsReceived: loaderData.profileListData.recommendationsReceived,
-            recommendationsSend:     loaderData.profileListData.recommendationsSend,
-        },
-
-        reloadPage: () => {navigate(location.href)},
-    }), [loaderData]);
+    const [profileContext, setProfileContext] = useState<ProfileContextType>(makeContext(loaderData));
+    useEffect(() => setProfileContext(makeContext(loaderData)), [ loaderData.profile?.id ]);
 
     useEffect(() => {
         if (auth.user === null) {
@@ -74,42 +54,43 @@ export function ProfilePage() {
                 <SelectionBar/>
                 <ProfileRecommendSettingsButton />
             </ProfileInfo>
-
-            {
-                showProfileSettings &&
-                <UniversiModal>
-                    <ProfileSettings
-                        cancelChanges={() => {setShowDiscardChanges(true)}}
-                        toggleModal={setShowProfileSettings}
-                    />
-                </UniversiModal>
-            }
-
-            {
-                showCompetencesSettings &&
-                <UniversiModal>
-                    <CompetencesSettings
-                        cancelChanges={()=>{setShowDiscardChanges(true)}}
-                    />
-                </UniversiModal>
-            }
-
-            {
-                (showProfileSettings || showCompetencesSettings) && showDiscardChanges &&
-                <UniversiModal>
-                    <ProfileDiscardChanges
-                        onDiscard={discardChanges}
-                        onCancel={()=>{setShowDiscardChanges(false);}}
-                    />
-                </UniversiModal>
-            }
         </div>
         </ProfileContext.Provider>
     );
 
-    function discardChanges() {
-        setShowCompetencesSettings(false);
-        setShowProfileSettings(false);
-        setShowDiscardChanges(false);
+    async function refreshProfileData() {
+        const data = await fetchProfilePageData(profileContext!.profile.user.name)
+        const newContext = makeContext(data);
+        setProfileContext(newContext);
+        return newContext;
+    }
+
+    function makeContext(data: ProfilePageLoaderResponse): NonNullable<ProfileContextType> {
+        // some values are using "!" even though they can be undefined
+
+        return {
+            accessingLoggedUser: data.accessingLoggedUser,
+            allInstitution: data.allInstitution,
+            allTypeCompetence: data.allTypeCompetence,
+            allTypeEducation: data.allTypeEducation,
+            allTypeExperience: data.allTypeExperience,
+            profile: new ProfileClass(data.profile!),
+            profileListData: data.profileListData,
+
+            reloadPage: refreshProfileData,
+
+            editCompetence: undefined,
+            editEducation: undefined,
+            editExperience: undefined,
+            setEditCompetence(c) {
+                setProfileContext({...this, editCompetence: c});
+            },
+            setEditEducation(e) {
+                setProfileContext({...this, editEducation: e});
+            },
+            setEditExperience(e) {
+                setProfileContext({...this, editExperience: e});
+            },
+        };
     }
 }

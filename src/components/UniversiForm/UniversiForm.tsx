@@ -40,10 +40,12 @@ type FormObjectBase<FormType extends FormInputs, ValueType> = {
     value?: ValueType,
     required?: boolean,
     validation?: ValidationComposite<ValueType>,
+    disabled?: (objects : FormObject[]) => boolean,
 };
 
 export type FormObjectText = FormObjectBase<FormInputs.TEXT | FormInputs.FORMATED_TEXT | FormInputs.LONG_TEXT | FormInputs.URL, string> & {
     charLimit?: number;
+    renderCharCounter?: boolean;
 };
 
 export type FormObjectNumber = FormObjectBase<FormInputs.NUMBER, number> & {
@@ -52,6 +54,7 @@ export type FormObjectNumber = FormObjectBase<FormInputs.NUMBER, number> & {
 };
 
 export type FormObjectBoolean = FormObjectBase<FormInputs.BOOLEAN, boolean>;
+export type FormObjectRadio<T = string | number>  = FormObjectBase<FormInputs.RADIO, T> & {options : {label : string, value : T}[]};
 
 export type FormObjectImage = FormObjectBase<FormInputs.IMAGE, string> & {
     defaultImageUrl?: string;
@@ -62,6 +65,8 @@ export type FormObjectFile = FormObjectBase<FormInputs.FILE, File> & {
 };
 
 export type FormObjectHidden<T> = FormObjectBase<FormInputs.HIDDEN, T>;
+
+export type FormObjectDate = FormObjectBase<FormInputs.DATE, string>;
 
 export type FormObjectSelectSingle<T> = FormObjectBase<FormInputs.SELECT_SINGLE, T> & SelectProps<T> & { stylesConfig?: StylesConfig<SelectOption<T>, true, GroupBase<T & SelectOption<T>>> };
 export type FormObjectSelectMulti<T> = FormObjectBase<FormInputs.SELECT_MULTI, T[]> & SelectProps<T> & { stylesConfig?: StylesConfig<SelectOption<T>, true, GroupBase<T&SelectOption<T>>> };
@@ -75,7 +80,7 @@ type SelectOption<T> = {
     value: T
 }
 
-export type FormObject<T = any> = FormObjectText | FormObjectNumber | FormObjectBoolean | FormObjectImage | FormObjectFile | FormObjectHidden<T> | FormObjectSelectSingle<T> | FormObjectSelectMulti<T>;
+export type FormObject<T = any> = FormObjectText | FormObjectNumber | FormObjectBoolean | FormObjectImage | FormObjectDate | FormObjectFile | FormObjectHidden<T> | FormObjectSelectSingle<T> | FormObjectSelectMulti<T> | FormObjectRadio<T> ;
 
 export enum FormInputs {
     TEXT,
@@ -88,7 +93,9 @@ export enum FormInputs {
     BOOLEAN,
     HIDDEN,
     NUMBER,
-    FORMATED_TEXT
+    FORMATED_TEXT,
+    DATE,
+    RADIO
 }
 
 export function UniversiForm(props : formProps){
@@ -99,7 +106,8 @@ export function UniversiForm(props : formProps){
 
     const MAX_TEXT_LENGTH = 50
     const MAX_LONG_TEXT_LENGTH = 150
-    const MAX_URL_LENGTH = 100
+    const MAX_URL_LENGTH = 2048;
+    const MAX_FORMATED_TEXT_LENGTH = 2048;
 
     const DEFAULT_IMAGE_PATH = "/assets/imgs/default-content.png";
 
@@ -144,7 +152,7 @@ export function UniversiForm(props : formProps){
         let isValid = true
 
         objects.forEach(obj => {
-            if(obj.validation && !obj.validation.validate(obj)) {
+            if(obj.validation && !obj.validation.validate(obj, objects)) {
                 isValid = false
             }
         });
@@ -176,20 +184,26 @@ export function UniversiForm(props : formProps){
 
 
     function getCharLimit(object : FormObjectText){
-        if(object.charLimit)
+        if (object.charLimit)
             return object.charLimit;
-        if(object.type == FormInputs.TEXT)
+
+        switch (object.type) {
+        case FormInputs.TEXT:
             return MAX_TEXT_LENGTH;
-        else if(object.type == FormInputs.LONG_TEXT)
-            return MAX_LONG_TEXT_LENGTH
-        else
-            return MAX_URL_LENGTH
-        return undefined;
+        case FormInputs.LONG_TEXT:
+            return MAX_LONG_TEXT_LENGTH;
+        case FormInputs.URL:
+            return MAX_URL_LENGTH;
+        case FormInputs.FORMATED_TEXT:
+            return MAX_FORMATED_TEXT_LENGTH;
+        }
     }
 
     function getTextInput(object : FormObjectText, index : number) {
 
         const [valueState, setValueState] = useState(object.value ?? "")
+        const charLimit = getCharLimit(object);
+        const renderCharCounter = object.renderCharCounter ?? object.type !== FormInputs.URL;
 
         useEffect(() => {
             handleContentChange()
@@ -214,7 +228,7 @@ export function UniversiForm(props : formProps){
         }
 
         function handleContentChange(){
-                handleChange(index, object.type == FormInputs.FORMATED_TEXT ? validHtml(valueState) : valueState)
+            handleChange(index, object.type == FormInputs.FORMATED_TEXT ? validHtml(valueState) : valueState)
         }
 
         return (
@@ -222,20 +236,15 @@ export function UniversiForm(props : formProps){
                 <legend>
                     {object.label}
                     {
-                        object.charLimit != undefined
-                        ?
+                        renderCharCounter &&
                         <div className="char-counter">
-                            {object.value?.length ?? 0}/{object.charLimit}
-                        </div>
-                        :
-                        <div className="char-counter">
-                            {object.value?.length ?? 0}/{object.type == FormInputs.TEXT ? MAX_TEXT_LENGTH : object.type === FormInputs.LONG_TEXT ? MAX_LONG_TEXT_LENGTH : MAX_URL_LENGTH}
+                            {object.value?.length ?? 0}/{charLimit}
                         </div>
                     }
                 </legend>
                 {
                     object.type == FormInputs.LONG_TEXT ? 
-                        <textarea className="field-input" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)} required={object.required}/>
+                        <textarea rows={5} className="field-input" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)} required={object.required}/>
                     : object.type == FormInputs.FORMATED_TEXT ?
                         <ReactQuill theme="snow" value={valueState} onChange={setValueState}/>
                     :
@@ -310,6 +319,25 @@ export function UniversiForm(props : formProps){
                 </fieldset>
             </div>
 
+        )
+    }
+
+    function getRadioInput(object : FormObjectRadio<string | number>, index : number){
+        return (
+            <div className="radio-input">
+                <fieldset>
+                    <legend>{object.label}</legend>
+                    {
+                        object.options.map((item, mapIndex) =>(
+                            <label key={mapIndex}>
+                                <input type={"radio"} name={`radio-${index}`} value={item.value} onChange={(e) => {handleChange(index, e.target.value)}} required={object.required}/>
+                                {item.label}
+                            </label>
+                        ))
+                    }
+                    {/* <input id={index.toString()} name={index.toString()} checked={object.value} type="checkbox" className="field-input checkbox" onChange={(e) =>{handleChange(index, e.target.checked)}} required={object.required}></input> */}
+                </fieldset>
+            </div>
         )
     }
 
@@ -406,7 +434,7 @@ export function UniversiForm(props : formProps){
                 return
             object.onCreate(inputValue)
             .then((options : any)=>{
-                setOptionsList(options)
+                setOptionsList(options??optionsList)
 
                 // select created value in options preserving selected values
                 for(const option of options) {
@@ -462,6 +490,7 @@ export function UniversiForm(props : formProps){
                 {
                     object.canCreate != undefined && object.canCreate ? 
                         <CreatableSelect isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
+                        menuPosition="fixed"
                         onChange={(value) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
                         formatCreateLabel={(value) => `Criar "${value}"`}
@@ -475,6 +504,7 @@ export function UniversiForm(props : formProps){
                     />
                     :
                         <Select isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
+                        menuPosition="fixed"
                         onChange={(value) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
                         classNamePrefix="category-item"
@@ -499,6 +529,15 @@ export function UniversiForm(props : formProps){
         )
     }
 
+    function getDateInput(object : FormObjectDate, index : number){
+        return(
+            <>
+                <legend>{object.label}</legend>
+                <input type="date" value={object.value} className="field-input" onChange={(e) => {handleChange(index, e.target.value)}} required={object.required}/>
+            </>
+        )
+    }
+
     function handleNumberChange(index : number, newValue : any){
 
         const obj = objects[index]
@@ -515,9 +554,18 @@ export function UniversiForm(props : formProps){
 
     }
 
+    // lets remove the item from form if it is disabled
+    function isFormObjectDisabled(object : FormObject) : boolean{ 
+        try {
+            return (object.disabled && object.disabled(objects)) ?? false;
+        } catch {
+            return false;
+        }
+    }
+
     function renderObjects() : ReactNode{
         return objects.map((object, index) =>(
-            object.type == FormInputs.HIDDEN ? <></> : 
+            object.type == FormInputs.HIDDEN || isFormObjectDisabled(object) ? <></> : 
             <fieldset key={index}>
                 {
                     object.type == FormInputs.TEXT ||
@@ -533,6 +581,10 @@ export function UniversiForm(props : formProps){
                     getListInput(object, index)
                     : object.type == FormInputs.NUMBER ?
                     getNumberInput(object, index)
+                    : object.type == FormInputs.DATE ?
+                    getDateInput(object, index)
+                    : object.type == FormInputs.RADIO ?
+                    getRadioInput(object, index)
                     : <></>
 
                 }
@@ -543,7 +595,9 @@ export function UniversiForm(props : formProps){
 
     const convertToDTO = (formObjects: FormObject[]) => {
         return formObjects.reduce((formData, currentObject) => {
-            formData[currentObject.DTOName] = currentObject.value;
+            if(!isFormObjectDisabled(currentObject)) {
+                formData[currentObject.DTOName] = currentObject.value;
+            }
             return formData;
         }, {} as Record<string, any>);
     };

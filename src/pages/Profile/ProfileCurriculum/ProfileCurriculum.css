@@ -1,0 +1,18 @@
+.curriculum-panel {
+    width: 100%;
+}
+
+.curriculum-title {
+    display: flex;
+    align-items: center;
+}
+
+.curriculum-name {
+
+    font-size: 30px;
+    font-weight: 500;
+}
+
+#item-competence {
+    padding-top: 15px;
+}

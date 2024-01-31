@@ -1,6 +1,6 @@
 import { MouseEventHandler, MouseEvent, useContext, useMemo } from 'react';
 import { ProfileContext, ProfileContextType } from '@/pages/Profile'
-import { LevelToLabel, LevelToNumber } from '@/types/Competence';
+import { LevelToLabel} from '@/types/Competence';
 import { ICON_EDIT_BLACK } from '@/utils/assets';
 import './ProfileCompetences.css'
 
@@ -52,7 +52,7 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
                                         {
                                             Array.apply(null, Array(MAX_COMPETENCE_LEVEL)).map((_, i) => {
                                                 // todo: current level from API
-                                                const learnedLevel = LevelToNumber[competence.level] >= i + 1
+                                                const learnedLevel = competence.level >= i + 1
                                                     ? 'learned'
                                                     : '';
 
