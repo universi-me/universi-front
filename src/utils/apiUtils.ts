@@ -1,4 +1,7 @@
 import { Group } from "@/types/Group";
+import { IMG_DEFAULT_CONTENT } from "@/utils/assets";
+import { type Folder } from "@/types/Capacity";
+import { isAbsoluteUrl } from "./regexUtils";
 
 export function groupBannerUrl(group: Group) {
     if(!group.bannerImage)
@@ -19,4 +22,13 @@ export function groupImageUrl(group: Group) {
         return "/assets/imgs/group.png"
 
     return `${import.meta.env.VITE_UNIVERSIME_API}/group/image/${group.id}`;
+}
+
+export function contentImageUrl(content: Folder) {
+    if (!content.image)
+        return IMG_DEFAULT_CONTENT;
+
+    return isAbsoluteUrl(content.image)
+        ? content.image
+        : import.meta.env.VITE_UNIVERSIME_API + content.image;
 }
