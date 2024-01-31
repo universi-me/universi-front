@@ -1,6 +1,6 @@
 import UniversimeApi from "@/services/UniversimeApi"
 import { competenceListResponse } from "@/services/UniversimeApi/Group"
-import { LevelToLabel, Level } from "@/types/Competence"
+import { LevelToLabel} from "@/types/Competence"
 import { Profile } from "@/types/Profile"
 import { useContext, useEffect, useState } from "react"
 import { GroupContext } from "../../GroupContext"
@@ -14,7 +14,7 @@ export function GroupCompetences(){
 
     const [orderedByName, setOrderedByName] = useState<boolean | undefined>(undefined);
     const [orderedByPeople, setOrderedByPeople] = useState<boolean | undefined>(undefined);
-    const [orderedByLevel, setOrderedByLevel] = useState<boolean | undefined>(undefined);
+    const [orderedByLevel, setOrderedByLevel] = useState<{inOrder : boolean, level : number} | undefined>(undefined);
 
     type CompetenceInfo = {
         competenceName: string,
@@ -132,16 +132,21 @@ export function GroupCompetences(){
         if(!competencesInfo)
             return
 
+        if(!orderedByLevel)
+            setOrderedByLevel({inOrder: false, level: level})
+
         console.log(level)
         console.log(competencesInfo[0].competenceLevelInfo[level])
 
         let sortedCompetences = [...competencesInfo].sort((a,b)=>{return getLevelPercentage(a.competencePeople, a.competenceLevelInfo[level].people) - getLevelPercentage(b.competencePeople, b.competenceLevelInfo[level].people)})
 
-        if(orderedByLevel == true)
+        if(orderedByLevel?.inOrder == true)
             sortedCompetences.reverse();
 
         setCompetencesInfo(sortedCompetences);
-        setOrderedByLevel(!orderedByLevel);
+
+        setOrderedByLevel((prevState) =>({...prevState, inOrder: !prevState?.inOrder, level: level}));
+        console.log(orderedByLevel)
 
         setOrderedByPeople(undefined)
         setOrderedByName(undefined)
@@ -152,7 +157,7 @@ export function GroupCompetences(){
 
     return (
         <section className="group-tab" id="competence-tab">
-            <div className="competence-container">
+            <div className="competence-tab">
                 <div className="labels">
                     <div className="label" onClick={orderByName}>
                         Competência
@@ -178,13 +183,13 @@ export function GroupCompetences(){
                     </div>
                     {
                         Object.entries(LevelToLabel).map((level)=>(
-                            <div className="label" onClick={() => orderByLevel(parseInt(level[0]))}>
+                            <div className="label" onClick={() => {orderByLevel(parseInt(level[0]))}}>
                                 {level[1]}
                                 {
-                                    orderedByLevel ?
-                                    <i className="bi bi-caret-down-fill"></i>
-                                    : orderedByLevel == false ?
+                                    orderedByLevel?.level == parseInt(level[0]) && orderedByLevel.inOrder?
                                     <i className="bi bi-caret-up-fill"></i>
+                                    : orderedByLevel?.level == parseInt(level[0]) && !orderedByLevel.inOrder?
+                                    <i className="bi bi-caret-down-fill"></i>
                                     :
                                     <></>
                                 }
@@ -192,7 +197,7 @@ export function GroupCompetences(){
                         ))
                     }
                 </div>
-
+                <div className="competence-container">
                 {
                     !competencesInfo ? <></> :
                     competencesInfo.map((competence)=>(
@@ -218,43 +223,8 @@ export function GroupCompetences(){
                         </div>
                     ))
                 }
+                </div>
 
-{/* 
-                {
-                    groupCompetences?.competences.map((competence)=>(
-                        <div className="competence" id={competence.competenceTypeId}>
-                            <div className="competence-name">
-                                {competence.competenceName}
-                            </div>
-                            <div className="amount-people">
-                                Pessoas:{" "+Object.entries(competence.levelInfo).length}
-                            </div>
-                            <div className="competence-level-container">
-                                {
-                                    Object.entries(LevelToLabel).map((level)=>(
-                                        <div className="competence-level">
-                                            <div className="level-label">
-                                                {
-                                                    LevelToLabel[parseInt(level[0]) as Level]
-                                                }
-                                            </div>
-                                            <div className="bar-container">
-                                                <div className="bar" style={{width: `${getLevelPercentage(competence.levelInfo, parseInt(level[0]))*100}%`}}>
-                                                </div>
-                                            </div>
-                                            <div className="bar-label">
-                                            {
-                                                getLevelPercentage(competence.levelInfo, parseInt(level[0]))*100
-                                            }
-                                            %
-                                            </div>
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        </div>
-                    ))
-                } */}
             </div>
         </section>
     )
