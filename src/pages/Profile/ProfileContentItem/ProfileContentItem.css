@@ -11,7 +11,7 @@
     width: 320px;
     height: 210px;
     display: block;
-    object-fit: fill;
+    object-fit: cover;
 }
 
 .profile-content-title{

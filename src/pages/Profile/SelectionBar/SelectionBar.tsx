@@ -60,6 +60,4 @@ function renderTab(tab: AvailableTabs) {
         case "curriculum": return <ProfileCurriculum/>;
         default: return null;
     }
-    if(tabValue == "curriculum")
-    return <ProfileCurriculum/>
 }
