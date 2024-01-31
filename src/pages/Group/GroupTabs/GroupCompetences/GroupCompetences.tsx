@@ -11,26 +11,6 @@ export function GroupCompetences(){
     const groupContext = useContext(GroupContext)
     console.log(groupContext?.group.id)
 
-    //entendendo como funciona a estrutura da request, apagar depois
-    UniversimeApi.Group.listCompetences({groupId: groupContext?.group.id}).then((response)=>{
-        console.log(response)
-        return response.body;
-    }).then((body)=>{
-        console.log(body?.competences)
-        body?.competences.forEach(competence => {
-            console.log("Competencia", competence);
-            console.log("Nome da Competencia", competence.competenceName);
-            console.log("Id da Competencia", competence.competenceTypeId);
-            console.log("Níveis da competência")
-            Object.entries(competence.levelInfo).forEach(([level, profile])=> {
-                console.log("Perfis: ", profile)
-                console.log("Level: ", level)
-
-            });
-        });
-    })
-
-
     const [groupCompetences, setGroupCompetences] = useState<competenceListResponse>();
 
     useEffect(()=>{
@@ -44,6 +24,8 @@ export function GroupCompetences(){
 
     function getLevelPercentage(levelInfo: {[key: number] : Profile[]}, level: number){
         let allLevelsSum = 0;
+        if(!levelInfo || !levelInfo[level])
+            return 0;
         Object.entries(levelInfo).forEach(([level, profile])=>{
             allLevelsSum+=profile.length
         })
@@ -60,46 +42,35 @@ export function GroupCompetences(){
                             <div className="competence-name">
                                 {competence.competenceName}
                             </div>
+                            <div className="amount-people">
+                                Pessoas:{" "+Object.entries(competence.levelInfo).length}
+                            </div>
                             <div className="competence-level-container">
                                 {
-                                    Object.entries(competence.levelInfo).map(([level, profiles])=>(
-                                     <div className="competence-level">
-                                        <div className="level-label">
+                                    Object.entries(LevelToLabel).map((level)=>(
+                                        <div className="competence-level">
+                                            <div className="level-label">
+                                                {
+                                                    LevelToLabel[parseInt(level[0]) as Level]
+                                                }
+                                            </div>
+                                            <div className="bar-container">
+                                                <div className="bar" style={{width: `${getLevelPercentage(competence.levelInfo, parseInt(level[0]))*100}%`}}>
+                                                </div>
+                                            </div>
+                                            <div className="bar-label">
                                             {
-                                                LevelToLabel[parseInt(level) as Level]
+                                                getLevelPercentage(competence.levelInfo, parseInt(level[0]))*100
                                             }
+                                            %
+                                            </div>
                                         </div>
-                                        <div className="bar-container">
-                                            <div className="bar" style={{width: `${getLevelPercentage(competence.levelInfo, parseInt(level))*100}%`}}></div>
-                                        </div>
-                                     </div>   
                                     ))
                                 }
                             </div>
                         </div>
                     ))
                 }
-                {/* Esses vão ser gerados automaticamente, isso é so para teste */}
-                {/* <div className="competence">
-                    <div className="competence-name">
-                        Python
-                    </div>
-                    <div className="competence-level-container">
-                        <div className="competence-level">
-                            <div className="level-label">Iniciante</div>
-                            <div className="bar-container">
-                                <div className="bar"></div>
-                            </div>
-                        </div>
-                        <div className="competence-level">
-                            <div className="level-label">Iniciante</div>
-                            <div className="bar-container">
-                                <div className="bar"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
-
             </div>
         </section>
     )
