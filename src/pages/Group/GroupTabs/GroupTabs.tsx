@@ -4,8 +4,9 @@ import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
 import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
+import { GroupCompetences } from "./GroupCompetences/GroupCompetences";
 
-export type AvailableTabs = "feed" | "contents" | "files" | "groups" | "people";
+export type AvailableTabs = "feed" | "contents" | "files" | "groups" | "people" | "competences";
 
 export type GroupTabDefinition = {
     name: string,
@@ -117,5 +118,10 @@ const TABS: GroupTabDefinition[] = [
         name: "Pessoas",
         value: "people",
         renderer: GroupPeople,
+    },
+    {
+        name: "Competências",
+        value: "competences",
+        renderer: GroupCompetences,
     },
 ];
