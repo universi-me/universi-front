@@ -58,21 +58,31 @@ export type GroupEmailFilterDelete_RequestDTO = GroupIdOrPath_RequestDTO & {
     emailFilterId: string;
 };
 
-export type GroupGet_ResponseDTO =               ApiResponse<{ group: Group }>;
-export type GroupCreate_ResponseDTO =            ApiResponse;
-export type GroupUpdate_ResponseDTO =            ApiResponse;
-export type GroupAvailableParents_ResponseDTO =  ApiResponse<{ groups: Group[] }>;
-export type GroupSubgroups_ResponseDTO =         ApiResponse<{ subgroups: Group[] }>;
-export type GroupParticipants_ResponseDTO =      ApiResponse<{ participants: Profile[] }>;
-export type GroupJoin_ResponseDTO =              ApiResponse;
-export type GroupExit_ResponseDTO =              ApiResponse;
-export type GroupFolders_ResponseDTO =           ApiResponse<{ folders: Folder[] }>;
-export type GroupEmailFilterAdd_ResponseDTO =    ApiResponse;
-export type GroupEmailFilterEdit_ResponseDTO =   ApiResponse;
-export type GroupEmailFilterDelete_ResponseDTO = ApiResponse;
-export type GroupEmailFilterList_ResponseDTO =   ApiResponse<{ emailFilters: GroupEmailFilter[] }>;
+
+export type FilterParticipants_RequestDTO = {
+    competences:           {id: string, level: number}[],
+    matchEveryCompetence:   boolean,
+    groupId?:               string,
+    groupPath?:             string
+}
+
+export type GroupGet_ResponseDTO =                       ApiResponse<{ group: Group }>;
+export type GroupCreate_ResponseDTO =                    ApiResponse;
+export type GroupUpdate_ResponseDTO =                    ApiResponse;
+export type GroupAvailableParents_ResponseDTO =          ApiResponse<{ groups: Group[] }>;
+export type GroupSubgroups_ResponseDTO =                 ApiResponse<{ subgroups: Group[] }>;
+export type GroupParticipants_ResponseDTO =              ApiResponse<{ participants: Profile[] }>;
+export type GroupFilteredParticipants_ResponseDTO =      ApiResponse<{ filteredParticipants: Profile[] }>;
+export type GroupJoin_ResponseDTO =                      ApiResponse;
+export type GroupExit_ResponseDTO =                      ApiResponse;
+export type GroupFolders_ResponseDTO =                   ApiResponse<{ folders: Folder[] }>;
+export type GroupEmailFilterAdd_ResponseDTO =            ApiResponse;
+export type GroupEmailFilterEdit_ResponseDTO =           ApiResponse;
+export type GroupEmailFilterDelete_ResponseDTO =         ApiResponse;
+export type GroupEmailFilterList_ResponseDTO =           ApiResponse<{ emailFilters: GroupEmailFilter[] }>;
 export type GroupCompetencesList_ResponseDTO =   ApiResponse<competenceListResponse>
 export type competenceListResponse = {competences : {competenceName : string, competenceTypeId : string, levelInfo : {[key : number]: Profile[]}}[]};
+
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
     return (await api.post<GroupGet_ResponseDTO>('/group/get', {
@@ -188,6 +198,10 @@ export async function editEnvironments(body: {}) {
 
 export async function listEnvironments(body: {}) {
     return (await api.post<ApiResponse>("/group/settings/environments/list", body)).data;
+}
+
+export async function filterParticipants(body : FilterParticipants_RequestDTO) {
+    return (await api.post<GroupFilteredParticipants_ResponseDTO>("/group/participant/filter", body)) 
 }
 
 export async function listCompetences(body: GroupIdOrPath_RequestDTO){

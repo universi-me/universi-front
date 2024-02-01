@@ -59,3 +59,109 @@
         grid-template-columns: repeat(3, 1fr);
     }
 }
+
+.advanced-search{
+    position: absolute;
+    padding: 10px;
+    border: 1px solid var(--primary-color);
+    background-color: white;
+    border-top: none;
+    margin-top: 1.8em;
+    border-radius: 0rem 0rem 0.5rem 0.5rem;
+    width: 18.5rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.advanced-button-container{
+    background-color: var(--primary-color);
+    color: var(--font-color-v1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 0.25rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.go-right-people{
+    gap: 0.5rem !important;
+}
+
+.levels-div{
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.levels-div.checkbox{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: left;
+}
+
+.add-competence-button{
+    background-color: var(--primary-color);
+    color: var(--font-color-v1);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+}
+
+.added-competences-container{
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+
+    .added-competence{
+        display: flex;
+        background-color: var(--font-color-v3);
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+        flex-direction: row;
+        align-items: center;
+    }
+    i{
+        cursor: pointer;
+    }
+
+}
+
+.search-button{
+    padding: 0.25rem 0.5rem;
+    background-color: var(--primary-color);
+    border-radius: 0.5rem;
+    color: var(--font-color-v1);
+    text-align: center;
+    max-width: fit-content;
+    align-self: center;
+    cursor: pointer;
+}
+
+.search-criteria{
+    .search-criteria-text{
+        background-color: var(--font-color-v3);
+        padding: 0.25rem 0.5rem;
+        align-self: flex-start;
+        border-radius: 0.25rem;
+    }
+
+    display: flex;
+    flex-direction: column-reverse;
+
+    .clear-search{
+        background-color: var(--font-color-v3);
+        padding: 0.25rem 0.5rem;
+        align-self: flex-start;
+        border-radius: 0.25rem;
+        margin-top: 0.5rem;
+        cursor: pointer;
+        width:max-content;
+    }
+}
+
+.hidden{
+    display: none !important;
+}

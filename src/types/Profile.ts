@@ -1,6 +1,7 @@
 import type { User } from "@/types/User";
 import { type Nullable } from "@/types/utils";
 import { IMG_DEFAULT_PROFILE } from "@/utils/assets";
+import { Competence } from "./Competence";
 
 export type Gender = "M" | "F" | "O";
 export const GENDER_OPTIONS: {[k in Gender]: string} = {
@@ -18,6 +19,7 @@ export type Profile = {
     lastname:     string | null;
     bio:          string | null;
     creationDate: string;
+    competences:  Competence[] | null;
 }
 
 export class ProfileClass implements Profile {
@@ -121,6 +123,9 @@ export class ProfileClass implements Profile {
 
     get image() { return this.profile.image }
     set image(image: Nullable<string>) { this.profile.image = image }
+
+    get competences() { return this.profile.competences }
+    set competences(competences : Nullable<Competence[]>) {this.competences = competences}
 
     get creationDate() { return this.profile.creationDate }
 }
