@@ -1,13 +1,13 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 
-import { ContentPageLoaderSuccess, type ContentPageLoaderResponse, ContentHeader } from "@/pages/Content";
+import { ContentPageLoaderSuccess, type ContentPageLoaderResponse, ContentHeader, MaterialList } from "@/pages/Content";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ContentContext, ContentContextType } from "./ContentContext";
 import { useContext, useMemo } from "react";
 import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
 import { AuthContext } from "@/contexts/Auth";
 
-
+import "./ContentPage.less";
 
 export function ContentPage() {
     const loaderData = useLoaderData() as ContentPageLoaderResponse;
@@ -38,7 +38,10 @@ export function ContentPage() {
             <ProfileInfo profile={authContext.profile ?? undefined} organization={authContext.organization} >
                 {/* todo: add remaining profile data to auth context */}
 
-                <ContentHeader />
+                <div id="content-page-content">
+                    <ContentHeader />
+                    <MaterialList />
+                </div>
             </ProfileInfo>
         </div>
         </ContentContext.Provider>

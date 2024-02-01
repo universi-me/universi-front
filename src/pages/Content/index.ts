@@ -4,3 +4,4 @@ export * from "./ContentContext";
 
 export * from "./ContentPage";
 export * from "./ContentHeader/ContentHeader";
+export * from "./MaterialList/MaterialList";

@@ -15,3 +15,7 @@ export const ICON_INSTAGRAM_BLACK = "/assets/icons/instagram-black.svg"
 export const ICON_INSTAGRAM_WHITE = "/assets/icons/instagram-white.svg"
 export const ICON_LINKEDIN_BLACK =  "/assets/icons/linkedin-black.svg"
 export const ICON_DELETE_BLACK = "/assets/icons/delete-black.svg"
+
+export const MATERIAL_THUMB_VIDEO = "/assets/imgs/video.png";
+export const MATERIAL_THUMB_LINK =  "/assets/imgs/link.png";
+export const MATERIAL_THUMB_FILE =  "/assets/imgs/file.png";
