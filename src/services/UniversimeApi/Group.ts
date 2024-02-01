@@ -3,6 +3,7 @@ import type { Profile } from "@/types/Profile";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
 import { Folder } from "@/types/Capacity";
+import { profile } from "./Profile";
 
 export type GroupId_RequestDTO = {
     groupId: string;
@@ -57,6 +58,7 @@ export type GroupEmailFilterDelete_RequestDTO = GroupIdOrPath_RequestDTO & {
     emailFilterId: string;
 };
 
+
 export type FilterParticipants_RequestDTO = {
     competences:           {id: string, level: number}[],
     matchEveryCompetence:   boolean,
@@ -78,6 +80,9 @@ export type GroupEmailFilterAdd_ResponseDTO =            ApiResponse;
 export type GroupEmailFilterEdit_ResponseDTO =           ApiResponse;
 export type GroupEmailFilterDelete_ResponseDTO =         ApiResponse;
 export type GroupEmailFilterList_ResponseDTO =           ApiResponse<{ emailFilters: GroupEmailFilter[] }>;
+export type GroupCompetencesList_ResponseDTO =   ApiResponse<competenceListResponse>
+export type competenceListResponse = {competences : {competenceName : string, competenceTypeId : string, levelInfo : {[key : number]: Profile[]}}[]};
+
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
     return (await api.post<GroupGet_ResponseDTO>('/group/get', {
@@ -197,4 +202,8 @@ export async function listEnvironments(body: {}) {
 
 export async function filterParticipants(body : FilterParticipants_RequestDTO) {
     return (await api.post<GroupFilteredParticipants_ResponseDTO>("/group/participant/filter", body)) 
+}
+
+export async function listCompetences(body: GroupIdOrPath_RequestDTO){
+    return (await api.post<GroupCompetencesList_ResponseDTO>("/group/participant/competences", body)).data
 }

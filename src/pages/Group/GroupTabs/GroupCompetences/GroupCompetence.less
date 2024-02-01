@@ -1,0 +1,98 @@
+#competence-tab{    
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    .competence-tab{
+
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+        border-radius: 0.5rem;
+        border-collapse: collapse;
+
+        .labels{
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            text-align: center;
+            background-color: var(--card-background-color);
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.25rem;
+
+            .label{
+                cursor: pointer;
+                padding: 1rem 0rem;
+                display: flex;
+                justify-content: center;
+
+            }
+
+            .label:hover{
+                background-color: var(--background-tela);
+            }
+
+        }
+        
+
+    }
+
+
+    .competence-container{
+        background-color: var(--card-background-color);
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.25rem;
+        .competence{
+            display: grid;
+            width: 100%;
+            align-items: center;
+            gap: 2rem;
+            grid-template-columns: repeat(6, 1fr);
+            text-align: center;
+            border-bottom: solid 1px var(--font-color-v3);
+            padding: 1.25rem 1rem;
+
+            .amount-people{
+            }
+
+        }
+
+    }
+
+
+    .competence-level-container{
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        padding: 0.25rem;
+        gap: 2rem;
+        .competence-level{
+
+            width: 100%;
+        
+            .level-label{
+                font-size: small;
+                text-align: center;
+            }
+
+            .bar-container{
+                background-color: var(--font-color-v3);
+                width: 100%;
+                border-radius: 1rem;
+                height: 0.5rem;
+                .bar{
+                    background-color: var(--primary-color);
+                    height: 0.5rem;
+                    border-radius: 1rem;
+                }
+            }
+            .bar-label{
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+
+        }
+    }
+}
