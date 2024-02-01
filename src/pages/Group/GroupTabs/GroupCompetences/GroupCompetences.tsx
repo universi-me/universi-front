@@ -213,7 +213,7 @@ export function GroupCompetences(){
                                                     {width: `${getLevelPercentage(competence.competencePeople, level.people)}%`}
                                                 }></div>
                                                 <div className="bar-label">
-                                                    {getLevelPercentage(competence.competencePeople, level.people)}%
+                                                    {Math.trunc(getLevelPercentage(competence.competencePeople, level.people))}%
                                                 </div>
                                             </div>
                                         </div>
