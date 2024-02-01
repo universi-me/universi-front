@@ -4,14 +4,14 @@
     width: 320px;
     height: 280px;
     background-color: var(--secondary-color);
-
+    text-decoration: none;
 }
 
 .profile-content-thumbnail{
     width: 320px;
     height: 210px;
     display: block;
-    object-fit: fill;
+    object-fit: cover;
 }
 
 .profile-content-title{

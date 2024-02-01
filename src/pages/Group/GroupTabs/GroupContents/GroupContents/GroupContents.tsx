@@ -24,7 +24,10 @@ function SelectPeople(){
         if(groupContext?.assignFolder == undefined || selectedPeople == undefined)
             return;
         UniversimeApi.Capacity.assignContent({folderId: groupContext?.assignFolder?.id, profilesIds: selectedPeople?.map((p)=>(p.value))})
-        groupContext.setAssignFolder(undefined)
+        .then(res => {
+            groupContext.setAssignFolder(undefined);
+            groupContext.refreshData();
+        })
     }
 
     function handleAssignChange(option : MultiValue<{value : string, label : string}>){
@@ -110,6 +113,28 @@ export function GroupContents() {
             hidden() {
                 return !groupContext?.group.canEdit;
             }
+        },
+        {
+            text: "Favoritar",
+            biIcon: "star-fill",
+            onSelect(data) {
+                UniversimeApi.Capacity.favoriteFolder({ folderId: data.id })
+                .then(res => {res.success && groupContext.refreshData()});
+            },
+            hidden(data) {
+                return !!data.favorite;
+            },
+        },
+        {
+            text: "Desfavoritar",
+            biIcon: "star-half",
+            hidden(data) {
+                return !data.favorite;
+            },
+            onSelect(data) {
+                UniversimeApi.Capacity.unfavoriteFolder({ folderId: data.id })
+                .then(res => {res.success && groupContext.refreshData()});
+            },
         },
         {
             text: "Excluir",

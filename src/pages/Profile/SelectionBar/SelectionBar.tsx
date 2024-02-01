@@ -31,7 +31,7 @@ export function SelectionBar(){
     )
 }
 
-export type AvailableTabs = "groups" | "curriculum";
+export type AvailableTabs = "groups" | "contents" | "curriculum";
 
 type TabDefinition = {
     name: string;
@@ -39,14 +39,6 @@ type TabDefinition = {
 };
 
 const TABS: TabDefinition[] = [
-    // {
-    //     name: "Conteúdos",
-    //     value: "content",
-    // },
-    // {
-    //     name: "Arquivos",
-    //     value: "files",
-    // },
     {
         name: "Grupos",
         value: "groups",
@@ -55,16 +47,17 @@ const TABS: TabDefinition[] = [
         name: "Currículo",
         value: "curriculum",
     },
+    {
+        name: "Conteúdos",
+        value: "contents",
+    },
 ];
 
-
-function renderTab(tabValue : string){
-    if(tabValue == "content")
-        return <ProfileContentListing title="Conteúdos"/>
-    if(tabValue == "files")
-        return <ProfileContentListing title="Arquivos"/>
-    if(tabValue == "groups")
-        return <ProfileGroupListing/>
-    if(tabValue == "curriculum")
-    return <ProfileCurriculum/>
+function renderTab(tab: AvailableTabs) {
+    switch (tab) {
+        case "contents": return <ProfileContentListing />;
+        case "groups":   return <ProfileGroupListing />;
+        case "curriculum": return <ProfileCurriculum/>;
+        default: return null;
+    }
 }

@@ -40,6 +40,7 @@ export type ProfileContextType = null | {
         recommendationsReceived: Recommendation[];
         achievements:            Achievements[];
         folders:                 Folder[];
+        favorites:               Folder[];
     };
 
     setEditCompetence(competence: Competence | null | undefined): any;

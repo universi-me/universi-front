@@ -31,6 +31,7 @@ export type ProfilePageLoaderResponse = {
         recommendationsReceived: Recommendation[];
         achievements:            Achievements[];
         folders:                 Folder[];
+        favorites:               Folder[];
     };
 };
 
@@ -75,6 +76,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
             education: fetchEducations.body?.educations ?? [],
             experience: fetchExperiences.body?.experiences ?? [],
             folders: fetchFolders.body?.folders ?? [],
+            favorites: fetchFolders.body?.favorites ?? [],
             groups: fetchGroups.body?.groups ?? [],
             links: fetchLinks.body?.links ?? [],
             recommendationsReceived: fetchRecommendations.body?.recomendationsReceived ?? [],
@@ -101,6 +103,7 @@ const FAILED_TO_LOAD: ProfilePageLoaderResponse = {
         education: [],
         experience: [],
         folders: [],
+        favorites: [],
         groups: [],
         links: [],
         recommendationsReceived: [],

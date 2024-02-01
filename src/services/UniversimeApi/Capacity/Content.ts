@@ -42,13 +42,20 @@ export type ContentStatusEdit_RequestDTO={
 
 export type AssignContent_RequestDTO = {
     folderId : string;
-    profilesIds : string[];
+    profilesIds : string | string[];
 }
 
-export type ContentGet_ResponseDTO =    ApiResponse<{content: Content}>;
-export type ContentCreate_ResponseDTO = ApiResponse;
-export type ContentEdit_ResponseDTO =   ApiResponse;
-export type ContentRemove_ResponseDTO = ApiResponse;
+export type UnassignContent_RequestDTO = {
+    folderId:    string;
+    profilesIds: string | string[];
+}
+
+export type ContentGet_ResponseDTO =      ApiResponse<{content: Content}>;
+export type ContentCreate_ResponseDTO =   ApiResponse;
+export type ContentEdit_ResponseDTO =     ApiResponse;
+export type ContentRemove_ResponseDTO =   ApiResponse;
+export type AssignContent_ResponseDTO =   ApiResponse;
+export type UnassignContent_ResponseDTO = ApiResponse;
 
 export async function getContent(body: ContentId_RequestDTO) {
     return (await api.post<ContentGet_ResponseDTO>("/capacity/content/get", {
@@ -110,6 +117,13 @@ export async function editContentStatus(body : ContentStatusEdit_RequestDTO){
 
 export async function assignContent(body : AssignContent_RequestDTO){
     return(
-        await api.post<AssignContent_RequestDTO>("/capacity/folder/assign", body)
+        await api.post<AssignContent_ResponseDTO>("/capacity/folder/assign", body)
     ).data;
+}
+
+export async function unassignContent(body: UnassignContent_RequestDTO) {
+    return (await api.post<UnassignContent_ResponseDTO>("/capacity/folder/unassign", {
+        folderId:    body.folderId,
+        profilesIds: body.profilesIds,
+    })).data;
 }

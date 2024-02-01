@@ -1,0 +1,64 @@
+@import url(/src/layouts/colors.less);
+
+#content-page #content-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    width: 100%;
+    gap: 0 2rem;
+
+    #content-header-image {
+        height: 15rem;
+        aspect-ratio: 1;
+
+        border-radius: 1rem;
+        object-fit: cover;
+    }
+
+    #content-main-info {
+        display: flex;
+        flex-direction: column;
+
+        #content-name {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            font-size: 2rem;
+
+            #content-favorite {
+                color: @primary-color;
+                margin-left: .25em;
+            }
+        }
+
+        #assigned-info {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            #assigned-by-icon {
+                margin-right: .25em;
+            }
+
+            #assigned-by-link {
+                margin-left: .25em;
+            }
+        }
+
+        #created-info {
+            margin-top: .5em;
+            font-size: .9em;
+        }
+
+        #content-description {
+            margin-top: 1em;
+        }
+    }
+
+    #content-misc-info {
+        margin-left: auto;
+        width: 20rem;
+    }
+}

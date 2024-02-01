@@ -26,6 +26,14 @@ export type FolderEdit_RequestDTO = {
     addCategoriesByIds?:    string | string[];
 };
 
+export type FolderFavorite_RequestDTO = {
+    folderId: string;
+}
+
+export type FolderUnfavorite_RequestDTO = {
+    folderId: string;
+}
+
 export type ContentAndFolder_RequestDTO = {
     folderId:   string;
     contentIds: string | string[];
@@ -38,6 +46,8 @@ export type FolderRemove_ResponseDTO =            ApiResponse;
 export type ListContentsInFolder_ResponseDTO =    ApiResponse<{ contents: Content[] }>;
 export type AddContentToFolder_ResponseDTO =      ApiResponse;
 export type RemoveContentFromFolder_ResponseDTO = ApiResponse;
+export type FolderFavorite_ResponseDTO =          ApiResponse;
+export type FolderUnfavorite_ResponseDTO =        ApiResponse;
 
 export async function getFolder(body: FolderId_RequestDTO) {
     return (await api.post<FolderGet_ResponseDTO>("/capacity/folder/get", {
@@ -92,5 +102,17 @@ export async function removeContentFromFolder(body: ContentAndFolder_RequestDTO)
     return (await api.post<RemoveContentFromFolder_ResponseDTO>("/capacity/folder/content/remove", {
         id:         body.folderId,
         contentIds: body.contentIds,
+    })).data;
+}
+
+export async function favoriteFolder(body: FolderFavorite_RequestDTO) {
+    return (await api.post<FolderFavorite_ResponseDTO>("/capacity/folder/favorite", {
+        folderId: body.folderId,
+    })).data;
+}
+
+export async function unfavoriteFolder(body: FolderUnfavorite_RequestDTO) {
+    return (await api.post<FolderUnfavorite_ResponseDTO>("/capacity/folder/unfavorite", {
+        folderId: body.folderId,
     })).data;
 }
