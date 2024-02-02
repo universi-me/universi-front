@@ -71,9 +71,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const profile = await getLoggedProfile();
         setProfile(profile);
 
-        updateOrganization();
-        updateLinks();
-        updateGroups();
+        if (profile !== null) await Promise.all([
+            updateOrganization(),
+            updateLinks(profile),
+            updateGroups(profile),
+        ]);
 
         setFinishedLogin(true);
         return profile;
@@ -87,23 +89,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return usedOrganization;
     }
 
-    async function updateLinks() {
+    async function updateLinks(profile: ProfileClass) {
         if (profile === null) return;
         const fetchLinks = await UniversimeApi.Profile.links({ username: profile.user.name });
         const links = fetchLinks.success ? fetchLinks.body.links : [];
 
         setProfileLinks(links);
-        console.dir({updatedLinks: links})
         return links;
     }
 
-    async function updateGroups() {
+    async function updateGroups(profile: ProfileClass) {
         if (profile === null) return;
         const fetchGroups = await UniversimeApi.Profile.groups({ username: profile.user.name });
         const groups = fetchGroups.success ? fetchGroups.body.groups : [];
 
         setProfileGroups(groups);
-        console.dir({updatedGroups: groups})
         return groups;
     }
 };
