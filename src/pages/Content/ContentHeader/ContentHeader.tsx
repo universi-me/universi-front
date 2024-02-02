@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { ContentContext } from "@/pages/Content";
+import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { ProfileClass } from "@/types/Profile";
 import { contentImageUrl } from "@/utils/apiUtils";
 
@@ -47,5 +48,11 @@ export function ContentHeader() {
                 <p id="content-description">{context.content.description}</p>
             }
         </div>
+        { context.content.canEdit &&
+            <div id="content-admin-buttons">
+                <ActionButton name="Editar conteúdo" biIcon="bi-pencil-fill" />
+                <ActionButton name="Adicionar material" biIcon="bi-plus-circle-fill" />
+            </div>
+        }
     </div>
 }

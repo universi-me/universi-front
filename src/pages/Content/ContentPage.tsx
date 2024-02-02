@@ -1,9 +1,10 @@
+import { useContext, useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
+import UniversimeApi from "@/services/UniversimeApi";
 import { ContentPageLoaderSuccess, type ContentPageLoaderResponse, ContentHeader, MaterialList } from "@/pages/Content";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ContentContext, ContentContextType } from "./ContentContext";
-import { useContext, useMemo } from "react";
 import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
 import { AuthContext } from "@/contexts/Auth";
 
@@ -14,10 +15,14 @@ export function ContentPage() {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
 
-    const context = useMemo(() => {
-        return loaderData.content
-            ? makeContext(loaderData)
-            : null;
+    const [context, setContext] = useState<ContentContextType>();
+
+    useEffect(() => {
+        if (loaderData.content) {
+            setContext(makeContext(loaderData));
+        } else if (context) {
+            setContext(undefined);
+        }
     }, [loaderData]);
 
     if (loaderData.content === undefined) {
@@ -31,6 +36,9 @@ export function ContentPage() {
         }).then(() => navigate("/"));
         return null;
     }
+
+    /* Undefined on the first render */
+    if (!context) return null;
 
     return (
         <ContentContext.Provider value={context}>
@@ -49,6 +57,19 @@ export function ContentPage() {
         return {
             content: data.content,
             materials: data.materials,
+
+            refreshMaterials() {
+                UniversimeApi.Capacity.contentsInFolder({ reference: this.content.reference })
+                .then(res => {
+                    if (res.success)
+                        setContext({...this, materials: res.body.contents});
+                })
+            },
+
+            editingSettings: undefined,
+            setEditingSettings(set) {
+                setContext({...this, editingSettings: set});
+            },
         };
     }
 }
