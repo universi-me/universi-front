@@ -26,8 +26,8 @@ export async function fetchContentPageData(contentId: string | undefined): Promi
     };
 
     const [fetchContent, fetchMaterials] = await Promise.all([
-        UniversimeApi.Capacity.getFolder({ id: contentId }),
-        UniversimeApi.Capacity.contentsInFolder({ id: contentId }),
+        UniversimeApi.Capacity.getFolder({ reference: contentId }),
+        UniversimeApi.Capacity.contentsInFolder({ reference: contentId }),
     ]);
 
     const content = fetchContent.body?.folder;

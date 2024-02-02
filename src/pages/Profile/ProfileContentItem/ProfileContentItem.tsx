@@ -9,7 +9,7 @@ export type ProfileContentItemProps = {
 
 export function ProfileContentItem({content} : Readonly<ProfileContentItemProps>){
     return(
-        <Link className="profile-content" to={`/content/${content.id}`}>
+        <Link className="profile-content" to={`/content/${content.reference}`}>
             <img src={contentImageUrl(content)} className="profile-content-thumbnail" alt=""/>
             <p className="profile-content-title">{content.name}</p>
         </Link>

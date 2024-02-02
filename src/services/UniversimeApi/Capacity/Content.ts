@@ -41,12 +41,14 @@ export type ContentStatusEdit_RequestDTO={
 }
 
 export type AssignContent_RequestDTO = {
-    folderId : string;
+    folderId?: string;
+    reference?: string;
     profilesIds : string | string[];
 }
 
 export type UnassignContent_RequestDTO = {
-    folderId:    string;
+    folderId?:   string;
+    reference?:  string;
     profilesIds: string | string[];
 }
 
@@ -124,6 +126,7 @@ export async function assignContent(body : AssignContent_RequestDTO){
 export async function unassignContent(body: UnassignContent_RequestDTO) {
     return (await api.post<UnassignContent_ResponseDTO>("/capacity/folder/unassign", {
         folderId:    body.folderId,
+        reference:   body.reference,
         profilesIds: body.profilesIds,
     })).data;
 }

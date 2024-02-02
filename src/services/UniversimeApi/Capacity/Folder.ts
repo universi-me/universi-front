@@ -4,6 +4,10 @@ import { api } from "../api";
 
 export type FolderId_RequestDTO = {
     id: string;
+    reference?: string;
+} | {
+    id?: string;
+    reference: string;
 };
 
 export type FolderCreate_RequestDTO = {
@@ -17,7 +21,8 @@ export type FolderCreate_RequestDTO = {
 };
 
 export type FolderEdit_RequestDTO = {
-    id:                     string;
+    id?:                    string;
+    reference?:             string;
     name?:                  string;
     image?:                 string;
     description?:           string;
@@ -27,15 +32,18 @@ export type FolderEdit_RequestDTO = {
 };
 
 export type FolderFavorite_RequestDTO = {
-    folderId: string;
+    folderId?: string;
+    reference?: string;
 }
 
 export type FolderUnfavorite_RequestDTO = {
-    folderId: string;
+    folderId?: string;
+    reference?: string;
 }
 
 export type ContentAndFolder_RequestDTO = {
-    folderId:   string;
+    folderId?:  string;
+    reference?: string;
     contentIds: string | string[];
 };
 
@@ -52,6 +60,7 @@ export type FolderUnfavorite_ResponseDTO =        ApiResponse;
 export async function getFolder(body: FolderId_RequestDTO) {
     return (await api.post<FolderGet_ResponseDTO>("/capacity/folder/get", {
         id: body.id,
+        reference: body.reference,
     })).data;
 }
 
@@ -70,6 +79,7 @@ export async function createFolder(body: FolderCreate_RequestDTO) {
 export async function editFolder(body: FolderEdit_RequestDTO) {
     return (await api.post<FolderEdit_ResponseDTO>("/capacity/folder/edit", {
         id:                    body.id,
+        reference:             body.reference,
         name:                  body.name,
         image:                 body.image,
         description:           body.description,
@@ -82,18 +92,21 @@ export async function editFolder(body: FolderEdit_RequestDTO) {
 export async function removeFolder(body: FolderId_RequestDTO) {
     return (await api.post<FolderRemove_ResponseDTO>("/capacity/folder/delete", {
         id: body.id,
+        reference: body.reference,
     })).data;
 }
 
 export async function contentsInFolder(body: FolderId_RequestDTO) {
     return (await api.post<ListContentsInFolder_ResponseDTO>("/capacity/folder/contents", {
         id: body.id,
+        reference: body.reference,
     })).data;
 }
 
 export async function addContentToFolder(body: ContentAndFolder_RequestDTO) {
     return (await api.post<AddContentToFolder_ResponseDTO>("/capacity/folder/content/add", {
         id:         body.folderId,
+        reference:  body.reference,
         contentIds: body.contentIds,
     })).data;
 }
@@ -101,6 +114,7 @@ export async function addContentToFolder(body: ContentAndFolder_RequestDTO) {
 export async function removeContentFromFolder(body: ContentAndFolder_RequestDTO) {
     return (await api.post<RemoveContentFromFolder_ResponseDTO>("/capacity/folder/content/remove", {
         id:         body.folderId,
+        reference:  body.reference,
         contentIds: body.contentIds,
     })).data;
 }
@@ -108,11 +122,13 @@ export async function removeContentFromFolder(body: ContentAndFolder_RequestDTO)
 export async function favoriteFolder(body: FolderFavorite_RequestDTO) {
     return (await api.post<FolderFavorite_ResponseDTO>("/capacity/folder/favorite", {
         folderId: body.folderId,
+        reference: body.reference,
     })).data;
 }
 
 export async function unfavoriteFolder(body: FolderUnfavorite_RequestDTO) {
     return (await api.post<FolderUnfavorite_ResponseDTO>("/capacity/folder/unfavorite", {
         folderId: body.folderId,
+        reference: body.reference,
     })).data;
 }

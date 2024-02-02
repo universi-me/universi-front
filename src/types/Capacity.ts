@@ -31,6 +31,7 @@ export type Category = {
 
 export type Folder = {
     id:                  string;
+    reference:           string;
     name:                string;
     image:               string | null;
     description:         string | null;
