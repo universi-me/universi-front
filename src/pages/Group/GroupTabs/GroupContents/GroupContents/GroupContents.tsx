@@ -1,11 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext, ManageContent } from "@/pages/Group";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
-import { type OptionInMenu, renderOption, hasAvailableOption } from "@/utils/dropdownMenuUtils"
+import { type OptionInMenu, renderOption, hasAvailableOption } from "@/utils/dropdownMenuUtils";
 
 import type { Folder } from "@/types/Capacity";
 import "./GroupContents.less";
@@ -13,25 +13,68 @@ import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { AuthContext } from "@/contexts/Auth";
 import { UniversiModal } from "@/components/UniversiModal";
-import Select, { MultiValue } from "react-select"
+import { ProfileClass } from "@/types/Profile";
+import { makeClassName } from "@/utils/tsxUtils";
+import { arrayRemoveEquals } from "@/utils/arrayUtils";
 
 function SelectPeople(){
-
-    const [selectedPeople, setSelectedPeople] = useState<{value: string, label: string}[] | null>(null)
     const groupContext = useContext(GroupContext)
 
-    function makeRequest(){
-        if(groupContext?.assignFolder == undefined || selectedPeople == undefined)
+    const [currentlyAssigned, setCurrentlyAssigned] = useState<ProfileClass[]>([]);
+    const [selectedProfiles, selectedProfilesDispatch] = useReducer(selectProfileReducer, []);
+
+    useEffect(() => {
+        if (!groupContext?.assignFolder) return;
+
+        UniversimeApi.Capacity.folderAssignedTo({ reference: groupContext.assignFolder.reference })
+            .then((res) => { setCurrentlyAssigned(res.body?.profilesIds.map(ProfileClass.new) ?? []) });
+    }, [groupContext?.assignFolder]);
+
+    useEffect(() => {
+        selectedProfilesDispatch({
+            action: "SET",
+            to: currentlyAssigned.map(ProfileClass.new),
+        });
+    }, [currentlyAssigned]);
+
+    if (!groupContext?.assignFolder) return null;
+
+    const assignedTo = arrayRemoveEquals(selectedProfiles, currentlyAssigned, (a, b) => a.id === b.id);
+    const unassignedTo = arrayRemoveEquals(currentlyAssigned, selectedProfiles, (a, b) => a.id === b.id);
+
+    const canSave = assignedTo.length > 0 || unassignedTo.length > 0;
+
+    async function makeRequest(){
+        if(groupContext?.assignFolder == undefined)
             return;
-        UniversimeApi.Capacity.assignContent({folderId: groupContext?.assignFolder?.id, profilesIds: selectedPeople?.map((p)=>(p.value))})
-        .then(res => {
-            groupContext.setAssignFolder(undefined);
-            groupContext.refreshData();
-        })
+
+        if (assignedTo.length) {
+            await UniversimeApi.Capacity.assignContent({
+                folderId: groupContext.assignFolder.id,
+                profilesIds: assignedTo.map(p => p.id),
+            });
+        }
+
+        if (unassignedTo.length) {
+            UniversimeApi.Capacity.unassignContent({
+                folderId: groupContext.assignFolder.id,
+                profilesIds: unassignedTo.map(p => p.id),
+            })
+        }
+
+        groupContext.setAssignFolder(undefined);
+        groupContext.refreshData();
     }
 
-    function handleAssignChange(option : MultiValue<{value : string, label : string}>){
-        setSelectedPeople(option.map(({value, label}) => ({value, label})));
+    function selectProfileReducer(state: ProfileClass[], action: SelectProfileAction): ProfileClass[] {
+        switch (action.action) {
+            case "ADD":
+                return state.concat([action.profile]);
+            case "REMOVE":
+                return state.filter(p => p.id !== action.profile.id);
+            case "SET":
+                return action.to;
+        }
     }
 
     return(
@@ -46,20 +89,29 @@ function SelectPeople(){
 
                     <fieldset>
                         <legend>Pessoas</legend>
-                        <Select
-                            isMulti
-                            name="pessoas"
-                            options={groupContext?.participants.map((t)=>({value: t.id, label: t.firstname+" "+t.lastname}))}
-                            className="category-select"
-                            value={selectedPeople}
-                            onChange={(option)=>{handleAssignChange(option)}}
-                        />
+                        <div id="assign-content-to-profile">
+                            { [...groupContext.participants]
+                                .sort((a, b) => a.fullname!.localeCompare(b.fullname!))
+                                .map(p => {
+                                const isSelected = !!selectedProfiles.find(i => i.id === p.id);
+
+                                return <div className="participant-item" key={p.id}>
+                                    <img src={p.imageUrl} alt="" className="profile-picture" />
+                                    <div className="profile-data">
+                                        <h2 className="profile-name">{ p.fullname }</h2>
+                                    </div>
+                                    <button className="assign-profile" onClick={() => { selectedProfilesDispatch({ action: isSelected ? "REMOVE" : "ADD", profile: p }) }}>
+                                        <i className={makeClassName("bi", isSelected ? "bi-check-circle-fill" : "bi-check-circle")} />
+                                    </button>
+                                </div>
+                            }) }
+                        </div>
                     </fieldset>
                     <section className="operation-buttons">
                         <button type="button" className="submit-button"
                         style={{width: "auto", padding: "0.75rem"}}
                         onClick={()=>{
-                            setSelectedPeople(groupContext?.participants.map((p)=>({value: p.id, label: p.firstname+" "+p.lastname})) ?? null)
+                            selectedProfilesDispatch({ action: "SET", to: groupContext!.participants.map(ProfileClass.new) })
                         }}>
                             Todas as pessoas do grupo
                         </button>
@@ -70,7 +122,7 @@ function SelectPeople(){
                             <i className="bi bi-x-circle-fill" />
                             Cancelar
                         </button>
-                        <button type="button" className="submit-button" onClick={makeRequest} disabled={selectedPeople==undefined} title={selectedPeople==undefined ? undefined : "Preencha os dados antes de salvar"}>
+                        <button type="button" className="submit-button" onClick={makeRequest} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
                             <i className="bi bi-check-circle-fill" />
                             Salvar
                         </button>
@@ -262,3 +314,11 @@ export function GroupContents() {
         });
     }
 }
+
+type SelectProfileAction = {
+    action: "ADD" | "REMOVE";
+    profile: ProfileClass;
+} | {
+    action: "SET";
+    to: ProfileClass[];
+};

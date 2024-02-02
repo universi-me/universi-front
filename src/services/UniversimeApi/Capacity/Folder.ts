@@ -1,5 +1,6 @@
 import type { Folder, Content } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
+import type { Profile } from "@/types/Profile";
 import { api } from "../api";
 
 export type FolderId_RequestDTO = {
@@ -47,6 +48,11 @@ export type ContentAndFolder_RequestDTO = {
     contentIds: string | string[];
 };
 
+export type FolderAssignedTo_RequestDTO = {
+    folderId?: string;
+    reference?: string;
+};
+
 export type FolderGet_ResponseDTO =               ApiResponse<{ folder: Folder }>;
 export type FolderCreate_ResponseDTO =            ApiResponse;
 export type FolderEdit_ResponseDTO =              ApiResponse;
@@ -56,6 +62,7 @@ export type AddContentToFolder_ResponseDTO =      ApiResponse;
 export type RemoveContentFromFolder_ResponseDTO = ApiResponse;
 export type FolderFavorite_ResponseDTO =          ApiResponse;
 export type FolderUnfavorite_ResponseDTO =        ApiResponse;
+export type FolderAssignedTo_ResponseDTO =        ApiResponse<{ profilesIds: Profile[] }>;
 
 export async function getFolder(body: FolderId_RequestDTO) {
     return (await api.post<FolderGet_ResponseDTO>("/capacity/folder/get", {
@@ -128,6 +135,13 @@ export async function favoriteFolder(body: FolderFavorite_RequestDTO) {
 
 export async function unfavoriteFolder(body: FolderUnfavorite_RequestDTO) {
     return (await api.post<FolderUnfavorite_ResponseDTO>("/capacity/folder/unfavorite", {
+        folderId: body.folderId,
+        reference: body.reference,
+    })).data;
+}
+
+export async function folderAssignedTo(body: FolderAssignedTo_RequestDTO) {
+    return (await api.post<FolderAssignedTo_ResponseDTO>("/capacity/folder/assigned", {
         folderId: body.folderId,
         reference: body.reference,
     })).data;
