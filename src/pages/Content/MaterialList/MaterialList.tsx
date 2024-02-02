@@ -16,7 +16,11 @@ export function MaterialList() {
     if (!contentContext) return null;
 
     return <div id="material-list">
-        { contentContext.materials.map(m => <RenderMaterial key={m.id} material={m} contexts={{ contentContext, youTubePlayerContext }} />) }
+        {
+            contentContext.materials.length > 0
+                ? contentContext.materials.map(m => <RenderMaterial key={m.id} material={m} contexts={{ contentContext, youTubePlayerContext }} />)
+                : <p className="empty-list">Nenhum material postado para esse conteúdo.</p>
+        }
     </div>
 }
 

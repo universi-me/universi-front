@@ -35,9 +35,7 @@ export function ContentPage() {
     return (
         <ContentContext.Provider value={context}>
         <div id="content-page">
-            <ProfileInfo profile={authContext.profile ?? undefined} organization={authContext.organization} >
-                {/* todo: add remaining profile data to auth context */}
-
+            <ProfileInfo profile={authContext.profile ?? undefined} organization={authContext.organization} links={authContext.profileLinks} groups={authContext.profileGroups} >
                 <div id="content-page-content">
                     <ContentHeader />
                     <MaterialList />

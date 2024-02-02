@@ -4,9 +4,12 @@ import { ProfileClass } from "@/types/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi";
 import { goTo } from "@/services/routes";
 import type { Group } from "@/types/Group";
+import type { Link } from "@/types/Link";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<ProfileClass | null>(null);
+  const [profileLinks, setProfileLinks] = useState<Link[]>([]);
+  const [profileGroups, setProfileGroups] = useState<Group[]>([]);
   const [organization, setOrganization] = useState<Group | null>(null);
   const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
   const user = profile?.user ?? null;
@@ -20,7 +23,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser, organization }}>
+        <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser, organization, profileGroups, profileLinks }}>
         { finishedLogin ? children : null }
         </AuthContext.Provider>
     );
@@ -68,11 +71,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const profile = await getLoggedProfile();
         setProfile(profile);
 
-        if (profile)
-            updateOrganization();
-        else
-            updateOrganization();
-            //setOrganization(null);
+        updateOrganization();
+        updateLinks();
+        updateGroups();
 
         setFinishedLogin(true);
         return profile;
@@ -84,6 +85,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setOrganization(usedOrganization);
         return usedOrganization;
+    }
+
+    async function updateLinks() {
+        if (profile === null) return;
+        const fetchLinks = await UniversimeApi.Profile.links({ username: profile.user.name });
+        const links = fetchLinks.success ? fetchLinks.body.links : [];
+
+        setProfileLinks(links);
+        console.dir({updatedLinks: links})
+        return links;
+    }
+
+    async function updateGroups() {
+        if (profile === null) return;
+        const fetchGroups = await UniversimeApi.Profile.groups({ username: profile.user.name });
+        const groups = fetchGroups.success ? fetchGroups.body.groups : [];
+
+        setProfileGroups(groups);
+        console.dir({updatedGroups: groups})
+        return groups;
     }
 };
 

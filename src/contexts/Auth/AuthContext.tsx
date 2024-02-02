@@ -2,12 +2,13 @@ import { createContext } from "react";
 import { User } from "@/types/User";
 import { type ProfileClass } from "@/types/Profile";
 import type { Group } from "@/types/Group";
-
-// todo: add profile links and groups to auth context (See ContentPage.tsx)
+import type { Link } from "@/types/Link";
 
 export type AuthContextType = {
     user : User | null;
     profile: ProfileClass | null;
+    profileLinks: Link[];
+    profileGroups: Group[];
     organization: Group | null;
 
     signin: (email : string, password: string, recaptchaToken: string | null) => Promise<ProfileClass | null>;
