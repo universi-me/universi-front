@@ -8,6 +8,6 @@ COPY . /opt/app
 
 RUN npm install --include=dev
 
-RUN npm run build
+CMD ["sh", "-c", "npm run build"]
 
 ENTRYPOINT ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "8088"]
