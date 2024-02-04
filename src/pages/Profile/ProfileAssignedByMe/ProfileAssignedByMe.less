@@ -1,0 +1,100 @@
+@import url(/src/layouts/colors.less);
+
+#profile-page #profile-assigned-by-me-tab {
+    .title-filter-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: end;
+        justify-content: space-between;
+
+        margin-bottom: 1rem;
+
+        .tab-title {
+            font-weight: 500;
+        }
+    }
+
+    #assigned-by-me-wrapper {
+        .folder-profile-item {
+            background-color: #FFF;
+            filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+            border-radius: 10px;
+            padding: 1rem;
+
+            display: flex;
+            flex-direction: row;
+
+            gap: 1rem;
+
+            &:not(:last-child) {
+                margin-bottom: 1rem;
+            }
+
+            .folder-image {
+                @side: 8rem;
+                width: @side;
+                height: @side;
+                object-fit: cover;
+
+                border-radius: 10px;
+            }
+        }
+
+        .folder-data {
+            .profile-watcher {
+                display: flex;
+                flex-direction: row;
+
+                &:not(:last-of-type) {
+                    margin-bottom: .5rem;
+                }
+
+                .profile-image {
+                    width: 5rem;
+                    aspect-ratio: 1;
+                    border-radius: 50%;
+
+                    margin-right: .5rem;
+                }
+
+                .progress-data {
+                    display: flex;
+                    flex-direction: column;
+                    gap: .2rem;
+
+                    .profile-name {
+                        margin-top: .5em;
+                    }
+
+                    .profile-progress {
+                        width: 15rem;
+
+                        .progress-bar-container {
+                            @bar-heigth: .5rem;
+                            @border-radius: 2 * @bar-heigth;
+
+                            width: 100%;
+                            height: @bar-heigth;
+                            border-radius: @border-radius;
+                            overflow: hidden;
+
+                            background-color: gray;
+
+                            .progress-until-now {
+                                height: @bar-heigth;
+                                border-radius: @border-radius;
+                                background-color: @primary-color;
+                            }
+                        }
+
+                        .text-progress {
+                            width: 100%;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
