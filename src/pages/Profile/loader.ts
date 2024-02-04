@@ -1,6 +1,6 @@
 import UniversimeApi from "@/services/UniversimeApi";
 import type { Achievements } from "@/types/Achievements";
-import type { Folder } from "@/types/Capacity";
+import type { Folder, FolderProfile } from "@/types/Capacity";
 import type { Competence, CompetenceType } from "@/types/Competence";
 import { Education } from "@/types/Education";
 import { Experience } from "@/types/Experience";
@@ -32,6 +32,7 @@ export type ProfilePageLoaderResponse = {
         achievements:            Achievements[];
         folders:                 Folder[];
         favorites:               Folder[];
+        assignedByMe:            FolderProfile[];
     };
 };
 
@@ -50,7 +51,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
     if (!fetchProfile.success || !fetchProfile.body?.profile )
         return FAILED_TO_LOAD;
 
-    const [fetchGroups, fetchCompetences, fetchLinks, fetchRecommendations, fetchFolders, fetchEducations, fetchExperiences] = await Promise.all([
+    const [fetchGroups, fetchCompetences, fetchLinks, fetchRecommendations, fetchFolders, fetchEducations, fetchExperiences, fetchAssignedByMe] = await Promise.all([
         UniversimeApi.Profile.groups({username}),
         UniversimeApi.Profile.competences({username}),
         UniversimeApi.Profile.links({username}),
@@ -58,7 +59,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
         UniversimeApi.Profile.folders({username, assignedOnly: true}),
         UniversimeApi.Profile.educations({username}),
         UniversimeApi.Profile.experiences({username}),
-
+        UniversimeApi.Capacity.foldersAssignedBy({username}),
     ]);
 
     return {
@@ -81,6 +82,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
             links: fetchLinks.body?.links ?? [],
             recommendationsReceived: fetchRecommendations.body?.recomendationsReceived ?? [],
             recommendationsSend: fetchRecommendations.body?.recomendationsSend ?? [],
+            assignedByMe: fetchAssignedByMe.success ? fetchAssignedByMe.body.folders : [],
         },
     };
 }
@@ -108,5 +110,6 @@ const FAILED_TO_LOAD: ProfilePageLoaderResponse = {
         links: [],
         recommendationsReceived: [],
         recommendationsSend: [],
+        assignedByMe: [],
     },
 };

@@ -20,8 +20,13 @@ export type Content = {
     createdAt:          string;
     author:             Profile;
     type:               ContentType | null;
-    contentStatus :     ContentStatus;
+    status:             ContentStatusEnum;
 };
+
+export type WatchProfileProgress = {
+    content: Content;
+    status:  ContentStatusEnum;
+}
 
 export type Category = {
     id:        string;
@@ -45,3 +50,16 @@ export type Folder = {
     favorite?:           true;
     canEdit:             boolean;
 };
+
+export type FolderProfile = {
+    author:  Profile;
+    profile: Profile;
+    folder:  Folder;
+
+    id:       string;
+    assigned: boolean;
+    created:  string;
+
+    doneUntilNow: number;
+    folderSize:   number;
+}

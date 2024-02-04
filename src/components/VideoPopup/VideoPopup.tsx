@@ -7,7 +7,7 @@ import { getYouTubeVideoIdFromUrl } from "@/utils/regexUtils";
 
 export function VideoPopup({material, handleClose, handleWatched, handleMinimized} : {material : Content, handleClose : (id : string, symbol : string) => void, handleWatched : (event : any) => void, handleMinimized : (material: Content) => void}){
 
-    const [status, setStatus] = useState(material.contentStatus.status)
+    const [status, setStatus] = useState(material.status)
     const id = getYouTubeVideoIdFromUrl(material.url);
 
     if (!id)
@@ -32,11 +32,11 @@ export function VideoPopup({material, handleClose, handleWatched, handleMinimize
                     style={{aspectRatio: "16/9", height: "90%", width: "100%"}}
                     />
                     {
-                        material.contentStatus.status != "DONE"
+                        status != "DONE"
                         ?
-                            <div className="watched-button" onClick={(event) => {handleWatched(event); material.contentStatus.status = "DONE";}}><i className="bi bi-check2-circle status-icon"></i> Marcar como concluído</div>
+                            <div className="watched-button" onClick={(event) => {handleWatched(event); setStatus("DONE");}}><i className="bi bi-check2-circle status-icon"></i> Marcar como concluído</div>
                         :
-                            <div className="watched-button watched" onClick={(event) => {handleWatched(event); material.contentStatus.status = "NOT_VIEWED";}}><i className="bi bi-check2-circle status-icon"></i> Concluído</div>
+                            <div className="watched-button watched" onClick={(event) => {handleWatched(event); setStatus("NOT_VIEWED");}}><i className="bi bi-check2-circle status-icon"></i> Concluído</div>
                     }
                 </div>
             </div>

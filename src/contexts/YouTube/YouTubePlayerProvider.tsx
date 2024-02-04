@@ -90,13 +90,13 @@ export function YouTubePlayerProvider({children}: YouTubePlayerProviderProps) {
     async function handleWatchedButton(material : Content, event : any){
         event.stopPropagation();
 
-        let nextStatus : ContentStatusEnum = material.contentStatus.status == "DONE"  ? "NOT_VIEWED" : "DONE"
+        let nextStatus : ContentStatusEnum = material.status == "DONE" ? "NOT_VIEWED" : "DONE"
 
         await UniversimeApi.Capacity.createContentStatus({contentId : material.id});
         await UniversimeApi.Capacity.editContentStatus({contentId: material.id, contentStatusType : nextStatus}).then(
             (data) => {
                 if(data.contentStatusType == "DONE" || data.contentStatusType == "NOT_VIEWED")
-                    material.contentStatus.status = data.contentStatusType
+                    material.status = data.contentStatusType
             }
         )
     }

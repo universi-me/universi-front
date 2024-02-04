@@ -1,4 +1,4 @@
-import type { Folder, Content } from "@/types/Capacity";
+import type { Folder, Content, FolderProfile, WatchProfileProgress } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import type { Profile } from "@/types/Profile";
 import { api } from "../api";
@@ -53,6 +53,18 @@ export type FolderAssignedTo_RequestDTO = {
     reference?: string;
 };
 
+export type FoldersAssignedBy_RequestDTO = {
+    profileId?: string;
+    username?: string;
+};
+
+export type FolderWatchProgress_RequestDTO = {
+    profileId?: string;
+    username?: string;
+    folderId?: string;
+    folderReference?: string;
+};
+
 export type FolderGet_ResponseDTO =               ApiResponse<{ folder: Folder }>;
 export type FolderCreate_ResponseDTO =            ApiResponse;
 export type FolderEdit_ResponseDTO =              ApiResponse;
@@ -63,6 +75,8 @@ export type RemoveContentFromFolder_ResponseDTO = ApiResponse;
 export type FolderFavorite_ResponseDTO =          ApiResponse;
 export type FolderUnfavorite_ResponseDTO =        ApiResponse;
 export type FolderAssignedTo_ResponseDTO =        ApiResponse<{ profilesIds: Profile[] }>;
+export type FoldersAssignedBy_ResponseDTO =       ApiResponse<{ folders: FolderProfile[] }>;
+export type FolderWatchProgress_ResponseDTO =     ApiResponse<{ folder: Folder, watching: Profile, contentWatches: WatchProfileProgress[] }>;
 
 export async function getFolder(body: FolderId_RequestDTO) {
     return (await api.post<FolderGet_ResponseDTO>("/capacity/folder/get", {
@@ -144,5 +158,21 @@ export async function folderAssignedTo(body: FolderAssignedTo_RequestDTO) {
     return (await api.post<FolderAssignedTo_ResponseDTO>("/capacity/folder/assigned", {
         folderId: body.folderId,
         reference: body.reference,
+    })).data;
+}
+
+export async function foldersAssignedBy(body: FoldersAssignedBy_RequestDTO) {
+    return (await api.post<FoldersAssignedBy_ResponseDTO>("/capacity/folder/assigned-by", {
+        profileId: body.profileId,
+        username: body.username,
+    })).data;
+}
+
+export async function watchProfileProgress(body: FolderWatchProgress_RequestDTO) {
+    return (await api.post<FolderWatchProgress_ResponseDTO>("/capacity/folder/watch", {
+        profileId: body.profileId,
+        username: body.username,
+        folderId: body.folderId,
+        folderReference: body.folderReference,
     })).data;
 }
