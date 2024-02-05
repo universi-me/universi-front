@@ -4,8 +4,12 @@ WORKDIR /opt/app
 
 ENV NODE_ENV production
 
+ENV VITE_UNIVERSIME_API /api
+
 COPY . /opt/app
 
 RUN npm install --include=dev --prefer-offline --no-audit --progress=false
 
-ENTRYPOINT ["sh", "-c", "npm run build && npm run preview -- --host 0.0.0.0 --port 8088"]
+RUN npm run build
+
+ENTRYPOINT ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "8088"]
