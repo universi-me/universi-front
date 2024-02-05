@@ -1,7 +1,7 @@
 import { Folder } from "@/types/Capacity";
-import './ProfileContentItem.css'
 import { Link } from "react-router-dom";
 import { contentImageUrl } from "@/utils/apiUtils";
+import './ProfileContentItem.less'
 
 export type ProfileContentItemProps = {
     content: Folder;
