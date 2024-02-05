@@ -32,11 +32,19 @@ export function ProfileContentListing(){
         ? "Meus Conteúdos"
         : otherProfileText;
 
+    const assignedLabel = isOwnProfile
+        ? "Atribuídos à mim"
+        : `Atribuídos à ${profileContext.profile.firstname}`;
+
+    const favoriteLabel = isOwnProfile
+        ? "Meus favoritos"
+        : `Favoritos de ${profileContext.profile.firstname}`;
+
       return(
         <div className="content-listing-container">
             <h1 className="content-name">{tabTitle}</h1>
             <div className="content-wrapper">
-                <h2>Conteúdos atribuídos</h2>
+                <h2>{assignedLabel}</h2>
                 <div className="contents">
                     { assignedContents.length === 0 ? <p>Nenhum conteúdo atribuído no momento.</p> :
                         assignedContents.map(content => (
@@ -46,7 +54,7 @@ export function ProfileContentListing(){
                 </div>
             </div>
             <div className="content-wrapper">
-                <h2>Conteúdos favoritos</h2>
+                <h2>{favoriteLabel}</h2>
                 <div className="contents">
                     { favoriteContents.length === 0 ? <p>Nenhum conteúdo atribuído no momento.</p> :
                         favoriteContents.map(content => (
