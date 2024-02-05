@@ -15,7 +15,7 @@ export function YouTubePlayerProvider({children}: YouTubePlayerProviderProps) {
     const currentVideoId = useMemo(() => {
         if (!currentMaterial) return undefined;
         else return getYouTubeVideoIdFromUrl(currentMaterial.url);
-    }, [currentMaterial]);
+    }, [currentMaterial?.url]);
 
     const context = useMemo(() => ({
         currentVideoId,
@@ -34,14 +34,19 @@ export function YouTubePlayerProvider({children}: YouTubePlayerProviderProps) {
         </YouTubePlayerContext.Provider>
     );
 
-    function playMaterial(material: Content) {
-        const videoId = getYouTubeVideoIdFromUrl(material.url);
+    async function playMaterial(material: {id: string}) {
+        const fetchApiMaterial = await UniversimeApi.Capacity.getContent({ id: material.id });
+        const apiMaterial = fetchApiMaterial.success ? fetchApiMaterial.body.content : undefined;
+
+        if (!apiMaterial) return false;
+
+        const videoId = getYouTubeVideoIdFromUrl(apiMaterial.url);
         if (!videoId) {
-            console.error(`URL '${material.url}' is not a YouTube video URL`)
+            console.error(`URL '${apiMaterial.url}' is not a YouTube video URL`)
             return false;
         }
 
-        handleVideoClick(material);
+        handleVideoClick(apiMaterial);
         return true;
     }
 
@@ -95,8 +100,11 @@ export function YouTubePlayerProvider({children}: YouTubePlayerProviderProps) {
         await UniversimeApi.Capacity.createContentStatus({contentId : material.id});
         await UniversimeApi.Capacity.editContentStatus({contentId: material.id, contentStatusType : nextStatus}).then(
             (data) => {
-                if(data.contentStatusType == "DONE" || data.contentStatusType == "NOT_VIEWED")
-                    material.status = data.contentStatusType
+                if (!data.success) return;
+
+                const status = data.body.contentStatus.status;
+                if(status == "DONE" || status == "NOT_VIEWED")
+                    setCurrentMaterial({...material, status});
             }
         )
     }

@@ -1,5 +1,6 @@
-import { type Content, type Folder } from "@/types/Capacity";
 import { createContext } from "react";
+import { type Content, type Folder } from "@/types/Capacity";
+import { type ProfileClass } from "@/types/Profile";
 
 type EditingSettings = {
     // Editing content
@@ -16,6 +17,7 @@ type EditingSettings = {
 export type ContentContextType = {
     content: Folder;
     materials: Content[];
+    watchingProfile?: ProfileClass;
 
     refreshMaterials(): void;
 

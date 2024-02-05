@@ -57,6 +57,7 @@ export function ContentPage() {
         return {
             content: data.content,
             materials: data.materials,
+            watchingProfile: data.beingWatched,
 
             refreshMaterials() {
                 UniversimeApi.Capacity.contentsInFolder({ reference: this.content.reference })

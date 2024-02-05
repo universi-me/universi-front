@@ -1,4 +1,4 @@
-import type { Content } from "@/types/Capacity";
+import type { Content, ContentStatus } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "../api";
 
@@ -52,12 +52,13 @@ export type UnassignContent_RequestDTO = {
     profilesIds: string | string[];
 }
 
-export type ContentGet_ResponseDTO =      ApiResponse<{content: Content}>;
-export type ContentCreate_ResponseDTO =   ApiResponse;
-export type ContentEdit_ResponseDTO =     ApiResponse;
-export type ContentRemove_ResponseDTO =   ApiResponse;
-export type AssignContent_ResponseDTO =   ApiResponse;
-export type UnassignContent_ResponseDTO = ApiResponse;
+export type ContentGet_ResponseDTO =        ApiResponse<{content: Content}>;
+export type ContentCreate_ResponseDTO =     ApiResponse;
+export type ContentEdit_ResponseDTO =       ApiResponse;
+export type ContentRemove_ResponseDTO =     ApiResponse;
+export type AssignContent_ResponseDTO =     ApiResponse;
+export type UnassignContent_ResponseDTO =   ApiResponse;
+export type ContentStatusEdit_ResponseDTO = ApiResponse<{ contentStatus: ContentStatus }>;
 
 export async function getContent(body: ContentId_RequestDTO) {
     return (await api.post<ContentGet_ResponseDTO>("/capacity/content/get", {
@@ -110,7 +111,7 @@ export async function createContentStatus(body : ContentStatus_RequestDTO){
 
 export async function editContentStatus(body : ContentStatusEdit_RequestDTO){
     return(
-        await api.post<ContentStatusEdit_RequestDTO>("/capacity/content/status/edit", {
+        await api.post<ContentStatusEdit_ResponseDTO>("/capacity/content/status/edit", {
             contentId : body.contentId,
             contentStatusType : body.contentStatusType,
         })

@@ -14,9 +14,14 @@ export function ContentHeader() {
     if (!context) return null;
 
     const author = new ProfileClass(context.content.author);
-    const assignedBy = context.content.assignedBy
+    const assignedBy = context.content.assignedBy && !context.watchingProfile
         ? new ProfileClass(context.content.assignedBy)
         : undefined;
+
+    const materialCount = context.materials.length;
+    const materialsDone = context.materials.filter(c => c.status === "DONE").length;
+    const materialPercentage = materialsDone / materialCount * 100;
+    const shownMaterialPercentage = isNaN(materialPercentage) ? 0 : materialPercentage;
 
     return <div id="content-header">
         <img id="content-header-image" src={contentImageUrl(context.content)} alt="" />
@@ -24,7 +29,7 @@ export function ContentHeader() {
             <h2 id="content-name">
                 {context.content.name}
 
-                { context.content.favorite &&
+                { context.content.favorite && !context.watchingProfile &&
                     <i id="content-favorite" className="bi bi-star-fill" title={`Você favoritou ${context.content.name}`} />
                 }
             </h2>
@@ -46,6 +51,21 @@ export function ContentHeader() {
             {
                 context.content.description &&
                 <p id="content-description">{context.content.description}</p>
+            }
+
+            { context.watchingProfile && 
+                <div id="watch-data">
+                    <p id="watching-info">
+                        <i className="bi bi-eye" />
+                        Você está acompanhando o progresso de <Link to={`/profile/${context.watchingProfile.user.name}`}>{context.watchingProfile.fullname}</Link>
+                    </p>
+                    <div id="progress-container">
+                        <div id="progress-bar-total">
+                            <div id="progress-bar-done" style={{width: `${shownMaterialPercentage}%`}} />
+                        </div>
+                        <p>{context.watchingProfile.firstname} concluiu {materialsDone} de {materialCount} materiais ({shownMaterialPercentage}%) </p>
+                    </div>
+                </div>
             }
         </div>
         { context.content.canEdit &&

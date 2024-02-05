@@ -7,9 +7,10 @@ import { ContentContext, type ContentContextType } from "@/pages/Content";
 import { MATERIAL_THUMB_FILE, MATERIAL_THUMB_LINK, MATERIAL_THUMB_VIDEO } from "@/utils/assets";
 import { getYouTubeVideoIdFromUrl } from "@/utils/regexUtils";
 import { type OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdownMenuUtils";
+import { makeClassName } from "@/utils/tsxUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
-import { type Content } from "@/types/Capacity";
+import { ContentStatusEnum, type Content } from "@/types/Capacity";
 
 import "./MaterialList.less";
 
@@ -22,7 +23,7 @@ export function MaterialList() {
     return <div id="material-list">
         {
             contentContext.materials.length > 0
-                ? contentContext.materials.map(m => <RenderMaterial key={m.id} material={m} contexts={{ contentContext, youTubePlayerContext }} />)
+                ? contentContext.materials.map(m => <RenderMaterial key={m.id} material={m} contexts={{ contentContext, youTubePlayerContext }} beingWatched={contentContext.watchingProfile !== undefined} />)
                 : <p className="empty-list">Nenhum material postado para esse conteúdo.</p>
         }
     </div>
@@ -30,13 +31,15 @@ export function MaterialList() {
 
 type RenderMaterialProps = {
     material: Content;
+    beingWatched: boolean;
     contexts: {
         contentContext: ContentContextType;
         youTubePlayerContext: YouTubePlayerContextType;
     };
 };
 
-function RenderMaterial({ material, contexts }: Readonly<RenderMaterialProps>) {
+function RenderMaterial(props: Readonly<RenderMaterialProps>) {
+    const { material, contexts, beingWatched } = props;
     const { imageUrl, onInteract } = getMaterialVariantData(material, contexts.youTubePlayerContext);
 
     const OPTIONS_DEFINITION: OptionInMenu<Content>[] = [
@@ -78,6 +81,10 @@ function RenderMaterial({ material, contexts }: Readonly<RenderMaterialProps>) {
     ];
 
     return <div className="material-item">
+        <button type="button" className={makeClassName("change-status", !beingWatched && "can-check")} onClick={handleCheckButton}>
+            <i className={makeClassName("bi", material.status === "DONE" ? "bi-check-circle-fill" : "bi-check-circle")} />
+        </button>
+
         <a href={material.url} target="_blank" onClick={onInteract}>
             <img src={imageUrl} className="material-item-thumb" alt="" />
         </a>
@@ -106,6 +113,20 @@ function RenderMaterial({ material, contexts }: Readonly<RenderMaterialProps>) {
             </DropdownMenu.Root>
         }
     </div>
+
+    function handleCheckButton() {
+        if (beingWatched) return;
+
+        const nextStatus: ContentStatusEnum = material.status === "DONE"
+            ? "VIEW"
+            : "DONE";
+
+        UniversimeApi.Capacity.editContentStatus({ contentId: material.id, contentStatusType: nextStatus })
+            .then(res => {
+                if (res.success)
+                    contexts.contentContext.refreshMaterials();
+            })
+    }
 }
 
 function getMaterialVariantData(material: Content, youTubePlayerContext: YouTubePlayerContextType) {

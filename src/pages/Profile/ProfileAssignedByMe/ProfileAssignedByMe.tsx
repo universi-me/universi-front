@@ -1,14 +1,15 @@
 import { useContext, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { ProfileContext } from "@/pages/Profile";
-import { groupArray, removeFalsy } from "@/utils/arrayUtils";
+import { Filter } from "@/components/Filter/Filter";
+import { groupArray } from "@/utils/arrayUtils";
 import { contentImageUrl } from "@/utils/apiUtils";
 
 import { type Folder, type FolderProfile } from "@/types/Capacity";
 import { ProfileClass } from "@/types/Profile";
 
 import "./ProfileAssignedByMe.less";
-import { Filter } from "@/components/Filter/Filter";
 
 export function ProfileAssignedByMe() {
     const context = useContext(ProfileContext);
@@ -71,14 +72,16 @@ function WatchFolderProgress({fp, folder}: Readonly<WatchFolderProgressProps>) {
     if (fp.length === 0) return null;
 
     return <div className="folder-profile-item">
-        <img src={contentImageUrl(folder)} alt="" className="folder-image" />
+        <Link to={`/content/${folder.reference}`} target="_blank" className="folder-name">
+            <img src={contentImageUrl(folder)} alt="" className="folder-image" />
+        </Link>
         <div className="folder-data">
-            <h2 className="folder-name">{folder.name}</h2>
+            <Link to={`/content/${folder.reference}`} target="_blank" className="folder-name">{folder.name}</Link>
             { fp.map(w => {
                 const percentage = w.doneUntilNow / w.folderSize * 100;
                 const shownPercentage = isNaN(percentage) ? 0 : percentage;
 
-                return <div className="profile-watcher">
+                return <Link to={`/content/${folder.reference}?watch=${w.profile.user.name}`} target="_blank" className="profile-watcher">
                     <img src={w.profile.imageUrl} className="profile-image" alt="" />
 
                     <div className="progress-data">
@@ -91,8 +94,7 @@ function WatchFolderProgress({fp, folder}: Readonly<WatchFolderProgressProps>) {
                             <div className="text-progress">{ w.doneUntilNow } / { w.folderSize } ({shownPercentage}%)</div>
                         </div>
                     </div>
-
-                </div>
+                </Link>
             }) }
         </div>
     </div>

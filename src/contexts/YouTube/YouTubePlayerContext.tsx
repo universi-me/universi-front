@@ -6,7 +6,7 @@ export type YouTubePlayerContextType = {
     currentVideoId: string | undefined;
     currentMaterial: Content | undefined;
     playingInMiniature: boolean;
-    playMaterial(material: Content): boolean;
+    playMaterial(material: Content): Promise<boolean>;
 };
 
 export const YouTubePlayerContext = createContext<YouTubePlayerContextType>(null!);

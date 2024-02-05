@@ -5,11 +5,15 @@
     flex-direction: row;
     align-items: center;
 
+    @x-gap: 2rem;
+    @admin-buttons-width: 12rem;
+    @image-width: 15rem;
+
     width: 100%;
-    gap: 0 2rem;
+    gap: 0 @x-gap;
 
     #content-header-image {
-        height: 15rem;
+        height: @image-width;
         aspect-ratio: 1;
 
         border-radius: 1rem;
@@ -19,6 +23,7 @@
     #content-main-info {
         display: flex;
         flex-direction: column;
+        width: calc(100% - 2*@x-gap - @image-width - @admin-buttons-width);
 
         #content-name {
             display: flex;
@@ -55,6 +60,56 @@
         #content-description {
             margin-top: 1em;
         }
+
+        #watch-data {
+            width: 100%;
+
+            #watching-info {
+                margin-top: 1em;
+                width: fit-content;
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                .bi {
+                    font-size: 1.5em;
+                    width: fit-content;
+                    margin-right: .25em;
+                }
+
+                a {
+                    margin-left: .25em;
+                }
+            }
+
+            #progress-container {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                #progress-bar-total {
+                    @bar-height: .5rem;
+                    @bar-radius: calc(2 * @bar-height);
+
+                    width: 100%;
+                    height: @bar-height;
+                    border-radius: @bar-radius;
+                    overflow: hidden;
+
+                    background-color: gray;
+
+                    margin-bottom: .5rem;
+
+                    #progress-bar-done {
+                        background-color: @primary-color;
+                        height: inherit;
+                        border-radius: inherit;
+                    }
+                }
+            }
+        }
     }
 
     #content-admin-buttons {
@@ -62,8 +117,9 @@
         flex-direction: column;
         gap: .5rem;
 
-        margin-left: auto;
         height: 100%;
+
+        width: @admin-buttons-width;
 
         .action-button-container {
             width: 100%;

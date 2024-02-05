@@ -51,6 +51,8 @@ export async function fetchProfilePageData(username: string | undefined): Promis
     if (!fetchProfile.success || !fetchProfile.body?.profile )
         return FAILED_TO_LOAD;
 
+    const isOwnProfile = fetchProfile.body.profile.user.ownerOfSession;
+
     const [fetchGroups, fetchCompetences, fetchLinks, fetchRecommendations, fetchFolders, fetchEducations, fetchExperiences, fetchAssignedByMe] = await Promise.all([
         UniversimeApi.Profile.groups({username}),
         UniversimeApi.Profile.competences({username}),
@@ -59,7 +61,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
         UniversimeApi.Profile.folders({username, assignedOnly: true}),
         UniversimeApi.Profile.educations({username}),
         UniversimeApi.Profile.experiences({username}),
-        UniversimeApi.Capacity.foldersAssignedBy({username}),
+        isOwnProfile ? UniversimeApi.Capacity.foldersAssignedBy({username}) : Promise.resolve(undefined),
     ]);
 
     return {
@@ -82,7 +84,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
             links: fetchLinks.body?.links ?? [],
             recommendationsReceived: fetchRecommendations.body?.recomendationsReceived ?? [],
             recommendationsSend: fetchRecommendations.body?.recomendationsSend ?? [],
-            assignedByMe: fetchAssignedByMe.success ? fetchAssignedByMe.body.folders : [],
+            assignedByMe: fetchAssignedByMe?.body?.folders ?? [],
         },
     };
 }

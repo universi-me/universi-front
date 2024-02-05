@@ -1,4 +1,5 @@
 @import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
 
 #profile-page #profile-assigned-by-me-tab {
     .title-filter-wrapper {
@@ -41,12 +42,29 @@
         }
 
         .folder-data {
+            .folder-name {
+                text-decoration: none;
+                color: inherit;
+                font-size: 1.65rem;
+                font-weight: @font-weight-semibold;
+            }
+
             .profile-watcher {
                 display: flex;
                 flex-direction: row;
+                width: 20rem;
+
+                padding: .5rem;
+                border-radius: 10px;
+                color: inherit;
+                text-decoration: none;
 
                 &:not(:last-of-type) {
                     margin-bottom: .5rem;
+                }
+
+                &:hover {
+                    background-color: #EEE;
                 }
 
                 .profile-image {
@@ -62,12 +80,14 @@
                     flex-direction: column;
                     gap: .2rem;
 
+                    width: 100%;
+
                     .profile-name {
                         margin-top: .5em;
                     }
 
                     .profile-progress {
-                        width: 15rem;
+                        width: 100%;
 
                         .progress-bar-container {
                             @bar-heigth: .5rem;
