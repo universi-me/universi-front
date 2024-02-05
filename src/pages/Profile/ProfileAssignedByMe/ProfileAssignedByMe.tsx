@@ -37,7 +37,7 @@ export function ProfileAssignedByMe() {
         )
     }, [filter, context?.profile]);
 
-    if (!context) return undefined;
+    if (!context) return null;
 
     const tabTitle = context.profile.user.ownerOfSession
         ? "Suas atribuições"
