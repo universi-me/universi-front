@@ -36,6 +36,16 @@ export function ContentHeader() {
                 }
             </h2>
 
+            { context.content.categories.length > 1 &&
+                <div id="content-categories">
+                { context.content.categories.map(c =>
+                    <div key={c.id} className="content-category-item">
+                        { c.name }
+                    </div>
+                ) }
+                </div>
+            }
+
             { assignedBy &&
                 <div id="assigned-info">
                     <i id="assigned-by-icon" className="bi bi-pin-angle-fill" />

@@ -1,4 +1,5 @@
 @import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
 
 #content-page #content-page-content #content-header {
     display: flex;
@@ -35,6 +36,21 @@
             #content-favorite {
                 color: @primary-color;
                 margin-left: .25em;
+            }
+        }
+
+        #content-categories {
+            display: flex;
+            flex-direction: row;
+            gap: .5em;
+
+            .content-category-item {
+                background-color: @primary-color;
+                color: @font-color-v1;
+                font-weight: @font-weight-semibold;
+
+                padding: .25em .5em;
+                border-radius: 5px;
             }
         }
 
