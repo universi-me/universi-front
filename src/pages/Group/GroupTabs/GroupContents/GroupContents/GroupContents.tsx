@@ -112,6 +112,9 @@ function SelectPeople(){
                         <button type="button" className="submit-button"
                         style={{width: "auto", padding: "0.75rem"}}
                         onClick={()=>{
+                            selectedProfiles.length == groupContext.participants.length?
+                            selectedProfilesDispatch({action: "SET", to: []})
+                            : 
                             selectedProfilesDispatch({ action: "SET", to: groupContext!.participants.map(ProfileClass.new) })
                         }}>
                             Todas as pessoas do grupo
