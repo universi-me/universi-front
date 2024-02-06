@@ -91,11 +91,9 @@ export function SignUpModal(props: SignUpModalProps) {
         <UniversiModal>
             <div id="sign-up-modal">
                 <div className="heading">
-                    <div/>
-                    <h2>Cadastro</h2>
-                    <button className="close-modal-button" onClick={closeModal}>
-                        <i className="bi bi-x-lg" />
-                    </button>
+                        <button className="close-modal-button" onClick={closeModal}>
+                            <i className="bi bi-x-lg" />
+                        </button>
                 </div>
 
                 <form>
