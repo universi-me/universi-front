@@ -65,7 +65,9 @@ export function ContentHeader() {
                         <div id="progress-bar-total">
                             <div id="progress-bar-done" style={{width: `${shownMaterialPercentage}%`}} />
                         </div>
-                        <p>{context.watchingProfile.firstname} concluiu {materialsDone} de {materialCount} materiais ({shownMaterialPercentage}%) </p>
+                        <p>{context.watchingProfile.firstname} concluiu {materialsDone} de {materialCount} materiais ({
+                            shownMaterialPercentage.toLocaleString(undefined, { maximumFractionDigits: 2 })
+                        }%) </p>
                     </div>
                 </div>
             }

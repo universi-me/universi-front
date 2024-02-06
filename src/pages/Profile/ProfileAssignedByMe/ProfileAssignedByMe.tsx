@@ -81,7 +81,7 @@ function WatchFolderProgress({fp, folder}: Readonly<WatchFolderProgressProps>) {
                 const percentage = w.doneUntilNow / w.folderSize * 100;
                 const shownPercentage = isNaN(percentage) ? 0 : percentage;
 
-                return <Link to={`/content/${folder.reference}?watch=${w.profile.user.name}`} target="_blank" className="profile-watcher">
+                return <Link to={`/content/${folder.reference}?watch=${w.profile.user.name}`} target="_blank" className="profile-watcher" key={w.id}>
                     <img src={w.profile.imageUrl} className="profile-image" alt="" />
 
                     <div className="progress-data">
@@ -91,7 +91,9 @@ function WatchFolderProgress({fp, folder}: Readonly<WatchFolderProgressProps>) {
                             <div className="progress-bar-container">
                                 <div className="progress-until-now" style={{width: `${shownPercentage}%`}} />
                             </div>
-                            <div className="text-progress">{ w.doneUntilNow } / { w.folderSize } ({shownPercentage}%)</div>
+                            <div className="text-progress">{ w.doneUntilNow } / { w.folderSize } ({
+                                shownPercentage.toLocaleString(undefined, { maximumFractionDigits: 2 })
+                            }%)</div>
                         </div>
                     </div>
                 </Link>
