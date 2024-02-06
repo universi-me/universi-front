@@ -1,4 +1,4 @@
-import type { Content } from "@/types/Capacity";
+import type { Content, ContentStatus } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "../api";
 
@@ -41,14 +41,24 @@ export type ContentStatusEdit_RequestDTO={
 }
 
 export type AssignContent_RequestDTO = {
-    folderId : string;
-    profilesIds : string[];
+    folderId?: string;
+    reference?: string;
+    profilesIds : string | string[];
 }
 
-export type ContentGet_ResponseDTO =    ApiResponse<{content: Content}>;
-export type ContentCreate_ResponseDTO = ApiResponse;
-export type ContentEdit_ResponseDTO =   ApiResponse;
-export type ContentRemove_ResponseDTO = ApiResponse;
+export type UnassignContent_RequestDTO = {
+    folderId?:   string;
+    reference?:  string;
+    profilesIds: string | string[];
+}
+
+export type ContentGet_ResponseDTO =        ApiResponse<{content: Content}>;
+export type ContentCreate_ResponseDTO =     ApiResponse;
+export type ContentEdit_ResponseDTO =       ApiResponse;
+export type ContentRemove_ResponseDTO =     ApiResponse;
+export type AssignContent_ResponseDTO =     ApiResponse;
+export type UnassignContent_ResponseDTO =   ApiResponse;
+export type ContentStatusEdit_ResponseDTO = ApiResponse<{ contentStatus: ContentStatus }>;
 
 export async function getContent(body: ContentId_RequestDTO) {
     return (await api.post<ContentGet_ResponseDTO>("/capacity/content/get", {
@@ -101,7 +111,7 @@ export async function createContentStatus(body : ContentStatus_RequestDTO){
 
 export async function editContentStatus(body : ContentStatusEdit_RequestDTO){
     return(
-        await api.post<ContentStatusEdit_RequestDTO>("/capacity/content/status/edit", {
+        await api.post<ContentStatusEdit_ResponseDTO>("/capacity/content/status/edit", {
             contentId : body.contentId,
             contentStatusType : body.contentStatusType,
         })
@@ -110,6 +120,14 @@ export async function editContentStatus(body : ContentStatusEdit_RequestDTO){
 
 export async function assignContent(body : AssignContent_RequestDTO){
     return(
-        await api.post<AssignContent_RequestDTO>("/capacity/folder/assign", body)
+        await api.post<AssignContent_ResponseDTO>("/capacity/folder/assign", body)
     ).data;
+}
+
+export async function unassignContent(body: UnassignContent_RequestDTO) {
+    return (await api.post<UnassignContent_ResponseDTO>("/capacity/folder/unassign", {
+        folderId:    body.folderId,
+        reference:   body.reference,
+        profilesIds: body.profilesIds,
+    })).data;
 }

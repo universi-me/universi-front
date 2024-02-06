@@ -5,8 +5,14 @@ import { Profile } from "@/types/Profile";
 export type ContentStatusEnum = "VIEW" | "DONE" | "NOT_VIEWED"
 export type ContentStatus = {status : ContentStatusEnum, updatedAt: string}
 export type ContentType = "VIDEO" | "LINK" | "FOLDER" | "FILE";
-export const Types: ContentType[] = ["VIDEO", "LINK", "FOLDER", "FILE"];
 
+export const MATERIAL_TYPES_TEXT: {[k in ContentType]: string} = {
+    VIDEO:  "Vídeo",
+    LINK:   "Link",
+    FOLDER: "Pasta",
+    FILE:   "Arquivo",
+};
+export const AVAILABLE_MATERIAL_TYPES = Object.keys(MATERIAL_TYPES_TEXT) as ContentType[];
 
 export type Content = {
     id:                 string;
@@ -20,8 +26,13 @@ export type Content = {
     createdAt:          string;
     author:             Profile;
     type:               ContentType | null;
-    contentStatus :     ContentStatus;
+    status:             ContentStatusEnum;
 };
+
+export type WatchProfileProgress = {
+    content: Content;
+    status:  ContentStatusEnum;
+}
 
 export type Category = {
     id:        string;
@@ -31,6 +42,7 @@ export type Category = {
 
 export type Folder = {
     id:                  string;
+    reference:           string;
     name:                string;
     image:               string | null;
     description:         string | null;
@@ -40,4 +52,20 @@ export type Folder = {
     author:              Profile;
     publicFolder:        boolean;
     grantedAccessGroups: Group[];
+    assignedBy?:         Profile;
+    favorite?:           true;
+    canEdit:             boolean;
 };
+
+export type FolderProfile = {
+    author:  Profile;
+    profile: Profile;
+    folder:  Folder;
+
+    id:       string;
+    assigned: boolean;
+    created:  string;
+
+    doneUntilNow: number;
+    folderSize:   number;
+}

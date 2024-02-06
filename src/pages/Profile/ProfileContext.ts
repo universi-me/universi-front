@@ -5,7 +5,7 @@ import type { Competence, CompetenceType, Level } from "@/types/Competence";
 import type { Recommendation } from "@/types/Recommendation";
 import type { Link } from "@/types/Link";
 import type { Achievements } from "@/types/Achievements";
-import type { Folder } from "@/types/Capacity";
+import type { Folder, FolderProfile } from "@/types/Capacity";
 import { Education } from "@/types/Education";
 import { Experience } from "@/types/Experience";
 import { Institution } from "@/types/Institution";
@@ -40,6 +40,8 @@ export type ProfileContextType = null | {
         recommendationsReceived: Recommendation[];
         achievements:            Achievements[];
         folders:                 Folder[];
+        favorites:               Folder[];
+        assignedByMe:            FolderProfile[];
     };
 
     setEditCompetence(competence: Competence | null | undefined): any;

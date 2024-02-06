@@ -21,7 +21,8 @@ import NewPassword from "@/pages/NewPassword/NewPassword";
 import ManageProfilePage, { ManageProfileLoader } from "@/pages/ManageProfile";
 import Homepage from "@/pages/Homepage";
 import SettingsPage, { GroupEmailFilterPage, GroupEmailFilterLoader, RolesPage, RolesPageLoader, EnvironmentsPage, EnvironmentsLoader } from "@/pages/Settings";
-
+import ContentPage from "@/pages/Content";
+import { ContentPageLoader } from "@/pages/Content/ContentPageLoader";
 
 
 
@@ -117,6 +118,11 @@ export const router = createBrowserRouter([{
                 loader: EnvironmentsLoader,
             }
         ],
+    },
+    {
+        path: "/content/:id",
+        element: <ContentPage />,
+        loader: ContentPageLoader,
     }
   ]
 },

@@ -1,6 +1,6 @@
 import UniversimeApi from "@/services/UniversimeApi";
 import type { Achievements } from "@/types/Achievements";
-import type { Folder } from "@/types/Capacity";
+import type { Folder, FolderProfile } from "@/types/Capacity";
 import type { Competence, CompetenceType } from "@/types/Competence";
 import { Education } from "@/types/Education";
 import { Experience } from "@/types/Experience";
@@ -31,6 +31,8 @@ export type ProfilePageLoaderResponse = {
         recommendationsReceived: Recommendation[];
         achievements:            Achievements[];
         folders:                 Folder[];
+        favorites:               Folder[];
+        assignedByMe:            FolderProfile[];
     };
 };
 
@@ -49,7 +51,9 @@ export async function fetchProfilePageData(username: string | undefined): Promis
     if (!fetchProfile.success || !fetchProfile.body?.profile )
         return FAILED_TO_LOAD;
 
-    const [fetchGroups, fetchCompetences, fetchLinks, fetchRecommendations, fetchFolders, fetchEducations, fetchExperiences] = await Promise.all([
+    const isOwnProfile = fetchProfile.body.profile.user.ownerOfSession;
+
+    const [fetchGroups, fetchCompetences, fetchLinks, fetchRecommendations, fetchFolders, fetchEducations, fetchExperiences, fetchAssignedByMe] = await Promise.all([
         UniversimeApi.Profile.groups({username}),
         UniversimeApi.Profile.competences({username}),
         UniversimeApi.Profile.links({username}),
@@ -57,7 +61,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
         UniversimeApi.Profile.folders({username, assignedOnly: true}),
         UniversimeApi.Profile.educations({username}),
         UniversimeApi.Profile.experiences({username}),
-
+        isOwnProfile ? UniversimeApi.Capacity.foldersAssignedBy({username}) : Promise.resolve(undefined),
     ]);
 
     return {
@@ -75,10 +79,12 @@ export async function fetchProfilePageData(username: string | undefined): Promis
             education: fetchEducations.body?.educations ?? [],
             experience: fetchExperiences.body?.experiences ?? [],
             folders: fetchFolders.body?.folders ?? [],
+            favorites: fetchFolders.body?.favorites ?? [],
             groups: fetchGroups.body?.groups ?? [],
             links: fetchLinks.body?.links ?? [],
             recommendationsReceived: fetchRecommendations.body?.recomendationsReceived ?? [],
             recommendationsSend: fetchRecommendations.body?.recomendationsSend ?? [],
+            assignedByMe: fetchAssignedByMe?.body?.folders ?? [],
         },
     };
 }
@@ -101,9 +107,11 @@ const FAILED_TO_LOAD: ProfilePageLoaderResponse = {
         education: [],
         experience: [],
         folders: [],
+        favorites: [],
         groups: [],
         links: [],
         recommendationsReceived: [],
         recommendationsSend: [],
+        assignedByMe: [],
     },
 };
