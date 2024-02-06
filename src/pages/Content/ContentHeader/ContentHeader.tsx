@@ -1,15 +1,19 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { ContentContext } from "@/pages/Content";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
-import { ProfileClass } from "@/types/Profile";
+import { ManageContent } from "@/components/ManageContent";
 import { contentImageUrl } from "@/utils/apiUtils";
 
+import { ProfileClass } from "@/types/Profile";
+import type { Content } from "@/types/Capacity";
 import "./ContentHeader.less";
 
 export function ContentHeader() {
     const context = useContext(ContentContext);
+    const [editingContent, setEditingContent] = useState(false);
+    const [editingMaterial, setEditingMaterial] = useState<Content>();
 
     if (!context) return null;
 
@@ -70,9 +74,18 @@ export function ContentHeader() {
         </div>
         { context.content.canEdit &&
             <div id="content-admin-buttons">
-                <ActionButton name="Editar conteúdo" biIcon="bi-pencil-fill" />
+                <ActionButton name="Editar conteúdo" biIcon="bi-pencil-fill" buttonProps={{onClick(){setEditingContent(true)}}} />
                 <ActionButton name="Adicionar material" biIcon="bi-plus-circle-fill" />
             </div>
         }
+        { editingContent &&
+            <ManageContent content={context.content} afterSave={afterSaveContent} />
+        }
     </div>
+
+    function afterSaveContent() {
+        context!.refreshContent().then(context => {
+            setEditingContent(false);
+        });
+    }
 }

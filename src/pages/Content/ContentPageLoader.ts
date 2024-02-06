@@ -14,6 +14,7 @@ export type ContentPageLoaderSuccess = {
 export type ContentPageLoaderFail = {
     content: undefined;
     materials: undefined;
+    beingWatched?: undefined;
 
     reasons: string[];
 }

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
 import UniversimeApi from "@/services/UniversimeApi";
-import { ContentPageLoaderSuccess, type ContentPageLoaderResponse, ContentHeader, MaterialList } from "@/pages/Content";
+import { type ContentPageLoaderSuccess, type ContentPageLoaderResponse, ContentHeader, MaterialList, fetchContentPageData } from "@/pages/Content";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ContentContext, ContentContextType } from "./ContentContext";
 import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
@@ -59,12 +59,45 @@ export function ContentPage() {
             materials: data.materials,
             watchingProfile: data.beingWatched,
 
-            refreshMaterials() {
-                UniversimeApi.Capacity.contentsInFolder({ reference: this.content.reference })
-                .then(res => {
-                    if (res.success)
-                        setContext({...this, materials: res.body.contents});
-                })
+            async refreshAllData() {
+                const res = await fetchContentPageData(this.content.reference, this.watchingProfile?.user.name);
+                if (!res.content) return this;
+
+                const newContext: ContentContextType = {
+                    ...this,
+                    content: res.content,
+                    materials: res.materials,
+                    watchingProfile: res.beingWatched,
+                };
+
+                setContext(newContext);
+                return newContext;
+            },
+
+            async refreshContent() {
+                const res = await UniversimeApi.Capacity.getFolder({ reference: this.content.reference });
+                if (!res.success) return this;
+
+                const newContext = {
+                    ...this,
+                    content: res.body.folder,
+                };
+
+                setContext(newContext);
+                return newContext;
+            },
+
+            async refreshMaterials() {
+                const res = await UniversimeApi.Capacity.contentsInFolder({ reference: this.content.reference });
+                if (!res.success) return this;
+
+                const newContext = {
+                    ...this,
+                    materials: res.body.contents,
+                };
+
+                setContext(newContext);
+                return newContext;
             },
 
             editingSettings: undefined,

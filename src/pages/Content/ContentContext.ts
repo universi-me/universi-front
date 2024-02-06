@@ -19,7 +19,9 @@ export type ContentContextType = {
     materials: Content[];
     watchingProfile?: ProfileClass;
 
-    refreshMaterials(): void;
+    refreshAllData(): Promise<ContentContextType>;
+    refreshContent(): Promise<ContentContextType>;
+    refreshMaterials(): Promise<ContentContextType>;
 
     editingSettings: EditingSettings;
     setEditingSettings(set: EditingSettings): void;

@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { EMPTY_LIST_CLASS, GroupContext, ManageMaterial } from "@/pages/Group";
+import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
+import { ManageMaterial } from "@/components/ManageMaterial";
 import { ContentStatusEnum, type Content } from "@/types/Capacity";
 
 import "./GroupContentMaterials.less";

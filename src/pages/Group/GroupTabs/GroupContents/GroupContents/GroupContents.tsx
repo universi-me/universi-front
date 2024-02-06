@@ -3,8 +3,9 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext, ManageContent } from "@/pages/Group";
+import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext } from "@/pages/Group";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
+import { ManageContent } from "@/components/ManageContent";
 import { type OptionInMenu, renderOption, hasAvailableOption } from "@/utils/dropdownMenuUtils";
 
 import type { Folder } from "@/types/Capacity";
@@ -215,7 +216,10 @@ export function GroupContents() {
 
             <div className="content-list tab-list"> { makeContentList(groupContext.folders, filterContents) } </div>
 
-            <ManageContent />
+            {
+                groupContext.editContent !== undefined &&
+                <ManageContent content={groupContext.editContent} group={groupContext.group} afterSave={()=>{groupContext.setEditContent(undefined); groupContext.refreshData() }} />
+            }
             {
                 groupContext.assignFolder !== undefined
                 ?
