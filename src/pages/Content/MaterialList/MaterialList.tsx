@@ -5,7 +5,7 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { YouTubePlayerContext, type YouTubePlayerContextType } from "@/contexts/YouTube";
 import { ContentContext, type ContentContextType } from "@/pages/Content";
 import { MATERIAL_THUMB_FILE, MATERIAL_THUMB_LINK, MATERIAL_THUMB_VIDEO } from "@/utils/assets";
-import { getYouTubeVideoIdFromUrl } from "@/utils/regexUtils";
+import { getYouTubeVideoIdFromUrl, isAbsoluteUrl } from "@/utils/regexUtils";
 import { type OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdownMenuUtils";
 import { makeClassName } from "@/utils/tsxUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
@@ -41,6 +41,10 @@ type RenderMaterialProps = {
 function RenderMaterial(props: Readonly<RenderMaterialProps>) {
     const { material, contexts, beingWatched } = props;
     const { imageUrl, onInteract } = getMaterialVariantData(material, contexts.youTubePlayerContext);
+
+    const materialUrl = isAbsoluteUrl(material.url)
+        ? material.url
+        : "http://" + material.url;
 
     const OPTIONS_DEFINITION: OptionInMenu<Content>[] = [
         {
@@ -85,11 +89,11 @@ function RenderMaterial(props: Readonly<RenderMaterialProps>) {
             <i className={makeClassName("bi", material.status === "DONE" ? "bi-check-circle-fill" : "bi-check-circle")} />
         </button>
 
-        <a href={material.url} target="_blank" onClick={onInteract}>
+        <a href={materialUrl} target="_blank" onClick={onInteract}>
             <img src={imageUrl} className="material-item-thumb" alt="" />
         </a>
         <div className="material-item-data">
-            <a className="material-item-title" href={material.url} target="_blank" onClick={onInteract}>
+            <a className="material-item-title" href={materialUrl} target="_blank" onClick={onInteract}>
                 { material.title }
             </a>
 
