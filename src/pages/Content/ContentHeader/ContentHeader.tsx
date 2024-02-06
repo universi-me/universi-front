@@ -89,15 +89,21 @@ export function ContentHeader() {
             </div>
         }
         { context.editingSettings?.content &&
-            <ManageContent content={context.content} afterSave={afterSave} />
+            <ManageContent content={context.content} afterSave={afterSaveContent} />
         }
         { context.editingSettings?.material !== undefined &&
-            <ManageMaterial material={context.editingSettings.material} content={context.content} afterSave={afterSave} />
+            <ManageMaterial material={context.editingSettings.material} content={context.content} afterSave={afterSaveMaterials} />
         }
     </div>
 
-    function afterSave() {
+    function afterSaveContent() {
         context!.refreshContent().then(context => {
+            context.setEditingSettings(undefined);
+        });
+    }
+
+    function afterSaveMaterials() {
+        context!.refreshMaterials().then(context => {
             context.setEditingSettings(undefined);
         });
     }
