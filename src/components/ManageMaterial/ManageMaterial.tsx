@@ -1,103 +1,84 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { GroupContext } from "@/pages/Group";
 import UniversimeApi from "@/services/UniversimeApi";
-
-import type { Category, ContentType } from "@/types/Capacity";
-import "./ManageMaterial.less";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
-export type ManageMaterialProps = {
-    refreshMaterials: () => any;
-}
+import { AVAILABLE_MATERIAL_TYPES, MATERIAL_TYPES_TEXT, type Category, type Content, type Folder } from "@/types/Capacity";
+import "./ManageMaterial.less";
 
-const MAX_TITLE_LENGTH = 50;
-const MAX_DESC_LENGTH = 150;
-const MAX_URL_LENGTH = 100;
+export type ManageMaterialProps = {
+    /** A null `material` means a material is being created, while a value means
+     * an existing material is being edited.
+     */
+    material: Content | null;
+
+    /** The content the material will be added to when being created */
+    content?: Folder;
+
+    /** Callback executed after the material is saved */
+    afterSave?: () => any;
+}
 
 export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
-    const context = useContext(GroupContext);
+    const [material, setMaterial] = useState(props.material);
+    const [content, setContent] = useState(props.content);
 
-    const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
-    const fetchData = ()=>{
-        UniversimeApi.Capacity.categoryList()
-            .then(response => {
-                if (response.success && response.body) {
-                    setAvailableCategories(response.body.categories);
-                }
-            })
-    };
+    const [availableCategories, setAvailableCategories] = useState<Category[]>();
 
-    useEffect(()=>{
-        fetchData()
-    }, [])
+    useEffect(() => {
+        setMaterial(props.material);
+        setContent(props.content);
 
+        updateCategories();
+    }, [props]);
 
-    // prevent later checks
-    if (!context)
-        return null;
+    if (availableCategories === undefined) return null;
 
-    if (context.editMaterial === undefined)
-        return null;
+    const isNewMaterial = material === null;
+    const availableOptions = availableCategories.map(c => ({ label: c.name, value: c.id }));
 
-    function handleCreateOption(value:any){
-        return UniversimeApi.Capacity.createCategory({name: value, image: ""})
-        .then(createResponse =>{
-            if(createResponse.success){
-                return UniversimeApi.Capacity.categoryList()
-                .then(response =>{
-                    if (response.success && response.body) {
-                        setAvailableCategories(response.body.categories);
-
-                        const options = response.body.categories.map(t => ({ value: t.id, label: t.name }));
-                        return options;
-                    }
-                })
-            }
-        }) 
-    }
-
-    return <UniversiForm 
-
-            formTitle={context.editMaterial == null ? "Criar material" : "Editar material"}
+    return <UniversiForm
+            formTitle={ isNewMaterial ? "Criar material" : "Editar material"}
             objects={[
                 {
-                    DTOName: "title", label: "Nome do material", type: FormInputs.TEXT, value: context.editMaterial?.title, required: true
+                    DTOName: "title", label: "Nome do material", type: FormInputs.TEXT, value: material?.title, required: true
                 }, {
-                    DTOName: "description", label: "Descrição do material", type: FormInputs.LONG_TEXT, value: context.editMaterial?.description ?? "", required: false, charLimit: 200,
+                    DTOName: "description", label: "Descrição do material", type: FormInputs.LONG_TEXT, value: material?.description ?? "", required: false, charLimit: 200,
                 }, {
-                    DTOName: "rating", label: "Rating do material", type: FormInputs.HIDDEN, value: context.editMaterial ? context.editMaterial?.rating : 1
+                    DTOName: "rating", label: "Rating do material", type: FormInputs.HIDDEN, value: material ? material?.rating : 1
                 }, {
-                    DTOName: "url", label: "Link do material", type: FormInputs.URL, value: context.editMaterial?.url, required: true
+                    DTOName: "url", label: "Link do material", type: FormInputs.URL, value: material?.url, required: true
                 }, {
                     DTOName: "type", label: "Tipo do material", type: FormInputs.SELECT_SINGLE, 
-                    options: AVAILABLE_MATERIAL_TYPES.map(t => ({value: t, label: t})), required: false, 
-                    value: context.editMaterial?.type ? { value: context.editMaterial.type, label: context.editMaterial.type } : undefined,
+                    options: AVAILABLE_MATERIAL_TYPES.map(t => ({ label: MATERIAL_TYPES_TEXT[t], value: t })), required: false,
+                    value: material?.type ? { value: material.type, label: material.type } : undefined,
                 }, {
                     DTOName: "addCategoriesByIds", label: "Categorias", type: FormInputs.SELECT_MULTI, 
-                    value: context.editMaterial?.categories.map((t)=>({value: t.id, label: t.name})) ?? [],  
-                    options: availableCategories.map(t => ({value: t.id, label: t.name})), canCreate: true, onCreate: handleCreateOption
+                    value: material?.categories.map((t)=>({value: t.id, label: t.name})) ?? [],
+                    options: availableOptions, canCreate: true, onCreate: handleCreateOption
                 }, {
-                    DTOName: "addFoldersByIds", label: "", type: FormInputs.HIDDEN, value: context.editMaterial ? context.editMaterial?.folders.map(t=>(t.id)) : context.currentContent?.id
+                    DTOName: "addFoldersByIds", label: "", type: FormInputs.HIDDEN, value: material ? material?.folders.map(t=>(t.id)) : content?.id
                 }, {
-                    DTOName: "id", label: "", type: FormInputs.HIDDEN, value: context.editMaterial?.id
+                    DTOName: "id", label: "", type: FormInputs.HIDDEN, value: material?.id
                 }
-            ]}  requisition={context.editMaterial ? UniversimeApi.Capacity.editContent : UniversimeApi.Capacity.createContent}
-                callback={() => {context.setEditMaterial(undefined);  props.refreshMaterials()}}
-            ></UniversiForm>
+            ]}  requisition={ !isNewMaterial ? UniversimeApi.Capacity.editContent : UniversimeApi.Capacity.createContent}
+                callback={() => { props.afterSave?.(); }}
+    />
 
+    async function handleCreateOption(value: string){
+        const createResponse = await UniversimeApi.Capacity.createCategory({ name: value, image: "" });
+        if (!createResponse.success) return [];
+
+        const response = await updateCategories();
+        if (!response.success) return [];
+
+        return response.body.categories.map(t => ({ value: t.id, label: t.name }));
+    }
+
+    async function updateCategories() {
+        const res = await UniversimeApi.Capacity.categoryList();
+        if (res.success) setAvailableCategories(res.body.categories);
+
+        return res;
+    }
 }
-
-function getContentTypeIcon(type: ContentType) {
-    return type === "FILE" || type === "FOLDER" ? "file"
-        : type === "LINK" ? "link"
-        : type === "VIDEO" ? "video"
-        : "link";
-}
-
-
-const AVAILABLE_MATERIAL_TYPES: string[] = [
-    "LINK",
-    "VIDEO",
-    "FILE",
-];

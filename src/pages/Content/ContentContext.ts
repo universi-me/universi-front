@@ -4,12 +4,12 @@ import { type ProfileClass } from "@/types/Profile";
 
 type EditingSettings = {
     // Editing content
-    content: Folder;
+    content: true;
     material?: undefined;
 } | {
     // Editing material
-    content?: undefined;
-    material: Content;
+    content?: false;
+    material: Content | null;
 } |
     // Not editing anything
     undefined;

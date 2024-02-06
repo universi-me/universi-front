@@ -25,7 +25,7 @@ export type ManageContentProps = {
 };
 
 export function ManageContent(props: Readonly<ManageContentProps>) {
-    const [content, setContent] = useState<Folder | null>(props.content);
+    const [content, setContent] = useState(props.content);
     const [group, setGroup] = useState(props.group);
 
     const [availableCategories, setAvailableCategories] = useState<Category[]>();
@@ -41,8 +41,6 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
 
     const isNewContent = content === null;
     const availableOptions = availableCategories.map(c => ({ label: c.name, value: c.id }));
-
-    console.debug(availableOptions);
 
     return <UniversiForm
         formTitle = { isNewContent ? "Criar conteúdo" : "Editar conteúdo" }

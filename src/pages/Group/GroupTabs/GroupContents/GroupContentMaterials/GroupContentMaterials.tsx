@@ -68,7 +68,9 @@ export function GroupContentMaterials() {
             </div>
 
             <div className="material-list tab-list"> { makeMaterialsList(materials, filterMaterials) } </div>
-            <ManageMaterial refreshMaterials={refreshMaterials} />
+            { groupContext.editMaterial !== undefined &&
+                <ManageMaterial material={groupContext.editMaterial} content={groupContext.currentContent} afterSave={()=>{ refreshMaterials(); groupContext.setEditMaterial(undefined) }} />
+            }
         </section>
     );
 

@@ -1,19 +1,17 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { ContentContext } from "@/pages/Content";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { ManageContent } from "@/components/ManageContent";
+import { ManageMaterial } from "@/components/ManageMaterial";
 import { contentImageUrl } from "@/utils/apiUtils";
 
 import { ProfileClass } from "@/types/Profile";
-import type { Content } from "@/types/Capacity";
 import "./ContentHeader.less";
 
 export function ContentHeader() {
     const context = useContext(ContentContext);
-    const [editingContent, setEditingContent] = useState(false);
-    const [editingMaterial, setEditingMaterial] = useState<Content>();
 
     if (!context) return null;
 
@@ -74,18 +72,21 @@ export function ContentHeader() {
         </div>
         { context.content.canEdit &&
             <div id="content-admin-buttons">
-                <ActionButton name="Editar conteúdo" biIcon="bi-pencil-fill" buttonProps={{onClick(){setEditingContent(true)}}} />
-                <ActionButton name="Adicionar material" biIcon="bi-plus-circle-fill" />
+                <ActionButton name="Editar conteúdo" biIcon="bi-pencil-fill" buttonProps={{onClick(){context.setEditingSettings({content: true})}}} />
+                <ActionButton name="Adicionar material" biIcon="bi-plus-circle-fill" buttonProps={{onClick(){context.setEditingSettings({material: null})}}} />
             </div>
         }
-        { editingContent &&
-            <ManageContent content={context.content} afterSave={afterSaveContent} />
+        { context.editingSettings?.content &&
+            <ManageContent content={context.content} afterSave={afterSave} />
+        }
+        { context.editingSettings?.material !== undefined &&
+            <ManageMaterial material={context.editingSettings.material} content={context.content} afterSave={afterSave} />
         }
     </div>
 
-    function afterSaveContent() {
+    function afterSave() {
         context!.refreshContent().then(context => {
-            setEditingContent(false);
+            context.setEditingSettings(undefined);
         });
     }
 }

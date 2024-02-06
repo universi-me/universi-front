@@ -3,7 +3,7 @@ import Select from 'react-select';
 
 import { AuthContext } from '@/contexts/Auth';
 import UniversimeApi from '@/services/UniversimeApi';
-import { Category, Content, Folder, Types } from '@/types/Capacity';
+import { Category, Content, Folder, AVAILABLE_MATERIAL_TYPES } from '@/types/Capacity';
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import './ManagerCapacity.css';
@@ -13,7 +13,7 @@ const CrudTela: React.FC = () => {
   const [selectedContent, setSelectedContent] = useState<Content | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const contentTypes = Types;
+  const contentTypes = AVAILABLE_MATERIAL_TYPES;
   
 
   const [showEditModal, setShowEditModal] = useState(false);

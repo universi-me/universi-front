@@ -5,8 +5,14 @@ import { Profile } from "@/types/Profile";
 export type ContentStatusEnum = "VIEW" | "DONE" | "NOT_VIEWED"
 export type ContentStatus = {status : ContentStatusEnum, updatedAt: string}
 export type ContentType = "VIDEO" | "LINK" | "FOLDER" | "FILE";
-export const Types: ContentType[] = ["VIDEO", "LINK", "FOLDER", "FILE"];
 
+export const MATERIAL_TYPES_TEXT: {[k in ContentType]: string} = {
+    VIDEO:  "Vídeo",
+    LINK:   "Link",
+    FOLDER: "Pasta",
+    FILE:   "Arquivo",
+};
+export const AVAILABLE_MATERIAL_TYPES = Object.keys(MATERIAL_TYPES_TEXT) as ContentType[];
 
 export type Content = {
     id:                 string;
