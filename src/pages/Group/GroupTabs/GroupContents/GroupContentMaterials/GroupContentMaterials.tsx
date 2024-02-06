@@ -12,6 +12,8 @@ import { renderOption, type OptionInMenu, hasAvailableOption } from "@/utils/dro
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { Filter } from "@/components/Filter/Filter";
 import { YouTubePlayerContext } from "@/contexts/YouTube";
+import { makeClassName } from "@/utils/tsxUtils";
+import { getYouTubeVideoIdFromUrl } from "@/utils/regexUtils";
 
 export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
@@ -118,13 +120,16 @@ export function GroupContentMaterials() {
     }
 
     function renderMaterial(material: Content) {
-        const youTubeMatch = YOU_TUBE_MATCH.exec(material.url);
+        const youTubeVideoId = getYouTubeVideoIdFromUrl(material.url);
 
         return (
             <div className="material-item tab-item" key={material.id}>
+                <button type="button" className="change-status" onClick={()=>{handleCheckButton(material)}}>
+                    <i className={makeClassName("bi", material.status === "DONE" ? "bi-check-circle-fill" : "bi-check-circle")} />
+                </button>
                 {
-                    youTubeMatch !== null
-                        ? renderYouTubeEmbed(youTubeMatch, material)
+                    youTubeVideoId !== undefined
+                        ? renderYouTubeEmbed(youTubeVideoId, material)
                         :
                         <Link to={material.url} target="_blank" className="material-name icon-container">
                             {
@@ -141,9 +146,9 @@ export function GroupContentMaterials() {
                 }
                 <div className="info">
                 {
-                    youTubeMatch !== null
+                    youTubeVideoId !== null
                     ?
-                        <div className="material-name"   onClick={() => { const videoId = (youTubeMatch[1] ?? youTubeMatch[2]); if(!isMiniature || videoId!= playingVideo) youTubeContext.playMaterial(material)}}>
+                        <div className="material-name" onClick={() => { const videoId = youTubeVideoId; if(!isMiniature || videoId!= playingVideo) youTubeContext.playMaterial(material)}}>
                             {material.title}
                         </div>
                     :
@@ -172,9 +177,7 @@ export function GroupContentMaterials() {
         );
     }
 
-    function renderYouTubeEmbed(videoUrl: RegExpExecArray, material : Content) {
-        const videoId = videoUrl[1] ?? videoUrl[2];
-
+    function renderYouTubeEmbed(videoId: string, material : Content) {
         return (
             <div className="icon-container" id={`icon-container-${videoId}`} onClick={() => {if(!isMiniature || videoId != playingVideo) youTubeContext?.playMaterial(material)}}>
                 <img src="/assets/imgs/video.png" className="material-image"></img>
@@ -206,8 +209,14 @@ export function GroupContentMaterials() {
             }
         });
     }
+
+    function handleCheckButton(material: Content) {
+        const nextStatus: ContentStatusEnum = material.status === "DONE"
+            ? "VIEW"
+            : "DONE";
+
+        UniversimeApi.Capacity.editContentStatus({ contentId: material.id, contentStatusType: nextStatus }).then(res => {
+            if (res.success) refreshMaterials();
+        });
+    }
 }
-
-
-
-const YOU_TUBE_MATCH = /^(?:https:\/\/)?(?:(?:www\.youtube\.com\/watch\?v=([-A-Za-z0-9_]{11,}))|(?:youtu\.be\/([-A-Za-z0-9_]{11,})))/;

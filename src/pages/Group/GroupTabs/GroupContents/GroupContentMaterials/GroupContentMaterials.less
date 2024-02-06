@@ -40,7 +40,6 @@
             display: flex;
             flex-direction: row;
             justify-content: center;
-            margin-left: 1rem;
         }
         .material-item {
             display: flex;
@@ -56,6 +55,20 @@
 
             &:not(:last-of-type) {
                 margin-bottom: 1.5rem;
+            }
+
+            .change-status {
+                background-color: transparent;
+                border: none;
+
+                height: fit-content;
+                cursor: pointer;
+
+                margin-left: 1rem;
+
+                i.bi {
+                    font-size: 2rem;
+                }
             }
 
             .material-image {
