@@ -1,6 +1,7 @@
 export const IMG_UNIVERSI_LOGO =   "/assets/imgs/universi-me2.png";
 export const IMG_DCX_LOGO =        "/assets/imgs/dcx-png 1.png";
 export const IMG_DEFAULT_PROFILE = "/assets/imgs/default_avatar.png";
+export const IMG_DEFAULT_CONTENT = "/assets/imgs/default-content.png";
 
 export const ICON_CHEVRON_DOWN =     "/assets/icons/chevron-down-1.svg";
 export const ICON_CHEVRON_UP_BLACK = "/assets/icons/chevron-up-black.svg";
@@ -14,3 +15,7 @@ export const ICON_INSTAGRAM_BLACK = "/assets/icons/instagram-black.svg"
 export const ICON_INSTAGRAM_WHITE = "/assets/icons/instagram-white.svg"
 export const ICON_LINKEDIN_BLACK =  "/assets/icons/linkedin-black.svg"
 export const ICON_DELETE_BLACK = "/assets/icons/delete-black.svg"
+
+export const MATERIAL_THUMB_VIDEO = "/assets/imgs/video.png";
+export const MATERIAL_THUMB_LINK =  "/assets/imgs/link.png";
+export const MATERIAL_THUMB_FILE =  "/assets/imgs/file.png";

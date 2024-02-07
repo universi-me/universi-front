@@ -3,23 +3,27 @@ import { Link } from "react-router-dom";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { EMPTY_LIST_CLASS, GroupContext, ManageMaterial } from "@/pages/Group";
+import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
+import { ManageMaterial } from "@/components/ManageMaterial";
 import { ContentStatusEnum, type Content } from "@/types/Capacity";
 
 import "./GroupContentMaterials.less";
-import { VideoPopup } from "@/components/VideoPopup/VideoPopup";
-import { ContentStatusEdit_RequestDTO } from "@/services/UniversimeApi/Capacity";
 import { renderOption, type OptionInMenu, hasAvailableOption } from "@/utils/dropdownMenuUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { Filter } from "@/components/Filter/Filter";
+import { YouTubePlayerContext } from "@/contexts/YouTube";
+import { makeClassName } from "@/utils/tsxUtils";
+import { getYouTubeVideoIdFromUrl } from "@/utils/regexUtils";
 
 export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
+    const youTubeContext = useContext(YouTubePlayerContext);
+
+    const playingVideo = youTubeContext.currentVideoId;
+    const isMiniature = youTubeContext.playingInMiniature;
+
     const [materials, setMaterials] = useState<Content[]>();
     const [filterMaterials, setFilterMaterials] = useState<string>("");
-    const [playingVideo, setPlayingVideo] = useState("")
-    const [isMiniature, setIsMiniature] = useState(false)
-    const [currentVideoMaterial, setCurrentVideoMaterial] = useState<Content | null>(null)
 
 
     useEffect(() => {
@@ -66,14 +70,9 @@ export function GroupContentMaterials() {
             </div>
 
             <div className="material-list tab-list"> { makeMaterialsList(materials, filterMaterials) } </div>
-            <ManageMaterial refreshMaterials={refreshMaterials} />
-            {
-                currentVideoMaterial
-                ? <VideoPopup material={currentVideoMaterial} id={playingVideo} handleClose={handleVideoClose} handleWatched={(event) => handleWatchedButton(currentVideoMaterial, event)} handleMinimized={handleVideoClick}/>
-                : <></>
+            { groupContext.editMaterial !== undefined &&
+                <ManageMaterial material={groupContext.editMaterial} content={groupContext.currentContent} afterSave={()=>{ refreshMaterials(); groupContext.setEditMaterial(undefined) }} />
             }
-
-
         </section>
     );
 
@@ -121,13 +120,16 @@ export function GroupContentMaterials() {
     }
 
     function renderMaterial(material: Content) {
-        const youTubeMatch = YOU_TUBE_MATCH.exec(material.url);
+        const youTubeVideoId = getYouTubeVideoIdFromUrl(material.url);
 
         return (
             <div className="material-item tab-item" key={material.id}>
+                <button type="button" className="change-status" onClick={()=>{handleCheckButton(material)}}>
+                    <i className={makeClassName("bi", material.status === "DONE" ? "bi-check-circle-fill" : "bi-check-circle")} />
+                </button>
                 {
-                    youTubeMatch !== null
-                        ? renderYouTubeEmbed(youTubeMatch, material)
+                    youTubeVideoId !== undefined
+                        ? renderYouTubeEmbed(youTubeVideoId, material)
                         :
                         <Link to={material.url} target="_blank" className="material-name icon-container">
                             {
@@ -144,9 +146,9 @@ export function GroupContentMaterials() {
                 }
                 <div className="info">
                 {
-                    youTubeMatch !== null
+                    youTubeVideoId !== null
                     ?
-                        <div className="material-name"   onClick={() => { const videoId = (youTubeMatch[1] ?? youTubeMatch[2]); if(!isMiniature || videoId!= playingVideo) handleVideoClick(videoId, material)}}>
+                        <div className="material-name" onClick={() => { const videoId = youTubeVideoId; if(!isMiniature || videoId!= playingVideo) youTubeContext.playMaterial(material)}}>
                             {material.title}
                         </div>
                     :
@@ -175,119 +177,12 @@ export function GroupContentMaterials() {
         );
     }
 
-    function renderYouTubeEmbed(videoUrl: RegExpExecArray, material : Content) {
-        const videoId = videoUrl[1] ?? videoUrl[2];
-
+    function renderYouTubeEmbed(videoId: string, material : Content) {
         return (
-            <div className="icon-container" id={`icon-container-${videoId}`} onClick={() => {if(!isMiniature || videoId != playingVideo) handleVideoClick(videoId, material)}}>
+            <div className="icon-container" id={`icon-container-${videoId}`} onClick={() => {if(!isMiniature || videoId != playingVideo) youTubeContext?.playMaterial(material)}}>
                 <img src="/assets/imgs/video.png" className="material-image"></img>
             </div>
         )
-    }
-
-    async function handleWatchedButton(material : Content, event : any){
-
-        event.stopPropagation();
-
-        let nextStatus : ContentStatusEnum = material.contentStatus.status == "DONE"  ? "NOT_VIEWED" : "DONE"
-
-
-
-        await UniversimeApi.Capacity.createContentStatus({contentId : material.id});
-        await UniversimeApi.Capacity.editContentStatus({contentId: material.id, contentStatusType : nextStatus}).then(
-            (data : ContentStatusEdit_RequestDTO) => {
-                if(data.contentStatusType == "DONE" || data.contentStatusType == "NOT_VIEWED")
-                    material.contentStatus.status = data.contentStatusType
-            }
-        )
-
-        refreshMaterials()
-
-
-    }
-
-    function handleVideoClick(id : string, material : Content){
-        if(playingVideo == id){
-            if(document.getElementsByClassName("fullscreen"))
-                showMiniature(id)
-            else
-                expand(id)
-        }
-        else{
-            setIsMiniature(false)
-            setPlayingVideo(id)
-            setCurrentVideoMaterial(material);
-        }
-    }
-
-    function getVideoContainers() : {[key : string] : HTMLElement | null} {
-
-        let elements : {[key : string] : HTMLElement | null} = {};
-
-        let popupContainer = document.getElementById("popup-container")
-        let close = document.getElementById("close")
-        let iframeContainer = document.getElementById("iframe-container");
-        let videoContainer = document.getElementById("video-container");
-
-        elements.popupContainer = popupContainer;
-        elements.close = close;
-        elements.iframeContainer = iframeContainer;
-        elements.videoContainer = videoContainer;
-
-        return elements
-    }
-
-
-    function expand(id : string){
-
-        let containers = getVideoContainers()
-
-        containers.popupContainer?.classList.remove("mini-player")
-        containers.popupContainer?.classList.add("popup-container")
-        containers.iframeContainer?.classList.remove("mini-iframe")
-        containers.iframeContainer?.classList.add("iframe-container")
-        containers.videoContainer?.classList.add("fullscreen")
-
-
-        if(containers.close){
-            containers.close.innerHTML = "✖";
-            containers.close.onclick = () => { handleVideoClose}
-        }
-        setIsMiniature(false)
-
-
-    }
-
-    function showMiniature(id : string){
-
-        let containers = getVideoContainers()
-
-        containers.popupContainer?.classList.remove("popup-container")
-        containers.popupContainer?.classList.add("mini-player")
-        containers.iframeContainer?.classList.remove("iframe-container")
-        containers.iframeContainer?.classList.add("mini-iframe")
-        containers.videoContainer?.classList.remove("fullscreen")
-
-
-        if(containers.close){
-            containers.close.innerHTML = "&#x26F6;"
-            containers.close.onclick = () => { handleVideoClose}
-        }
-        setIsMiniature(true)
-
-    }
-
-    function handleVideoClose(id : string, symbol : string){
-
-        if(symbol == "✖"){
-            setPlayingVideo("")
-            setCurrentVideoMaterial(null)
-            setIsMiniature(false)
-            return
-        }
-        expand(id)
-
-
     }
 
     function handleDeleteMaterial(material: Content) {
@@ -314,8 +209,14 @@ export function GroupContentMaterials() {
             }
         });
     }
+
+    function handleCheckButton(material: Content) {
+        const nextStatus: ContentStatusEnum = material.status === "DONE"
+            ? "VIEW"
+            : "DONE";
+
+        UniversimeApi.Capacity.editContentStatus({ contentId: material.id, contentStatusType: nextStatus }).then(res => {
+            if (res.success) refreshMaterials();
+        });
+    }
 }
-
-
-
-const YOU_TUBE_MATCH = /^(?:https:\/\/)?(?:(?:www\.youtube\.com\/watch\?v=([-A-Za-z0-9_]{11,}))|(?:youtu\.be\/([-A-Za-z0-9_]{11,})))/;

@@ -13,4 +13,5 @@ export * from './ProfileContext'
 export * from './ProfileContentListing/ProfileContentListing'
 export * from './ProfileGroupListing/ProfileGroupListing'
 export * from './ProfileCurriculum/ProfileCurriculum'
+export * from './ProfileAssignedByMe/ProfileAssignedByMe'
 export * from "./loader";

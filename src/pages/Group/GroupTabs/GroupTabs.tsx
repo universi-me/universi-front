@@ -35,7 +35,8 @@ export  function GroupTabs(props: GroupTabsProps){
         const resData = await UniversimeApi.Group.join({groupId: context.group.id});
         if(resData.success) {
             setJoined(true)
-            context.refreshData();
+            auth.updateLoggedUser()
+                .then(() => context.refreshData())
         };
     }
 
@@ -46,7 +47,8 @@ export  function GroupTabs(props: GroupTabsProps){
         const resData = await UniversimeApi.Group.exit({groupId: context.group.id});
         if(resData.success) {
             setJoined(false)
-            context.refreshData();
+            auth.updateLoggedUser()
+                .then(() => context.refreshData())
         };
     }
 

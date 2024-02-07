@@ -8,7 +8,10 @@
     margin-bottom: 40px;
 }
 
-.select-element{
+.selection-bar .select-element {
+    background: transparent;
+    border: none;
+    color: var(--font-color-v1);
     padding: 20px 20px;
     border-right: solid 1px white ;
     font-size: large;
@@ -16,6 +19,6 @@
     cursor: pointer;
 }
 
-.select-element.current-tab {
+.selection-bar .select-element.current-tab {
     text-decoration: underline;
 }
