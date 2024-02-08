@@ -22,6 +22,7 @@ export function RolesPage() {
 
     const [participants, participantsDispatch] = useReducer(participantsReducer, data.success ? data.participants.map(ProfileClass.new) : undefined);
     const [filter, setFilter] = useState("");
+    const [changedParticipants, setChangedParticipants] = useState<ProfileClass[]>([])
 
     if (!participants) {
         SwalUtils.fireModal({
@@ -52,10 +53,43 @@ export function RolesPage() {
                 profileId: data.id,
                 setRole: role as UserAccessLevel,
             });
+
+            //lista de participantes que mudaram o role
+            let newChangedParticipants = changedParticipants.slice();
+
+            //participante com informações originais
+            const targetParticipant = participants.find(p=>p.id == data.id);
+
+            if(!targetParticipant || targetParticipant?.user.accessLevel == role as UserAccessLevel)
+                return;
+
+            // caso o participante já tenha uma edição pendente, ou seja, ele está ná lista
+            // de changedParticipants, essa variavel irá conter este usuário
+            // caso não exista, será null
+            const existingTargetParticipant = newChangedParticipants.find(p=>p.id == targetParticipant.id)
+
+
+            if (existingTargetParticipant != null){
+
+                existingTargetParticipant.user.accessLevel = role as UserAccessLevel
+
+                if(targetParticipant.user.accessLevel == role as UserAccessLevel){
+                    newChangedParticipants.splice(newChangedParticipants.indexOf(existingTargetParticipant), 1)
+                }
+            }
+            else{
+                const newParticipant = new ProfileClass(targetParticipant!)
+                newParticipant.user.accessLevel = role as UserAccessLevel
+                newChangedParticipants.push(newParticipant)
+            } 
+
+            setChangedParticipants(newChangedParticipants);
+
         },
     }));
 
-    const canSubmit = participants.filter(p => p.changed).length > 0;
+    // const canSubmit = participants.filter(p => p.changed).length > 0;
+    const canSubmit = changedParticipants.length > 0;
 
     return <div id="roles-settings">
         <SettingsTitle>Configurar administradores</SettingsTitle>
@@ -114,6 +148,7 @@ export function RolesPage() {
 
     async function refreshPage() {
         const response = await RolesPageFetch(auth.organization!.id);
+        console.log("RESPONSE: ", response)
         participantsDispatch({
             type: "SET_ALL",
             setParticipants: response.success ? response.participants.map(ProfileClass.new) : undefined,
@@ -124,10 +159,12 @@ export function RolesPage() {
         if (!participants)
             return;
 
-        const toUpdate = participants.filter(p => p.changed);
+        const toUpdate = changedParticipants
         const responses = await Promise.all(
             toUpdate.map(p => UniversimeApi.Admin.editAccount({ userId: p.user.id, authorityLevel: p.user.accessLevel }))
         );
+
+        setChangedParticipants([])
 
         refreshPage();
 
