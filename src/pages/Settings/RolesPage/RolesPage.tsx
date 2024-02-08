@@ -148,7 +148,6 @@ export function RolesPage() {
 
     async function refreshPage() {
         const response = await RolesPageFetch(auth.organization!.id);
-        console.log("RESPONSE: ", response)
         participantsDispatch({
             type: "SET_ALL",
             setParticipants: response.success ? response.participants.map(ProfileClass.new) : undefined,
