@@ -11,7 +11,7 @@ import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import { ProfileClass, type Profile } from "@/types/Profile";
-import { UserAccessLevelLabel, type UserAccessLevel, compareAccessLevel } from "@/types/User";
+import { UserAccessLevelLabel, type UserAccessLevel } from "@/types/User";
 import { type Optional } from "@/types/utils";
 import "./RolesPage.less";
 
@@ -20,9 +20,8 @@ export function RolesPage() {
     const navigate = useNavigate();
     const auth = useContext(AuthContext);
 
-    const [participants, participantsDispatch] = useReducer(participantsReducer, data.success ? data.participants.map(ProfileClass.new) : undefined);
+    const [participants, participantsDispatch] = useReducer(participantsReducer, data.success ? data.participants.map(p => new ProfileOnList(p)) : undefined);
     const [filter, setFilter] = useState("");
-    const [changedParticipants, setChangedParticipants] = useState<ProfileClass[]>([])
 
     if (!participants) {
         SwalUtils.fireModal({
@@ -35,15 +34,11 @@ export function RolesPage() {
         return null;
     }
 
+    const changedParticipants = participants.filter(p => p.changed);
+
     const filteredParticipants = participants
         .filter(p => p.firstname?.toLocaleLowerCase().includes(filter.toLocaleLowerCase()))
-        .sort((a, b) => {
-            if (a.user.accessLevel !== b.user.accessLevel) {
-                return compareAccessLevel(a.user.accessLevel!, b.user.accessLevel!);
-            }
-
-            return (a.fullname ?? "").localeCompare(b.fullname ?? "");
-        });
+        .sort(ProfileOnList.compare);
 
     const CHANGE_ROLE_OPTIONS: OptionInMenu<Profile>[] = Object.entries(UserAccessLevelLabel).map(([role, label]) => ({
         text: label,
@@ -53,42 +48,9 @@ export function RolesPage() {
                 profileId: data.id,
                 setRole: role as UserAccessLevel,
             });
-
-            //lista de participantes que mudaram o role
-            let newChangedParticipants = changedParticipants.slice();
-
-            //participante com informações originais
-            const targetParticipant = participants.find(p=>p.id == data.id);
-
-            if(!targetParticipant || targetParticipant?.user.accessLevel == role as UserAccessLevel)
-                return;
-
-            // caso o participante já tenha uma edição pendente, ou seja, ele está ná lista
-            // de changedParticipants, essa variavel irá conter este usuário
-            // caso não exista, será null
-            const existingTargetParticipant = newChangedParticipants.find(p=>p.id == targetParticipant.id)
-
-
-            if (existingTargetParticipant != null){
-
-                existingTargetParticipant.user.accessLevel = role as UserAccessLevel
-
-                if(targetParticipant.user.accessLevel == role as UserAccessLevel){
-                    newChangedParticipants.splice(newChangedParticipants.indexOf(existingTargetParticipant), 1)
-                }
-            }
-            else{
-                const newParticipant = new ProfileClass(targetParticipant!)
-                newParticipant.user.accessLevel = role as UserAccessLevel
-                newChangedParticipants.push(newParticipant)
-            } 
-
-            setChangedParticipants(newChangedParticipants);
-
         },
     }));
 
-    // const canSubmit = participants.filter(p => p.changed).length > 0;
     const canSubmit = changedParticipants.length > 0;
 
     return <div id="roles-settings">
@@ -102,6 +64,7 @@ export function RolesPage() {
         <section id="participants-list">
         { filteredParticipants.map(profile => {
             const isOwnProfile = auth.profile!.id === profile.id;
+            const roleLabel = UserAccessLevelLabel[profile.role];
 
             return <div className="profile-item" key={profile.id}>
                 <ProfileImage imageUrl={profile.imageUrl} className="profile-image" />
@@ -112,7 +75,7 @@ export function RolesPage() {
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild disabled={isOwnProfile} title={isOwnProfile ? "Você não pode alterar seu próprio nível de acesso" : undefined}>
                         <button type="button" className="set-role-trigger">
-                            { UserAccessLevelLabel[profile.user.accessLevel!] }
+                            { roleLabel }
                             <span className="bi"/>
                         </button>
                     </DropdownMenu.Trigger>
@@ -138,19 +101,17 @@ export function RolesPage() {
             if (p.id !== action.profileId)
                 return p;
 
-            const originalRole = data.participants
-                .find(p => p.id === action.profileId)!
-                .user.accessLevel!;
-
-            return new ProfileOnList(p, originalRole, action.setRole);
+            return new ProfileOnList(p, action.setRole);
         });
     }
 
-    async function refreshPage() {
+    async function refreshParticipants() {
         const response = await RolesPageFetch(auth.organization!.id);
         participantsDispatch({
             type: "SET_ALL",
-            setParticipants: response.success ? response.participants.map(ProfileClass.new) : undefined,
+            setParticipants: response.success
+                ? response.participants.map(p => new ProfileOnList(p))
+                : undefined,
         });
     }
 
@@ -158,14 +119,11 @@ export function RolesPage() {
         if (!participants)
             return;
 
-        const toUpdate = changedParticipants
         const responses = await Promise.all(
-            toUpdate.map(p => UniversimeApi.Admin.editAccount({ userId: p.user.id, authorityLevel: p.user.accessLevel }))
+            changedParticipants.map(p => UniversimeApi.Admin.editAccount({ userId: p.user.id, authorityLevel: p.role }))
         );
 
-        setChangedParticipants([])
-
-        refreshPage();
+        refreshParticipants();
 
         const failedChanges = responses.filter(r => !r.success);
         if (failedChanges.length === 0)
@@ -183,14 +141,25 @@ export function RolesPage() {
 }
 
 class ProfileOnList extends ProfileClass {
-    public changed?: true;
+    public newRole?: UserAccessLevel;
 
-    constructor(profile: Profile, originalRole: UserAccessLevel, newRole: UserAccessLevel) {
+    /**
+     * Returns the current role of the profile, which can be the modified before saving or the original
+     */
+    get role() {
+        return this.newRole ?? this.user.accessLevel!;
+    }
+
+    /**
+     * Returns true if the profile has a new role and it's different from the original role
+     */
+    get changed() {
+        return this.newRole && this.newRole !== this.user.accessLevel;
+    }
+
+    constructor(profile: Profile, newRole?: UserAccessLevel) {
         super(profile);
-        this.user.accessLevel = newRole;
-        this.changed = originalRole === newRole
-            ? true
-            : undefined;
+        this.newRole = newRole;
     }
 }
 

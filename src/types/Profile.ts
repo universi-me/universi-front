@@ -1,4 +1,4 @@
-import type { User } from "@/types/User";
+import { compareAccessLevel, type User } from "@/types/User";
 import { type Nullable } from "@/types/utils";
 import { IMG_DEFAULT_PROFILE } from "@/utils/assets";
 import { Competence } from "./Competence";
@@ -100,6 +100,19 @@ export class ProfileClass implements Profile {
      */
     public static new(profile: Profile) {
         return new ProfileClass(profile);
+    }
+
+    /**
+     * Compares two profiles to determine sorted order
+     */
+    public static compare(a: ProfileClass, b: ProfileClass) {
+        const aLevel = a.user.accessLevel;
+        const bLevel = b.user.accessLevel;
+
+        if (aLevel && bLevel && aLevel !== bLevel)
+            return compareAccessLevel(aLevel, bLevel);
+
+        return (a.fullname ?? "").localeCompare(b.fullname ?? "");
     }
 
     /* Profile type getters and setters */
