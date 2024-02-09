@@ -92,6 +92,7 @@ function SelectPeople(){
                         <legend>Pessoas</legend>
                         <div id="assign-content-to-profile">
                             { [...groupContext.participants]
+                                .filter(a => !a.user.needProfile)
                                 .sort((a, b) => a.fullname!.localeCompare(b.fullname!))
                                 .map(p => {
                                 const isSelected = !!selectedProfiles.find(i => i.id === p.id);
