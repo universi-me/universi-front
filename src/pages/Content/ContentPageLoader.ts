@@ -9,6 +9,8 @@ export type ContentPageLoaderSuccess = {
     content: Folder;
     materials: Content[];
     beingWatched?: ProfileClass;
+
+    reasons?: string[];
 }
 
 export type ContentPageLoaderFail = {
