@@ -8,7 +8,7 @@ ENV VITE_UNIVERSIME_API /api
 
 COPY . /opt/app
 
-RUN npm install --include=dev --prefer-offline --no-audit --progress=false
+RUN npm ci
 
 RUN npm run build
 
