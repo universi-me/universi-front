@@ -1,12 +1,10 @@
-FROM node:18-alpine
+FROM node:latest
 
 WORKDIR /opt/app
 
-ENV NODE_ENV production
-
 ENV VITE_UNIVERSIME_API /api
 
-COPY . /opt/app
+COPY . .
 
 RUN npm ci
 
