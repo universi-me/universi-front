@@ -90,21 +90,19 @@ export function GroupPeople() {
             <div id="advanced-search" className="advanced-search">
                 <Select
                     options={competenceTypeOptions}
-                    value={{value: currentCompetence?.typeId?.toString(), label: currentCompetence?.label}}
+                    value={{value: currentCompetence?.typeId?.toString(), label : currentCompetence?.label}}
                     onChange={(option)=>{
                         if(!option || !option.value) return
-                        let currentCompetence_old : competenceSearch;
-                        if(currentCompetence){
-                            currentCompetence_old = currentCompetence
-                            currentCompetence_old.typeId = option.value
-                            currentCompetence_old.label = option.label
+                        let newCompetence : competenceSearch;
+                        newCompetence = {
+                            typeId: option.value,
+                            label: option.label
                         }
-                        else
-                            currentCompetence_old = {
-                                typeId: option.value,
-                                label: option.label
-                            }
-                        setCurrentCompetence(currentCompetence_old)
+
+                        if(currentCompetence)
+                            newCompetence.level = currentCompetence.level
+
+                        setCurrentCompetence(newCompetence)
                     }}
                     placeholder={"nome da competência"}
                 />
