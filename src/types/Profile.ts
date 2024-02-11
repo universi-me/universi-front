@@ -72,6 +72,15 @@ export class ProfileClass implements Profile {
     }
 
     /**
+     * Returns `true` if this person's name includes `search`, ignoring name and `search` casing.
+     */
+    nameIncludesIgnoreCase(search: string): boolean {
+        return this.fullname === null
+            ? false
+            : this.fullname.toLowerCase().includes(search.toLowerCase());
+    }
+
+    /**
      * Separates a full name into a first name and a last name.
      *
      * @param {string} fullname The full name to be separated.
