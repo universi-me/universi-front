@@ -1,3 +1,5 @@
+@import url(/src/layouts/spacing.less);
+
 .universi-modal {
     position: fixed;
     top: 0;
@@ -19,8 +21,8 @@
         position: fixed;
         margin: auto;
 
-        max-height: 95vh;
-        max-width: 95vw;
+        max-height: @modal-max-height;
+        max-width: @modal-max-width;
         overflow: auto;
     }
 }

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useMemo, useReducer, useState } from "react";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import UniversimeApi from "@/services/UniversimeApi";
@@ -20,9 +20,17 @@ import { arrayRemoveEquals } from "@/utils/arrayUtils";
 
 function SelectPeople(){
     const groupContext = useContext(GroupContext)
+    const authContext = useContext(AuthContext)
 
     const [currentlyAssigned, setCurrentlyAssigned] = useState<ProfileClass[]>([]);
     const [selectedProfiles, selectedProfilesDispatch] = useReducer(selectProfileReducer, []);
+    const [filterName, setFilterName] = useState("");
+
+    const possibleAssignments = useMemo(() => {
+        return [...groupContext?.participants ?? []]
+            .filter(a => !a.user.needProfile && a.user.name !== authContext.profile?.user.name)
+            .sort((a, b) => a.fullname!.localeCompare(b.fullname!));
+    }, [groupContext?.participants, authContext.profile]);
 
     useEffect(() => {
         if (!groupContext?.assignFolder) return;
@@ -44,6 +52,9 @@ function SelectPeople(){
     const unassignedTo = arrayRemoveEquals(currentlyAssigned, selectedProfiles, (a, b) => a.id === b.id);
 
     const canSave = assignedTo.length > 0 || unassignedTo.length > 0;
+
+    const shownParticipants = possibleAssignments
+        .filter(a => a.nameIncludesIgnoreCase(filterName));
 
     async function makeRequest(){
         if(groupContext?.assignFolder == undefined)
@@ -78,9 +89,16 @@ function SelectPeople(){
         }
     }
 
+    function handleAssignToAll() {
+        if (selectedProfiles.length === possibleAssignments.length)
+            selectedProfilesDispatch({action: "SET", to: []})
+        else
+            selectedProfilesDispatch({ action: "SET", to: possibleAssignments })
+    }
+
     return(
         <UniversiModal>
-            <div id="universi-form-container">
+            <div id="universi-form-container" className="assign-content-modal" >
                 <div className="universi-form-container fields">
 
                     <div className="header">
@@ -89,11 +107,12 @@ function SelectPeople(){
                     </div>
 
                     <fieldset>
-                        <legend>Pessoas</legend>
+                        <div className="legend-wrapper">
+                            <legend>Pessoas</legend>
+                            <Filter setter={setFilterName} placeholderMessage="Pesquisar por alguém..." />
+                        </div>
                         <div id="assign-content-to-profile">
-                            { [...groupContext.participants]
-                                .filter(a => !a.user.needProfile)
-                                .sort((a, b) => a.fullname!.localeCompare(b.fullname!))
+                            { shownParticipants.length > 0 ? shownParticipants
                                 .map(p => {
                                 const isSelected = !!selectedProfiles.find(i => i.id === p.id);
 
@@ -106,30 +125,18 @@ function SelectPeople(){
                                         <i className={makeClassName("bi", isSelected ? "bi-check-circle-fill" : "bi-check-circle")} />
                                     </button>
                                 </div>
-                            }) }
+                            }) : <p>{ possibleAssignments.length > 0 ? "Nenhum participante encontrado nessa busca" : "Nenhum participante no grupo" }</p> }
                         </div>
                     </fieldset>
                     <section className="operation-buttons">
-                        <button type="button" className="submit-button"
-                        style={{width: "auto", padding: "0.75rem"}}
-                        onClick={()=>{
-                            selectedProfiles.length == groupContext.participants.length?
-                            selectedProfilesDispatch({action: "SET", to: []})
-                            : 
-                            selectedProfilesDispatch({ action: "SET", to: groupContext!.participants.map(ProfileClass.new) })
-                        }}>
-                            Todas as pessoas do grupo
+                        <button type="button" className="submit-button" style={{width: "fit-content", padding: "0.75rem"}} onClick={handleAssignToAll}>
+                            <i className="bi bi-people-fill"/> Todas as pessoas do grupo
                         </button>
-                    </section>
-
-                    <section className="operation-buttons">
                         <button type="button" className="cancel-button" onClick={() => groupContext?.setAssignFolder(undefined)}>
-                            <i className="bi bi-x-circle-fill" />
-                            Cancelar
+                            <i className="bi bi-x-circle-fill" /> Cancelar
                         </button>
                         <button type="button" className="submit-button" onClick={makeRequest} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
-                            <i className="bi bi-check-circle-fill" />
-                            Salvar
+                            <i className="bi bi-check-circle-fill" /> Salvar
                         </button>
                     </section>
                 </div>
