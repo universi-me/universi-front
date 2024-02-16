@@ -1,6 +1,8 @@
 @import url(/src/layouts/colors.less);
 @import url(/src/layouts/fonts.less);
 @import url(/src/layouts/border-radius.less);
+@import url(/src/layouts/spacing.less);
+
 .image-wrapper {
     display: flex;
     flex-direction: row;
@@ -71,8 +73,8 @@
 
     box-sizing: 0px 4px 4px 0px rgba(0, 0, 0, 0.50);
 
-    @header-padding: 1rem;
-    @header-image-size: 3rem;
+    @header-padding: @universiform-header-padding;
+    @header-image-size: @universiform-header-image-size;
 
     .header {
         display: flex;
@@ -99,7 +101,7 @@
     }
 
     .universi-form-container.fields {
-        max-height: calc(90vh - (@header-padding * 2) - @header-image-size);
+        max-height: @universiform-max-height;
         overflow: auto;
 
         .url-wrapper {

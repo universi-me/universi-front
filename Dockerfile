@@ -1,11 +1,15 @@
 FROM node:18-alpine
 
+WORKDIR /opt/app
+
 ENV NODE_ENV production
 
-ARG REACT_BUILD_FILES=./
+ENV VITE_UNIVERSIME_API /api
 
-COPY ${REACT_BUILD_FILES} /
+COPY . /opt/app
 
-RUN npm install --include=dev
+RUN npm install --include=dev --prefer-offline --no-audit --progress=false
+
+RUN npm run build
 
 ENTRYPOINT ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "8088"]

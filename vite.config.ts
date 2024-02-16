@@ -9,6 +9,5 @@ export default defineConfig({
     react(),
     viteTsConfigPaths(),
     vitePluginRewriteAll()
-  ],
-  base: './'
+  ]
 })

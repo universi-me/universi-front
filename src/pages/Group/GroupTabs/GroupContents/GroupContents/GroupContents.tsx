@@ -1,11 +1,12 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useMemo, useReducer, useState } from "react";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import UniversimeApi from "@/services/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext, ManageContent } from "@/pages/Group";
+import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext } from "@/pages/Group";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
-import { type OptionInMenu, renderOption, hasAvailableOption } from "@/utils/dropdownMenuUtils"
+import { ManageContent } from "@/components/ManageContent";
+import { type OptionInMenu, renderOption, hasAvailableOption } from "@/utils/dropdownMenuUtils";
 
 import type { Folder } from "@/types/Capacity";
 import "./GroupContents.less";
@@ -13,27 +14,91 @@ import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { AuthContext } from "@/contexts/Auth";
 import { UniversiModal } from "@/components/UniversiModal";
-import Select, { MultiValue } from "react-select"
+import { ProfileClass } from "@/types/Profile";
+import { makeClassName } from "@/utils/tsxUtils";
+import { arrayRemoveEquals } from "@/utils/arrayUtils";
 
 function SelectPeople(){
-
-    const [selectedPeople, setSelectedPeople] = useState<{value: string, label: string}[] | null>(null)
     const groupContext = useContext(GroupContext)
+    const authContext = useContext(AuthContext)
 
-    function makeRequest(){
-        if(groupContext?.assignFolder == undefined || selectedPeople == undefined)
+    const [currentlyAssigned, setCurrentlyAssigned] = useState<ProfileClass[]>([]);
+    const [selectedProfiles, selectedProfilesDispatch] = useReducer(selectProfileReducer, []);
+    const [filterName, setFilterName] = useState("");
+
+    const possibleAssignments = useMemo(() => {
+        return [...groupContext?.participants ?? []]
+            .filter(a => !a.user.needProfile && a.user.name !== authContext.profile?.user.name)
+            .sort((a, b) => a.fullname!.localeCompare(b.fullname!));
+    }, [groupContext?.participants, authContext.profile]);
+
+    useEffect(() => {
+        if (!groupContext?.assignFolder) return;
+
+        UniversimeApi.Capacity.folderAssignedTo({ reference: groupContext.assignFolder.reference })
+            .then((res) => { setCurrentlyAssigned(res.body?.profilesIds.map(ProfileClass.new) ?? []) });
+    }, [groupContext?.assignFolder]);
+
+    useEffect(() => {
+        selectedProfilesDispatch({
+            action: "SET",
+            to: currentlyAssigned.map(ProfileClass.new),
+        });
+    }, [currentlyAssigned]);
+
+    if (!groupContext?.assignFolder) return null;
+
+    const assignedTo = arrayRemoveEquals(selectedProfiles, currentlyAssigned, (a, b) => a.id === b.id);
+    const unassignedTo = arrayRemoveEquals(currentlyAssigned, selectedProfiles, (a, b) => a.id === b.id);
+
+    const canSave = assignedTo.length > 0 || unassignedTo.length > 0;
+
+    const shownParticipants = possibleAssignments
+        .filter(a => a.nameIncludesIgnoreCase(filterName));
+
+    async function makeRequest(){
+        if(groupContext?.assignFolder == undefined)
             return;
-        UniversimeApi.Capacity.assignContent({folderId: groupContext?.assignFolder?.id, profilesIds: selectedPeople?.map((p)=>(p.value))})
-        groupContext.setAssignFolder(undefined)
+
+        if (assignedTo.length) {
+            await UniversimeApi.Capacity.assignContent({
+                folderId: groupContext.assignFolder.id,
+                profilesIds: assignedTo.map(p => p.id),
+            });
+        }
+
+        if (unassignedTo.length) {
+            UniversimeApi.Capacity.unassignContent({
+                folderId: groupContext.assignFolder.id,
+                profilesIds: unassignedTo.map(p => p.id),
+            })
+        }
+
+        groupContext.setAssignFolder(undefined);
+        groupContext.refreshData();
     }
 
-    function handleAssignChange(option : MultiValue<{value : string, label : string}>){
-        setSelectedPeople(option.map(({value, label}) => ({value, label})));
+    function selectProfileReducer(state: ProfileClass[], action: SelectProfileAction): ProfileClass[] {
+        switch (action.action) {
+            case "ADD":
+                return state.concat([action.profile]);
+            case "REMOVE":
+                return state.filter(p => p.id !== action.profile.id);
+            case "SET":
+                return action.to;
+        }
+    }
+
+    function handleAssignToAll() {
+        if (selectedProfiles.length === possibleAssignments.length)
+            selectedProfilesDispatch({action: "SET", to: []})
+        else
+            selectedProfilesDispatch({ action: "SET", to: possibleAssignments })
     }
 
     return(
         <UniversiModal>
-            <div id="universi-form-container">
+            <div id="universi-form-container" className="assign-content-modal" >
                 <div className="universi-form-container fields">
 
                     <div className="header">
@@ -42,34 +107,36 @@ function SelectPeople(){
                     </div>
 
                     <fieldset>
-                        <legend>Pessoas</legend>
-                        <Select
-                            isMulti
-                            name="pessoas"
-                            options={groupContext?.participants.map((t)=>({value: t.id, label: t.firstname+" "+t.lastname}))}
-                            className="category-select"
-                            value={selectedPeople}
-                            onChange={(option)=>{handleAssignChange(option)}}
-                        />
+                        <div className="legend-wrapper">
+                            <legend>Pessoas</legend>
+                            <Filter setter={setFilterName} placeholderMessage="Pesquisar por alguém..." />
+                        </div>
+                        <div id="assign-content-to-profile">
+                            { shownParticipants.length > 0 ? shownParticipants
+                                .map(p => {
+                                const isSelected = !!selectedProfiles.find(i => i.id === p.id);
+
+                                return <div className="participant-item" key={p.id}>
+                                    <img src={p.imageUrl} alt="" className="profile-picture" />
+                                    <div className="profile-data">
+                                        <h2 className="profile-name">{ p.fullname }</h2>
+                                    </div>
+                                    <button className="assign-profile" onClick={() => { selectedProfilesDispatch({ action: isSelected ? "REMOVE" : "ADD", profile: p }) }}>
+                                        <i className={makeClassName("bi", isSelected ? "bi-check-circle-fill" : "bi-check-circle")} />
+                                    </button>
+                                </div>
+                            }) : <p>{ possibleAssignments.length > 0 ? "Nenhum participante encontrado nessa busca" : "Nenhum participante no grupo" }</p> }
+                        </div>
                     </fieldset>
                     <section className="operation-buttons">
-                        <button type="button" className="submit-button"
-                        style={{width: "auto", padding: "0.75rem"}}
-                        onClick={()=>{
-                            setSelectedPeople(groupContext?.participants.map((p)=>({value: p.id, label: p.firstname+" "+p.lastname})) ?? null)
-                        }}>
-                            Todas as pessoas do grupo
+                        <button type="button" className="submit-button" style={{width: "fit-content", padding: "0.75rem"}} onClick={handleAssignToAll}>
+                            <i className="bi bi-people-fill"/> Todas as pessoas do grupo
                         </button>
-                    </section>
-
-                    <section className="operation-buttons">
                         <button type="button" className="cancel-button" onClick={() => groupContext?.setAssignFolder(undefined)}>
-                            <i className="bi bi-x-circle-fill" />
-                            Cancelar
+                            <i className="bi bi-x-circle-fill" /> Cancelar
                         </button>
-                        <button type="button" className="submit-button" onClick={makeRequest} disabled={selectedPeople==undefined} title={selectedPeople==undefined ? undefined : "Preencha os dados antes de salvar"}>
-                            <i className="bi bi-check-circle-fill" />
-                            Salvar
+                        <button type="button" className="submit-button" onClick={makeRequest} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
+                            <i className="bi bi-check-circle-fill" /> Salvar
                         </button>
                     </section>
                 </div>
@@ -112,6 +179,28 @@ export function GroupContents() {
             }
         },
         {
+            text: "Favoritar",
+            biIcon: "star-fill",
+            onSelect(data) {
+                UniversimeApi.Capacity.favoriteFolder({ folderId: data.id })
+                .then(res => {res.success && groupContext.refreshData()});
+            },
+            hidden(data) {
+                return !!data.favorite;
+            },
+        },
+        {
+            text: "Desfavoritar",
+            biIcon: "star-half",
+            hidden(data) {
+                return !data.favorite;
+            },
+            onSelect(data) {
+                UniversimeApi.Capacity.unfavoriteFolder({ folderId: data.id })
+                .then(res => {res.success && groupContext.refreshData()});
+            },
+        },
+        {
             text: "Excluir",
             biIcon: "trash-fill",
             className: "delete",
@@ -138,7 +227,10 @@ export function GroupContents() {
 
             <div className="content-list tab-list"> { makeContentList(groupContext.folders, filterContents) } </div>
 
-            <ManageContent />
+            {
+                groupContext.editContent !== undefined &&
+                <ManageContent content={groupContext.editContent} group={groupContext.group} afterSave={()=>{groupContext.setEditContent(undefined); groupContext.refreshData() }} />
+            }
             {
                 groupContext.assignFolder !== undefined
                 ?
@@ -237,3 +329,11 @@ export function GroupContents() {
         });
     }
 }
+
+type SelectProfileAction = {
+    action: "ADD" | "REMOVE";
+    profile: ProfileClass;
+} | {
+    action: "SET";
+    to: ProfileClass[];
+};

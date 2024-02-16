@@ -1,17 +1,17 @@
 import { Folder } from "@/types/Capacity";
-import './ProfileContentItem.css'
 import { Link } from "react-router-dom";
+import { contentImageUrl } from "@/utils/apiUtils";
+import './ProfileContentItem.less'
 
-export function ProfileContentItem({content} : {content : Folder}){
+export type ProfileContentItemProps = {
+    content: Folder;
+};
 
+export function ProfileContentItem({content} : Readonly<ProfileContentItemProps>){
     return(
-
-        <div className="profile-content">
-            <Link to={`/capacitacao/folder/${content.id}`}>
-                <img src={content.image ?? undefined} className="profile-content-thumbnail"/>
-            </Link>
+        <Link className="profile-content" to={`/content/${content.reference}`}>
+            <img src={contentImageUrl(content)} className="profile-content-thumbnail" alt=""/>
             <p className="profile-content-title">{content.name}</p>
-        </div>
+        </Link>
     )
-
 }
