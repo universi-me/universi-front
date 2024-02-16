@@ -14,6 +14,7 @@ import { TextValidation } from "@/components/UniversiForm/Validation/TextValidat
 import UniversimeApi from "@/services/UniversimeApi";
 import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdownMenuUtils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
 
 export function GroupGroups() {
@@ -34,8 +35,36 @@ export function GroupGroups() {
             hidden() {
                 return !(groupContext.group.canEdit);
             },
+        },
+        {
+            text: "Excluir",
+            biIcon: "trash",
+            onSelect(data) {
+                handleRemoveGroup(data);
+            },
+            hidden(){
+                return !(groupContext.group.canEdit);
+            }
         }
     ];
+
+    function handleRemoveGroup(group : Group){
+        let groupParentPath = group.path.substring(0, group.path.lastIndexOf("/"))
+        SwalUtils.fireModal({
+                title: "Deseja remover este grupo?",
+                text: "Esta ação é irreversível.",
+
+                showCancelButton: true,
+                cancelButtonText: "Cancelar",
+                confirmButtonText: "Ok",
+                confirmButtonColor: "var(--wrong-invalid-color)"
+        }).then(response =>{
+            if(response.isConfirmed){
+                UniversimeApi.Group.remove({groupPath: groupParentPath, groupIdRemove: group.id});
+                groupContext?.refreshData();
+            }
+        })
+    }
 
     const groupTypes = [
         ["INSTITUTION", "Instituição"],

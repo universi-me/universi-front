@@ -36,6 +36,13 @@ export type GroupUpdate_RequestDTO = {
     everyoneCanPost?: boolean;
 };
 
+export type GroupRemove_RequestDTO = {
+    groupId?:       string;
+    groupPath?:     string;
+    groupIdRemove:  string;
+}
+
+
 export type GroupIdOrPath_RequestDTO = {
     groupId?:   string;
     groupPath?: string;
@@ -119,6 +126,10 @@ export async function update(body: GroupUpdate_RequestDTO) {
         canEnter:        body.canJoin,
         everyoneCanPost: body.everyoneCanPost,
     })).data;
+}
+
+export async function remove(body: GroupRemove_RequestDTO) {
+    return (await api.post("/group/remove", body))
 }
 
 export async function availableParents() {
