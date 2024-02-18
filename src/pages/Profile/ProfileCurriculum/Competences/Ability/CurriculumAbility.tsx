@@ -1,23 +1,21 @@
 import { useContext, MouseEvent, useState } from 'react';
-import { CompetencesSettings, ProfileContext } from '@/pages/Profile';
-import { UniversiModal } from '@/components/UniversiModal';
-import { Competence, Level, LevelToLabel} from '@/types/Competence';
-import { ICON_DELETE_BLACK, ICON_EDIT_BLACK } from '@/utils/assets';
+import { ProfileContext } from '@/pages/Profile';
+import { Competence, Level, LevelToLabel } from '@/types/Competence';
+import { ICON_DELETE_BLACK } from '@/utils/assets';
 import './CurriculumAbility.css';
 import UniversimeApi from '@/services/UniversimeApi';
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 export function CurriculumAbility() {
   const profileContext = useContext(ProfileContext);
+  const [isEditing, setIsEditing] = useState(false);
 
   if (profileContext === null) {
     return null;
   }
 
   const sortedCompetences = [...profileContext.profileListData.competences]
-    .sort((c1, c2) => new Date(c1.creationDate).getTime() - new Date(c2.creationDate).getTime());
-
-  const [isEditing, setIsEditing] = useState(false);
+    .sort((c1, c2) => c1.competenceType.name.localeCompare(c2.competenceType.name));
 
   const toggleEditing = () => {
     setIsEditing((prevEditing) => !prevEditing);
@@ -97,8 +95,11 @@ export function CurriculumAbility() {
                             return (
                                 <div className="competence-item" key={competence.id}>
 
-                                <div className="competece-initial">
+                                <div className="competence-initial" title={ competence.competenceType.reviewed ? undefined : "Esta competência não foi revisada por um administrador e não é visível publicamente" }>
                                     <h4 className="competence-type">{competence.competenceType.name}</h4>
+                                    { competence.competenceType.reviewed ||
+                                        <i className="bi bi-exclamation-diamond-fill unreviewed-competence-warning"/>
+                                    }
                                 </div>
                                 <div className="level-container">
                                     <h2 className="level-label">{(LevelToLabel)[competence.level]}</h2>

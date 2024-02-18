@@ -74,11 +74,22 @@
     margin-bottom: 0.95em;
 }
 
+#item-competence .competence .competence-list .competence-item .competence-initial {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 #item-competence .competence .competence-list .competence-item .competence-type {
     font-size: 0.95rem;
     margin-right: .5em;
     text-transform: uppercase;
     font-weight: var(--font-weight-bold);
+}
+
+#item-competence .competence .competence-list .competence-item .unreviewed-competence-warning {
+    color: var(--warning-color);
+    font-size: 1.25em;
 }
 
 #item-competence .competence .competence-list .competence-item .icon {

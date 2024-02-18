@@ -1,4 +1,4 @@
-import type { Competence } from "@/types/Competence";
+import type { Competence, CompetenceType } from "@/types/Competence";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
 
@@ -20,7 +20,7 @@ export type CompetenceId_RequestDTO = {
 };
 
 export type CompetenceGet_ResponseDTO =    ApiResponse<{ competencia: Competence }>;
-export type CompetenceCreate_ResponseDTO = ApiResponse;
+export type CompetenceCreate_ResponseDTO = ApiResponse<{ competenceType: CompetenceType }>;
 export type CompetenceUpdate_ResponseDTO = ApiResponse;
 export type CompetenceRemove_ResponseDTO = ApiResponse;
 export type CompetenceList_ResponseDTO =   ApiResponse<{ lista: Competence[] }>;

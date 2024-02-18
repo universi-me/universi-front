@@ -16,6 +16,7 @@ export type Competence = {
 export type CompetenceType = {
     id:   string;
     name: string;
+    reviewed: boolean;
 };
 
 
