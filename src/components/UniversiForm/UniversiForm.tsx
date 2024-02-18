@@ -12,6 +12,7 @@ import { makeClassName } from "@/utils/tsxUtils"
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
+import { stringEqualsIgnoreCase } from "@/utils/stringUtils"
 
 export type cancelPopup = {
     confirmCancel? : boolean,
@@ -438,7 +439,10 @@ export function UniversiForm(props : formProps){
 
                 // select created value in options preserving selected values
                 for(const option of options) {
-                    if(option.label == inputValue) {
+                    const label = option?.label;
+                    if (typeof label !== "string") continue;
+
+                    if(stringEqualsIgnoreCase(label, inputValue)) {
                         handleSelectChange(index, object.type === FormInputs.SELECT_MULTI ? [...values, option] : option)
                         break
                     }
