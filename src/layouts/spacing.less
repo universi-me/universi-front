@@ -1,9 +1,18 @@
 @top-page-margin: 4rem;
 @left-page-padding: 5%;
 
-:root{
+@modal-max-height: 95vh;
+@modal-max-width: 95vw;
 
+@universiform-header-padding: 1rem;
+@universiform-header-image-size: 3rem;
+@universiform-max-height: calc(@modal-max-height - (@universiform-header-padding * 2) - @universiform-header-image-size);
+
+:root{
     --top-page-margin:   @top-page-margin;
     --left-page-padding: @left-page-padding;
 
+    --modal-max-height: @modal-max-height;
+    --modal-max-width: @modal-max-width;
+    --universiform-max-height: @universiform-max-height;
 }

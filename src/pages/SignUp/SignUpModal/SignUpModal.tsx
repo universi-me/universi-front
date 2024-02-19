@@ -36,9 +36,11 @@ export function SignUpModal(props: SignUpModalProps) {
 
     const [usernameAvailable, setUsernameAvailable] = useState<boolean>(false);
     const [usernameAvailableChecked, setUsernameAvailableChecked] = useState<boolean>(false);
+    const [usernameUnavailableMessage, setUsernameUnavailableMessage] = useState<string>('');
 
     const [emailAvailable, setEmailAvailable] = useState<boolean>(false);
     const [emailAvailableChecked, setEmailAvailableChecked] = useState<boolean>(false);
+    const [emailUnavailableMessage, setEmailUnavailableMessage] = useState<string>('');
 
     const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
     const [recaptchaRef, setRecaptchaRef] = useState<any>(null);
@@ -64,6 +66,7 @@ export function SignUpModal(props: SignUpModalProps) {
             }
             const resp = await UniversimeApi.User.usernameAvailable({username: username});
             setUsernameAvailable(resp.success);
+            setUsernameUnavailableMessage((resp.body as any)!?.reason ?? 'Usuário não está disponivel para uso.');
             setUsernameAvailableChecked(true);
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
@@ -78,6 +81,7 @@ export function SignUpModal(props: SignUpModalProps) {
             }
             const resp = await UniversimeApi.User.emailAvailable({email: email});
             setEmailAvailable(resp.success);
+            setEmailUnavailableMessage((resp.body as any)!?.reason ?? 'Email não está disponivel para uso.');
             setEmailAvailableChecked(true);
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
@@ -91,11 +95,9 @@ export function SignUpModal(props: SignUpModalProps) {
         <UniversiModal>
             <div id="sign-up-modal">
                 <div className="heading">
-                    <div/>
-                    <h2>Cadastro</h2>
-                    <button className="close-modal-button" onClick={closeModal}>
-                        <i className="bi bi-x-lg" />
-                    </button>
+                        <button className="close-modal-button" onClick={closeModal}>
+                            <i className="bi bi-x-lg" />
+                        </button>
                 </div>
 
                 <form>
@@ -128,7 +130,7 @@ export function SignUpModal(props: SignUpModalProps) {
                             }}
                         />
                         <section className="password-requirements">
-                            { emailAvailableChecked ? <p className={`bi fieldset-info ${emailAvailable?'success-validation':'failed-validation'}`}>{emailAvailable?'Email Disponível para uso.':'Email não está disponivel para uso.'}</p> : null }
+                            { emailAvailableChecked ? <p className={`bi fieldset-info ${emailAvailable?'success-validation':'failed-validation'}`}>{emailAvailable?'Email Disponível para uso.':emailUnavailableMessage}</p> : null }
                         </section>
                     </fieldset>
 
@@ -146,7 +148,7 @@ export function SignUpModal(props: SignUpModalProps) {
                             }}
                         />
                         <section className="password-requirements">
-                            { usernameAvailableChecked ? <p className={`bi fieldset-info ${usernameAvailable?'success-validation':'failed-validation'}`}>{usernameAvailable?'Usuário Disponível para uso.':'Usuário não está disponivel para uso.'}</p> : null }
+                            { usernameAvailableChecked ? <p className={`bi fieldset-info ${usernameAvailable?'success-validation':'failed-validation'}`}>{usernameAvailable?'Usuário Disponível para uso.':usernameUnavailableMessage}</p> : null }
                             <p className="fieldset-info">
                                 Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).<br/>
                                 Todos irão acessar seu perfil em: <div className="profile-url-preview">{location.origin}/profile/{username || "<insira um nome de usuário>"}</div>
