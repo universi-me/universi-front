@@ -1,15 +1,15 @@
-FROM node:18-alpine
+FROM node:latest
 
 WORKDIR /opt/app
 
-ENV NODE_ENV production
-
 ENV VITE_UNIVERSIME_API /api
 
-COPY . /opt/app
+COPY . .
 
-RUN npm install --include=dev --prefer-offline --no-audit --progress=false
+RUN npm ci
 
 RUN npm run build
+
+EXPOSE 8088
 
 ENTRYPOINT ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "8088"]
