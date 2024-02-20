@@ -13,4 +13,4 @@ EXPOSE 8088
 
 RUN chmod +x ./entrypoint.sh
 
-ENTRYPOINT ["./entrypoint.sh", "npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "8088"]
+ENTRYPOINT ["/bin/bash", "./entrypoint.sh", "npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "8088"]
