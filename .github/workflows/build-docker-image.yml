@@ -12,6 +12,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: ~/.docker
+        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
+        restore-keys: |
+          ${{ runner.os }}-docker-
+      
     - name: Cache npm dependencies
       uses: actions/cache@v2
       with:
