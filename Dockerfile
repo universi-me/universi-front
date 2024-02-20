@@ -4,6 +4,10 @@ WORKDIR /opt/app
 
 ENV VITE_UNIVERSIME_API /api
 
+# Set version in environment variables
+ARG BUILD_HASH
+ENV BUILD_HASH=${BUILD_HASH}
+
 COPY . .
 
 #RUN npm ci
