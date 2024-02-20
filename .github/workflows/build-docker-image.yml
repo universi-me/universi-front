@@ -57,9 +57,9 @@ jobs:
         docker buildx create --use
         tag_name=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
         [ "$tag_name" == "prod" ] && tag_name='latest'
+        echo "${{ steps.set-build-hash.outputs.BUILD_HASH }}" > /build.hash
         docker buildx build \
           --platform linux/arm64,linux/amd64 \
-          --build-arg BUILD_HASH=${{ steps.set-build-hash.outputs.BUILD_HASH }} \
           -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:$tag_name \
           -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:${{ github.sha }} \
           --push \
