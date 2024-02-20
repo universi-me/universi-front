@@ -27,6 +27,10 @@ jobs:
       id: set-env
       run: echo "VITE_UNIVERSIME_API=/api" >> $GITHUB_ENV
       
+    - name: Set BUILD_HASH environment variable
+      id: set-build-hash
+      run: echo "BUILD_HASH=${{ github.sha }}" >> $GITHUB_ENV
+      
     - name: Run Build
       run: npm run build
 
@@ -47,7 +51,7 @@ jobs:
         [ "$tag_name" == "prod" ] && tag_name='latest'
         docker buildx build \
           --platform linux/arm64,linux/amd64 \
-          --build-arg BUILD_HASH=${{ github.sha }} \
+          --build-arg BUILD_HASH=${{ steps.set-build-hash.outputs.BUILD_HASH }} \
           -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:$tag_name \
           -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:${{ github.sha }} \
           --push \
