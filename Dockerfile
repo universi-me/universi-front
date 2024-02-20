@@ -9,7 +9,7 @@ ENV VITE_UNIVERSIME_API /api
 COPY . .
 
 # Set version in environment variables
-CMD export BUILD_HASH=${cat ./build.hash}
+CMD export BUILD_HASH=$(cat ./build.hash)
 
 #RUN npm ci
 #RUN npm run build
