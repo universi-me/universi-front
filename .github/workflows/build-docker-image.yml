@@ -12,11 +12,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Cache Docker layers
+    - name: Cache npm dependencies
       uses: actions/cache@v2
       with:
-        path: ~/.docker
-        key: ${{ runner.os }}-docker-${{ github.sha }}
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
+
+    - name: Install dependencies
+      run: npm ci
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
