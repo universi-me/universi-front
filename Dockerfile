@@ -2,12 +2,14 @@ FROM node:latest
 
 WORKDIR /opt/app
 
-# Set version in environment variables
-CMD export BUILD_HASH=${cat /build.hash}
+
 
 ENV VITE_UNIVERSIME_API /api
 
 COPY . .
+
+# Set version in environment variables
+CMD export BUILD_HASH=${cat ./build.hash}
 
 #RUN npm ci
 #RUN npm run build
