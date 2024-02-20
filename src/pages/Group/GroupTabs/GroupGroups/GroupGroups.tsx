@@ -38,7 +38,7 @@ export function GroupGroups() {
         },
         {
             text: "Excluir",
-            biIcon: "trash",
+            biIcon: "trash-fill",
             onSelect(data) {
                 handleRemoveGroup(data);
             },
@@ -60,8 +60,9 @@ export function GroupGroups() {
                 confirmButtonColor: "var(--wrong-invalid-color)"
         }).then(response =>{
             if(response.isConfirmed){
-                UniversimeApi.Group.remove({groupPath: groupParentPath, groupIdRemove: group.id});
-                groupContext?.refreshData();
+                UniversimeApi.Group.remove({groupPath: groupParentPath, groupIdRemove: group.id}).then(()=>{
+                    groupContext?.refreshData();
+                })
             }
         })
     }
@@ -126,7 +127,7 @@ export function GroupGroups() {
                         }, {
                             DTOName: "canJoin", label: "Usuários podem entrar", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.canEnter
                         }, {
-                            DTOName: "isRootGroup", label: "Grupo raiz", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.rootGroup
+                            DTOName: "isRootGroup", label: "Grupo raiz", type: FormInputs.HIDDEN, value: groupContext.editGroup?.rootGroup ?? false
                         }, {
                             DTOName: "parentGroupId", label: "Id do grupo pai (grupo atual)", type: FormInputs.HIDDEN, value: groupContext.group.id
                         }, {
