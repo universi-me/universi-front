@@ -1,6 +1,6 @@
 FROM node:latest
 
-#WORKDIR /opt/app
+WORKDIR /opt/app
 
 # Set version in environment variables
 ARG BUILD_HASH
@@ -8,7 +8,7 @@ ENV BUILD_HASH=${BUILD_HASH}
 
 ENV VITE_UNIVERSIME_API /api
 
-#COPY . .
+COPY . .
 
 #RUN npm ci
 
