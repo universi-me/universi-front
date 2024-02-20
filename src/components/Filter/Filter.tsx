@@ -10,9 +10,9 @@ interface FilterProps{
 export function Filter({setter, placeholderMessage} : FilterProps){
 
     return(
-        <div id="filter-wrapper">
+        <div className="filter-component">
             <i className="bi bi-search filter-icon"/>
-            <input type="search" name="filter-groups" id="filter-groups" className="filter-input"
+            <input type="search" className="filter-input"
                 onChange={setStateAsValue(setter)} placeholder={placeholderMessage}
             />
         </div>
