@@ -25,6 +25,12 @@ export function SettingsPage() {
             <SettingsMoveTo title="Tema de cores" description="Configurar tema de cores da plataforma" to="#"/>
             <SettingsMoveTo title="Analytics" description="Ver detalhes do monitoramento com Google Analytics" to="#"/>
         </> }
+
+        <br/><br/>
+        <i>Version</i>
+        <i>front: { import.meta.env.VITE_BUILD_HASH ?? '---' }</i>
+        <i>back: { (auth.organization??{} as any).buildHash ?? '---' }</i>
         </div>
+        
     </div>
 }

@@ -11,6 +11,36 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: ~/.docker
+        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
+        restore-keys: |
+          ${{ runner.os }}-docker-
+      
+    - name: Cache npm dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
+
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Set environment variable
+      id: set-env
+      run: echo "VITE_UNIVERSIME_API=/api" >> $GITHUB_ENV
+      
+    - name: Set VITE_BUILD_HASH environment variable
+      id: set-build-hash
+      run: echo "VITE_BUILD_HASH=${{ github.sha }}" >> $GITHUB_ENV
+      
+    - name: Run Build
+      run: npm run build
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -27,8 +57,10 @@ jobs:
         docker buildx create --use
         tag_name=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
         [ "$tag_name" == "prod" ] && tag_name='latest'
+        echo "${{ github.sha }}" > ./build.hash
         docker buildx build \
           --platform linux/arm64,linux/amd64 \
+          --build-arg VITE_BUILD_HASH=${{ github.sha }} \
           -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:$tag_name \
           -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:${{ github.sha }} \
           --push \
