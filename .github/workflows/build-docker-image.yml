@@ -23,7 +23,11 @@ jobs:
     - name: Install dependencies
       run: npm ci
       
-    - name: Install dependencies
+    - name: Set environment variable
+      id: set-env
+      run: echo "VITE_UNIVERSIME_API=/api" >> $GITHUB_ENV
+      
+    - name: Run Build
       run: npm run build
 
     - name: Set up Docker Buildx
