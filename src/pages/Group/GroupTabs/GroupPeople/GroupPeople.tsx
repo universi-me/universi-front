@@ -36,6 +36,17 @@ export function GroupPeople() {
         })
     }, [])
 
+    useEffect(()=>{
+
+        if(addedCompetences.length == 0){
+            document.getElementById("search-criteria")?.classList.add("hidden")
+            clearFilteredPeople();
+        }
+        else
+            searchUsers();
+
+    }, [addedCompetences])
+
 
     const competenceTypeOptions = useMemo(() => {
         return orderByName(allTypeCompetence ?? [])
@@ -46,6 +57,18 @@ export function GroupPeople() {
             .slice()
             .sort((c1,c2) => c1.name.localeCompare(c2.name))
             .map((t)=> ({value: t.id, label: t.name})) ?? [];
+    }
+
+    function removeAddedCompetence(typeId: string, level: Level){
+        setAddedCompetences((addedCompetences) => addedCompetences.filter((element) => !(element.typeId === typeId && element.level === level)))
+    }
+
+    function searchUsers(){
+        clearFilteredPeople();
+        showOnlyFilteredPeople(addedCompetences, matchEveryCompetence)
+        let searchCriteria = document.getElementById("search-criteria");
+        if(searchCriteria)
+            searchCriteria?.classList.remove("hidden")
     }
 
     if (!groupContext)
@@ -75,7 +98,27 @@ export function GroupPeople() {
                     if(searchCriteriaText) searchCriteriaText.classList.add("hidden")
                     clearFilteredPeople();
                 }}>Limpar busca</p>
-                <div className="search-criteria-text" id="search-criteria-text">
+                {
+                    matchEveryCompetence?
+                    "Exigindo todas as competências"
+                    :
+                    "Exigindo apenas uma competência"
+                }
+                <div className="all-competences-container">
+                {
+                    addedCompetences.map((c)=>(
+                        <div className="added-competence-container">
+                            <div className="added-competence">{c.label}</div>
+                            <i className="bi bi-x-lg" onClick={()=>{
+                                if(c.typeId == undefined || c.level == undefined)
+                                    return
+
+                                removeAddedCompetence(c.typeId, c.level)
+                            }}></i>
+                        </div>
+                    ))
+                }
+
                 </div>
             </div>
 
@@ -137,33 +180,22 @@ export function GroupPeople() {
                 </div>
 
                 <div className="added-competences-container">
-                    {
+                    { addedCompetences.length != 0? 
                         addedCompetences.map((competence)=>(
                             <div className="added-competence" key={competence.typeId??"" + competence.level}>
                                 {competence.label}
                                 <i className="bi bi-x" onClick={()=>{
-                                    setAddedCompetences((addedCompetences) => addedCompetences.filter((element) => !(element.typeId === competence.typeId && element.level === competence.level)))
+                                    if(competence.typeId == undefined || competence.level == undefined)
+                                        return
+                                    removeAddedCompetence(competence.typeId, competence.level);
                                 }}></i>
                             </div>
                         ))
+                        : <></>
                     }
                 </div>
 
-                <div className="search-button" onClick={() => {
-                        clearFilteredPeople();
-                        showOnlyFilteredPeople(addedCompetences, matchEveryCompetence)
-                        let searchCriteriaText = document.getElementById("search-criteria-text");
-                        let searchCriteria = document.getElementById("search-criteria");
-                        if(searchCriteriaText){
-                            searchCriteriaText.innerHTML = "Pesquisa realizada: <br>"
-                            searchCriteria?.classList.remove("hidden")
-                            addedCompetences.map((c)=>{
-                                if(searchCriteriaText)
-                                    searchCriteriaText.innerHTML+=c.label+"<br>";
-                            });
-                            searchCriteriaText.innerHTML += matchEveryCompetence ? "Exigindo todas as competências"  : "Exigindo apenas uma das competências"
-                        } 
-                    }}>
+                <div className="search-button" onClick={searchUsers}>
                     Pesquisar
                 </div>
 
