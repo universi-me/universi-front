@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { type MouseEvent, useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom"
 
 import UniversimeApi from "@/services/UniversimeApi";
 import { Filter } from "@/components/Filter/Filter";
-import { CompetencesSettingsLoaderResponse, SettingsDescription, SettingsTitle } from "@/pages/Settings";
+import { type CompetencesSettingsLoaderResponse, SettingsDescription, SettingsTitle } from "@/pages/Settings";
 
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { stringIncludesIgnoreCase } from "@/utils/stringUtils";
 import { groupArray } from "@/utils/arrayUtils";
-import { makeClassName } from "@/utils/tsxUtils";
+import { makeClassName, setStateAsValue } from "@/utils/tsxUtils";
 
 import { type CompetenceType } from "@/types/Competence";
 import "./CompetencesSettingsPage.less";
@@ -114,6 +114,19 @@ type CompetenceTypeEditorProps = {
 function CompetenceTypeEditor(props: Readonly<CompetenceTypeEditorProps>) {
     const { ct, refreshCTs } = props;
 
+    const [nameInput, setNameInput] = useState<string>();
+    const renderNameChange = nameInput !== undefined;
+
+    /* On click edit focus on the input */
+    useEffect(() => {
+        if (nameInput === undefined) return;
+
+        document
+            .querySelector(`.competence-editor[data-competence-name="${ct.name}"] form.competence-editing-form`)
+            ?.getElementsByTagName("input")
+            .item(0)?.focus();
+    }, [nameInput]);
+
     const reviewTitle = ct.reviewed
         ? "Essa competência já foi revisada por um administrador"
         : "Clique para aprovar essa competência";
@@ -122,13 +135,31 @@ function CompetenceTypeEditor(props: Readonly<CompetenceTypeEditorProps>) {
         ? () => {}
         : reviewCompetence;
 
-    return <div className="competence-editor">
-        <button disabled={ct.reviewed} title={reviewTitle} onClick={reviewAction} className="review-competencetype">
+    return <div className="competence-editor" data-competence-name={ct.name}>
+        { renderNameChange ||
+        <button disabled={ct.reviewed} title={reviewTitle} onClick={reviewAction} className="competence-interact-button">
             <i className={makeClassName("bi", ct.reviewed ? "bi-check-circle-fill" : "bi-check-circle")} />
         </button>
+        }
 
-        <h2 className="competencetype-name">
-            { ct.name }
+        <h2>
+            { renderNameChange
+                ? <form className="competence-editing-form competencetype-name-wrapper">
+                    <button type="submit" className="competence-interact-button" onClick={saveNameChange} title="Salvar mudanças">
+                        <i className="bi bi-floppy-fill"/>
+                    </button>
+                    <button type="reset" className="competence-interact-button competence-cancel-name" onClick={() => setNameInput(undefined)} title="Cancelar mudanças">
+                        <i className="bi bi-x-circle"/>
+                    </button>
+                    <input type="text" className="competence-name-input competencetype-name" defaultValue={ct.name} onChange={setStateAsValue(setNameInput)} />
+                </form>
+                : <div className="competencetype-name-wrapper">
+                    <button type="button" className="competence-interact-button" onClick={() => setNameInput(ct.name)} title="Alterar nome da competência">
+                        <i className="bi bi-pencil-square"/>
+                    </button>
+                    <h3 className="competencetype-name"> { ct.name } </h3>
+                </div>
+            }
         </h2>
     </div>
 
@@ -148,5 +179,16 @@ function CompetenceTypeEditor(props: Readonly<CompetenceTypeEditorProps>) {
 
         await UniversimeApi.CompetenceType.update({ id: ct.id, reviewed: true });
         await refreshCTs();
+    }
+
+    async function saveNameChange(e: MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+
+        if (nameInput === undefined)
+            return;
+
+        await UniversimeApi.CompetenceType.update({ id: ct.id, name: nameInput });
+        await refreshCTs();
+        setNameInput(undefined);
     }
 }
