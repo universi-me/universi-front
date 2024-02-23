@@ -40,8 +40,8 @@ export function CompetencesSettingsPage() {
         .sort((ct1, ct2) => ct1.name.localeCompare(ct2.name));
 
     const groupedArrays = groupArray(sortedCompetenceTypes, ct => ct.reviewed ? "reviewed" : "unreviewed");
-    const unreviewedCompetenceTypes = groupedArrays.get("unreviewed")!;
-    const reviewedCompetenceTypes = groupedArrays.get("reviewed")!;
+    const unreviewedCompetenceTypes = groupedArrays.get("unreviewed") ?? [];
+    const reviewedCompetenceTypes = groupedArrays.get("reviewed") ?? [];
 
     const unreviewedFilteredCompetences = unreviewedCompetenceTypes
         .filter(ct => stringIncludesIgnoreCase(ct.name, unreviewedFilter));
@@ -67,7 +67,7 @@ export function CompetencesSettingsPage() {
             { unreviewedFilteredCompetences.length > 0
                 ? unreviewedFilteredCompetences.map(ct => <CompetenceTypeEditor key={ct.id} ct={ct} refreshCTs={refreshCompetenceTypes} />)
                 : <p className="empty-competences">
-                { reviewedCompetenceTypes.length > 0
+                { unreviewedCompetenceTypes.length > 0
                     ? "Nenhuma competência encontrada."
                     : "Nenhuma competência precisa ser revisada no momento."
                 }
@@ -90,7 +90,7 @@ export function CompetencesSettingsPage() {
             { reviewedFilteredCompetences.length > 0
                 ? reviewedFilteredCompetences.map(ct => <CompetenceTypeEditor key={ct.id} ct={ct} refreshCTs={refreshCompetenceTypes} />)
                 : <p className="empty-competences">
-                { unreviewedCompetenceTypes.length > 0
+                { reviewedCompetenceTypes.length > 0
                     ? "Nenhuma competência encontrada."
                     : "Nenhuma competência revisada no momento."
                 }
@@ -161,6 +161,10 @@ function CompetenceTypeEditor(props: Readonly<CompetenceTypeEditorProps>) {
                 </div>
             }
         </h2>
+
+        <button type="button" className="competence-interact-button competencetype-delete" onClick={deleteCompetenceType} title="Excluir competência">
+            <i className="bi bi-trash-fill"/>
+        </button>
     </div>
 
     async function reviewCompetence() {
@@ -190,5 +194,23 @@ function CompetenceTypeEditor(props: Readonly<CompetenceTypeEditorProps>) {
         await UniversimeApi.CompetenceType.update({ id: ct.id, name: nameInput });
         await refreshCTs();
         setNameInput(undefined);
+    }
+
+    async function deleteCompetenceType() {
+        const response = await SwalUtils.fireModal({
+            title: `Deseja excluir a competência "${ct.name}"?`,
+            text: "Essa ação não pode ser desfeita",
+
+            showConfirmButton: true,
+            confirmButtonText: "Excluir",
+            showCancelButton: true,
+            cancelButtonText: "Cancelar",
+        });
+
+        if (!response.isConfirmed)
+            return;
+
+        await UniversimeApi.CompetenceType.remove({ id: ct.id });
+        await refreshCTs();
     }
 }
