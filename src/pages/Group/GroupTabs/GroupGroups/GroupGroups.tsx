@@ -14,6 +14,7 @@ import { TextValidation } from "@/components/UniversiForm/Validation/TextValidat
 import UniversimeApi from "@/services/UniversimeApi";
 import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdownMenuUtils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
 
 export function GroupGroups() {
@@ -34,8 +35,37 @@ export function GroupGroups() {
             hidden() {
                 return !(groupContext.group.canEdit);
             },
+        },
+        {
+            text: "Excluir",
+            biIcon: "trash-fill",
+            onSelect(data) {
+                handleRemoveGroup(data);
+            },
+            hidden(){
+                return !(groupContext.group.canEdit);
+            }
         }
     ];
+
+    function handleRemoveGroup(group : Group){
+        let groupParentPath = group.path.substring(0, group.path.lastIndexOf("/"))
+        SwalUtils.fireModal({
+                title: "Deseja remover este grupo?",
+                text: "Esta ação é irreversível.",
+
+                showCancelButton: true,
+                cancelButtonText: "Cancelar",
+                confirmButtonText: "Ok",
+                confirmButtonColor: "var(--wrong-invalid-color)"
+        }).then(response =>{
+            if(response.isConfirmed){
+                UniversimeApi.Group.remove({groupPath: groupParentPath, groupIdRemove: group.id}).then(()=>{
+                    groupContext?.refreshData();
+                })
+            }
+        })
+    }
 
     const groupTypes = [
         ["INSTITUTION", "Instituição"],
@@ -97,7 +127,7 @@ export function GroupGroups() {
                         }, {
                             DTOName: "canJoin", label: "Usuários podem entrar", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.canEnter
                         }, {
-                            DTOName: "isRootGroup", label: "Grupo raiz", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.rootGroup
+                            DTOName: "isRootGroup", label: "Grupo raiz", type: FormInputs.HIDDEN, value: groupContext.editGroup?.rootGroup ?? false
                         }, {
                             DTOName: "parentGroupId", label: "Id do grupo pai (grupo atual)", type: FormInputs.HIDDEN, value: groupContext.group.id
                         }, {
