@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import UniversimeApi from "@/services/UniversimeApi";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
@@ -10,6 +10,7 @@ import type { Category, Folder } from "@/types/Capacity";
 import type { Group } from "@/types/Group";
 
 import "./ManageContent.less";
+import { GroupContext } from "@/pages/Group";
 
 export type ManageContentProps = {
     /** A null `content` means a content is being created, while a value means
@@ -30,6 +31,8 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
 
     const [availableCategories, setAvailableCategories] = useState<Category[]>();
 
+    const groupContext = useContext(GroupContext)
+
     useEffect(() => {
         setContent(props.content);
         setGroup(props.group);
@@ -46,7 +49,7 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
         formTitle = { isNewContent ? "Criar conteúdo" : "Editar conteúdo" }
         objects = {[
             {
-                DTOName: "name", label: "Nome do conteúdo", type: FormInputs.TEXT, value: content?.name, required: true, charLimit: 100,
+                DTOName: "name", label: "Nome do conteúdo", type: FormInputs.TEXT, value: content?.name, required: true, charLimit: 100, 
             }, {
                 DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: content?.description ?? undefined, required: false, charLimit: 200,
             }, {
@@ -68,8 +71,19 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
             },
         ]}
         requisition = { !isNewContent ? UniversimeApi.Capacity.editFolder : UniversimeApi.Capacity.createFolder }
-        callback = {() => { props.afterSave?.(); }}
+        callback = {() => { props.afterSave?.(); isNewContent ? handleCreateNewContent() : null;}}
     />;
+
+    
+    function handleCreateNewContent(){
+        if(groupContext == undefined || group == undefined)
+            return;
+        UniversimeApi.Feed.createGroupPost({
+            authorId: groupContext.loggedData.profile.id,
+            content: `<h2>O conteúdo ${content?.name} foi cadastrado no grupo.</h2>`,
+            groupId: group.id
+        })
+    }
 
     async function handleCreateOption(value: string){
         const createResponse = await UniversimeApi.Capacity.createCategory({ name: value, image: "" });
