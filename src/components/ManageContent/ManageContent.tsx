@@ -11,6 +11,7 @@ import type { Group } from "@/types/Group";
 
 import "./ManageContent.less";
 import { GroupContext } from "@/pages/Group";
+import { FolderCreate_RequestDTO } from "@/services/UniversimeApi/Capacity";
 
 export type ManageContentProps = {
     /** A null `content` means a content is being created, while a value means
@@ -70,19 +71,34 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
                 DTOName: "id", label: "Id do conteúdo", type: FormInputs.HIDDEN, value: content?.id,
             },
         ]}
-        requisition = { !isNewContent ? UniversimeApi.Capacity.editFolder : UniversimeApi.Capacity.createFolder }
-        callback = {() => { props.afterSave?.(); isNewContent ? handleCreateNewContent() : null;}}
+        requisition = { !isNewContent ? UniversimeApi.Capacity.editFolder : handleCreateNewContent }
+        callback = {() => { props.afterSave?.();}}
     />;
 
     
-    function handleCreateNewContent(){
+    function handleCreateNewContent(dto : FolderCreate_RequestDTO){
+
         if(groupContext == undefined || group == undefined)
             return;
-        UniversimeApi.Feed.createGroupPost({
-            authorId: groupContext.loggedData.profile.id,
-            content: `<h2>O conteúdo ${content?.name} foi cadastrado no grupo.</h2>`,
-            groupId: group.id
-        })
+
+        const canPost = (
+        (groupContext.group.everyoneCanPost) ||
+        (!groupContext.group.everyoneCanPost && groupContext.group.admin.id == groupContext.loggedData.profile.id)
+        )
+
+        UniversimeApi.Capacity.createFolder(dto)
+            .then((response)=>{
+                if(response.success && canPost && dto.groupId){
+                    UniversimeApi.Feed.createGroupPost({
+                        authorId: groupContext.loggedData.profile.id,
+                        content: `<h2>Novo conteúdo no grupo.</h2><br>
+                        <p>O conteúdo ${dto.name} foi cadastrado no grupo.</p>`,
+                        groupId: dto.groupId
+                    }).then(()=>{groupContext.refreshData()})
+                }
+
+            })
+
     }
 
     async function handleCreateOption(value: string){
