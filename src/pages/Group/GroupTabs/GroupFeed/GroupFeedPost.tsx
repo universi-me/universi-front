@@ -11,6 +11,8 @@ import { hasAvailableOption, renderOption, type OptionInMenu } from "@/utils/dro
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import { type GroupPost } from "@/types/Feed";
+import { canI } from "@/utils/paper/paperUtils";
+import { Permission } from "@/types/Paper";
 
 export type GroupFeedPostProps = Readonly<{
     post: GroupPost;
@@ -54,7 +56,8 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
                 groupContext.setEditPost(data);
             },
             hidden(data) {
-                return !data.author.user.ownerOfSession;
+                let canEdit = canI("FEED", Permission.READ_WRITE, undefined, groupContext.group) && (data.author.user.ownerOfSession);
+                return  !canEdit;
             },
         },
         {
@@ -63,7 +66,8 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             className: "delete",
             onSelect: handleDeletePost,
             hidden(data) {
-                return !groupContext.group.canEdit && !data.author.user.ownerOfSession;
+                let canDelete = canI("FEED", Permission.READ_WRITE_DELETE, undefined, groupContext.group) && (groupContext.group.canEdit || data.author.user.ownerOfSession);
+                return !canDelete;
             },
         }
     ]

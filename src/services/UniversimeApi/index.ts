@@ -15,6 +15,8 @@ import * as User from "./User"
 import * as Image from "./Image"
 import * as Admin from "./Admin"
 import * as Feed from "./Feed"
+import * as Paper from "./Paper"
+import * as Feature from "./Feature"
 
 export const UniversimeApi = {
     api,
@@ -34,6 +36,8 @@ export const UniversimeApi = {
     Image,
     Admin,
     Feed,
+    Paper,
+    Feature,
 };
 
 export default UniversimeApi;

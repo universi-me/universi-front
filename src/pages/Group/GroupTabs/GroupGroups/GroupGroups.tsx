@@ -90,6 +90,7 @@ export function GroupGroups() {
                         ?<>
                             <ActionButton name="Criar grupo" buttonProps={{onClick(){groupContext.setEditGroup(null)}}}/>
                             <ActionButton name="Editar este grupo" buttonProps={{onClick(){groupContext.setEditGroup(groupContext.group); console.log(groupContext.group)}}}/>
+                            <ActionButton name="Configurações" buttonProps={{onClick(){ groupContext.setGroupConfigModalOpen(true); }}}/>
                         </>
                         : <></>
                     }

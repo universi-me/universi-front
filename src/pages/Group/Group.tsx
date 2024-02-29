@@ -6,6 +6,7 @@ import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
 import { AuthContext } from "@/contexts/Auth";
 import "./Group.less";
 import { ProfileClass } from "@/types/Profile";
+import GroupConfigModal from './GroupConfig/GroupConfigModal';
 
 export function GroupPage() {
     const page = useLoaderData() as GroupPageLoaderResponse;
@@ -40,6 +41,9 @@ export function GroupPage() {
 
     return (
         <GroupContext.Provider value={context}>
+        {
+            context.groupConfigModalOpen && <GroupConfigModal />
+        }
         <div className="group-page-container">
             <ProfileInfo
                 profile={context.loggedData.profile}
@@ -96,6 +100,11 @@ export function GroupPage() {
             },
             participants: data.participants.map(ProfileClass.new),
             subgroups: data.subGroups,
+
+            groupConfigModalOpen: false,
+            setGroupConfigModalOpen(open) {
+                setContext({...this, groupConfigModalOpen: open});
+            },
 
             currentContent: undefined,
             setCurrentContent(c) {

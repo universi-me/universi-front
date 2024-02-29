@@ -5,12 +5,15 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
 import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 import { GroupCompetences } from "./GroupCompetences/GroupCompetences";
+import { canI } from '@/utils/paper/paperUtils';
+import { Permission, type FeatureTypes } from "@/types/Paper";
 
 export type AvailableTabs = "feed" | "contents" | "files" | "groups" | "people" | "competences";
 
 export type GroupTabDefinition = {
     name: string,
     value: AvailableTabs,
+    featureType?: FeatureTypes,
     renderer(): ReactElement | null,
 };
 
@@ -52,7 +55,7 @@ export  function GroupTabs(props: GroupTabsProps){
         };
     }
 
-
+    
 
     return (
         <nav id="group-tabs"> 
@@ -60,11 +63,13 @@ export  function GroupTabs(props: GroupTabsProps){
             TABS.map(t => {
                 const isCurrentTab = t.value === props.currentTab;
 
-                return (
-                    <button className={`group-tab-button`} value={t.value} key={t.value} onClick={() => { window.location.hash = t.value; props.changeTab(t.value); }} data-current-tab={isCurrentTab ? "" : undefined}>
-                        {t.name}
-                    </button>
-                );
+                return (<>
+                    { canI(t!.featureType!, Permission.READ, undefined, context?.group) &&
+                        <button className={`group-tab-button`} value={t.value} key={t.value} onClick={() => { window.location.hash = t.value; props.changeTab(t.value); }} data-current-tab={isCurrentTab ? "" : undefined}>
+                            {t.name}
+                        </button>
+                    }
+                </>);
             })
         }
         
@@ -99,11 +104,13 @@ const TABS: GroupTabDefinition[] = [
     {
         name: 'Publicações',
         value: 'feed',
+        featureType: "FEED",
         renderer: GroupFeed,
     },
     {
         name: 'Conteúdos',
         value: "contents",
+        featureType: "CONTENT",
         renderer: GroupContents,
     },
     // {
@@ -114,16 +121,19 @@ const TABS: GroupTabDefinition[] = [
     {
         name: "Grupos",
         value: "groups",
+        featureType: "GROUP",
         renderer: GroupGroups,
     },
     {
         name: "Pessoas",
         value: "people",
+        featureType: "PEOPLE",
         renderer: GroupPeople,
     },
     {
         name: "Competências",
         value: "competences",
+        featureType: "COMPETENCE",
         renderer: GroupCompetences,
     },
 ];
