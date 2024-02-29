@@ -1,6 +1,6 @@
 import { type LoaderFunctionArgs } from "react-router-dom";
 import { useContext } from "react";
-import { PaperProfile, type Paper } from "@/types/Paper";
+import { PaperProfile, Paper } from "@/types/Paper";
 import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
 

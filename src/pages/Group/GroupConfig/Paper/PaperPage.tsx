@@ -67,7 +67,7 @@ const PaperPage : React.FC<PaperPageProps> = ({ group }) => {
     };
 
     const isFeatureChecked = (row : Paper, column : any) => {
-        let paperFeature : PaperFeature | undefined = row!?.paperFeatures!?.findLast(f => f.featureType == column);
+        let paperFeature = (row!?.paperFeatures as any)?.findLast((feature: { featureType: any; }) => feature.featureType == column);
         if(paperFeature) {
             return paperFeature.permission;
         }

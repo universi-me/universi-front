@@ -154,5 +154,5 @@ export class ProfileClass implements Profile {
     get creationDate() { return this.profile.creationDate }
 
     get paper(): Paper | undefined | null { return this.profile.paper }
-    set paper(paper: Paper) { this.profile.paper = paper }
+    set paper(paper: Paper | undefined | null) { this.profile.paper = paper }
 }

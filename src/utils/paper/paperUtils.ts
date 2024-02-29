@@ -4,7 +4,6 @@ import { Profile } from "@/types/Profile";
 import { AuthContext } from "@/contexts/Auth";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Group } from "@/types/Group";
-import { PaperRemove_ResponseDTO } from "@/services/UniversimeApi/Paper";
 
 
 type PaperStored = null | {
@@ -40,7 +39,7 @@ function canI_(featureType: FeatureTypes, permission?: Permission,  profile?: Pr
       return 'paper|' + (group!?.id ?? auth!?.organization!.id) + (profile!?.id ?? auth!?.profile!.id);
     } 
   
-    function getCachePaper(checkTime: boolean, group?: Group, profile?: Profile) {
+    function getCachePaper(checkTime: boolean, group?: Group, profile?: Profile): Paper | undefined {
       try {
       let paperStore : PaperStored = JSON.parse(localStorage.getItem(getCachingKey(group, profile)) as any);
     
@@ -51,8 +50,9 @@ function canI_(featureType: FeatureTypes, permission?: Permission,  profile?: Pr
       }
       return paperStore?.paper;
 
-    } catch (error) {
-    }
+      } catch (error) {
+      }
+      return null as any;
     }
   
     function setCachePaper(group?: Group, profile?: Profile, paper?: Paper) {
@@ -100,7 +100,7 @@ function canI_(featureType: FeatureTypes, permission?: Permission,  profile?: Pr
     let cachedPaper : Paper | null | undefined = getCachePaper(false, group, profile);
 
     if (cachedPaper) {
-      const featureR: PaperFeature | undefined = cachedPaper?.paperFeatures?.findLast((f :any) => f.featureType === featureType);
+      const featureR = (cachedPaper?.paperFeatures as any)?.findLast((f :any) => f.featureType === featureType);
 
       if(returnValueAsBollean) {
         return  (featureR ? (featureR.permission >= permission!)? true : false : defaultPermission>1);

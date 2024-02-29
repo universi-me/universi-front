@@ -1,4 +1,3 @@
-import { Group } from "./Group";
 
 export enum Permission {
     DEFAULT = 4,
@@ -23,7 +22,7 @@ export type Paper = {
     id: string;
     name: string;
     description : string;
-    paperFeatures: PaperFeature[] | undefined;
+    paperFeatures: PaperFeature[];
 }
 
 export type PaperFeature = {
