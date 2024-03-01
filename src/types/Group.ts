@@ -45,7 +45,7 @@ export type GroupType = "INSTITUTION" | "CAMPUS" | "COURSE" | "PROJECT" | "CLASS
                       | "ACADEMIC_CENTER" | "DEPARTMENT" | "STUDY_GROUP" | "GROUP_GENERAL" | "DIRECTORATE" | "MANAGEMENT" 
                       | "COORDINATION" | "COMPANY_AREA" | "DEVELOPMENT_TEAM" | "INTEREST_GROUP" | "MISCELLANEOUS_SUBJECTS" | "ENTERTAINMENT";
 
-export const GroupTypeToLabel = {
+export const GroupTypeToLabel: { [k in GroupType]: string } = {
     "INSTITUTION":     "Instituição",
     "CAMPUS":          "Campus",
     "COURSE":          "Curso",
