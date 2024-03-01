@@ -42,7 +42,8 @@ export const GroupEmailFilterTypeToLabel = {
 };
 
 export type GroupType = "INSTITUTION" | "CAMPUS" | "COURSE" | "PROJECT" | "CLASSROOM" | "MONITORIA" | "LABORATORY"
-                      | "ACADEMIC_CENTER" | "DEPARTMENT" | "STUDY_GROUP";
+                      | "ACADEMIC_CENTER" | "DEPARTMENT" | "STUDY_GROUP" | "GROUP_GENERAL" | "DIRECTORATE" | "MANAGEMENT" 
+                      | "COORDINATION" | "COMPANY_AREA" | "DEVELOPMENT_TEAM" | "INTEREST_GROUP" | "MISCELLANEOUS_SUBJECTS" | "ENTERTAINMENT";
 
 export const GroupTypeToLabel = {
     "INSTITUTION":     "Instituição",
@@ -54,5 +55,14 @@ export const GroupTypeToLabel = {
     "LABORATORY":      "Laboratório",
     "ACADEMIC_CENTER": "Centro Acadêmico",
     "DEPARTMENT":      "Departamento",
-    "STUDY_GROUP":     "Grupo de Estudo",
+    "STUDY_GROUP":     "Grupo de Estudos",
+    "GROUP_GENERAL": "Grupo Geral",
+    "DIRECTORATE": "Diretoria",
+    "MANAGEMENT": "Gerência",
+    "COORDINATION": "Coordenação",
+    "COMPANY_AREA": "Área da Empresa",
+    "DEVELOPMENT_TEAM": "Time de Desenvolvimento",
+    "INTEREST_GROUP": "Grupo de Interesse",
+    "MISCELLANEOUS_SUBJECTS": "Assuntos Diversos",
+    "ENTERTAINMENT": "Entretenimento",
 };
