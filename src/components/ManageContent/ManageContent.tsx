@@ -69,7 +69,9 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
                 DTOName: "groupId", label: "Id do grupo", type: FormInputs.HIDDEN, value: group?.id,
             }, {
                 DTOName: "id", label: "Id do conteúdo", type: FormInputs.HIDDEN, value: content?.id,
-            },
+            }, {
+                DTOName: "groupPath", label: "Path do grupo", type: FormInputs.HIDDEN, value: group?.path
+            }
         ]}
         requisition = { !isNewContent ? UniversimeApi.Capacity.editFolder : handleCreateNewContent }
         callback = {() => { props.afterSave?.();}}
@@ -91,8 +93,7 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
                 if(response.success && canPost && dto.groupId){
                     UniversimeApi.Feed.createGroupPost({
                         authorId: groupContext.loggedData.profile.id,
-                        content: `<h2>Novo conteúdo no grupo.</h2><br>
-                        <p>O conteúdo ${dto.name} foi cadastrado no grupo.</p>`,
+                        content: `<p>Conteúdo <a href="/group${dto.groupPath}#contents/${response.body.contentId}">${dto.name}<a/> foi cadastrado.<p/>`,
                         groupId: dto.groupId
                     }).then(()=>{groupContext.refreshData()})
                 }

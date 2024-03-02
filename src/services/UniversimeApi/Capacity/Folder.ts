@@ -66,7 +66,7 @@ export type FolderWatchProgress_RequestDTO = {
 };
 
 export type FolderGet_ResponseDTO =               ApiResponse<{ folder: Folder }>;
-export type FolderCreate_ResponseDTO =            ApiResponse;
+export type FolderCreate_ResponseDTO =            ApiResponse<{ contentId : string }>;
 export type FolderEdit_ResponseDTO =              ApiResponse;
 export type FolderRemove_ResponseDTO =            ApiResponse;
 export type ListContentsInFolder_ResponseDTO =    ApiResponse<{ contents: Content[] }>;
