@@ -93,21 +93,17 @@ export function GroupPeople() {
             </div>
             
             <div className="search-criteria hidden" id="search-criteria">
-                <p className="clear-search" onClick={()=>{
-                    let searchCriteriaText = document.getElementById("search-criteria")
-                    if(searchCriteriaText) searchCriteriaText.classList.add("hidden")
-                    clearFilteredPeople();
-                }}>Limpar busca</p>
+                <div className="all-competences-container">
                 {
                     matchEveryCompetence?
-                    "Exigindo todas as competências"
+                    "Filtro(todos): "
                     :
-                    "Exigindo apenas uma competência"
+                    "Filtro: "
                 }
-                <div className="all-competences-container">
                 {
                     addedCompetences.map((c)=>(
                         <div className="added-competence-container">
+                            <i className="bi bi-funnel-fill"></i>
                             <div className="added-competence">{c.label}</div>
                             <i className="bi bi-x-lg" onClick={()=>{
                                 if(c.typeId == undefined || c.level == undefined)
@@ -120,11 +116,18 @@ export function GroupPeople() {
                 }
 
                 </div>
+                <p className="clear-search" onClick={()=>{
+                    let searchCriteriaText = document.getElementById("search-criteria")
+                    if(searchCriteriaText) searchCriteriaText.classList.add("hidden")
+                    clearFilteredPeople();
+                }}>Limpar busca</p>
             </div>
 
             <div className="people-list tab-list"> { 
                 makePeopleList(groupContext.participants, filterPeople)
-            } </div>
+            } 
+                <div id="people-not-found-message" className="people-not-found hidden">Não foi encontrada nenhuma pessoa que corresponde à pesquisa.</div>
+            </div>
         </section>
     );
 
@@ -223,6 +226,9 @@ export function GroupPeople() {
                             element.classList.add("hidden")
                         }
                     });
+                    if(participants.length == 0){
+                        document.getElementById("people-not-found-message")?.classList.remove("hidden")
+                    }
                 }
             }).catch((error) => {
                 console.error(error);
@@ -234,6 +240,7 @@ export function GroupPeople() {
         Array.from(participantsCards).forEach(participantCard =>{
             participantCard.classList.remove("hidden")
         })
+        document.getElementById("people-not-found-message")?.classList.add("hidden")
     }
 
     function makeRadioSelectLevel(){
