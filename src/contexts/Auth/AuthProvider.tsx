@@ -61,6 +61,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         await UniversimeApi.Auth.logout();
         setProfile(null);
+
+        // clear stored roles
+        localStorage.removeItem("roles");
+
         goTo("");
 
         setFinishedLogin(true);
@@ -73,6 +77,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         if (profile !== null) await Promise.all([
             updateOrganization(),
+            updateRoles(),
             updateLinks(profile),
             updateGroups(profile),
         ]);
@@ -87,6 +92,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setOrganization(usedOrganization);
         return usedOrganization;
+    }
+
+    async function updateRoles() {
+        if (organization === null) return;
+
+        const roles = await UniversimeApi.Roles.listRoles();
+
+        if (!roles.success) {
+            return null;
+        }
+
+        // save roles to local storage
+        localStorage.setItem("roles", JSON.stringify(roles.body?.roles));
+
+        return {
+            roles: roles.body?.roles,
+        };
     }
 
     async function updateLinks(profile: ProfileClass) {

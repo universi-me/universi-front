@@ -18,21 +18,21 @@ export const FeatureTypesToLabel = {
     "COMPETENCE":   "Competência"
 };
 
-export type Paper = {
+export type Roles = {
     id: string;
     name: string;
     description : string;
-    paperFeatures: PaperFeature[];
+    rolesFeatures: RolesFeature[];
 }
 
-export type PaperFeature = {
+export type RolesFeature = {
     id: string;
-    paper: string;
+    roles: string;
     featureType: FeatureTypes;
     permission: number;
 }
 
-export type PaperProfile = {
+export type RolesProfile = {
     id: string;
-    paper: Paper;
+    roles: Roles;
 }

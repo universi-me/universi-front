@@ -8,8 +8,8 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { useContext, useState } from "react";
 import { GroupContext, GroupFeedPost } from "@/pages/Group";
 import "./GroupFeed.less";
-import { canI } from "@/utils/paper/paperUtils";
-import { Permission } from "@/types/Paper";
+import { canI } from "@/utils/roles/rolesUtils";
+import { Permission } from "@/types/Roles";
 
 export function GroupFeed(){
 

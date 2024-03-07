@@ -1,31 +1,31 @@
 import { type LoaderFunctionArgs } from "react-router-dom";
 import { useContext } from "react";
-import { PaperProfile, Paper } from "@/types/Paper";
+import { RolesProfile, Roles } from "@/types/Roles";
 import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
 
-export type PaperResponse = {
-    papers: Paper[] | undefined;
-    participants: PaperProfile[] | undefined;
+export type RolesResponse = {
+    roles: Roles[] | undefined;
+    participants: RolesProfile[] | undefined;
 };
 
-export async function PaperFetch(groupId: string): Promise<PaperResponse> {
+export async function RolesFetch(groupId: string): Promise<RolesResponse> {
 
-    const papers = await UniversimeApi.Paper.list({ groupId });
+    const roles = await UniversimeApi.Roles.list({ groupId });
     
-    const participants = await UniversimeApi.Paper.listPaticipants({ groupId });
+    const participants = await UniversimeApi.Roles.listPaticipants({ groupId });
 
-    if(!papers.success ) {
+    if(!roles.success ) {
         return FAILED_TO_LOAD;
     }
 
     return {
-        papers: papers.body?.papers,
+        roles: roles.body?.roles,
         participants: participants.body?.participants,
     }
 }
 
-export async function PaperLoader(args: LoaderFunctionArgs) {
+export async function RolesLoader(args: LoaderFunctionArgs) {
 
     const auth = useContext(AuthContext);
 
@@ -38,10 +38,10 @@ export async function PaperLoader(args: LoaderFunctionArgs) {
         };
     }
 
-    return PaperFetch(organization!.id);
+    return RolesFetch(organization!.id);
 }
 
 const FAILED_TO_LOAD = {
-    papers: undefined,
+    roles: undefined,
     participants: undefined
 };

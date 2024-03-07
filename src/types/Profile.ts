@@ -2,7 +2,7 @@ import { compareAccessLevel, type User } from "@/types/User";
 import { type Nullable } from "@/types/utils";
 import { IMG_DEFAULT_PROFILE } from "@/utils/assets";
 import { Competence } from "./Competence";
-import { Paper } from "./Paper";
+import { Roles } from "./Roles";
 
 export type Gender = "M" | "F" | "O";
 export const GENDER_OPTIONS: {[k in Gender]: string} = {
@@ -21,7 +21,7 @@ export type Profile = {
     bio:          string | null;
     creationDate: string;
     competences:  Competence[] | null;
-    paper?:       Paper | undefined | null;
+    roles?:       Roles | undefined | null;
 }
 
 export class ProfileClass implements Profile {
@@ -153,6 +153,6 @@ export class ProfileClass implements Profile {
 
     get creationDate() { return this.profile.creationDate }
 
-    get paper(): Paper | undefined | null { return this.profile.paper }
-    set paper(paper: Paper | undefined | null) { this.profile.paper = paper }
+    get roles(): Roles | undefined | null { return this.profile.roles }
+    set roles(roles: Roles | undefined | null) { this.profile.roles = roles }
 }

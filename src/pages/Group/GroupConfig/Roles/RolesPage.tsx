@@ -12,16 +12,16 @@ import { ValidationComposite } from "@/components/UniversiForm/Validation/Valida
 
 import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 
-import { FeatureTypesToLabel, type FeatureTypes, Paper, PaperFeature, Permission } from "@/types/Paper";
+import { FeatureTypesToLabel, type FeatureTypes, Roles, RolesFeature, Permission } from "@/types/Roles";
 
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
 import { ProfileClass, type Profile } from "@/types/Profile";
 
-import { type PaperResponse, PaperFetch, PaperLoader } from "./PaperLoader";
+import { type RolesResponse, RolesFetch, RolesLoader } from "./RolesLoader";
 
 
-import "./Paper.less";
+import "./Roles.less";
 import { Group } from "@/types/Group";
 
 type PaperPageProps = {
@@ -29,9 +29,9 @@ type PaperPageProps = {
 };
 
 
-const PaperPage : React.FC<PaperPageProps> = ({ group }) => {
+const RolesPage : React.FC<PaperPageProps> = ({ group }) => {
     const auth = useContext(AuthContext);
-    const data = useLoaderData() as PaperResponse;
+    const data = useLoaderData() as RolesResponse;
     const navigate = useNavigate();
 
     const [managePaperMode, setManagePaperMode] = useState(false);
@@ -39,17 +39,17 @@ const PaperPage : React.FC<PaperPageProps> = ({ group }) => {
     const [editMode, setEditMode] = useState(true);
 
     const [showPaperForm, setShowPaperForm] = useState(false);
-    const [paperEdit, setPaperEdit] = useState(null as Paper | null);
+    const [paperEdit, setPaperEdit] = useState(null as Roles | null);
 
-    const [rows, setRows] = useState(null as Paper[] | null);
+    const [rows, setRows] = useState(null as Roles[] | null);
     const [columns, setColumns] = useState(null as string[] | null);
 
     const [participants, setParticipants] = useState(null as ProfileClass[] | null);
 
-    const CHANGE_PAPER_OPTIONS: OptionInMenu<Paper>[] = rows!?.map((paper) => ({
-        text: paper.name,
+    const CHANGE_PAPER_OPTIONS: OptionInMenu<Roles>[] = rows!?.map((roles) => ({
+        text: roles.name,
         onSelect(data) {
-            UniversimeApi.Paper.assign({paperId: paper.id, profileId: data.id}).then(
+            UniversimeApi.Roles.assign({rolesId: roles.id, profileId: data.id}).then(
                 refreshPage
             );
         },
@@ -60,14 +60,14 @@ const PaperPage : React.FC<PaperPageProps> = ({ group }) => {
         refreshPage();
     }, [data]);
     
-    const handleFeatureCheckboxChange = (e : any, row : Paper, column : any) => {
-        UniversimeApi.Feature.toggle({paperId: row.id, feature: column, value: e.target.value}).then(
+    const handleFeatureCheckboxChange = (e : any, row : Roles, column : any) => {
+        UniversimeApi.Feature.toggle({rolesId: row.id, feature: column, value: e.target.value}).then(
             refreshPage
         );
     };
 
-    const isFeatureChecked = (row : Paper, column : any) => {
-        let paperFeature = (row!?.paperFeatures as any)?.findLast((feature: { featureType: any; }) => feature.featureType == column);
+    const isFeatureChecked = (row : Roles, column : any) => {
+        let paperFeature = (row!?.rolesFeatures as any)?.findLast((feature: { featureType: any; }) => feature.featureType == column);
         if(paperFeature) {
             return paperFeature.permission;
         }
@@ -93,11 +93,11 @@ const PaperPage : React.FC<PaperPageProps> = ({ group }) => {
                             value: group?.id
                         },
                         {
-                            DTOName: "paperId", label: "id", type: FormInputs.HIDDEN,
+                            DTOName: "rolesId", label: "id", type: FormInputs.HIDDEN,
                             value: paperEdit?.id
                         },
                     ]}
-                    requisition={paperEdit ? UniversimeApi.Paper.edit : UniversimeApi.Paper.create}
+                    requisition={paperEdit ? UniversimeApi.Roles.edit : UniversimeApi.Roles.create}
                     callback={()=>{setPaperEdit(null); setShowPaperForm(false); refreshPage()}}
                 />
             }
@@ -187,7 +187,7 @@ const PaperPage : React.FC<PaperPageProps> = ({ group }) => {
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild /*disabled={isOwnProfile}*/ title={isOwnProfile ? "Você não pode alterar seu próprio nível de acesso" : undefined}>
                         <button type="button" className="set-role-trigger">
-                            { profile.paper!?.name! }
+                            { profile.roles!?.name! }
                             <span className="bi"/>
                         </button>
                     </DropdownMenu.Trigger>
@@ -208,15 +208,15 @@ const PaperPage : React.FC<PaperPageProps> = ({ group }) => {
     </div>
 
     async function refreshPage() {
-        const newData = await PaperFetch(group!.id);
+        const newData = await RolesFetch(group!.id);
         setValuesWithData(newData);
     }
 
     function setValuesWithData(data : any) {
         setColumns((data!.features! ?? []).sort((a :any,b : any) => a.name.localeCompare(b.name)) );
-        setRows((data!.papers! ?? []).sort((a :any,b : any) => a.name.localeCompare(b.name)) );
+        setRows((data!.roles! ?? []).sort((a :any,b : any) => a.name.localeCompare(b.name)) );
         setParticipants(data!.participants!?.map(ProfileClass.new));
     }
 }
 
-export default PaperPage;
+export default RolesPage;

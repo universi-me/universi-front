@@ -11,8 +11,8 @@ import { hasAvailableOption, renderOption, type OptionInMenu } from "@/utils/dro
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import { type GroupPost } from "@/types/Feed";
-import { canI } from "@/utils/paper/paperUtils";
-import { Permission } from "@/types/Paper";
+import { canI } from "@/utils/roles/rolesUtils";
+import { Permission } from "@/types/Roles";
 
 export type GroupFeedPostProps = Readonly<{
     post: GroupPost;

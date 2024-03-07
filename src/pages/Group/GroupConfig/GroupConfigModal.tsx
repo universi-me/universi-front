@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import PaperPage from './Paper/PaperPage';
+import RolesPage from './Roles/RolesPage';
 import './GroupConfigModal.css';
 import { Group } from '@/types/Group';
 import { GroupContext } from "@/pages/Group";
@@ -37,7 +37,7 @@ export function GroupConfigModal() {
         <div className="tab-content">
           {activeTab === Tab.PERMISSIONS && (
             <div>
-             { <PaperPage group={groupContext?.group}/> }
+             { <RolesPage group={groupContext?.group}/> }
             </div>
           )}
         </div>

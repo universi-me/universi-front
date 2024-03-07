@@ -5,8 +5,8 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
 import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 import { GroupCompetences } from "./GroupCompetences/GroupCompetences";
-import { canI } from '@/utils/paper/paperUtils';
-import { Permission, type FeatureTypes } from "@/types/Paper";
+import { canI } from '@/utils/roles/rolesUtils';
+import { Permission, type FeatureTypes } from "@/types/Roles";
 
 export type AvailableTabs = "feed" | "contents" | "files" | "groups" | "people" | "competences";
 
