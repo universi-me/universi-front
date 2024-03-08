@@ -20,10 +20,16 @@ export type CompetenceTypeRemove_RequestDTO = {
     id: string;
 };
 
+export type CompetenceTypeMerge_RequestDTO = {
+    removedCompetenceTypeId:   string;
+    remainingCompetenceTypeId: string;
+};
+
 export type CompetenceTypeGet_ResponseDTO =  ApiResponse<{ competenceType: CompetenceType }>;
 export type CompetenceTypeList_ResponseDTO = ApiResponse<{ list: CompetenceType[] }>;
 export type CompetenceTypeCreate_ResponseDTO = ApiResponse;
 export type CompetenceTypeUpdate_ResponseDTO = ApiResponse;
+export type CompetenceTypeMerge_ResponseDTO =  ApiResponse;
 export type CompetenceTypeRemove_ResponseDTO = ApiResponse;
 
 export async function get(body: CompetenceTypeGet_RequestDTO) {
@@ -53,5 +59,12 @@ export async function list() {
 export async function remove(body: CompetenceTypeRemove_RequestDTO) {
     return (await api.post<CompetenceTypeRemove_ResponseDTO>("/admin/competencetype/remove", {
         competenceTypeId: body.id,
+    })).data;
+}
+
+export async function merge(body: CompetenceTypeMerge_RequestDTO) {
+    return (await api.post<CompetenceTypeMerge_ResponseDTO>("/admin/competencetype/merge", {
+        removedCompetenceTypeId:   body.removedCompetenceTypeId,
+        remainingCompetenceTypeId: body.remainingCompetenceTypeId,
     })).data;
 }

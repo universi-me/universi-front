@@ -3,6 +3,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 
 import UniversimeApi from "@/services/UniversimeApi";
 import { Filter } from "@/components/Filter/Filter";
+import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { type CompetencesSettingsLoaderResponse, SettingsDescription, SettingsTitle, CompetenceTypeEditor } from "@/pages/Settings";
 
 import * as SwalUtils from "@/utils/sweetalertUtils";
@@ -20,6 +21,9 @@ export function CompetencesSettingsPage() {
     const [unreviewedFilter, setUnreviewedFilter] = useState("");
 
     const [competenceTypes, setCompetenceTypes] = useState<CompetenceType[]>(loaderData.competenceTypes ?? []);
+
+    const [mergeCompetence, setMergeCompetence] = useState<CompetenceType | undefined>();
+    const renderSelectMerge = mergeCompetence !== undefined;
 
     if (loaderData.competenceTypes === undefined) {
         SwalUtils.fireModal({
@@ -64,7 +68,7 @@ export function CompetencesSettingsPage() {
 
             <div className="competences-wrapper">
             { unreviewedFilteredCompetences.length > 0
-                ? unreviewedFilteredCompetences.map(ct => <CompetenceTypeEditor key={ct.id} ct={ct} refreshCompetenceTypes={refreshCompetenceTypes} />)
+                ? unreviewedFilteredCompetences.map(ct => <CompetenceTypeEditor key={ct.id} ct={ct} refreshCompetenceTypes={refreshCompetenceTypes} setMergedCompetence={setMergeCompetence} />)
                 : <p className="empty-competences">
                 { unreviewedCompetenceTypes.length > 0
                     ? "Nenhuma competência encontrada."
@@ -97,10 +101,34 @@ export function CompetencesSettingsPage() {
             }
             </div>
         </section>
+
+        { renderSelectMerge && 
+            <UniversiForm formTitle="Fundir competência" objects={[
+                {
+                    DTOName: "remainingCompetenceTypeId", label: `Substituir "${mergeCompetence.name}" por:`, type: FormInputs.SELECT_SINGLE,
+                    canCreate: false, options: reviewedCompetenceTypes.map(ct => ({ label: ct.name, value: ct.id })), required: true,
+                }
+            ]} requisition={mergeCompetences} callback={() => {setMergeCompetence(undefined); refreshCompetenceTypes()}}/>
+        }
     </div>;
 
     async function refreshCompetenceTypes() {
         const competenceTypes = await UniversimeApi.CompetenceType.list();
         setCompetenceTypes(competenceTypes.body?.list ?? []);
+    }
+
+    type MergeCompetencesProps = {
+        remainingCompetenceTypeId: string;
+    }
+    async function mergeCompetences(props: MergeCompetencesProps) {
+        if (mergeCompetence === undefined)
+            return;
+
+        const { remainingCompetenceTypeId } = props;
+
+        await UniversimeApi.CompetenceType.merge({
+            remainingCompetenceTypeId,
+            removedCompetenceTypeId: mergeCompetence.id
+        });
     }
 }

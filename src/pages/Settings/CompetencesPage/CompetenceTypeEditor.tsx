@@ -12,6 +12,11 @@ export type CompetenceTypeEditorProps = {
 
     /** Function to update current CompetenceTypes available */
     refreshCompetenceTypes: () => any;
+
+    /** Function to be called when the merge button is pressed.
+     * If undefined this competence type cannot be merged
+     */
+    setMergedCompetence?: (competence: CompetenceType) => any;
 };
 
 export function CompetenceTypeEditor(props: Readonly<CompetenceTypeEditorProps>) {
@@ -65,9 +70,17 @@ export function CompetenceTypeEditor(props: Readonly<CompetenceTypeEditorProps>)
             }
         </h2>
 
-        <button type="button" className="competence-interact-button competencetype-delete" onClick={deleteCompetenceType} title="Excluir competência">
-            <i className="bi bi-trash-fill"/>
-        </button>
+        <div className="right-button-wrapper">
+            { props.setMergedCompetence &&
+            <button type="button" className="competence-interact-button competencetype-merge" onClick={() => props.setMergedCompetence!(ct)} title="Fundir competência">
+                <i className="bi bi-circle-square"/>
+            </button>
+            }
+
+            <button type="button" className="competence-interact-button competencetype-delete" onClick={deleteCompetenceType} title="Excluir competência">
+                <i className="bi bi-trash-fill"/>
+            </button>
+        </div>
     </div>
 
     async function reviewCompetence() {
