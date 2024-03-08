@@ -4,6 +4,7 @@ import { Profile } from "@/types/Profile";
 import { AuthContext } from "@/contexts/Auth";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Group } from "@/types/Group";
+import { get } from "@/services/UniversimeApi/Profile";
 
 
 /**
@@ -16,27 +17,31 @@ import { Group } from "@/types/Group";
  */
 export function canI(featureType: FeatureTypes, permission?: Permission,  profile?: Profile, group?: Group): number | boolean {
   const auth = useContext(AuthContext);
+
   const defaultPermission = Permission.DEFAULT;
-  let returnValueAsBollean = (permission != null || permission != undefined);
-  
+  let returnValueAsBoolean = (permission != null || permission != undefined);
+
+  let getGroup = group ?? auth.organization;
+  let getProfile = profile ?? auth.profile;
+
   // get roles from local storage
   let roles = localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles') as string) : null;
   
   if(roles) {
 
     // get feature from roles, based in group and profile
-    let cachedPaper = roles!?.findLast((r :any) => r.group === (group?.id ?? auth.organization?.id) && r.profile === (profile?.id ?? auth.profile?.id));
+    let cachedRoles = roles!?.findLast((r :any) => r.group === getGroup?.id && r.profile === getProfile?.id);
 
-    if (cachedPaper) {
-      const featureR = (cachedPaper?.features as any)?.findLast((f :any) => f.featureType === featureType);
-      if(returnValueAsBollean) {
+    if (cachedRoles) {
+      const featureR = (cachedRoles?.features as any)?.findLast((f :any) => f.featureType === featureType);
+      if(returnValueAsBoolean) {
         return  (featureR ? (featureR.permission >= permission!) : (defaultPermission > Permission.DISABLED));
       }
       return  (featureR ? featureR.permission ?? defaultPermission : defaultPermission);
     }
   }
 
-  return returnValueAsBollean? (defaultPermission > Permission.DISABLED) : defaultPermission;
+  return returnValueAsBoolean ? (defaultPermission > Permission.DISABLED) : defaultPermission;
 }
 
 
