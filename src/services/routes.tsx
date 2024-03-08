@@ -20,7 +20,7 @@ import Recovery from "@/pages/Recovery/Recovery";
 import NewPassword from "@/pages/NewPassword/NewPassword";
 import ManageProfilePage, { ManageProfileLoader } from "@/pages/ManageProfile";
 import Homepage from "@/pages/Homepage";
-import SettingsPage, { GroupEmailFilterPage, GroupEmailFilterLoader, RolesPage, RolesPageLoader, EnvironmentsPage, EnvironmentsLoader } from "@/pages/Settings";
+import SettingsPage, { GroupEmailFilterPage, GroupEmailFilterLoader, RolesPage, RolesPageLoader, EnvironmentsPage, EnvironmentsLoader, CompetencesSettingsPage, CompetencesSettingsLoader } from "@/pages/Settings";
 import ContentPage from "@/pages/Content";
 import { ContentPageLoader } from "@/pages/Content/ContentPageLoader";
 
@@ -116,6 +116,11 @@ export const router = createBrowserRouter([{
                 path: "environments",
                 element: <EnvironmentsPage />,
                 loader: EnvironmentsLoader,
+            },
+            {
+                path: "competences",
+                element: <CompetencesSettingsPage />,
+                loader: CompetencesSettingsLoader,
             }
         ],
     },
