@@ -24,6 +24,7 @@ export type RolesEdit_RequestDTO = {
 
 export type RolesAssign_RequestDTO = {
     rolesId:        string;
+    groupId:        string;
     profileId:      string;
 }
 
@@ -89,6 +90,7 @@ export async function listPaticipants(body: RolesList_RequestDTO) {
 export async function assign(body:  RolesAssign_RequestDTO) {
     return (await api.post<RolesRemove_ResponseDTO>("/roles/assign", {
         rolesId:                 body.rolesId,
+        groupId:                 body.groupId,
         profileId:               body.profileId
     })).data;
 }

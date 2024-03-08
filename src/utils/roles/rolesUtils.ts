@@ -23,14 +23,14 @@ export function canI(featureType: FeatureTypes, permission?: Permission,  profil
   let roles = localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles') as string) : null;
   
   if(roles) {
-    
+
     // get feature from roles, based in group and profile
     let cachedPaper = roles!?.findLast((r :any) => r.group === (group?.id ?? auth.organization?.id) && r.profile === (profile?.id ?? auth.profile?.id));
 
     if (cachedPaper) {
       const featureR = (cachedPaper?.features as any)?.findLast((f :any) => f.featureType === featureType);
       if(returnValueAsBollean) {
-        return  (featureR ? (featureR.permission >= permission!)? true : false : (defaultPermission > Permission.DISABLED));
+        return  (featureR ? (featureR.permission >= permission!) : (defaultPermission > Permission.DISABLED));
       }
       return  (featureR ? featureR.permission ?? defaultPermission : defaultPermission);
     }

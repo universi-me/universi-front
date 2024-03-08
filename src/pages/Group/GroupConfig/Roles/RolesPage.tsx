@@ -49,7 +49,7 @@ const RolesPage : React.FC<PaperPageProps> = ({ group }) => {
     const CHANGE_PAPER_OPTIONS: OptionInMenu<Roles>[] = rows!?.map((roles) => ({
         text: roles.name,
         onSelect(data) {
-            UniversimeApi.Roles.assign({rolesId: roles.id, profileId: data.id}).then(
+            UniversimeApi.Roles.assign({rolesId: roles.id, groupId: group!?.id, profileId: data.id}).then(
                 refreshPage
             );
         },
@@ -133,8 +133,8 @@ const RolesPage : React.FC<PaperPageProps> = ({ group }) => {
                   </thead>
                   <tbody>
                     {rows!?.map((row) => (
-                      <tr key={row.id}>
-                        <td title={row.description}>{row.name} { editMode &&
+                      <tr key={row.id} className="row-diasbled">
+                        <td title={row.description}>{row.name} { (editMode && !row.isDefault) &&
                             <button onClick={()=>{ setPaperEdit(row); setShowPaperForm(true); }} className={`edit-button ${editMode ? 'active' : ''}`}>
                                 <div className={`icon-edit ${editMode ? 'active' : ''}`}>
                                     <i className="bi bi-pencil-fill" />
@@ -146,11 +146,12 @@ const RolesPage : React.FC<PaperPageProps> = ({ group }) => {
                             <select
               value={isFeatureChecked(row, key)}
               onChange={(e) => handleFeatureCheckboxChange(e, row, key)}
+              disabled={row.isDefault === true}
             >
               <option value={ Permission.DISABLED }>Desabilitada</option>
-              <option value={ Permission.READ }>Visualizar</option>
-              <option value={ Permission.READ_WRITE }>Visualizar e Modificar</option>
-              <option value={ Permission.READ_WRITE_DELETE }>Visualizar, Modificar e Apagar</option>
+              <option value={ Permission.READ }>Ver</option>
+              <option value={ Permission.READ_WRITE }>Ver e Editar</option>
+              <option value={ Permission.READ_WRITE_DELETE }>Ver, Editar e Apagar</option>
             </select>
                           </td>
                         ))}
@@ -214,7 +215,10 @@ const RolesPage : React.FC<PaperPageProps> = ({ group }) => {
 
     function setValuesWithData(data : any) {
         setColumns((data!.features! ?? []).sort((a :any,b : any) => a.name.localeCompare(b.name)) );
-        setRows((data!.roles! ?? []).sort((a :any,b : any) => a.name.localeCompare(b.name)) );
+        setRows((data!.roles! ?? [])
+            .sort((a :any,b : any) => a.name.localeCompare(b.name))
+            .sort((a :any,b : any) => (b.isDefault ?? 0).toString().localeCompare((a.isDefault ?? 0).toString()))
+        );
         setParticipants(data!.participants!?.map(ProfileClass.new));
     }
 }
