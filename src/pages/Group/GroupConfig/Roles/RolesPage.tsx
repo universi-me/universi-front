@@ -24,22 +24,22 @@ import { type RolesResponse, RolesFetch, RolesLoader } from "./RolesLoader";
 import "./Roles.less";
 import { Group } from "@/types/Group";
 
-type PaperPageProps = {
+type RolesPageProps = {
     group: Group | undefined;
 };
 
 
-const RolesPage : React.FC<PaperPageProps> = ({ group }) => {
+const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     const auth = useContext(AuthContext);
     const data = useLoaderData() as RolesResponse;
     const navigate = useNavigate();
 
-    const [managePaperMode, setManagePaperMode] = useState(false);
+    const [manageRolesMode, setManageRolesMode] = useState(false);
 
     const [editMode, setEditMode] = useState(true);
 
-    const [showPaperForm, setShowPaperForm] = useState(false);
-    const [paperEdit, setPaperEdit] = useState(null as Roles | null);
+    const [showRolesForm, setShowRolesForm] = useState(false);
+    const [rolesEdit, setRolesEdit] = useState(null as Roles | null);
 
     const [rows, setRows] = useState(null as Roles[] | null);
     const [columns, setColumns] = useState(null as string[] | null);
@@ -67,25 +67,25 @@ const RolesPage : React.FC<PaperPageProps> = ({ group }) => {
     };
 
     const isFeatureChecked = (row : Roles, column : any) => {
-        let paperFeature = (row!?.rolesFeatures as any)?.findLast((feature: { featureType: any; }) => feature.featureType == column);
-        if(paperFeature) {
-            return paperFeature.permission;
+        let rolesFeature = (row!?.rolesFeatures as any)?.findLast((feature: { featureType: any; }) => feature.featureType == column);
+        if(rolesFeature) {
+            return rolesFeature.permission;
         }
         return Permission.DEFAULT;
     };
 
-    return <div id="paper-settings">
+    return <div id="roles-settings">
 
-            { showPaperForm &&
+            { showRolesForm &&
                 <UniversiForm
-                    formTitle={paperEdit == null ? "Criar Papel" : "Editar Papel"}
+                    formTitle={rolesEdit == null ? "Criar Papel" : "Editar Papel"}
                     objects={[
                         {
-                            DTOName: "name", label: "Nome", type: FormInputs.TEXT, value: paperEdit?.name, required: true,
+                            DTOName: "name", label: "Nome", type: FormInputs.TEXT, value: rolesEdit?.name, required: true,
                             charLimit: 30,
                             validation: new ValidationComposite<string>().addValidation(new TextValidation())
                         }, {
-                            DTOName: "description", label: "Descrição", type: FormInputs.LONG_TEXT, value: paperEdit?.description, required: false,
+                            DTOName: "description", label: "Descrição", type: FormInputs.LONG_TEXT, value: rolesEdit?.description, required: false,
                             charLimit: 130,
                         },
                         {
@@ -94,26 +94,26 @@ const RolesPage : React.FC<PaperPageProps> = ({ group }) => {
                         },
                         {
                             DTOName: "rolesId", label: "id", type: FormInputs.HIDDEN,
-                            value: paperEdit?.id
+                            value: rolesEdit?.id
                         },
                     ]}
-                    requisition={paperEdit ? UniversimeApi.Roles.edit : UniversimeApi.Roles.create}
-                    callback={()=>{setPaperEdit(null); setShowPaperForm(false); refreshPage()}}
+                    requisition={rolesEdit ? UniversimeApi.Roles.edit : UniversimeApi.Roles.create}
+                    callback={()=>{setRolesEdit(null); setShowRolesForm(false); refreshPage()}}
                 />
             }
 
             <p/>
             <br/>
 
-        { managePaperMode ? <div>
+        { manageRolesMode ? <div>
             
         <p className="buttons">
             <ActionButton name="Atribuir Papéis" buttonProps={{
-                onClick() { setManagePaperMode(false) },
+                onClick() { setManageRolesMode(false) },
                 className: "create-new-filter",
             }}/>
             <ActionButton name="Criar Papel de Usuário" buttonProps={{
-                onClick() { setShowPaperForm(true) },
+                onClick() { setShowRolesForm(true) },
                 className: "create-new-filter",
             }}/>
         </p>
@@ -135,7 +135,7 @@ const RolesPage : React.FC<PaperPageProps> = ({ group }) => {
                     {rows!?.map((row) => (
                       <tr key={row.id} className="row-diasbled">
                         <td title={row.description}>{row.name} { (editMode && !row.isDefault) &&
-                            <button onClick={()=>{ setPaperEdit(row); setShowPaperForm(true); }} className={`edit-button ${editMode ? 'active' : ''}`}>
+                            <button onClick={()=>{ setRolesEdit(row); setShowRolesForm(true); }} className={`edit-button ${editMode ? 'active' : ''}`}>
                                 <div className={`icon-edit ${editMode ? 'active' : ''}`}>
                                     <i className="bi bi-pencil-fill" />
                                 </div>
@@ -170,7 +170,7 @@ const RolesPage : React.FC<PaperPageProps> = ({ group }) => {
 
             <p className="edit_button">
                 <ActionButton name="Gerenciar Papéis" buttonProps={{
-                    onClick() { setManagePaperMode(true) },
+                    onClick() { setManageRolesMode(true) },
                     className: "create-new-filter",
                 }}/>
             </p>
