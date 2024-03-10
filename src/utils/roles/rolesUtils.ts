@@ -15,7 +15,7 @@ import { get } from "@/services/UniversimeApi/Profile";
  * @param group The group
  * @returns The permission or false if the user does not have permission
  */
-export function canI(featureType: FeatureTypes, permission?: Permission,  profile?: Profile, group?: Group): number | boolean {
+export function canI(featureType: FeatureTypes, permission?: Permission, group?: Group, profile?: Profile): number | boolean {
   const auth = useContext(AuthContext);
 
   const defaultPermission = Permission.DEFAULT;

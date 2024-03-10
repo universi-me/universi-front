@@ -64,7 +64,7 @@ export  function GroupTabs(props: GroupTabsProps){
                 const isCurrentTab = t.value === props.currentTab;
 
                 return (<>
-                    { canI(t!.featureType!, Permission.READ, undefined, context?.group) &&
+                    { canI(t!.featureType!, Permission.READ, context?.group) &&
                         <button className={`group-tab-button`} value={t.value} key={t.value} onClick={() => { window.location.hash = t.value; props.changeTab(t.value); }} data-current-tab={isCurrentTab ? "" : undefined}>
                             {t.name}
                         </button>
