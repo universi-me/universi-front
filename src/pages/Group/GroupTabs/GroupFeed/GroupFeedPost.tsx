@@ -146,39 +146,6 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
         })
     }
 
-    return(
-        <div className="feed-item tab-item">
-            <Link to={`/profile/${author.user.name}`} className="feed-user-info">
-                <img src={author.imageUrl} alt="" className="feed-image" />
-                <p>{author.fullname}</p>
-            </Link>
-
-            { hasAvailableOption(OPTIONS_DEFINITION, post) && <DropdownMenu.Root>
-                <DropdownMenu.Trigger asChild>
-                    <button className="options-button">
-                        <i className="bi bi-three-dots-vertical" />
-                    </button>
-                </DropdownMenu.Trigger>
-
-                <DropdownMenu.Content className="options" side="left">
-                    { OPTIONS_DEFINITION.map(def => renderOption(post, def)) }
-
-                    <DropdownMenu.Arrow className="options-arrow" height=".5rem" width="1rem" />
-                </DropdownMenu.Content>
-            </DropdownMenu.Root> }
-
-            <div className="info">
-                <p className={makeClassName("feed-description", "ql-editor", isExpanded && EXPANDED_CLASS)} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }} id={feedDescriptionId} />
-                { readMore !== "NOT_SHOW" ? 
-                    <p className="ler-button" onClick={toggleReadMore}>
-                        { readMore == "SHOW_MORE" ? "Ler mais" : "Ler menos" }
-                    </p> 
-                    :<></>
-                }
-            </div>
-        </div>
-    )
-
 }
 
 const EXPANDED_CLASS = "show-full-text";
