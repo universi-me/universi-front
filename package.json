@@ -17,7 +17,7 @@
     "@types/youtube": "^0.0.47",
     "axios": "^1.6.2",
     "bootstrap": "^5.3.0",
-    "bootstrap-icons": "^1.10.5",
+    "bootstrap-icons": "^1.11.3",
     "dompurify": "^3.0.6",
     "jsdom": "^23.0.1",
     "phosphor-react": "^1.4.1",
