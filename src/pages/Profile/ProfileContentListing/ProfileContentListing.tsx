@@ -11,12 +11,14 @@ export function ProfileContentListing(){
 
     const assignedContents = profileContext.profileListData.folders
         .slice(0)
+        .filter(content => content != null)
         .sort((content1, content2) => {
             return content1.name.localeCompare(content2.name);
         });
 
     const favoriteContents = profileContext.profileListData.favorites
         .slice(0)
+        .filter(content => content != null)
         .sort((content1, content2) => {
             return content1.name.localeCompare(content2.name);
         });
