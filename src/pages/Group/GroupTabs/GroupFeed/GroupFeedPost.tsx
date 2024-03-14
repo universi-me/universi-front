@@ -18,13 +18,13 @@ export type GroupFeedPostProps = Readonly<{
 
 export function GroupFeedPost({ post }: GroupFeedPostProps) {
     const feedDescriptionId = `post-${post.postId}`;
-    const feedDescriptionElement = document.getElementById(feedDescriptionId);
+    const [feedDescriptionElement, setFeedDescriptionElement] = useState(document.getElementById(feedDescriptionId));
 
     const groupContext = useContext(GroupContext);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
-    const [readMore, setReadMore] = useState<"NOT_SHOW" | "SHOW_MORE" | "SHOW_LESS">("NOT_SHOW");
+    const [readMore, setReadMore] = useState<"NOT_SHOW" | "SHOW_MORE" | "SHOW_LESS">();
 
-    useEffect(() => {
+    const loadReadMore = () => {
         const state = descriptionState();
         if (!state) return;
 
@@ -39,7 +39,17 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
         // is expanded
         else
             setReadMore("SHOW_LESS")
+    }
+
+    useEffect(() => {
+        loadReadMore()
     }, [feedDescriptionElement, post.content]);
+
+    useEffect(() => {
+        setFeedDescriptionElement(document.getElementById(feedDescriptionId))
+        if(readMore == undefined)
+            loadReadMore()
+    }, [])
 
     if (!groupContext)
         return null;
@@ -67,7 +77,7 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             },
         }
     ]
-
+    
     return <div className="feed-item tab-item">
         <Link to={`/profile/${author.user.name}`} className="feed-user-info">
             <img src={author.imageUrl} alt="" className="feed-image" />
@@ -109,7 +119,8 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
     }
 
     function toggleReadMore() {
-        const { isExpanded } = descriptionState()!;
+
+        const { isExpanded } = descriptionState() ?? {};
         const willExpand = !isExpanded;
 
         setIsExpanded(willExpand);
@@ -134,6 +145,7 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             }
         })
     }
+
 }
 
 const EXPANDED_CLASS = "show-full-text";
