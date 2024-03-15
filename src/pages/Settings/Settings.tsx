@@ -27,7 +27,7 @@ export function SettingsPage() {
         </> }
 
         <br/><br/>
-        <i>Version</i>
+        <i>Build Version</i>
         <i>front: { import.meta.env.VITE_BUILD_HASH ?? '---' }</i>
         <i>back: { (auth.organization??{} as any).buildHash ?? '---' }</i>
         </div>

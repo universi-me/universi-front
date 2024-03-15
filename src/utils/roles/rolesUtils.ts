@@ -15,33 +15,51 @@ import { get } from "@/services/UniversimeApi/Profile";
  * @param group The group
  * @returns The permission or false if the user does not have permission
  */
-export function canI(featureType: FeatureTypes, permission?: Permission, group?: Group, profile?: Profile): number | boolean {
-  const auth = useContext(AuthContext);
-
-  const defaultPermission = Permission.DEFAULT;
+export function canI(featureType: FeatureTypes, permission?: Permission, group?: Group, profile?: Profile): boolean | number  {
   let returnValueAsBoolean = (permission != null || permission != undefined);
+  const defaultPermission = Permission.DEFAULT;
+  
+  let returnVal = returnValueAsBoolean ? (defaultPermission > Permission.DISABLED) : defaultPermission;
 
-  let getGroup = group ?? auth.organization;
-  let getProfile = profile ?? auth.profile;
+  let getGroup = group ?? useContext(AuthContext).organization;
+  let getProfile = profile ?? useContext(AuthContext).profile;
 
   // get roles from local storage
   let roles = localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles') as string) : null;
-  
+
+  if(roles ===  null || !roles) {
+    // get roles from API
+    return UniversimeApi.Roles.listRoles().then((res) => {
+      if(res.success && res.body.roles) {
+        localStorage.setItem('roles', JSON.stringify(res.body.roles));
+        return canI(featureType, permission, group, profile);
+      }
+    }) as any;
+  }
+
   if(roles) {
 
     // get feature from roles, based in group and profile
-    let cachedRoles = roles!?.findLast((r :any) => r.group === getGroup?.id && r.profile === getProfile?.id);
+    let roleBasedInGroup = roles!?.findLast((r :any) => r.group === getGroup?.id && r.profile === getProfile?.id);
 
-    if (cachedRoles) {
-      const featureR = (cachedRoles?.features as any)?.findLast((f :any) => f.featureType === featureType);
+    if (roleBasedInGroup) {
+      let featureR = (roleBasedInGroup?.features as any)?.findLast((f :any) => f.featureType === featureType);
       if(returnValueAsBoolean) {
-        return  (featureR ? (featureR.permission >= permission!) : (defaultPermission > Permission.DISABLED));
+        returnVal = (featureR ? (featureR.permission >= permission!) : (defaultPermission > Permission.DISABLED));
+      } else {
+        returnVal = (featureR ? featureR.permission ?? defaultPermission : defaultPermission);
       }
-      return  (featureR ? featureR.permission ?? defaultPermission : defaultPermission);
     }
   }
 
-  return returnValueAsBoolean ? (defaultPermission > Permission.DISABLED) : defaultPermission;
+  console.log(getGroup);
+  console.log(getProfile);
+  console.log(featureType);
+  
+  console.log(roles);
+  console.log(returnVal);
+
+  return returnVal;
 }
 
 

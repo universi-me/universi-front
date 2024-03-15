@@ -75,8 +75,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const profile = await getLoggedProfile();
         setProfile(profile);
 
+        const organization = await updateOrganization();
+
         if (profile !== null) await Promise.all([
-            updateOrganization(),
+            organization,
             updateRoles(),
             updateLinks(profile),
             updateGroups(profile),
@@ -94,20 +96,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return usedOrganization;
     }
 
-    async function updateRoles() {
+     function updateRoles() {
         if (organization === null) return;
 
-        const roles = await UniversimeApi.Roles.listRoles();
+        let roles;
 
-        if (!roles.success) {
+        UniversimeApi.Roles.listRoles().then((res) => {
+            if (res.success && res.body.roles) {
+                roles = res.body.roles;
+            }
+        })
+
+        if (!roles) {
             return null;
         }
 
         // save roles to local storage
-        localStorage.setItem("roles", JSON.stringify(roles.body?.roles));
+        localStorage.setItem("roles", JSON.stringify(roles));
 
         return {
-            roles: roles.body?.roles,
+            roles: roles,
         };
     }
 
