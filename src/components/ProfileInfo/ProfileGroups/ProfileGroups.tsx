@@ -10,6 +10,25 @@ export type ProfileGroupsProps = {
 };
 
 export function ProfileGroups(props: ProfileGroupsProps) {
+
+
+    //Making the first group be the organization group
+    for(let i = 0; i<props.groups.length; i++){
+
+        let group : Group = props.groups[i];
+
+        //switching groups
+        //Root group is now stored in position 0
+        //previous group is now stored where the root
+        //  group was stored before the switch
+        if(group.rootGroup){
+            let tmpGroup = props.groups[0];
+            props.groups[0] = group;
+            props.groups[i] = tmpGroup;
+        }
+
+    }
+
     return (
         <div className="profile-groups-component">
             <div className="header-container">
