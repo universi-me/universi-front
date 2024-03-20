@@ -67,7 +67,7 @@ function getDefaultRolesForProfile(profile? : Profile | ProfileClass | null, gro
 
   // check if gruop administrator
   if(group?.admin?.id == getProfile?.id ||
-     getGroup?.administrators?.findLast((a :any) => a.id === getProfile?.id) ||
+     (getGroup?.administrators as any)?.findLast((a :any) => a.id === getProfile?.id) ||
      getProfile?.user?.accessLevel == 'ROLE_ADMIN') {
     return defaultAdmin;
   }
