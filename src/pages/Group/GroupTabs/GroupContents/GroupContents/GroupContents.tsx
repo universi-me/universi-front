@@ -268,7 +268,7 @@ export function GroupContents() {
                         type: FormInputs.HIDDEN
                     }
                 ]}
-                requisition={() => {}}
+                requisition={UniversimeApi.Capacity.duplicateContent}
                 />
                 :
                 <></>
