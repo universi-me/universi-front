@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import UniversimeApi from "@/services/UniversimeApi";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
@@ -10,6 +10,8 @@ import type { Category, Folder } from "@/types/Capacity";
 import type { Group } from "@/types/Group";
 
 import "./ManageContent.less";
+import { GroupContext } from "@/pages/Group";
+import { FolderCreate_RequestDTO } from "@/services/UniversimeApi/Capacity";
 
 export type ManageContentProps = {
     /** A null `content` means a content is being created, while a value means
@@ -30,6 +32,8 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
 
     const [availableCategories, setAvailableCategories] = useState<Category[]>();
 
+    const groupContext = useContext(GroupContext)
+
     useEffect(() => {
         setContent(props.content);
         setGroup(props.group);
@@ -46,7 +50,7 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
         formTitle = { isNewContent ? "Criar conteúdo" : "Editar conteúdo" }
         objects = {[
             {
-                DTOName: "name", label: "Nome do conteúdo", type: FormInputs.TEXT, value: content?.name, required: true, charLimit: 100,
+                DTOName: "name", label: "Nome do conteúdo", type: FormInputs.TEXT, value: content?.name, required: true, charLimit: 100, 
             }, {
                 DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: content?.description ?? undefined, required: false, charLimit: 200,
             }, {
@@ -65,11 +69,38 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
                 DTOName: "groupId", label: "Id do grupo", type: FormInputs.HIDDEN, value: group?.id,
             }, {
                 DTOName: "id", label: "Id do conteúdo", type: FormInputs.HIDDEN, value: content?.id,
-            },
+            }, {
+                DTOName: "groupPath", label: "Path do grupo", type: FormInputs.HIDDEN, value: group?.path
+            }
         ]}
-        requisition = { !isNewContent ? UniversimeApi.Capacity.editFolder : UniversimeApi.Capacity.createFolder }
-        callback = {() => { props.afterSave?.(); }}
+        requisition = { !isNewContent ? UniversimeApi.Capacity.editFolder : handleCreateNewContent }
+        callback = {() => { props.afterSave?.();}}
     />;
+
+    
+    function handleCreateNewContent(dto : FolderCreate_RequestDTO){
+
+        if(groupContext == undefined || group == undefined)
+            return;
+
+        const canPost = (
+        (groupContext.group.everyoneCanPost) ||
+        (!groupContext.group.everyoneCanPost && groupContext.group.admin.id == groupContext.loggedData.profile.id)
+        )
+
+        UniversimeApi.Capacity.createFolder(dto)
+            .then((response)=>{
+                if(response.success && canPost && dto.groupId){
+                    UniversimeApi.Feed.createGroupPost({
+                        authorId: groupContext.loggedData.profile.id,
+                        content: `<p>Conteúdo <a href="/group${dto.groupPath}#contents/${response.body.contentId}">${dto.name}<a/> foi cadastrado.<p/>`,
+                        groupId: dto.groupId
+                    }).then(()=>{groupContext.refreshData()})
+                }
+
+            })
+
+    }
 
     async function handleCreateOption(value: string){
         const createResponse = await UniversimeApi.Capacity.createCategory({ name: value, image: "" });

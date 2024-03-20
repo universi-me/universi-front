@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 
 import { ProfileContext } from "@/pages/Profile";
-import { CompetenceType, LevelToLabel } from "@/types/Competence";
+import { CompetenceType, Level, LevelToDescription, LevelToLabel } from "@/types/Competence";
 import { UniversimeApi } from "@/services/UniversimeApi";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
@@ -21,6 +21,12 @@ export function CompetencesSettings() {
             .sort((c1,c2) => c1.name.localeCompare(c2.name))
             .map((t)=> ({value: t.id, label: t.name})) ?? [];
     }
+
+    const levelOptions = Object.entries(LevelToLabel)
+        .map(([level, label]) => ({
+            value: level,
+            label: `${label}: ${LevelToDescription[parseInt(level) as Level]}`,
+        }));
 
     return (
         profileContext &&
@@ -48,8 +54,7 @@ export function CompetencesSettings() {
                 {
                     DTOName: "level", label: "Nível de Experiência", type: FormInputs.RADIO, 
                     value: editCompetence?.level ? {value: editCompetence?.level , label: editCompetence?.level } : undefined,
-                    options: Object.entries(LevelToLabel).map(([level, label]) => ({value: level, label })),
-                    required: true
+                    options: levelOptions, required: true
                 },
                 {
                     DTOName: "description", label: "description", type: FormInputs.HIDDEN,

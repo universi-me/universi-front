@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { groupImageUrl } from "@/utils/apiUtils";
 
-import type { Group } from "@/types/Group";
+import { GroupTypeToLabel, type Group, type GroupType } from "@/types/Group";
 import "./GroupGroups.less";
 import { Filter } from "@/components/Filter/Filter";
 import { AuthContext } from "@/contexts/Auth";
@@ -67,18 +67,9 @@ export function GroupGroups() {
         })
     }
 
-    const groupTypes = [
-        ["INSTITUTION", "Instituição"],
-        ["CAMPUS", "Campus"],
-        ["COURSE", "Curso"],
-        ["PROJECT", "Projeto"],
-        ["CLASSROOM", "Sala de aula"],
-        ["MONITORIA", "Monitoria"],
-        ["LABORATORY", "Laboratório"],
-        ["ACADEMIC_CENTER", "Centro acadêmico"],
-        ["DEPARTMENT", "Departamento"],
-        ["STUDY_GROUP", "Grupo de estudo"]
-    ]
+    const availableGroupTypes = Object.entries(GroupTypeToLabel)
+        .sort((a, b) => a[1].localeCompare(b[1]))
+        .map((t) => ({ value: t[0] as GroupType, label: t[1] }));
 
     return (
         <section id="groups" className="group-tab">
@@ -120,7 +111,7 @@ export function GroupGroups() {
                         }, { 
                             DTOName: "groupType", label: "Tipo do grupo", type: FormInputs.SELECT_SINGLE, 
                             value: groupContext.editGroup ?  {value : groupContext.editGroup.type, label : groupContext.editGroup.type } : undefined, 
-                            options: groupTypes.map((t) => ({value: t[0], label: t[1]})), required: true
+                            options: availableGroupTypes, required: true
                         }, {
                             DTOName: "canHaveSubgroup", label: "Pode criar grupo", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.canCreateGroup
                         }, {

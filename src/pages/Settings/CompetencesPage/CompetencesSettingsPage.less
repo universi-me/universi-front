@@ -1,0 +1,90 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+#universi-settings #settings-content #competences-admin-settings {
+    .competence-section {
+        &:not(:last-of-type) {
+            margin-bottom: 1.5rem;
+        }
+
+        .competence-section-title-filter-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: end;
+            justify-content: space-between;
+
+            .filter-component {
+                background-color: @card-item-color;
+            }
+        }
+
+        .competence-section-description {
+            max-width: 85%;
+            margin-bottom: .5rem;
+        }
+
+        .competences-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            width: 100%;
+
+            gap: .5rem;
+
+            .empty-competences {
+                width: 100%;
+                text-align: center;
+                font-style: italic;
+            }
+
+            .competence-editor {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                background-color: @card-item-color;
+                border-radius: 10px;
+
+                width: 100%;
+                padding: .25rem .5rem;
+
+                .competence-interact-button {
+                    color: @font-color-v2;
+                    border: none;
+                    background-color: transparent;
+
+                    margin-right: .5rem;
+                    font-size: 1.5rem;
+
+                    &:not(:disabled) {
+                        cursor: pointer;
+                    }
+
+                    &.competence-cancel-name {
+                        color: @wrong-invalid-color;
+                    }
+
+                    &.competencetype-delete {
+                        color: @wrong-invalid-color;
+                    }
+                }
+
+                .competencetype-name-wrapper {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+
+                    .competencetype-name {
+                        color: @font-color-v2;
+                        font-size: 1.25rem;
+                        font-weight: @font-weight-semibold;
+                    }
+                }
+
+                .right-button-wrapper {
+                    margin-left: auto;
+                }
+            }
+        }
+    }
+}

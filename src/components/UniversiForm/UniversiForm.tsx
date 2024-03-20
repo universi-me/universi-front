@@ -367,7 +367,6 @@ export function UniversiForm(props : formProps){
 
                 if(optionsList && object.value){
                     for(const option of optionsList){
-                        console.log("Testando opção", option.value, "Com object.value: ", object.value)
 
                         if(object.value === option.value){
                             console.log("retornando: ", option);
