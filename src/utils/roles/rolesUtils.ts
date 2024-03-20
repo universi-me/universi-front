@@ -50,7 +50,7 @@ export function getRolesProfile(profile? : Profile, group?: Group, roles?: Roles
   let getGroup = group ?? useContext(AuthContext).organization;
   let getProfile = profile ?? useContext(AuthContext).profile;
 
-  let getRolesVar : Roles[] = roles ?? getRoles();
+  let getRolesVar : any = roles ?? getRoles();
 
 
   let roleBasedInGroup = getRolesVar.findLast((r :any) => r.group === getGroup?.id && r.profile === getProfile?.id) ?? getDefaultRolesForProfile(getProfile, getGroup, getRolesVar);
@@ -60,14 +60,14 @@ export function getRolesProfile(profile? : Profile, group?: Group, roles?: Roles
 function getDefaultRolesForProfile(profile? : Profile | ProfileClass | null, group?: Group | null, roles?: Roles[]) {
   let getGroup = group ?? useContext(AuthContext).organization;
   let getProfile = profile ?? useContext(AuthContext).profile;
-  let getRolesVar = roles ?? getRoles();
+  let getRolesVar : any = roles ?? getRoles();
 
   let defaultAdmin = getRolesVar?.findLast((r :any) => r.group === null && isAdminRole(r) && r.profile === getProfile?.id);
   let defaultUser = getRolesVar?.findLast((r :any) => r.group === null && !isAdminRole(r) && r.profile === getProfile?.id);
 
   // check if gruop administrator
   if(group?.admin?.id == getProfile?.id ||
-     getGroup?.administrators.findLast((a :any) => a.id === getProfile?.id) ||
+     getGroup?.administrators?.findLast((a :any) => a.id === getProfile?.id) ||
      getProfile?.user?.accessLevel == 'ROLE_ADMIN') {
     return defaultAdmin;
   }
@@ -77,7 +77,7 @@ function getDefaultRolesForProfile(profile? : Profile | ProfileClass | null, gro
 
 
 // get roles from local storage or refetch API
-function getRoles(): Roles[] {
+function getRoles(): any {
   let roles = null;
 
   // get roles from local storage
