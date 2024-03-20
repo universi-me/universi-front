@@ -93,11 +93,15 @@ interface ThemeColorItemProps {
 }
 
 function ThemeColorItem({ theme, isSelected, onClick }: ThemeColorItemProps) {
+  const handleClick = () => {
+    onClick(theme);
+  };
+
   return (
     <div
       className={`theme-color-item ${isSelected ? "selected" : ""}`}
       style={{ backgroundColor: theme.primaryColor }}
-      onClick={() => onClick(theme)}
+      onClick={handleClick}
     ></div>
   );
 }
@@ -107,15 +111,6 @@ function themeReducer(state: GroupTheme | null, action: { type: "SELECT"; theme:
 }
 
 const showErrorModal = (title: string, text: string) => {
-  SwalUtils.fireModal({
-    title,
-    text,
-    showConfirmButton: true,
-    confirmButtonText: "OK",
-  });
-};
-
-const showSuccessModal = (title: string, text: string) => {
   SwalUtils.fireModal({
     title,
     text,
@@ -181,7 +176,7 @@ export function GroupThemeColorPage() {
 
   const saveChanges = async () => {
     if (!selectedTheme || !organizationId) {
-      showErrorModal("Erro ao salvar alterações", "Selecione um tema e obtenha a organização antes de salvar.");
+      showErrorModal("Erro ao salvar alterações", "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente.)");
       return;
     }
 
@@ -192,7 +187,6 @@ export function GroupThemeColorPage() {
         ...themeMapping,
       });
       applyThemeStyles(themeMapping);
-      showSuccessModal("Alterações salvas!", "O tema foi atualizado com sucesso");
     } catch {
       showErrorModal(
         "Erro ao salvar alterações",
