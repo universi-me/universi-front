@@ -17,6 +17,7 @@ import { UniversiModal } from "@/components/UniversiModal";
 import { ProfileClass } from "@/types/Profile";
 import { makeClassName } from "@/utils/tsxUtils";
 import { arrayRemoveEquals } from "@/utils/arrayUtils";
+import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
 function SelectPeople(){
     const groupContext = useContext(GroupContext)
@@ -149,6 +150,7 @@ export function GroupContents() {
     const groupContext = useContext(GroupContext);
     const authContext = useContext(AuthContext);
     const [filterContents, setFilterContents] = useState<string>("");
+    const [duplicateContentId, setDuplicateContentId] = useState<string | undefined> ();
 
     if (!groupContext)
         return null;
@@ -208,6 +210,17 @@ export function GroupContents() {
             hidden() {
                 return !groupContext?.group.canEdit;
             },
+        },
+        {
+            text: "Duplicar",
+            biIcon: "folder-plus",
+            className: "duplicate",
+            onSelect: (data) => {
+                setDuplicateContentId(data.id)
+            },
+            hidden(){
+                return !groupContext.group.canEdit;
+            },
         }
     ]
 
@@ -235,6 +248,28 @@ export function GroupContents() {
                 groupContext.assignFolder !== undefined
                 ?
                 <SelectPeople/>
+                :
+                duplicateContentId !== undefined
+                ?
+                <UniversiForm
+                callback={() => {setDuplicateContentId(undefined)}}
+                formTitle="Duplicar conteúdo"
+                objects={[
+                    {
+                        DTOName : "targetGroupId", 
+                        label : "Grupo para o qual você deseja copiar",
+                        type: FormInputs.SELECT_SINGLE,
+                        options : groupContext.loggedData.groups.filter(g => g.canEdit).map((g) => ({value: g.id, label: g.name}))
+                    },
+                    {
+                        DTOName: "contentId",
+                        label: "",
+                        value: duplicateContentId,
+                        type: FormInputs.HIDDEN
+                    }
+                ]}
+                requisition={() => {}}
+                />
                 :
                 <></>
             }
