@@ -6,7 +6,9 @@ export enum Permission {
     READ = 2,
     READ_WRITE = 3,
     READ_WRITE_DELETE = 4,
-} 
+}
+
+
 
 export type FeatureTypes = "FEED" | "CONTENT" | "GROUP" | "PEOPLE" | "COMPETENCE";
 
@@ -24,6 +26,7 @@ export type Roles = {
     description : string;
     isDefault: boolean;
     rolesFeatures: RolesFeature[];
+    features?: RolesFeature[];
 }
 
 export type RolesFeature = {

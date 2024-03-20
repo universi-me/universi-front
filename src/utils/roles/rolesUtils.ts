@@ -1,11 +1,9 @@
 import UniversimeApi from "@/services/UniversimeApi";
 import { FeatureTypes, Roles, RolesFeature, Permission } from "@/types/Roles";
-import { Profile } from "@/types/Profile";
+import { Profile, ProfileClass } from "@/types/Profile";
 import { AuthContext } from "@/contexts/Auth";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Group } from "@/types/Group";
-import { get } from "@/services/UniversimeApi/Profile";
-
 
 /**
  * Check if the user has permission to do something
@@ -17,18 +15,11 @@ import { get } from "@/services/UniversimeApi/Profile";
  */
 export function canI(featureType: FeatureTypes, permission?: Permission, group?: Group, profile?: Profile): boolean | number  {
   let returnValueAsBoolean = (permission != null || permission != undefined);
-  const defaultPermission = Permission.DEFAULT;
-  
-  let returnVal = returnValueAsBoolean ? (defaultPermission > Permission.DISABLED) : defaultPermission;
-
-  let getGroup = group ?? useContext(AuthContext).organization;
-  let getProfile = profile ?? useContext(AuthContext).profile;
 
   // get roles from local storage
   let roles = localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles') as string) : null;
-
   if(roles ===  null || !roles) {
-    // get roles from API
+    // fetch roles from API
     return UniversimeApi.Roles.listRoles().then((res) => {
       if(res.success && res.body.roles) {
         localStorage.setItem('roles', JSON.stringify(res.body.roles));
@@ -37,31 +28,76 @@ export function canI(featureType: FeatureTypes, permission?: Permission, group?:
     }) as any;
   }
 
-  if(roles) {
+  // get feature from roles, based in group and profile
+  let roleBasedInGroup : any = getRolesProfile(profile, group, roles);
 
-    // get feature from roles, based in group and profile
-    let roleBasedInGroup = roles!?.findLast((r :any) => r.group === getGroup?.id && r.profile === getProfile?.id);
-
-    if (roleBasedInGroup) {
-      let featureR = (roleBasedInGroup?.features as any)?.findLast((f :any) => f.featureType === featureType);
+  if (roleBasedInGroup) {
+    let featureR = roleBasedInGroup.features.findLast((f :any) => f.featureType === featureType);
+    if(featureR) {
       if(returnValueAsBoolean) {
-        returnVal = (featureR ? (featureR.permission >= permission!) : (defaultPermission > Permission.DISABLED));
+        return (featureR.permission >= permission!);
       } else {
-        returnVal = (featureR ? featureR.permission ?? defaultPermission : defaultPermission);
+        return featureR.permission;
       }
     }
   }
 
-  console.log(getGroup);
-  console.log(getProfile);
-  console.log(featureType);
-  
-  console.log(roles);
-  console.log(returnVal);
+  return returnValueAsBoolean ? false : Permission.NONE;
+}
 
-  return returnVal;
+
+export function getRolesProfile(profile? : Profile, group?: Group, roles?: Roles[]) {
+  let getGroup = group ?? useContext(AuthContext).organization;
+  let getProfile = profile ?? useContext(AuthContext).profile;
+
+  let getRolesVar : Roles[] = roles ?? getRoles();
+
+
+  let roleBasedInGroup = getRolesVar.findLast((r :any) => r.group === getGroup?.id && r.profile === getProfile?.id) ?? getDefaultRolesForProfile(getProfile, getGroup, getRolesVar);
+  return roleBasedInGroup;
+}
+
+function getDefaultRolesForProfile(profile? : Profile | ProfileClass | null, group?: Group | null, roles?: Roles[]) {
+  let getGroup = group ?? useContext(AuthContext).organization;
+  let getProfile = profile ?? useContext(AuthContext).profile;
+  let getRolesVar = roles ?? getRoles();
+
+  let defaultAdmin = getRolesVar?.findLast((r :any) => r.group === null && isAdminRole(r) && r.profile === getProfile?.id);
+  let defaultUser = getRolesVar?.findLast((r :any) => r.group === null && !isAdminRole(r) && r.profile === getProfile?.id);
+
+  // check if gruop administrator
+  if(group?.admin?.id == getProfile?.id ||
+     getGroup?.administrators.findLast((a :any) => a.id === getProfile?.id) ||
+     getProfile?.user?.accessLevel == 'ROLE_ADMIN') {
+    return defaultAdmin;
+  }
+
+  return defaultUser;
+}
+
+
+// get roles from local storage or refetch API
+function getRoles(): Roles[] {
+  let roles = null;
+
+  // get roles from local storage
+  roles = localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles') as string) : null;
+
+  if(roles ===  null || !roles) {
+    // fetch roles from API
+    return UniversimeApi.Roles.listRoles().then((res) => {
+      if(res.success && res.body.roles) {
+        localStorage.setItem('roles', JSON.stringify(res.body.roles));
+        return getRoles();
+      }
+    }) as any;
+  }
+
+  return roles;
 }
 
 
 
-
+function isAdminRole(role : Roles) {
+  return role != null && role.id == '00000000-0000-0000-0000-000000000001';
+}
