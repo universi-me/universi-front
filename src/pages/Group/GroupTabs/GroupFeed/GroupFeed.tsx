@@ -42,7 +42,7 @@ export function GroupFeed(){
                 <div className="go-right">
                     <Filter setter={setFilterPosts} placeholderMessage={`Buscar publicação em ${groupContext.group.name}`}/>
                     {
-                        canCreatePost() && canI("FEED", Permission.READ_WRITE, groupContext.group)
+                        canCreatePost() || canI("FEED", Permission.READ_WRITE, groupContext.group)
                         ?
                             <ActionButton name="Criar publicação" buttonProps={{onClick(){groupContext.setEditPost(null)}}}/>
                         :
