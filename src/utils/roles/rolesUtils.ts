@@ -47,7 +47,7 @@ export function canI(featureType: FeatureTypes, permission?: Permission, group?:
 }
 
 
-export function getRolesProfile(profile? : Profile, group?: Group, roles?: Roles[]) {
+export function getRolesProfile(profile? : Profile, group?: Group, roles?: Roles[]) : Roles {
   let getGroup = group ?? useContext(AuthContext).organization;
   let getProfile = profile ?? useContext(AuthContext).profile;
 
