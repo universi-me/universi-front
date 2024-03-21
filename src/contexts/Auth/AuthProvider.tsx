@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [organization, setOrganization] = useState<Group | null>(null);
   const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
   const user = profile?.user ?? null;
-  const [roles, setRoles] = useState<any>(profile && getRoles());
+  const [roles, setRoles] = useState<any>(getRoles());
 
   useEffect(() => {
     updateLoggedUser()
