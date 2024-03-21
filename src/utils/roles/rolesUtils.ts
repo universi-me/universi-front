@@ -17,22 +17,23 @@ export function canI(featureType: FeatureTypes, permission?: Permission, group?:
   let returnValueAsBoolean = (permission != null || permission != undefined);
 
   // get roles from local storage
-  let roles = localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles') as string) : null;
+  let roles = getRolesFromLocalStorage();
   if(roles ===  null || !roles) {
     // fetch roles from API
-    return UniversimeApi.Roles.listRoles().then((res) => {
-      if(res.success && res.body.roles) {
-        localStorage.setItem('roles', JSON.stringify(res.body.roles));
-        return canI(featureType, permission, group, profile);
+    return UniversimeApi.Roles.listRoles().then((data : any) => {
+      if(data.success && data.body.roles) {
+        saveRolesLocalStorage(data.body.roles);
       }
-    }) as any;
+      return canI(featureType, permission, group, profile);
+    });
   }
 
   // get feature from roles, based in group and profile
   let roleBasedInGroup : any = getRolesProfile(profile, group, roles);
 
   if (roleBasedInGroup) {
-    let featureR = roleBasedInGroup.features.findLast((f :any) => f.featureType === featureType);
+    let featureR = roleBasedInGroup.features.findLast((f :any) => f.featureType === featureType) ??
+                        getDefaultRolesForProfile(profile, group, roles)?.features.findLast((f :any) => f.featureType === featureType);
     if(featureR) {
       if(returnValueAsBoolean) {
         return (featureR.permission >= permission!);
@@ -50,17 +51,20 @@ export function getRolesProfile(profile? : Profile, group?: Group, roles?: Roles
   let getGroup = group ?? useContext(AuthContext).organization;
   let getProfile = profile ?? useContext(AuthContext).profile;
 
-  let getRolesVar : any = roles ?? getRoles();
+  let getRolesVar : any = roles && roles?.length > 0? roles:null  ?? getRoles() ?? useContext(AuthContext).roles;
 
+  if(!getRolesVar) {
+    return getRolesProfile(profile, group, roles);
+  }
 
-  let roleBasedInGroup = getRolesVar.findLast((r :any) => r.group === getGroup?.id && r.profile === getProfile?.id) ?? getDefaultRolesForProfile(getProfile, getGroup, getRolesVar);
-  return roleBasedInGroup;
+  return getRolesVar.findLast((r :any) => r.group === getGroup?.id && r.profile === getProfile?.id) ??
+          getDefaultRolesForProfile(getProfile, getGroup, getRolesVar);
 }
 
 function getDefaultRolesForProfile(profile? : Profile | ProfileClass | null, group?: Group | null, roles?: Roles[]) {
   let getGroup = group ?? useContext(AuthContext).organization;
   let getProfile = profile ?? useContext(AuthContext).profile;
-  let getRolesVar : any = roles ?? getRoles();
+  let getRolesVar : any = roles ?? getRoles() ?? useContext(AuthContext).roles;
 
   let defaultAdmin = getRolesVar?.findLast((r :any) => r.group === null && isAdminRole(r) && r.profile === getProfile?.id);
   let defaultUser = getRolesVar?.findLast((r :any) => r.group === null && !isAdminRole(r) && r.profile === getProfile?.id);
@@ -77,25 +81,42 @@ function getDefaultRolesForProfile(profile? : Profile | ProfileClass | null, gro
 
 
 // get roles from local storage or refetch API
-function getRoles(): any {
+export function getRoles(): any {
+
   let roles = null;
 
   // get roles from local storage
-  roles = localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles') as string) : null;
+  roles = getRolesFromLocalStorage();
 
   if(roles ===  null || !roles) {
     // fetch roles from API
-    return UniversimeApi.Roles.listRoles().then((res) => {
-      if(res.success && res.body.roles) {
-        localStorage.setItem('roles', JSON.stringify(res.body.roles));
+    return UniversimeApi.Roles.listRoles().then((data : any) => {
+      if(data.success && data.body.roles) {
+        saveRolesLocalStorage(data.body.roles);
+        roles = data.body.roles;
         return getRoles();
       }
-    }) as any;
+    });
+    
   }
 
   return roles;
 }
 
+
+export function saveRolesLocalStorage(roles : any) {
+  if(roles && Object.keys(roles).length !== 0) {
+    localStorage.setItem('roles', JSON.stringify(roles));
+  }
+}
+
+export function removeRolesLocalStorage() {
+  localStorage.removeItem('roles');
+}
+
+export function getRolesFromLocalStorage() {
+  return localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles') as string) : null;
+}
 
 
 function isAdminRole(role : Roles) {

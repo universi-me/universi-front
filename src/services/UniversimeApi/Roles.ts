@@ -102,6 +102,8 @@ export async function assigned(body:  RolesAssigned_RequestDTO) {
     })).data;
 }
 
-export async function listRoles() {
-    return (await api.get<RolesList_ResponseDTO>("/roles")).data
+export function listRoles() : any {
+    return api.get<RolesList_ResponseDTO>("/account").then((data) => {
+        return data.data;
+    });
 }

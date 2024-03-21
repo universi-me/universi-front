@@ -6,7 +6,7 @@ import type { Group } from "@/types/Group";
 import type { Folder } from "@/types/Capacity";
 import { Link } from "@/types/Link";
 import { GroupPost } from "@/types/Feed";
-import { canI } from "@/utils/roles/rolesUtils";
+import { canI, getRoles } from "@/utils/roles/rolesUtils";
 import { Permission } from "@/types/Roles";
 
 export type GroupPageLoaderResponse = {
@@ -28,6 +28,7 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     const [groupRes, profileRes] = await Promise.all([
         UniversimeApi.Group.get({groupPath: props.groupPath}),
         UniversimeApi.Profile.profile(),
+        getRoles()
     ]);
     if (!groupRes.success || !groupRes.body || !profileRes.success || !profileRes.body) {
         return FAILED_TO_LOAD;
@@ -37,12 +38,12 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     const profile = profileRes.body.profile;
     
     const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes, groupPostsRes] = await Promise.all([
-        UniversimeApi.Group.subgroups({groupId: group.id}),
-        canI('PEOPLE', Permission.READ, group, profile) == true ? UniversimeApi.Group.participants({groupId: group.id}) : {} as any,
-        canI('CONTENT', Permission.READ, group, profile) == true ? UniversimeApi.Group.folders({groupId: group.id}) : {} as any,
-        canI('GROUP', Permission.READ, group, profile) == true ? UniversimeApi.Profile.groups({profileId: profile.id}) : {} as any,
+        canI('GROUP',   Permission.READ, group, profile) == true ? UniversimeApi.Group.subgroups({groupId: group.id})    : {} as any,
+        canI('PEOPLE',  Permission.READ, group, profile) == true ? UniversimeApi.Group.participants({groupId: group.id}) : {} as any,
+        canI('CONTENT', Permission.READ, group, profile) == true ? UniversimeApi.Group.folders({groupId: group.id})      : {} as any,
+        UniversimeApi.Profile.groups({profileId: profile.id}),
         UniversimeApi.Profile.links({profileId: profile.id}),
-        canI('FEED', Permission.READ, group, profile) == true ? UniversimeApi.Feed.getGroupPosts({groupId: group.id}) : {} as any,
+        canI('FEED',    Permission.READ, group, profile) == true ? UniversimeApi.Feed.getGroupPosts({groupId: group.id}) : {} as any,
     ]);
     
     return {
