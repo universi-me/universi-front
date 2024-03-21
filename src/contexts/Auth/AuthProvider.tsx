@@ -48,7 +48,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         setFinishedLogin(false);
-        await updateRoles();
         const logged = await updateLoggedUser();
         setFinishedLogin(true);
         return logged;
@@ -56,7 +55,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     async function signinGoogle() {
         setFinishedLogin(false);
-        await updateRoles();
         const profile = await updateLoggedUser();
 
         if (profile === null) {
@@ -81,6 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     async function updateLoggedUser() {
+        await updateRoles();
         setFinishedLogin(false);
         const profile = await getLoggedProfile();
         setProfile(profile);
