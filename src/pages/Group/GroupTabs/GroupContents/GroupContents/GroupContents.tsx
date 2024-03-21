@@ -212,7 +212,7 @@ export function GroupContents() {
             },
         },
         {
-            text: "Duplicar",
+            text: "Criar uma cópia",
             biIcon: "folder-plus",
             className: "duplicate",
             onSelect: (data) => {
@@ -252,13 +252,14 @@ export function GroupContents() {
                 duplicateContentId !== undefined
                 ?
                 <UniversiForm
-                callback={() => {setDuplicateContentId(undefined)}}
-                formTitle="Duplicar conteúdo"
+                callback={() => {setDuplicateContentId(undefined); groupContext.refreshData()}}
+                formTitle="Criar uma cópia"
                 objects={[
                     {
                         DTOName : "targetGroupId", 
-                        label : "Grupo para o qual você deseja copiar",
+                        label : "Copiar para: ",
                         type: FormInputs.SELECT_SINGLE,
+                        value: {value : groupContext.group.id, label: groupContext.group.name},
                         options : groupContext.loggedData.groups.filter(g => g.canEdit).map((g) => ({value: g.id, label: g.name}))
                     },
                     {
@@ -269,6 +270,7 @@ export function GroupContents() {
                     }
                 ]}
                 requisition={UniversimeApi.Capacity.duplicateContent}
+                saveButtonText="Copiar"
                 />
                 :
                 <></>
