@@ -669,19 +669,13 @@ export function UniversiForm(props : formProps){
                     <button type="button" className="cancel-button" onClick={handleCancel}>
                         <i className="bi bi-x-circle-fill" />
                         {
-                            props.cancelButtonText ? 
-                                props.cancelButtonText 
-                            :
-                                "Cancelar"
+                            props.cancelButtonText ?? "Cancelar"
                         }
                     </button>
                     <button type="button" className="submit-button" onClick={makeRequest} disabled={isSubmitting || !canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
                         <i className="bi bi-check-circle-fill" />
                         {
-                            props.saveButtonText ? 
-                                props.saveButtonText 
-                            :
-                                "Salvar"
+                            props.saveButtonText ?? "Salvar"
                         }
                     </button>
                 </section>
