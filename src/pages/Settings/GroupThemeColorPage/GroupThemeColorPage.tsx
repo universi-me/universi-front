@@ -151,28 +151,9 @@ const applyThemeStyles = (themeMapping: GroupTheme) => {
 };
 
 export function GroupThemeColorPage() {
-  const [organizationId, setOrganizationId] = useState<string | null>(null);
+  const [organizationId, setOrganizationId ] = useState<string | null>(null);
   const [selectedTheme, themeDispatch] = useReducer(themeReducer, null);
   const auth = useContext(AuthContext);
-
-  const fetchOrganizationAndGroupTheme = async () => {
-    try {
-      const org = await UniversimeApi.User.organization();
-      if (org.success && org.body?.organization) {
-        setOrganizationId(org.body.organization.id);
-        const organizationTheme = (((auth.organization ?? {} as any).groupSettings ?? {} as any).theme ?? {} as any);
-
-        if (organizationTheme) {
-          applyThemeStyles(organizationTheme);
-          themeDispatch({ type: "SELECT", theme: organizationTheme });
-        }
-      } else {
-        showErrorModal("Falha ao recuperar a organização.", "Tente novamente mais tarde");
-      }
-    } catch (error) {
-      showErrorModal("Erro ao buscar a organização", "Tente novamente mais tarde");
-    }
-  };
 
   const saveChanges = async () => {
     if (!selectedTheme || !organizationId) {
@@ -197,11 +178,16 @@ export function GroupThemeColorPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchOrganizationAndGroupTheme();
+      const theme: any = await UniversimeApi.Group.getTheme({ groupId: auth.organization?.id!, groupPath: auth.organization?.path! });
+      if (theme.success && theme.body?.theme) {
+        themeDispatch({ type: "SELECT", theme: theme.body.theme });
+        setOrganizationId(auth.organization?.id!); 
+      }
     };
+    
 
     fetchData();
-  }, [auth.organization]);
+  }, [auth.organization, auth.signin, auth.updateLoggedUser]);
 
   return (
     <div id="theme-color-settings">
