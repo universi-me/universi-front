@@ -202,7 +202,7 @@ export function GroupContents() {
             },
         },
         {
-            text: "Excluir",
+            text: "Remover do grupo",
             biIcon: "trash-fill",
             className: "delete",
             onSelect: handleDeleteContent,
@@ -312,12 +312,6 @@ export function GroupContents() {
     }
 
     function handleDeleteContent(content: Folder) {
-        /**
-         * If true the content will be deleted from the database.
-         * If false the content will only me removed from this group.
-         */
-        const deleteContent = undefined === content.grantedAccessGroups.find(g => g.id === groupContext!.group.id);
-
         SwalUtils.fireModal({
             showCancelButton: true,
 
@@ -325,18 +319,12 @@ export function GroupContents() {
             confirmButtonText: "Excluir",
             confirmButtonColor: "var(--alert-color)",
 
-            text: deleteContent
-                ? "Tem certeza que deseja excluir este conteúdo?"
-                : "Tem certeza que deseja remover este conteúdo do grupo?",
+            text: "Tem certeza que deseja remover este conteúdo do grupo?",
 
             icon: "warning",
         }).then(res => {
             if (res.isConfirmed) {
-                const operation = deleteContent
-                    ? UniversimeApi.Capacity.removeFolder({id: content.id})
-                    : UniversimeApi.Capacity.editFolder({ id: content.id, removeGrantedAccessGroupByIds: groupContext!.group.id });
-
-                operation
+                UniversimeApi.Capacity.editFolder({ id: content.id, removeGrantedAccessGroupByIds: groupContext!.group.id })
                     .then(res => {
                         if (!res.success)
                             return;
