@@ -237,10 +237,22 @@ export async function editTheme(body: GroupThemeEdit_RequestDTO) {
 }
 
 export async function getTheme(body: GroupIdOrPath_RequestDTO) {
-    return (await api.get<GroupThemeGet_ResponseDTO>('/group/settings/theme/get', {
-        params: {
-            groupId: body.groupId,
-            groupPath: body.groupPath,
+    try {
+        const response = await api.get<GroupThemeGet_ResponseDTO>('/group/settings/theme/get', {
+            params: {
+                groupId: body.groupId,
+                groupPath: body.groupPath,
+            }
+        });
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            console.error(JSON.stringify(response.data));
+            throw new Error(JSON.stringify(response.data));
         }
-    })).data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 }
+
