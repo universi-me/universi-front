@@ -179,17 +179,17 @@ export function GroupThemeColorPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const theme: any = await UniversimeApi.Group.getTheme({ groupId: auth.organization?.id!, groupPath: auth.organization?.path! });
-      if (theme.success && theme.body?.theme) {
-        themeDispatch({ type: "SELECT", theme: theme.body.theme });
+      const organizationTheme = (((auth.organization ?? {} as any).groupSettings ?? {} as any).theme ?? {} as any);
+      console.log(organizationTheme)
+      if (organizationTheme) {
+        themeDispatch({ type: "SELECT", theme: organizationTheme });
         setOrganizationId(auth.organization?.id!); 
+        applyThemeStyles(organizationTheme);
       }
     };
-    
-
     fetchData();
-  }, [auth.organization, auth.signin, auth.updateLoggedUser]);
-
+  }, [auth.organization]);
+    
   return (
     <div id="theme-color-settings">
       <SettingsTitle>Configuração de Tema</SettingsTitle>

@@ -97,7 +97,6 @@ export type GroupEmailFilterEdit_ResponseDTO =   ApiResponse;
 export type GroupEmailFilterDelete_ResponseDTO = ApiResponse;
 export type GroupEmailFilterList_ResponseDTO =   ApiResponse<{ emailFilters: GroupEmailFilter[] }>;
 export type GroupThemeEdit_ResponseDTO =         ApiResponse<{ theme: GroupTheme[] }>;
-export type GroupThemeGet_ResponseDTO =          ApiResponse<{ theme: GroupTheme[] }>;
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
     return (await api.post<GroupGet_ResponseDTO>('/group/get', {
@@ -233,14 +232,5 @@ export async function editTheme(body: GroupThemeEdit_RequestDTO) {
         success_color:              body.successColor,
         wrong_invalid_color:        body.wrongInvalidColor,
         rank_color:                 body.rankColor,
-    })).data;
-}
-
-export async function getTheme(body: GroupIdOrPath_RequestDTO) {
-    return (await api.get<GroupThemeGet_ResponseDTO>('/group/settings/theme/get', {
-        params: {
-            groupId: body.groupId,
-            groupPath: body.groupPath,
-        }
     })).data;
 }
