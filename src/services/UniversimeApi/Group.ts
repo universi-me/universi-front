@@ -211,48 +211,36 @@ export async function editTheme(body: GroupThemeEdit_RequestDTO) {
         groupId:                    body.groupId,
         groupPath:                  body.groupPath,
 
-        primary_Color:              body.primaryColor,
-        secondary_Color:            body.secondaryColor,
-        tertiary_Color:             body.tertiaryColor,
-        background_Color:           body.backgroundColor,
-        card_Background_Color:      body.cardBackgroundColor,
-        card_Item_Color:            body.cardItemColor,
-        font_Color_V1:              body.fontColorV1,
-        font_Color_V2:              body.fontColorV2,
-        font_Color_V3:              body.fontColorV3,
-        font_Color_V4:              body.fontColorV4,
-        font_Color_V5:              body.fontColorV5,
-        font_Color_V6:              body.fontColorV6,
-        font_Disabled_Color:        body.fontDisabledColor,
-        forms_Color:                body.formsColor,
-        skills_1_Color:             body.skills1Color,
-        wave_Color:                 body.waveColor,
-        button_Yellow_Hover_Color:  body.buttonYellowHoverColor,
-        button_Hover_Color:         body.buttonHoverColor,
-        alert_Color:                body.alertColor,
-        success_Color:              body.successColor,
-        wrong_Invalid_Color:        body.wrongInvalidColor,
-        rank_Color:                 body.rankColor,
+        primary_color:              body.primaryColor,
+        secondary_color:            body.secondaryColor,
+        tertiary_color:             body.tertiaryColor,
+        background_color:           body.backgroundColor,
+        card_background_color:      body.cardBackgroundColor,
+        card_item_color:            body.cardItemColor,
+        font_color_v1:              body.fontColorV1,
+        font_color_v2:              body.fontColorV2,
+        font_color_v3:              body.fontColorV3,
+        font_color_v4:              body.fontColorV4,
+        font_color_v5:              body.fontColorV5,
+        font_color_v6:              body.fontColorV6,
+        font_disabled_color:        body.fontDisabledColor,
+        forms_color:                body.formsColor,
+        skills_1_color:             body.skills1Color,
+        wave_color:                 body.waveColor,
+        button_yellow_hover_color:  body.buttonYellowHoverColor,
+        button_hover_color:         body.buttonHoverColor,
+        alert_color:                body.alertColor,
+        success_color:              body.successColor,
+        wrong_invalid_color:        body.wrongInvalidColor,
+        rank_color:                 body.rankColor,
     })).data;
 }
 
 export async function getTheme(body: GroupIdOrPath_RequestDTO) {
-    try {
-        const response = await api.get<GroupThemeGet_ResponseDTO>('/group/settings/theme/get', {
-            params: {
-                groupId: body.groupId,
-                groupPath: body.groupPath,
-            }
-        });
-        if (response.status === 200) {
-            return response.data;
-        } else {
-            console.error(JSON.stringify(response.data));
-            throw new Error(JSON.stringify(response.data));
+    return (await api.get<GroupThemeGet_ResponseDTO>('/group/settings/theme/get', {
+        params: {
+            groupId: body.groupId,
+            groupPath: body.groupPath,
         }
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+    })).data;
 }
-
