@@ -1,4 +1,3 @@
-
 import { useContext, useEffect, useReducer, useState } from "react";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
@@ -6,8 +5,9 @@ import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import UniversimeApi from "@/services/UniversimeApi";
 import type { GroupTheme } from "@/types/Group";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
+import { useTheme } from "@/pages/Settings/GroupThemeColorPage/ThemeContext";
 import "./GroupThemeColor.less";
-
+import { applyThemeStyles } from "@/utils/themeUtils";
 
 const themeColorMappings: Record<string, GroupTheme> = {
   themeId1: {
@@ -107,7 +107,10 @@ function ThemeColorItem({ theme, isSelected, onClick }: ThemeColorItemProps) {
   );
 }
 
-function themeReducer(state: GroupTheme | null, action: { type: "SELECT"; theme: GroupTheme }) {
+function themeReducer(
+  state: GroupTheme | null,
+  action: { type: "SELECT"; theme: GroupTheme }
+) {
   return action.type === "SELECT" ? action.theme : state;
 }
 
@@ -120,45 +123,18 @@ const showErrorModal = (title: string, text: string) => {
   });
 };
 
-const applyThemeStyles = (themeMapping: GroupTheme) => {
-  const styleProperties = {
-    '--primary-color': themeMapping.primaryColor,
-    '--secondary-color': themeMapping.secondaryColor,
-    '--tertiary-color': themeMapping.tertiaryColor,
-    '--background-color': themeMapping.backgroundColor,
-    '--card-background-color': themeMapping.cardBackgroundColor,
-    '--card-item-color': themeMapping.cardItemColor,
-    '--font-color-v1': themeMapping.fontColorV1,
-    '--font-color-v2': themeMapping.fontColorV2,
-    '--font-color-v3': themeMapping.fontColorV3,
-    '--font-color-v4': themeMapping.fontColorV4,
-    '--font-color-v5': themeMapping.fontColorV5,
-    '--font-color-v6': themeMapping.fontColorV6,
-    '--font-disabled-color': themeMapping.fontDisabledColor,
-    '--forms-color': themeMapping.formsColor,
-    '--skills-1-color': themeMapping.skills1Color,
-    '--wave-color': themeMapping.waveColor,
-    '--button-yellow-hover-color': themeMapping.buttonYellowHoverColor,
-    '--button-hover-color': themeMapping.buttonHoverColor,
-    '--alert-color': themeMapping.alertColor,
-    '--success-color': themeMapping.successColor,
-    '--wrong-invalid-color': themeMapping.wrongInvalidColor,
-    '--rank-color': themeMapping.rankColor,
-  };
-
-  for (const [property, value] of Object.entries(styleProperties)) {
-    document.documentElement.style.setProperty(property, value);
-  }
-};
-
 export function GroupThemeColorPage() {
-  const [organizationId, setOrganizationId ] = useState<string | null>(null);
+  const [organizationId, setOrganizationId] = useState<string | null>(null);
   const [selectedTheme, themeDispatch] = useReducer(themeReducer, null);
   const auth = useContext(AuthContext);
+  const theme = useTheme();
 
   const saveChanges = async () => {
     if (!selectedTheme || !organizationId) {
-      showErrorModal("Erro ao salvar alterações", "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente.)");
+      showErrorModal(
+        "Erro ao salvar alterações",
+        "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente.)"
+      );
       return;
     }
 
@@ -179,17 +155,18 @@ export function GroupThemeColorPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const organizationTheme = (((auth.organization ?? {} as any).groupSettings ?? {} as any).theme ?? {} as any);
-      console.log(organizationTheme)
+      const organizationTheme =
+        ((auth.organization ?? ({} as any)).groupSettings ?? ({} as any))
+          .theme ?? ({} as any);
       if (organizationTheme) {
         themeDispatch({ type: "SELECT", theme: organizationTheme });
-        setOrganizationId(auth.organization?.id!); 
+        setOrganizationId(auth.organization?.id!);
         applyThemeStyles(organizationTheme);
       }
     };
     fetchData();
   }, [auth.organization]);
-    
+
   return (
     <div id="theme-color-settings">
       <SettingsTitle>Configuração de Tema</SettingsTitle>
@@ -201,7 +178,9 @@ export function GroupThemeColorPage() {
             key={theme.id}
             theme={theme}
             isSelected={selectedTheme?.id === theme.id}
-            onClick={(selected) => themeDispatch({ type: "SELECT", theme: selected })}
+            onClick={(selected) =>
+              themeDispatch({ type: "SELECT", theme: selected })
+            }
           />
         ))}
       </div>
