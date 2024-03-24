@@ -148,8 +148,8 @@ function SelectPeople(){
 
 export function GroupContents() {
     const groupContext = useContext(GroupContext);
-    const authContext = useContext(AuthContext);
     const [filterContents, setFilterContents] = useState<string>("");
+    const [importContentAvailable, setImportContentAvailable] = useState<Folder[]>();
     const [duplicateContentId, setDuplicateContentId] = useState<string | undefined> ();
 
     if (!groupContext)
@@ -203,7 +203,7 @@ export function GroupContents() {
             },
         },
         {
-            text: "Excluir",
+            text: "Remover do grupo",
             biIcon: "trash-fill",
             className: "delete",
             onSelect: handleDeleteContent,
@@ -231,9 +231,7 @@ export function GroupContents() {
                     <Filter setter={setFilterContents} placeholderMessage={`Buscar em Conteúdos ${groupContext.group.name}`}/>
                     {  
                         groupContext.group.canEdit &&
-                        <ActionButton name="Criar conteúdo" buttonProps={{
-                            onClick(){ groupContext.setEditContent(null); }
-                        }} />
+                        <ActionButton name="Adicionar conteúdo" buttonProps={{ onClick: handleAddContent }} />
                     }
                 </div>
             </div>
@@ -274,6 +272,12 @@ export function GroupContents() {
                 />
                 :
                 <></>
+            }
+            {
+                importContentAvailable !== undefined && <ImportContent
+                    availableContents={importContentAvailable}
+                    resetContents={() => setImportContentAvailable(undefined)}
+                />
             }
         </section>
     );
@@ -351,11 +355,12 @@ export function GroupContents() {
             confirmButtonText: "Excluir",
             confirmButtonColor: "var(--alert-color)",
 
-            text: "Tem certeza que deseja excluir este conteúdo?",
+            text: "Tem certeza que deseja remover este conteúdo do grupo?",
+
             icon: "warning",
         }).then(res => {
             if (res.isConfirmed) {
-                UniversimeApi.Capacity.removeFolder({id: content.id})
+                UniversimeApi.Capacity.editFolder({ id: content.id, removeGrantedAccessGroupByIds: groupContext!.group.id })
                     .then(res => {
                         if (!res.success)
                             return;
@@ -364,6 +369,29 @@ export function GroupContents() {
                     });
             }
         });
+    }
+
+    async function handleAddContent() {
+        const response = await SwalUtils.fireModal({
+            title: `Adicionar um conteúdo à "${groupContext!.group.name}"?`,
+
+            showCancelButton: true,
+            showDenyButton: true,
+
+            confirmButtonText: "Criar novo conteúdo",
+            denyButtonText:   "Importar conteúdo já existente",
+            cancelButtonText: "Cancelar",
+        });
+
+        if (response.isConfirmed)
+            groupContext!.setEditContent(null);
+
+        if (response.isDenied) {
+            UniversimeApi.Capacity.folderList()
+            .then(res => {
+                if (res.success) setImportContentAvailable(res.body.folders);
+            })
+        }
     }
 }
 
@@ -374,3 +402,45 @@ type SelectProfileAction = {
     action: "SET";
     to: ProfileClass[];
 };
+
+type ImportContentProps = {
+    availableContents: Folder[];
+    resetContents(): any;
+};
+function ImportContent(props: Readonly<ImportContentProps>) {
+    const groupContext = useContext(GroupContext);
+    const { availableContents, resetContents } = props;
+
+    const importOptions = useMemo(() => {
+        return availableContents
+            // filter - not already in group
+            .filter(c => !groupContext?.folders.find(groupContent => groupContent.id === c.id))
+
+            .map(c => ({label: c.name, value: c.id}))
+            .sort((c1, c2) => c1.label.localeCompare(c2.label));
+    }, availableContents)
+
+    return <UniversiForm
+        formTitle="Importar conteúdos"
+        objects={[
+        {
+            label: "Conteúdos disponíveis", DTOName: "contentIds", type: FormInputs.SELECT_MULTI,
+            canCreate: false, required: true,
+            options: importOptions
+        },
+        ]}
+        requisition={handleImport}
+        callback={resetContents}
+    />;
+
+    async function handleImport(formData: {contentIds: string[]}) {
+        const { contentIds } = formData;
+
+        await Promise.all(contentIds.map( cId => UniversimeApi.Capacity.editFolder({
+            id: cId,
+            addGrantedAccessGroupByIds: groupContext!.group.id,
+        })));
+
+        await groupContext!.refreshData();
+    }
+}
