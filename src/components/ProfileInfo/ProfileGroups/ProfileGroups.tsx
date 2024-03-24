@@ -10,6 +10,8 @@ export type ProfileGroupsProps = {
 };
 
 export function ProfileGroups(props: ProfileGroupsProps) {
+
+
     return (
         <div className="profile-groups-component">
             <div className="header-container">

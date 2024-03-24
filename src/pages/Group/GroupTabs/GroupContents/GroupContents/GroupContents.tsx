@@ -150,6 +150,7 @@ export function GroupContents() {
     const groupContext = useContext(GroupContext);
     const [filterContents, setFilterContents] = useState<string>("");
     const [importContentAvailable, setImportContentAvailable] = useState<Folder[]>();
+    const [duplicateContentId, setDuplicateContentId] = useState<string | undefined> ();
 
     if (!groupContext)
         return null;
@@ -209,6 +210,17 @@ export function GroupContents() {
             hidden() {
                 return !groupContext?.group.canEdit;
             },
+        },
+        {
+            text: "Criar uma cópia",
+            biIcon: "folder-plus",
+            className: "duplicate",
+            onSelect: (data) => {
+                setDuplicateContentId(data.id)
+            },
+            hidden(){
+                return !groupContext.group.canEdit;
+            },
         }
     ]
 
@@ -234,6 +246,30 @@ export function GroupContents() {
                 groupContext.assignFolder !== undefined
                 ?
                 <SelectPeople/>
+                :
+                duplicateContentId !== undefined
+                ?
+                <UniversiForm
+                callback={() => {setDuplicateContentId(undefined); groupContext.refreshData()}}
+                formTitle="Criar uma cópia"
+                objects={[
+                    {
+                        DTOName : "targetGroupId", 
+                        label : "Copiar para: ",
+                        type: FormInputs.SELECT_SINGLE,
+                        value: {value : groupContext.group.id, label: groupContext.group.name},
+                        options : groupContext.loggedData.groups.filter(g => g.canEdit).map((g) => ({value: g.id, label: g.name}))
+                    },
+                    {
+                        DTOName: "contentId",
+                        label: "",
+                        value: duplicateContentId,
+                        type: FormInputs.HIDDEN
+                    }
+                ]}
+                requisition={UniversimeApi.Capacity.duplicateContent}
+                saveButtonText="Copiar"
+                />
                 :
                 <></>
             }
