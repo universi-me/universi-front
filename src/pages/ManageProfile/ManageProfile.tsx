@@ -22,7 +22,7 @@ export function ManageProfilePage() {
     const [bio, setBio] = useState(profile?.bio ?? "");
     const [gender, setGender] = useState(profile?.gender ?? "");
 
-    // undefined means the images file is the profile image was unchanged, while a `File` value means it was changed
+    // undefined means the profile image was unchanged, while a `File` value means it was changed
     const [image, setImage] = useState<File | undefined>(undefined);
 
     if (!profile)
