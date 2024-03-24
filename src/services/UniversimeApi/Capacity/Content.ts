@@ -52,6 +52,12 @@ export type UnassignContent_RequestDTO = {
     profilesIds: string | string[];
 }
 
+export type DuplicateContent_RequestDTO = {
+    contentId :         string,
+    targetGroupId? :   string,
+    targetGroupPath? : string
+}
+
 export type ContentGet_ResponseDTO =        ApiResponse<{content: Content}>;
 export type ContentCreate_ResponseDTO =     ApiResponse;
 export type ContentEdit_ResponseDTO =       ApiResponse;
@@ -130,4 +136,8 @@ export async function unassignContent(body: UnassignContent_RequestDTO) {
         reference:   body.reference,
         profilesIds: body.profilesIds,
     })).data;
+}
+
+export async function duplicateContent(body : DuplicateContent_RequestDTO){
+    return (await api.post("/capacity/folder/duplicate", body)).data;
 }

@@ -21,7 +21,7 @@ export function ManageProfileLinks(props: ManageProfileLinksProps) {
     return (
         <fieldset id="fieldset-links" className="card">
             <div className="heading">
-                <h2 className="legend">Gerenciar seus links</h2>
+                <h2 className="legend">Gerenciar meus links</h2>
                 <button id="new-link" type="button" title="Adicionar novo link" onClick={newLink}>
                     <i className="bi bi-plus-circle-fill" />
                 </button>

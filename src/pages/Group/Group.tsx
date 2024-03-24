@@ -96,7 +96,15 @@ export function GroupPage() {
                 isParticipant: data.loggedData?.isParticipant!,
                 profile: new ProfileClass(data.loggedData?.profile!),
                 links: data.loggedData?.links ?? [],
-                groups: data.loggedData?.groups ?? [],
+                groups: data.loggedData?.groups.sort((g1, g2) => {
+                    if (g1.rootGroup && !g2.rootGroup) {
+                        return -1; 
+                    } else if (!g1.rootGroup && g2.rootGroup) {
+                        return 1; 
+                    } else {
+                        return g1.name.localeCompare(g2.name);
+                    }
+                }) ?? [],
             },
             participants: data.participants.map(ProfileClass.new),
             subgroups: data.subGroups,
