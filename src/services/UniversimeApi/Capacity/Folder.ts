@@ -30,6 +30,8 @@ export type FolderEdit_RequestDTO = {
     rating?:                number;
     removeCategoriesByIds?: string | string[];
     addCategoriesByIds?:    string | string[];
+    addGrantedAccessGroupByIds?:    string | string[];
+    removeGrantedAccessGroupByIds?: string | string[];
 };
 
 export type FolderFavorite_RequestDTO = {
@@ -107,6 +109,8 @@ export async function editFolder(body: FolderEdit_RequestDTO) {
         rating:                body.rating,
         removeCategoriesByIds: body.removeCategoriesByIds,
         addCategoriesByIds:    body.addCategoriesByIds,
+        addGrantedAccessGroupByIds:    body.addGrantedAccessGroupByIds,
+        removeGrantedAccessGroupByIds: body.removeGrantedAccessGroupByIds,
     })).data;
 }
 

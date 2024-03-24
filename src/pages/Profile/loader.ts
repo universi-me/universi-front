@@ -11,6 +11,7 @@ import type { Profile } from "@/types/Profile";
 import type { Recommendation } from "@/types/Recommendation";
 import { TypeEducation } from "@/types/TypeEducation";
 import { TypeExperience } from "@/types/TypeExperience";
+import { removeFalsy } from "@/utils/arrayUtils";
 import type { LoaderFunctionArgs } from "react-router-dom";
 
 export type ProfilePageLoaderResponse = {
@@ -78,9 +79,17 @@ export async function fetchProfilePageData(username: string | undefined): Promis
             competences: fetchCompetences.body?.competences ?? [],
             education: fetchEducations.body?.educations ?? [],
             experience: fetchExperiences.body?.experiences ?? [],
-            folders: fetchFolders.body?.folders ?? [],
-            favorites: fetchFolders.body?.favorites ?? [],
-            groups: fetchGroups.body?.groups ?? [],
+            folders: fetchFolders.body?.folders ? removeFalsy(fetchFolders.body.folders) : [],
+            favorites: fetchFolders.body?.favorites ? removeFalsy(fetchFolders.body.favorites) : [],
+            groups: fetchGroups.body?.groups.sort((g1, g2) => {
+                if (g1.rootGroup && !g2.rootGroup) {
+                    return -1; 
+                } else if (!g1.rootGroup && g2.rootGroup) {
+                    return 1; 
+                } else {
+                    return g1.name.localeCompare(g2.name);
+                }
+            }) ?? [],
             links: fetchLinks.body?.links ?? [],
             recommendationsReceived: fetchRecommendations.body?.recomendationsReceived ?? [],
             recommendationsSend: fetchRecommendations.body?.recomendationsSend ?? [],

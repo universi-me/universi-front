@@ -52,7 +52,7 @@ export function ProfileBio(props: ProfileBioProps) {
                 {
                     props.profile.bio === null || props.profile.bio.length === 0
                     ? <p style={{fontStyle: 'italic', textAlign: 'center'}}>Nenhuma bio</p>
-                    : <p style={{whiteSpace: 'break-spaces', textAlign: 'center'}}>{ props.profile.bio }</p>
+                    : <p style={{whiteSpace: 'break-spaces', textAlign: 'center'}} className='profile-bio'>{ props.profile.bio }</p>
                 }
             </div>
 

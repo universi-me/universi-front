@@ -31,6 +31,8 @@ export type formProps = {
     callback : () => void,
     formTitle : string,
     cancelProps? : cancelPopup,
+    saveButtonText? : string,
+    cancelButtonText? : string
 }
 
 type FormObjectBase<FormType extends FormInputs, ValueType> = {
@@ -666,11 +668,15 @@ export function UniversiForm(props : formProps){
                 <section className="operation-buttons">
                     <button type="button" className="cancel-button" onClick={handleCancel}>
                         <i className="bi bi-x-circle-fill" />
-                        Cancelar
+                        {
+                            props.cancelButtonText ?? "Cancelar"
+                        }
                     </button>
                     <button type="button" className="submit-button" onClick={makeRequest} disabled={isSubmitting || !canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
                         <i className="bi bi-check-circle-fill" />
-                        Salvar
+                        {
+                            props.saveButtonText ?? "Salvar"
+                        }
                     </button>
                 </section>
             </div>

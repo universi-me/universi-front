@@ -71,8 +71,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const profile = await getLoggedProfile();
         setProfile(profile);
 
+        const organization = await updateOrganization();
+
         if (profile !== null) await Promise.all([
-            updateOrganization(),
+            organization,
             updateLinks(profile),
             updateGroups(profile),
         ]);

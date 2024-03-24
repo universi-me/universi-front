@@ -19,11 +19,11 @@ export function ProfileInfo(props: ProfileInfoProps) {
     const { profile, links, groups, organization, children, ...div } = props;
 
     return <div {...div} className={makeClassName("profile-info-component", div.className)}>
-        <div>
+        <div className="profile-bio-groups-container">
             { profile ? <ProfileBio profile={profile} links={links ?? []} organization={organization} /> : null }
             { groups ? <ProfileGroups groups={groups} /> : null }
         </div>
-        <div>
+        <div id="group-page-container" className="group-page-container">
             { children }
         </div>
     </div>
