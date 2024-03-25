@@ -21,7 +21,7 @@ export const applyThemeStyles = (themeMapping: GroupTheme) => {
     "--button-hover-color":         themeMapping.buttonHoverColor,
     "--alert-color":                themeMapping.alertColor,
     "--success-color":              themeMapping.successColor,
-    "--wrong-invalid-color":                themeMapping.wrongInvalidColor,
+    "--wrong-invalid-color":        themeMapping.wrongInvalidColor,
     "--rank-color":                 themeMapping.rankColor,
   };
 
