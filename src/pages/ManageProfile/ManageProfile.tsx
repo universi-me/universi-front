@@ -2,7 +2,7 @@ import { MouseEvent, useContext, useState } from "react";
 import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 
 import UniversimeApi from "@/services/UniversimeApi";
-import { ManageProfileLinks, ManageProfileLoaderResponse, ManageProfilePassword, ManageProfileImage, getManageLinks, getProfileImage } from "@/pages/ManageProfile";
+import { ManageProfileLinks, ManageProfileLoaderResponse, ManageProfilePassword, ManageProfileImage, getManageLinks } from "@/pages/ManageProfile";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { AuthContext } from "@/contexts/Auth";
 import * as SwalUtils from "@/utils/sweetalertUtils";
@@ -22,13 +22,18 @@ export function ManageProfilePage() {
     const [bio, setBio] = useState(profile?.bio ?? "");
     const [gender, setGender] = useState(profile?.gender ?? "");
 
+    // undefined means the profile image was unchanged, while a `File` value means it was changed
+    const [image, setImage] = useState<File | undefined>(undefined);
+
     if (!profile)
         return <Navigate to="/login" />
 
     const isBioFull = (bio?.length ?? 0) >= BIO_MAX_LENGTH;
     const isFirstnameFull = (firstname.length) >= FIRST_NAME_MAX_LENGTH;
     const isLastnameFull = (lastname.length) >= LAST_NAME_MAX_LENGTH;
-    const canSaveProfile = !!firstname && !!lastname;
+
+    const hasImage = (image !== undefined) || !!profile.image;
+    const canSaveProfile = !!firstname && !!lastname && hasImage;
 
     return <div id="manage-profile-page">
         <h1 className="heading">Editar meu perfil</h1>
@@ -37,7 +42,7 @@ export function ManageProfilePage() {
             <div id="left-side">
                 <form id="profile-edit" className="card">
                     <div className="image-name-container">
-                        <ManageProfileImage currentImage={profile.imageUrl} />
+                        <ManageProfileImage currentImage={profile.imageUrl} setImage={setImage} />
 
                         <fieldset id="fieldset-name">
                             <legend>Altere seu nome</legend>
@@ -101,7 +106,6 @@ export function ManageProfilePage() {
             return;
 
         let newImageUrl = undefined;
-        const image = getProfileImage();
         if (image) {
             const res = await UniversimeApi.Image.upload({image});
             if (res.success && res.body) {
