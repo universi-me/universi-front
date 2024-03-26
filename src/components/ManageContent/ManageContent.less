@@ -21,8 +21,8 @@
     .header{
         display: flex;
         flex-direction: row;
-        background-color: var(--primary-color);
-        border-bottom: 5px solid var(--secondary-color);
+        background-color: @primary-color;
+        border-bottom: 5px solid @secondary-color;
         color: white;
         padding: @header-padding @left-padding;
         gap: 1rem;
@@ -77,7 +77,7 @@
                 aspect-ratio: 1;
 
                 border-radius: 1rem;
-                border: 1px solid var(--secondary-color);;
+                border: 1px solid @secondary-color;;
                 object-fit: cover;
 
                 &.default-image {
@@ -91,7 +91,7 @@
         }
 
         .image-button{
-            background-color: var(--primary-color);
+            background-color: @primary-color;
             color: white;
             text-align: center;
             padding: 0.5rem 0.5rem ;
@@ -137,7 +137,7 @@
             resize: vertical;
 
             &:focus {
-                outline: solid 2px var(--primary-color);
+                outline: solid 2px @primary-color;
             }
         }
 
@@ -187,14 +187,14 @@
             will-change: background-color;
 
             &.cancel-button {
-                background-color: var(--secondary-color);
+                background-color: @secondary-color;
             }
 
             &.submit-button {
                 &:not(:disabled) {
-                    background-color: var(--primary-color);
+                    background-color: @primary-color;
                     &:hover {
-                        background-color: var(--secondary-color);;
+                        background-color: @secondary-color;
                     }
                 }
 

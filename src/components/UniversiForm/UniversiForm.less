@@ -14,7 +14,7 @@
         aspect-ratio: 1;
 
         border-radius: 1rem;
-        border: 1px solid var(--secondary-color);
+        border: 1px solid @secondary-color;
         object-fit: cover;
 
         &.default-image {
@@ -84,7 +84,7 @@
         padding: @header-padding @left-padding;
 
         background-color:  var(--primary-color);
-        border-bottom: 5px solid var(--secondary-color);;
+        border-bottom: 5px solid @secondary-color;
 
         color: white;
 
@@ -255,14 +255,14 @@
                 will-change: background-color;
 
                 &.cancel-button {
-                    background-color:  var(--secondary-color);;
+                    background-color:  @secondary-color;
                 }
 
                 &.submit-button {
                     &:not(:disabled) {
                         background-color:  var(--primary-color);
                         &:hover {
-                            background-color:  var(--secondary-color);;
+                            background-color:  @secondary-color;
                         }
                     }
 
