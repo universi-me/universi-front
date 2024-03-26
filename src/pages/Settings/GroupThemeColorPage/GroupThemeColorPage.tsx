@@ -97,14 +97,16 @@ export function GroupThemeColorPage() {
 
       <div className="theme-color-list">
         {Object.values(themeColorMappings).map((theme) => (
-          <ThemeColorItem
-            key={theme.id}
-            theme={theme}
-            isSelected={selectedTheme?.id === theme.id}
-            onClick={(selected) =>
-              themeDispatch({ type: "SELECT", theme: selected })
-            }
-          />
+          theme.id !== "themeDefeaut" && (
+            <ThemeColorItem
+              key={theme.id}
+              theme={theme}
+              isSelected={selectedTheme?.id === theme.id}
+              onClick={(selected) =>
+                themeDispatch({ type: "SELECT", theme: selected })
+              }
+            />
+          )
         ))}
       </div>
 
