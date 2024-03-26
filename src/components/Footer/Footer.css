@@ -1,7 +1,7 @@
 :root {
-    --Background-cirular-button: @primary-color;
+    --Background-cirular-button: var(--primary-color);
     --Background-Line: var(--secondary-color);
-    --Background-Scroll-button: @primary-color;
+    --Background-Scroll-button: var(--primary-color);
     --Icon-Text-color: var(--font-color-v2);
 
     --Color-border-button: var(--secondary-color);
