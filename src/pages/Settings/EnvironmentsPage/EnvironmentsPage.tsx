@@ -67,6 +67,47 @@ export function EnvironmentsPage() {
                 ]
             },
             {
+                title: "Login via Keycloak",
+                items: [
+                    {
+                        name: "Habilitar",
+                        key: "keycloak_enabled",
+                        type: "boolean",
+                        defaultValue: false,
+                    },
+                    {
+                        name: "Auth URL",
+                        key: "keycloak_url",
+                        type: "string",
+                        defaultValue: "",
+                    },
+                    {
+                        name: "Redirect URL",
+                        key: "keycloak_redirect_url",
+                        type: "string",
+                        defaultValue: "",
+                    },
+                    {
+                        name: "Realm",
+                        key: "keycloak_realm",
+                        type: "string",
+                        defaultValue: "",
+                    },
+                    {
+                        name: "Client ID",
+                        key: "keycloak_client_id",
+                        type: "string",
+                        defaultValue: "",
+                    },
+                    {
+                        name: "Client Secret",
+                        key: "keycloak_client_secret",
+                        type: "string",
+                        defaultValue: "",
+                    },
+                ]
+            },
+            {
                 title: "reCAPTCHA Enterprise",
                 items: [
                     {
