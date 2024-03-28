@@ -5,6 +5,7 @@ export type Group = {
     name:              string;
     description:       string;
     admin:             Profile;
+    administrators?:   Profile[];
     type:              GroupType;
     nickname:          string;
     path:              string;

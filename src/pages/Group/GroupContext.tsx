@@ -16,6 +16,12 @@ export type GroupContextType = null | {
     setCurrentContent(content: Folder | undefined): any;
 
     /**
+     * The modal to configure the group.
+     */
+    groupConfigModalOpen: boolean;
+    setGroupConfigModalOpen(open: boolean): any;
+
+    /**
      * The content being edited/created.
      *
      * If `null`, should handle creation of a content. If has a value, should handle

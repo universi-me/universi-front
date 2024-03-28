@@ -10,6 +10,7 @@ export type AuthContextType = {
     profileLinks: Link[];
     profileGroups: Group[];
     organization: Group | null;
+    roles: any;
 
     signin: (email : string, password: string, recaptchaToken: string | null) => Promise<ProfileClass | null>;
     signinGoogle: () => Promise<ProfileClass | null>;

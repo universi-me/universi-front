@@ -5,6 +5,7 @@ import { UniversimeApi } from "@/services/UniversimeApi";
 import { goTo } from "@/services/routes";
 import type { Group } from "@/types/Group";
 import type { Link } from "@/types/Link";
+import { getRoles, saveRolesLocalStorage, removeRolesLocalStorage } from "@/utils/roles/rolesUtils";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<ProfileClass | null>(null);
@@ -13,17 +14,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [organization, setOrganization] = useState<Group | null>(null);
   const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
   const user = profile?.user ?? null;
+  const [roles, setRoles] = useState<any>(getRoles());
 
   useEffect(() => {
     updateLoggedUser()
   }, []);
+
+  useEffect(() => {
+    if(roles && Object.keys(roles).length !== 0) {
+        saveRolesLocalStorage(roles);
+    } else {
+        removeRolesLocalStorage();
+    }
+  }, [roles]);
 
     if (user?.needProfile) {
         goTo("/manage-profile");
     }
 
     return (
-        <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser, organization, profileGroups, profileLinks }}>
+        <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser, organization, roles, profileGroups, profileLinks  }}>
         { finishedLogin ? children : null }
         </AuthContext.Provider>
     );
@@ -45,7 +55,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     async function signinGoogle() {
         setFinishedLogin(false);
-
         const profile = await updateLoggedUser();
 
         if (profile === null) {
@@ -61,12 +70,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         await UniversimeApi.Auth.logout();
         setProfile(null);
+
+        setRoles(null);
+
         goTo("");
 
         setFinishedLogin(true);
     };
 
     async function updateLoggedUser() {
+        await updateRoles();
         setFinishedLogin(false);
         const profile = await getLoggedProfile();
         setProfile(profile);
@@ -89,6 +102,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setOrganization(usedOrganization);
         return usedOrganization;
+    }
+
+    async function updateRoles() {
+        return UniversimeApi.Roles.listRoles().then((data : any) => {
+            if(data.success && data.body.roles) {
+                setRoles(data.body.roles);
+                return data.body.roles;
+            }
+        });
     }
 
     async function updateLinks(profile: ProfileClass) {

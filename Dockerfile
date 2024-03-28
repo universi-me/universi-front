@@ -10,8 +10,8 @@ ENV VITE_BUILD_HASH=${VITE_BUILD_HASH}
 
 COPY . .
 
-#RUN npm ci
-#RUN npm run build
+RUN npm ci
+RUN npm run build
 
 EXPOSE 8088
 
