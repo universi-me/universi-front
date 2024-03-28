@@ -46,6 +46,31 @@ export function GroupGroups() {
                 return !(groupContext.group.canEdit);
             }
         }
+    ];    
+
+    //<ActionButton name="Editar este grupo" buttonProps={{onClick(){groupContext.setEditGroup(groupContext.group); console.log(groupContext.group)}}}/>
+    //<ActionButton name="Criar grupo" buttonProps={{onClick(){groupContext.setEditGroup(null)}}}/>
+    const GROUP_OPTIONS: OptionInMenu<Group>[] = [
+        {
+            text: "Editar este grupo",
+            biIcon: "pencil-fill",
+            onSelect(data) {
+                groupContext.setEditGroup(groupContext.group)
+            },
+            hidden() {
+                return !(groupContext.group.canEdit);
+            },
+        },
+        {
+            text: "Criar grupo",
+            biIcon: "plus-lg",
+            onSelect(data) {
+                groupContext.setEditGroup(null);
+            },
+            hidden(){
+                return !(groupContext.group.canEdit);
+            }
+        }
     ];
 
     function handleRemoveGroup(group : Group){
@@ -76,14 +101,22 @@ export function GroupGroups() {
             <div className="heading top-container">
                 <div className="go-right">
                     <Filter setter={setFilterGroups} placeholderMessage={`Buscar grupos em ${groupContext.group.name}`}/>
-                    {
-                        (groupContext.group.canEdit || groupContext.group.canCreateGroup)
-                        ?<>
-                            <ActionButton name="Criar grupo" buttonProps={{onClick(){groupContext.setEditGroup(null)}}}/>
-                            <ActionButton name="Editar este grupo" buttonProps={{onClick(){groupContext.setEditGroup(groupContext.group); console.log(groupContext.group)}}}/>
-                        </>
-                        : <></>
-                    }
+                    <div className="group-options-container">
+                        { !hasAvailableOption(GROUP_OPTIONS, groupContext.group) ? null :
+                            <DropdownMenu.Root>
+                                <DropdownMenu.Trigger asChild>
+                                    <button className="group-options-button">
+                                        <i className="bi bi-three-dots-vertical" />
+                                    </button>
+                                </DropdownMenu.Trigger>
+
+                                <DropdownMenu.Content className="group-options" side="left">
+                                    { GROUP_OPTIONS.map(def => renderOption(groupContext.group, def)) }
+                                    <DropdownMenu.Arrow className="group-options-arrow" height=".5rem" width="1rem" />
+                                </DropdownMenu.Content>
+                            </DropdownMenu.Root>
+                        }
+                    </div>
                 </div>
             </div>
 
