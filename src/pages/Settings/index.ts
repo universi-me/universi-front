@@ -8,3 +8,4 @@ export * from "./GroupEmailFilterPage";
 export * from "./RolesPage";
 export * from "./EnvironmentsPage";
 export * from "./CompetencesPage";
+export * from "./GroupThemeColorPage";
