@@ -1,4 +1,4 @@
-import type { Group, GroupType, GroupEmailFilter, GroupEmailFilterType } from "@/types/Group";
+import type { Group, GroupType, GroupEmailFilter, GroupEmailFilterType, GroupTheme } from "@/types/Group";
 import type { Profile } from "@/types/Profile";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
@@ -73,6 +73,32 @@ export type FilterParticipants_RequestDTO = {
     groupPath?:             string
 }
 
+export type GroupThemeEdit_RequestDTO = GroupIdOrPath_RequestDTO & {
+    id:                     string;     
+    primaryColor:           string;
+    secondaryColor:         string;
+    tertiaryColor:          string;
+    backgroundColor:        string;
+    cardBackgroundColor:    string;
+    cardItemColor:          string;
+    fontColorV1:            string;
+    fontColorV2:            string;
+    fontColorV3:            string;
+    fontColorV4:            string;
+    fontColorV5:            string;
+    fontColorV6:            string;
+    fontDisabledColor:      string;
+    formsColor:             string;
+    skills1Color:           string;
+    waveColor:              string;
+    buttonYellowHoverColor: string;
+    buttonHoverColor:       string;
+    alertColor:             string;
+    successColor:           string;
+    wrongInvalidColor:      string;
+    rankColor:              string;
+};
+
 export type GroupGet_ResponseDTO =                       ApiResponse<{ group: Group }>;
 export type GroupCreate_ResponseDTO =                    ApiResponse;
 export type GroupUpdate_ResponseDTO =                    ApiResponse;
@@ -87,8 +113,9 @@ export type GroupEmailFilterAdd_ResponseDTO =            ApiResponse;
 export type GroupEmailFilterEdit_ResponseDTO =           ApiResponse;
 export type GroupEmailFilterDelete_ResponseDTO =         ApiResponse;
 export type GroupEmailFilterList_ResponseDTO =           ApiResponse<{ emailFilters: GroupEmailFilter[] }>;
-export type GroupCompetencesList_ResponseDTO =   ApiResponse<competenceListResponse>
+export type GroupCompetencesList_ResponseDTO =           ApiResponse<competenceListResponse>
 export type competenceListResponse = {competences : {competenceName : string, competenceTypeId : string, levelInfo : {[key : number]: Profile[]}}[]};
+export type GroupThemeEdit_ResponseDTO =                 ApiResponse<{ theme: GroupTheme[] }>;
 
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
@@ -200,6 +227,36 @@ export async function listEmailFilter(body: GroupIdOrPath_RequestDTO) {
     return (await api.post<GroupEmailFilterList_ResponseDTO>("/group/settings/email-filter/list", {
         groupId: body.groupId,
         groupPath: body.groupPath,
+    })).data;
+}
+
+export async function editTheme(body: GroupThemeEdit_RequestDTO) {
+    return (await api.post<GroupThemeEdit_ResponseDTO>('/group/settings/theme/edit', {
+        groupId:                    body.groupId,
+        groupPath:                  body.groupPath,
+
+        primary_color:              body.primaryColor,
+        secondary_color:            body.secondaryColor,
+        tertiary_color:             body.tertiaryColor,
+        background_color:           body.backgroundColor,
+        card_background_color:      body.cardBackgroundColor,
+        card_item_color:            body.cardItemColor,
+        font_color_v1:              body.fontColorV1,
+        font_color_v2:              body.fontColorV2,
+        font_color_v3:              body.fontColorV3,
+        font_color_v4:              body.fontColorV4,
+        font_color_v5:              body.fontColorV5,
+        font_color_v6:              body.fontColorV6,
+        font_disabled_color:        body.fontDisabledColor,
+        forms_color:                body.formsColor,
+        skills_1_color:             body.skills1Color,
+        wave_color:                 body.waveColor,
+        button_yellow_hover_color:  body.buttonYellowHoverColor,
+        button_hover_color:         body.buttonHoverColor,
+        alert_color:                body.alertColor,
+        success_color:              body.successColor,
+        wrong_invalid_color:        body.wrongInvalidColor,
+        rank_color:                 body.rankColor,
     })).data;
 }
 

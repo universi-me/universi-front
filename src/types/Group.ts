@@ -42,6 +42,32 @@ export const GroupEmailFilterTypeToLabel = {
     "REGEX":        "Padrão RegEx",
 };
 
+export type GroupTheme ={
+    id:                     string;
+    primaryColor:           string;
+    secondaryColor:         string;
+    tertiaryColor:          string;
+    backgroundColor:        string;
+    cardBackgroundColor:    string;
+    cardItemColor:          string;
+    fontColorV1:            string;
+    fontColorV2:            string;
+    fontColorV3:            string;
+    fontColorV4:            string;
+    fontColorV5:            string;
+    fontColorV6:            string;
+    fontDisabledColor:      string;
+    formsColor:             string;
+    skills1Color:           string;
+    waveColor:              string;
+    buttonYellowHoverColor: string;
+    buttonHoverColor:       string;
+    alertColor:             string;
+    successColor:           string;
+    wrongInvalidColor:      string;
+    rankColor:              string;
+};
+
 export type GroupType = "INSTITUTION" | "CAMPUS" | "COURSE" | "PROJECT" | "CLASSROOM" | "MONITORIA" | "LABORATORY"
                       | "ACADEMIC_CENTER" | "DEPARTMENT" | "STUDY_GROUP" | "GROUP_GENERAL" | "DIRECTORATE" | "MANAGEMENT" 
                       | "COORDINATION" | "COMPANY_AREA" | "DEVELOPMENT_TEAM" | "INTEREST_GROUP" | "MISCELLANEOUS_SUBJECTS" | "ENTERTAINMENT";
