@@ -1,20 +1,20 @@
 import { useContext, type ReactElement, useState, useEffect } from "react";
-import { GroupContents, GroupContext, GroupGroups, GroupPeople,GroupFeed} from "@/pages/Group";
+import { GroupContents, GroupContext, GroupGroups, GroupPeople, GroupFeed, GroupContextType } from "@/pages/Group";
 import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
 import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 import { GroupCompetences } from "./GroupCompetences/GroupCompetences";
 import { canI } from '@/utils/roles/rolesUtils';
-import { Permission, type FeatureTypes } from "@/types/Roles";
+import { Permission } from "@/types/Roles";
 
-export type AvailableTabs = "feed" | "contents" | "files" | "groups" | "people" | "competences";
+export type AvailableTabs = "feed" | "contents" | "groups" | "people" | "competences";
 
 export type GroupTabDefinition = {
     name: string,
     value: AvailableTabs,
-    featureType?: FeatureTypes,
     renderer(): ReactElement | null,
+    condition?(context: NonNullable<GroupContextType>): boolean;
 };
 
 export type GroupTabsProps = {
@@ -62,14 +62,11 @@ export  function GroupTabs(props: GroupTabsProps){
         {
             TABS.map(t => {
                 const isCurrentTab = t.value === props.currentTab;
+                const render = t.condition?.(context!) ?? true;
 
-                return (<>
-                    { canI(t!.featureType!, Permission.READ, context?.group) &&
-                        <button className={`group-tab-button`} value={t.value} key={t.value} onClick={() => { window.location.hash = t.value; props.changeTab(t.value); }} data-current-tab={isCurrentTab ? "" : undefined}>
-                            {t.name}
-                        </button>
-                    }
-                </>);
+                return render && <button className={`group-tab-button`} value={t.value} key={t.value} onClick={() => { window.location.hash = t.value; props.changeTab(t.value); }} data-current-tab={isCurrentTab ? "" : undefined}>
+                    {t.name}
+                </button>;
             })
         }
         
@@ -104,36 +101,41 @@ const TABS: GroupTabDefinition[] = [
     {
         name: 'Publicações',
         value: 'feed',
-        featureType: "FEED",
         renderer: GroupFeed,
+        condition(context) {
+            return Boolean(canI("FEED", Permission.READ, context.group))
+        },
     },
     {
         name: 'Conteúdos',
         value: "contents",
-        featureType: "CONTENT",
         renderer: GroupContents,
+        condition(context) {
+            return Boolean(canI("CONTENT", Permission.READ, context.group))
+        },
     },
-    // {
-    //     name: "Arquivos",
-    //     value: "files",
-    //     renderer: GroupFiles,
-    // },
     {
         name: "Grupos",
         value: "groups",
-        featureType: "GROUP",
         renderer: GroupGroups,
+        condition(context) {
+            return Boolean(canI("GROUP", Permission.READ, context.group))
+        },
     },
     {
         name: "Pessoas",
         value: "people",
-        featureType: "PEOPLE",
         renderer: GroupPeople,
+        condition(context) {
+            return Boolean(canI("PEOPLE", Permission.READ, context.group))
+        },
     },
     {
         name: "Competências",
         value: "competences",
-        featureType: "COMPETENCE",
         renderer: GroupCompetences,
+        condition(context) {
+            return Boolean(canI("COMPETENCE", Permission.READ, context.group))
+        },
     },
 ];
