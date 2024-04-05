@@ -1,11 +1,11 @@
 
 export enum Permission {
-    DEFAULT = 4,
     NONE = 0,
     DISABLED = 1,
     READ = 2,
     READ_WRITE = 3,
     READ_WRITE_DELETE = 4,
+    DEFAULT = READ_WRITE_DELETE,
 }
 
 
