@@ -23,14 +23,7 @@ export function GroupFeed(){
         if (!groupContext)
             return false;
 
-        if (groupContext.group.canEdit)
-            return true;
-
-        if (groupContext.group.everyoneCanPost)
-            // return is participant
-            return groupContext.participants.some(p => p.id === groupContext.loggedData.profile.id);
-
-        return false;
+       return canI("FEED", Permission.READ_WRITE, groupContext.group);
     }
 
     if(groupContext == null)
@@ -42,11 +35,8 @@ export function GroupFeed(){
                 <div className="go-right">
                     <Filter setter={setFilterPosts} placeholderMessage={`Buscar publicação em ${groupContext.group.name}`}/>
                     {
-                        canCreatePost() || canI("FEED", Permission.READ_WRITE, groupContext.group)
-                        ?
+                        canCreatePost() &&
                             <ActionButton name="Criar publicação" buttonProps={{onClick(){groupContext.setEditPost(null)}}}/>
-                        :
-                            <></>
                     }
                 </div>
             </div>
