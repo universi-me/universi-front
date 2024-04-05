@@ -12,7 +12,7 @@ export enum Permission {
 
 export type FeatureTypes = "FEED" | "CONTENT" | "GROUP" | "PEOPLE" | "COMPETENCE";
 
-export const FeatureTypesToLabel = {
+export const FeatureTypesToLabel: { [k in FeatureTypes]: string } = {
     "FEED":         "Publicações",
     "CONTENT":      "Conteúdo",
     "GROUP":        "Grupo",
