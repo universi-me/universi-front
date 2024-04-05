@@ -76,8 +76,8 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             className: "delete",
             onSelect: handleDeletePost,
             hidden(data) {
-                let canDelete = canI("FEED", Permission.READ_WRITE_DELETE, groupContext.group) || (groupContext.group.canEdit || data.author.user.ownerOfSession);
-                return !canDelete;
+                return !data.author.user.ownerOfSession
+                    || !canI("FEED", Permission.READ_WRITE_DELETE, groupContext.group);
             },
         }
     ]
