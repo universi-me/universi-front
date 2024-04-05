@@ -1,8 +1,5 @@
-import { type LoaderFunctionArgs } from "react-router-dom";
-import { useContext } from "react";
 import { RolesProfile, Roles } from "@/types/Roles";
 import UniversimeApi from "@/services/UniversimeApi";
-import { AuthContext } from "@/contexts/Auth";
 
 export type RolesResponse = {
     roles: Roles[] | undefined;
@@ -10,6 +7,8 @@ export type RolesResponse = {
 };
 
 export async function RolesFetch(groupId: string): Promise<RolesResponse> {
+    const profile = await UniversimeApi.Profile.profile();
+    if (!profile.success) return FAILED_TO_LOAD;
 
     const roles = await UniversimeApi.Roles.list({ groupId });
     
@@ -23,22 +22,6 @@ export async function RolesFetch(groupId: string): Promise<RolesResponse> {
         roles: roles.body?.roles,
         participants: participants.body?.participants,
     }
-}
-
-export async function RolesLoader(args: LoaderFunctionArgs) {
-
-    const auth = useContext(AuthContext);
-
-    const organization = auth.organization;
-
-    if (auth.profile === null || organization === null) {
-        return {
-            success: false,
-            reason: null,
-        };
-    }
-
-    return RolesFetch(organization!.id);
 }
 
 const FAILED_TO_LOAD = {

@@ -18,7 +18,7 @@ import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
 import { ProfileClass, type Profile } from "@/types/Profile";
 
-import { type RolesResponse, RolesFetch, RolesLoader } from "./RolesLoader";
+import { type RolesResponse, RolesFetch } from "./RolesLoader";
 
 
 import "./Roles.less";
