@@ -79,17 +79,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     async function updateLoggedUser() {
-        await updateRoles();
         setFinishedLogin(false);
         const profile = await getLoggedProfile();
         setProfile(profile);
 
-        const organization = await updateOrganization();
-
         if (profile !== null) await Promise.all([
-            organization,
+            updateOrganization(),
             updateLinks(profile),
             updateGroups(profile),
+            updateRoles(),
         ]);
 
         setFinishedLogin(true);
