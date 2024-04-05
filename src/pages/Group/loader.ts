@@ -37,26 +37,31 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     const group = groupRes.body.group;
     const profile = profileRes.body.profile;
     
+    const canISubgroups =    canI('GROUP',   Permission.READ, group, profile);
+    const canIParticipants = canI('PEOPLE',  Permission.READ, group, profile);
+    const canIFolders =      canI('CONTENT', Permission.READ, group, profile);
+    const canIFeed =         canI('FEED',    Permission.READ, group, profile);
+
     const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes, groupPostsRes] = await Promise.all([
-        canI('GROUP',   Permission.READ, group, profile) == true ? UniversimeApi.Group.subgroups({groupId: group.id})    : {} as any,
-        canI('PEOPLE',  Permission.READ, group, profile) == true ? UniversimeApi.Group.participants({groupId: group.id}) : {} as any,
-        canI('CONTENT', Permission.READ, group, profile) == true ? UniversimeApi.Group.folders({groupId: group.id})      : {} as any,
+        canISubgroups ? UniversimeApi.Group.subgroups({groupId: group.id})       : undefined,
+        canIParticipants ? UniversimeApi.Group.participants({groupId: group.id}) : undefined,
+        canIFolders ? UniversimeApi.Group.folders({groupId: group.id})           : undefined,
         UniversimeApi.Profile.groups({profileId: profile.id}),
         UniversimeApi.Profile.links({profileId: profile.id}),
-        canI('FEED',    Permission.READ, group, profile) == true ? UniversimeApi.Feed.getGroupPosts({groupId: group.id}) : {} as any,
+        canIFeed ? UniversimeApi.Feed.getGroupPosts({groupId: group.id}) : undefined,
     ]);
     
     return {
         group: group,
-        folders: foldersRes.body?.folders ?? [],
-        participants: participantsRes.body?.participants ?? [],
-        subGroups: subgroupsRes.body?.subgroups ?? [],
-        posts: groupPostsRes.body?.posts ?? [],
+        folders: foldersRes?.success ? foldersRes.body.folders : [],
+        participants: participantsRes?.success ? participantsRes.body.participants : [],
+        subGroups: subgroupsRes?.success ? subgroupsRes.body.subgroups : [],
+        posts: groupPostsRes?.success ? groupPostsRes.body.posts : [],
         loggedData: {
             profile: profile,
             groups: profileGroupsRes.body?.groups ?? [],
             links: profileLinksRes.body?.links ?? [],
-            isParticipant: participantsRes.body?.participants
+            isParticipant: participantsRes?.body?.participants
             .find((p : any) => p.user.name === profile.user?.name) !== undefined,
         }
     };
