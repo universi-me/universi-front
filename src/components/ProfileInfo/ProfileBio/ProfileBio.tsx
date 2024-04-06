@@ -23,7 +23,7 @@ export function ProfileBio(props: ProfileBioProps) {
 
     const headerBackground = props.organization
         ? { backgroundImage: `url(${groupBannerUrl(props.organization)})` }
-        : { backgroundColor: "var(--primary-color)" }
+        : { backgroundColor: "@primary-color" }
 
     const profile = new ProfileClass(props.profile);
 
