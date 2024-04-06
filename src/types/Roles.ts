@@ -23,10 +23,10 @@ export const FeatureTypesToLabel: { [k in FeatureTypes]: string } = {
 export type Roles = {
     id: string;
     name: string;
-    description : string;
-    isDefault: boolean;
-    rolesFeatures: RolesFeature[];
-    features?: RolesFeature[];
+
+    profile: string;
+    group: string | null;
+    features: RolesFeature[];
 }
 
 export type RolesFeature = {

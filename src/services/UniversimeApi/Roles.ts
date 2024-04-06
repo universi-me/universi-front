@@ -1,6 +1,7 @@
 import { Roles, RolesProfile } from "@/types/Roles";
 import { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
+import UniversimeApi from "@/services/UniversimeApi";
 
 export type RolesCreate_RequestDTO = {
     groupId:        string;
@@ -79,7 +80,7 @@ export async function list(body: RolesList_RequestDTO) {
     })).data
 }
 
-export async function listPaticipants(body: RolesList_RequestDTO) {
+export async function listParticipants(body: RolesList_RequestDTO) {
     return (await api.post<RolesParticipantsList_ResponseDTO>("/roles/participants/list", {
         groupId:             body.groupId
     })).data
@@ -102,8 +103,6 @@ export async function assigned(body:  RolesAssigned_RequestDTO) {
     })).data;
 }
 
-export function listRoles() : any {
-    return api.get<RolesList_ResponseDTO>("/account").then((data) => {
-        return data.data;
-    });
+export function listRoles() {
+    return UniversimeApi.Auth.getAccount();
 }
