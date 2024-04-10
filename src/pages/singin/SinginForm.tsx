@@ -47,7 +47,7 @@ export default function SinginForm() {
   const ENABLE_GOOGLE_LOGIN = organizationEnv.login_google_enabled ?? (import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1");
   const ENABLE_RECAPTCHA = organizationEnv.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
   const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-  let ENABLE_KEYCLOAK_LOGIN = organizationEnv.keycloak_enabled ?? false;
+  const ENABLE_KEYCLOAK_LOGIN = organizationEnv.keycloak_enabled ?? false;
   
   return (
   <>
