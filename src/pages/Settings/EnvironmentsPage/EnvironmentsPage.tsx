@@ -67,7 +67,7 @@ export function EnvironmentsPage() {
                 ]
             },
             {
-                title: "Login via Keycloak",
+                title: "Login via Keycloak - OIDC",
                 items: [
                     {
                         name: "Habilitar",
