@@ -9,6 +9,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Singin from "@/pages/singin/Singin";
 
 import { OAuth2Element } from './oauth2-google';
+import { KeyCloakOAuth2Element } from "./oauth2-keycloak";
 
 import CapacityPage from "@/pages/Capacity/Capacity";
 import CategoryPage from "@/pages/Capacity/Category";
@@ -92,6 +93,10 @@ export const router = createBrowserRouter([{
     {
         path: "/google-oauth-redirect",
         element: <OAuth2Element/>
+    },
+    {
+      path: "/keycloak-oauth-redirect",
+      element: <KeyCloakOAuth2Element/>
     },
     {
         path: "/manage-group",
