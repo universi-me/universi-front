@@ -35,7 +35,7 @@ export function ProfileBio(props: ProfileBioProps) {
                     renderEditButton ?
                         <div className="edit-button">
                             <Link to="/manage-profile" title="Editar seu perfil">
-                                <img src={ICON_EDIT_WHITE} alt="Editar" />
+                                <img src={ICON_EDIT_WHITE} alt="Editar" className="edit-icon" />
                             </Link>
                         </div>
                     : null
