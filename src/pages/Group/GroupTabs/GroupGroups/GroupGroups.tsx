@@ -96,10 +96,10 @@ export function GroupGroups() {
                     formTitle={groupContext.editGroup == null ? "Criar grupo" : "Editar grupo"}
                     objects={[
                         {
-                            DTOName: "nickname", label: "Apelido do grupo", type: FormInputs.TEXT, value: groupContext.editGroup?.name, required: true, 
+                            DTOName: "nickname", label: "Apelido do grupo", type: groupContext.editGroup == null ? FormInputs.TEXT : FormInputs.HIDDEN, value: undefined, required: true, 
                             validation: new ValidationComposite<string>().addValidation(new TextValidation())
                         }, {
-                            DTOName: "name", label: "Nome do grupo", type: FormInputs.TEXT, value: groupContext.editGroup?.nickname, required: true, 
+                            DTOName: "name", label: "Nome do grupo", type: FormInputs.TEXT, value: groupContext.editGroup?.name, required: true, 
                             validation: new ValidationComposite<string>().addValidation(new TextValidation())
                         }, {
                             DTOName: "description", label: "Descrição do grupo", type: FormInputs.LONG_TEXT, value: groupContext.editGroup?.description, required: true, charLimit: 200,

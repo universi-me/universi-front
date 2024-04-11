@@ -13,6 +13,10 @@ export type GoogleSignIn_RequestDTO = {
     token: string;
 };
 
+export type KeyCloakSignIn_RequestDTO = {
+    code: string;
+};
+
 export type GetAccount_ResponseDTO = ApiResponse<{ user: User, roles: Roles[] }>;
 export type SignIn_ResponseDTO =     ApiResponse<{ user: User }>;
 export type LogOut_ResponseDTO =     ApiResponse;
@@ -39,5 +43,10 @@ export async function logout() {
 
 export async function login_google({ token }: GoogleSignIn_RequestDTO) {
     const response = await api.post<SignIn_ResponseDTO>("/login/google", { token });
+    return response.data;
+}
+
+export async function login_keycloak({ code }: KeyCloakSignIn_RequestDTO) {
+    const response = await api.post<SignIn_ResponseDTO>("/login/keycloak", { code });
     return response.data;
 }

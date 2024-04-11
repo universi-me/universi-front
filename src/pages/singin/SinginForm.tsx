@@ -22,6 +22,10 @@ export default function SinginForm() {
     window.location.href = oauthSignIn().toString();
   };
 
+  const handleAuthLoginKeycloak = async () => {
+    window.location.href = import.meta.env.VITE_UNIVERSIME_API + "/login/keycloak/auth";
+  };
+
   const handleRecaptchaChange = (token: string | null) => {
     setRecaptchaToken(token);
   };
@@ -45,6 +49,7 @@ export default function SinginForm() {
   const ENABLE_GOOGLE_LOGIN = organizationEnv.login_google_enabled ?? (import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1");
   const ENABLE_RECAPTCHA = organizationEnv.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
   const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  const ENABLE_KEYCLOAK_LOGIN = organizationEnv.keycloak_enabled ?? false;
   
   return (
   <>
@@ -112,7 +117,7 @@ export default function SinginForm() {
         <>
             <div className="container-line-form" style={{margin: "20px 0"}}>
                 <div className="line-form"></div>
-                <div>ou entre com</div>
+                <div style={{color: "#c2c2c2"}}>ou entre com</div>
                 <div className="line-form"></div>
             </div>
 
@@ -126,6 +131,27 @@ export default function SinginForm() {
             </button>
         </>
       }
+
+      {
+        !ENABLE_KEYCLOAK_LOGIN ? null :
+        <>
+            <div className="container-line-form" style={{margin: "20px 0"}}>
+                <div className="line-form"></div>
+                <div style={{color: "#c2c2c2"}}>ou entre com</div>
+                <div className="line-form"></div>
+            </div>
+
+            <button
+                className="btn_form_dcx"
+                type="button"
+                onClick={handleAuthLoginKeycloak}
+            >
+                <img src="https://i.imgur.com/pKFFuoh.png"  height={70}/>
+                Keycloak
+            </button>
+        </>
+      }
+
       { !SIGNUP_ENABLED ? null :
         <div className="container-line-form" style={{marginTop: "20px"}}>
             <Link to="/signup">Crie sua conta</Link>

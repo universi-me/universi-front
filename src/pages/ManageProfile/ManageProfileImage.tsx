@@ -5,6 +5,7 @@ import { arrayBufferToBase64 } from "@/utils/fileUtils";
 
 export type ManageProfileImageProps = {
     currentImage: string | null;
+    setImage(image: File | undefined): any;
 };
 
 export function ManageProfileImage(props: ManageProfileImageProps) {
@@ -15,7 +16,7 @@ export function ManageProfileImage(props: ManageProfileImageProps) {
 
     return (
         <fieldset id="fieldset-image">
-            <legend>Alterar imagem do perfil</legend>
+            <legend className="required-input">Alterar imagem do perfil</legend>
             <input id="image" name="image" accept="image/*" type="file" onChange={changeImage} />
             <label htmlFor="image"><ProfileImage imageUrl={image} id="profile-image-view" /></label>
         </fieldset>
@@ -33,13 +34,14 @@ export function ManageProfileImage(props: ManageProfileImageProps) {
     }
 
     function readerLoadImage(this: FileReader, ev: ProgressEvent<FileReader>) {
-        if (ev.target?.readyState === this.DONE)
+        if (ev.target?.readyState === this.DONE) {
             setImageBuffer(ev.target.result as ArrayBuffer);
+            props.setImage(getProfileImage());
+        }
     }
-}
 
-export function getProfileImage() {
-    return (document.getElementById("image") as HTMLInputElement)
-        .files
-        ?.item(0);
+    function getProfileImage() {
+        return (document.getElementById("image") as HTMLInputElement)
+            .files?.item(0) ?? undefined;
+    }
 }
