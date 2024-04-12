@@ -37,7 +37,9 @@ jobs:
       
     - name: Set VITE_BUILD_HASH environment variable
       id: set-build-hash
-      run: echo "VITE_BUILD_HASH=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+      run: |
+        version_tag=$(echo "${{ github.event.release.tag_name }}" | sed 's/refs\/tags\///')
+        echo "VITE_BUILD_HASH=$version_tag" >> $GITHUB_ENV
       
     - name: Run Build
       run: npm run build
@@ -57,11 +59,12 @@ jobs:
         docker buildx create --use
         tag_name=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
         [ "$tag_name" == "prod" ] && tag_name='latest'
-        echo "${{ github.event.release.tag_name }}" > ./build.hash
+        version_tag=$(echo "${{ github.event.release.tag_name }}" | sed 's/refs\/tags\///')
+        echo "$version_tag" > ./build.hash
         docker buildx build \
           --platform linux/arm64,linux/amd64 \
-          --build-arg VITE_BUILD_HASH=${{ github.event.release.tag_name }} \
+          --build-arg VITE_BUILD_HASH=$version_tag \
           -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:$tag_name \
-          -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:${{ github.event.release.tag_name }} \
+          -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:$version_tag \
           --push \
           .
