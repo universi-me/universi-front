@@ -15,6 +15,8 @@ export type GroupCreate_RequestDTO = {
     nickname:        string;
     groupType:       GroupType;
     imageUrl?:       string;
+    bannerImageUrl?: string;
+    headerImageUrl?: string;
     canHaveSubgroup: boolean;
     isPublic:        boolean;
     canJoin:         boolean;
@@ -30,6 +32,8 @@ export type GroupUpdate_RequestDTO = {
     description?:     string;
     groupType?:       GroupType;
     imageUrl?:        string;
+    bannerImageUrl?:  string;
+    headerImageUrl?:  string;
     canHaveSubgroup?: boolean;
     isPublic?:        boolean;
     canJoin?:         boolean;
@@ -133,6 +137,8 @@ export async function create(body: GroupCreate_RequestDTO) {
         name:           body.name,
         description:    body.description,
         imageUrl:       body.imageUrl,
+        bannerImageUrl: body.bannerImageUrl,
+        headerImageUrl: body.headerImageUrl,
         type:           body.groupType,
         canCreateGroup: body.canHaveSubgroup,
         publicGroup:    body.isPublic,
@@ -148,6 +154,8 @@ export async function update(body: GroupUpdate_RequestDTO) {
         description:     body.description,
         type:            body.groupType,
         imageUrl:        body.imageUrl,
+        bannerImageUrl:  body.bannerImageUrl,
+        headerImageUrl:  body.headerImageUrl,
         canCreateGroup:  body.canHaveSubgroup,
         publicGroup:     body.isPublic,
         canEnter:        body.canJoin,
