@@ -13,7 +13,7 @@ const CropperPopup = ({ src, onClose, options }: { src: string, onClose: (imageB
   const cropperRef = createRef<ReactCropperElement>();
 
   const onApply = () => {
-    onClose(Buffer.from(cropperRef!.current!?.cropper!?.getCroppedCanvas().toDataURL().split(",")[1], 'base64').buffer  as any);
+    onClose(Buffer.from(cropperRef!.current!?.cropper!?.getCroppedCanvas().toDataURL().split(",")[1], 'base64').buffer as ArrayBuffer);
   };
   
   const onCancel = () => {
@@ -23,7 +23,10 @@ const CropperPopup = ({ src, onClose, options }: { src: string, onClose: (imageB
   return (
     <div className="cropper-popup container-radius" style={{ height: '60%' , width: '60%'}}>
 
-      <h1 className='header header-radius'>{options?.title ?? 'Ajustar Imagem'}</h1>
+      <div className='header header-radius'>
+        <h1 className='bi bi-crop'></h1>
+        <h1 className='title'>{options?.title ?? 'Ajustar Imagem'}</h1>
+      </div>
 
       <div className='cropper-container'>
         
