@@ -23,6 +23,12 @@ export function RolesPage() {
     const [participants, participantsDispatch] = useReducer(participantsReducer, data.success ? data.participants.map(p => new ProfileOnList(p)) : undefined);
     const [filter, setFilter] = useState("");
 
+    const [selectionProfile, setSelectionProfile] = useState<Profile[]>([]);
+    const [isSelectionActive, setIsSelectionActive] = useState(false);
+
+    const [showActionPopup, setShowActionPopup] = useState(false);
+    const [actionSelectionBlock, setActionSelectionBlock] = useState(false);
+
     if (!participants) {
         SwalUtils.fireModal({
             title: "Erro ao recuperar dados dos participantes",
@@ -53,13 +59,106 @@ export function RolesPage() {
 
     const canSubmit = changedParticipants.length > 0;
 
+    function startSelection() {
+        setIsSelectionActive(true);
+    }
+
+    function applySelection() {
+        selectionProfile.forEach(p => {
+            participantsDispatch({
+                type: "SET_ROLE",
+                profileId: p.id,
+                setRole: undefined,
+                setBlockedAccount: actionSelectionBlock,
+            });
+        });
+    }
+
+    function blockProfile(profile: ProfileOnList, blocked: boolean) {
+        participantsDispatch({
+            type: "SET_ROLE",
+            profileId: profile.id,
+            setBlockedAccount: blocked,
+        });
+    }
+
+    function addSelection(profile: Profile) {
+        setSelectionProfile([...selectionProfile, profile]);
+    }
+
+    function removeSelection(profile: Profile) {
+        setSelectionProfile(selectionProfile.filter(p => p.id !== profile.id));
+    }
+
+    function isSelectionProfile(profile: Profile) {
+        return selectionProfile.some(p => p.id === profile.id);
+    }
+
+    function toggleSelection(profile: Profile) {
+        if (isSelectionProfile(profile))
+            removeSelection(profile);
+        else
+            addSelection(profile);
+    }
+
+    function showSelectionAction() {
+        setShowActionPopup(true);
+    }
+
+    function cancelSelection() {
+        setIsSelectionActive(false);
+        setSelectionProfile([]);
+        setShowActionPopup(false);
+    }
+
+    function cancelChanges() {
+        participantsDispatch({ type: "SET_ALL", setParticipants: participants!.map(p => new ProfileOnList(p)) });
+    }
+
+    
+
     return <div id="roles-settings">
         <SettingsTitle>Configurar administradores</SettingsTitle>
         <SettingsDescription>Configure os níveis de acesso dos usuários do Universi.me</SettingsDescription>
         <section id="search-submit-wrapper">
             <input type="search" placeholder="Pesquisar usuário" onChange={setStateAsValue(setFilter)} />
             <button type="button" onClick={submitChanges} className="submit" disabled={!canSubmit} title={canSubmit ? undefined : "Faça uma alteração primeiro"}>Salvar mudanças</button>
+            {
+                canSubmit &&
+                <button type="button" onClick={cancelChanges} className="submit">Cancelar Mudanças</button>
+            }
         </section>
+
+        <section id="search-submit-wrapper">
+            { isSelectionActive ?
+                <>
+                    {!showActionPopup ? <button type="button" onClick={showSelectionAction} className="submit"><h2 className="bi-grip-vertical" />Ação para Seleção</button>
+                    :
+                    <button type="button" className="submit" onClick={() => applySelection()} style={{display: 'inline-block' }}>
+                        <span className="bi bi-check2-all"/> Aplicar seleção
+                    </button>
+                    }
+
+                    <button type="button" onClick={cancelSelection} className="submit"><h2 className="bi-x-circle" />Cancelar Seleção</button>
+                </>
+                :
+                    <button type="button" onClick={startSelection} className="submit"><h2 className="bi-check2-all" />Selecionar</button>
+            }
+        </section>
+
+        { (showActionPopup && isSelectionActive) && <>
+        <div className="actions-popup" style={{backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: 10, padding: 10, marginBottom: 20}}>
+                <section id="search-submit-wrapper">
+                    <h3>Ação para a seleção{selectionProfile.length ?  ' ('+selectionProfile.length+' perfis)' : '' }: </h3>
+                    <button type="button" className="submit" onClick={() => setActionSelectionBlock(!actionSelectionBlock)} style={{display: 'inline-block' }}>
+                        { actionSelectionBlock ? <><span className="bi bi-unlock-fill"/> Habilitar</> : <><span className="bi bi-lock-fill"/> Desabilitar</> }
+                    </button>
+
+                    
+                </section>
+        </div>
+        </>
+        }
 
         <section id="participants-list">
         { filteredParticipants.map(profile => {
@@ -67,11 +166,25 @@ export function RolesPage() {
             const roleLabel = UserAccessLevelLabel[profile.role];
 
             return <div className="profile-item" key={profile.id}>
-                <ProfileImage imageUrl={profile.imageUrl} className="profile-image" />
-                <div className="info">
+                <div style={{  display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', justifyContent: 'space-between',  width: '100%', }}>
+
+                <div style={{margin: 0, padding: 0, width: '9%'}}>
+                    { isSelectionActive && <h2 onClick={() => toggleSelection(profile) } className={isSelectionProfile(profile) ? "bi-check-circle-fill" : "bi-check-circle"} /> }
+                    { profile.blockedAccount && <><br/><h2 className="bi-ban" style={{color: 'red'}}/></> }
+                </div>
+
+                <div style={{width: '40%'}}>
+                    <ProfileImage imageUrl={profile.imageUrl} className="profile-image" />
+                </div>
+
+                <div className="info" style={{width: '50%'}}>
                     <h2 className="profile-name">{profile.fullname}</h2>
                     <p className="profile-bio">{profile.bio}</p>
                 </div>
+                
+                <div style={{display: 'inline-block', padding: 0, marginBottom: 5, width: '40%'}}>
+
+                <div style={{ marginBottom: 25}}>
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild disabled={isOwnProfile} title={isOwnProfile ? "Você não pode alterar seu próprio nível de acesso" : undefined}>
                         <button type="button" className="set-role-trigger">
@@ -84,6 +197,19 @@ export function RolesPage() {
                         { CHANGE_ROLE_OPTIONS.map(def => renderOption(profile, def)) }
                     </DropdownMenu.Content>
                 </DropdownMenu.Root>
+                </div>
+
+                <div>
+                    <section id="search-submit-wrapper">
+                        <button type="button" className="submit" onClick={() => blockProfile(profile, !profile.blockedAccount)} style={{display: 'inline-block' }}>
+                            { profile.blockedAccount ? <><span className="bi bi-unlock-fill"/> Habilitar</> : <><span className="bi bi-lock-fill"/> Desabilitar</> }
+                        </button>
+                    </section>
+                </div>
+
+                </div>
+
+                </div>
             </div>
         }) }
         </section>
@@ -101,7 +227,7 @@ export function RolesPage() {
             if (p.id !== action.profileId)
                 return p;
 
-            return new ProfileOnList(p, action.setRole);
+            return new ProfileOnList(p, action.setRole, action.setBlockedAccount);
         });
     }
 
@@ -120,7 +246,7 @@ export function RolesPage() {
             return;
 
         const responses = await Promise.all(
-            changedParticipants.map(p => UniversimeApi.Admin.editAccount({ userId: p.user.id, authorityLevel: p.role }))
+            changedParticipants.map(p => UniversimeApi.Admin.editAccount({ userId: p.user.id, authorityLevel: p.role, blockedAccount: p.blockedAccount}))
         );
 
         refreshParticipants();
@@ -142,6 +268,7 @@ export function RolesPage() {
 
 class ProfileOnList extends ProfileClass {
     public newRole?: UserAccessLevel;
+    public newBlockedAccount?: boolean;
 
     /**
      * Returns the current role of the profile, which can be the modified before saving or the original
@@ -151,21 +278,31 @@ class ProfileOnList extends ProfileClass {
     }
 
     /**
+     * Returns the current blocked_account status of the profile, which can be the modified before saving or the original
+     */
+    get blockedAccount() {
+        return this.newBlockedAccount ?? this.user.blocked_account;
+    }
+
+    /**
      * Returns true if the profile has a new role and it's different from the original role
      */
     get changed() {
-        return this.newRole && this.newRole !== this.user.accessLevel;
+        return (this.newRole && this.newRole !== this.user.accessLevel) ||
+                 (this.newBlockedAccount !== undefined && (this.newBlockedAccount !== this.user.blocked_account));
     }
 
-    constructor(profile: Profile, newRole?: UserAccessLevel) {
+    constructor(profile: Profile, newRole?: UserAccessLevel, newBlockedAccount?: boolean) {
         super(profile);
         this.newRole = newRole;
+        this.newBlockedAccount = newBlockedAccount;
     }
 }
 
 type ParticipantsReducerAction = {
     type: "SET_ROLE";
-    setRole:   UserAccessLevel;
+    setRole?:   UserAccessLevel;
+    setBlockedAccount?: boolean;
     profileId: string;
 } | {
     type: "SET_ALL";
