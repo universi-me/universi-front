@@ -72,6 +72,7 @@ export function RolesPage() {
                 setBlockedAccount: actionSelectionBlock,
             });
         });
+        cancelSelection();
     }
 
     function blockProfile(profile: ProfileOnList, blocked: boolean) {
@@ -160,7 +161,7 @@ export function RolesPage() {
                 <section id="search-submit-wrapper">
                     <h3>Ação para a seleção{selectionProfile.length ?  ' ('+selectionProfile.length+' perfis)' : '' }: </h3>
                     <button type="button" className="submit" onClick={() => setActionSelectionBlock(!actionSelectionBlock)} style={{display: 'inline-block' }}>
-                        { actionSelectionBlock ? <><span className="bi bi-unlock-fill"/> Habilitar</> : <><span className="bi bi-lock-fill"/> Desabilitar</> }
+                        { actionSelectionBlock ? <><span className="bi bi-lock-fill"/> Bloqueado</> : <><span className="bi bi-unlock-fill"/> Habilitado</> }
                     </button>
 
                     
@@ -211,7 +212,7 @@ export function RolesPage() {
                 <div>
                     <section id="search-submit-wrapper">
                         <button type="button" className="submit" onClick={() => blockProfile(profile, !profile.blockedAccount)} style={{display: 'inline-block' }}>
-                            { profile.blockedAccount ? <><span className="bi bi-unlock-fill"/> Habilitar</> : <><span className="bi bi-lock-fill"/> Desabilitar</> }
+                            { profile.blockedAccount ? <><span className="bi bi-lock-fill"/> Bloqueado</> : <><span className="bi bi-unlock-fill"/> Habilitado</> }
                         </button>
                     </section>
                 </div>
