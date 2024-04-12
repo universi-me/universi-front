@@ -186,7 +186,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild /*disabled={isOwnProfile}*/ title={isOwnProfile ? "Você não pode alterar seu próprio nível de acesso" : undefined}>
                         <button type="button" className="set-role-trigger">
-                            { profile.roles!.name }
+                            { profile.roles?.name }
                             <span className="bi"/>
                         </button>
                     </DropdownMenu.Trigger>
