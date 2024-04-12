@@ -71,7 +71,7 @@ function getRolesFromLocalStorage(): RoleDTO[] | null {
     return item && JSON.parse(item);
 }
 
-export function isAdminRole(role : RoleDTO) {
+function isAdminRole(role : RoleDTO) {
   return role != null && role.id == '00000000-0000-0000-0000-000000000001';
 }
 

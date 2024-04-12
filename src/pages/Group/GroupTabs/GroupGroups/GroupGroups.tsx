@@ -8,7 +8,6 @@ import { GroupTypeToLabel, type Group, type GroupType } from "@/types/Group";
 import "./GroupGroups.less";
 import { Filter } from "@/components/Filter/Filter";
 import { AuthContext } from "@/contexts/Auth";
-import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { TextValidation } from "@/components/UniversiForm/Validation/TextValidation";
 import UniversimeApi from "@/services/UniversimeApi";
@@ -16,7 +15,6 @@ import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdown
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
-import { isAdminRole } from "@/utils/roles/rolesUtils";
 
 export function GroupGroups() {
     const groupContext = useContext(GroupContext);
@@ -80,7 +78,7 @@ export function GroupGroups() {
                 groupContext.setGroupConfigModalOpen(true);
             },
             hidden(){
-                return authContext.roles?.find(isAdminRole) !== undefined;
+                return authContext.user?.accessLevel !== "ROLE_ADMIN";
             }
         }
     ];
