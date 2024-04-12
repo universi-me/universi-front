@@ -5,7 +5,7 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
 import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 import { GroupCompetences } from "./GroupCompetences/GroupCompetences";
-import { canI } from '@/utils/roles/rolesUtils';
+import useCanI, { CanI_SyncFunction } from "@/hooks/useCanI";
 import { Permission } from "@/types/Roles";
 
 export type AvailableTabs = "feed" | "contents" | "groups" | "people" | "competences";
@@ -14,7 +14,7 @@ export type GroupTabDefinition = {
     name: string,
     value: AvailableTabs,
     renderer(): ReactElement | null,
-    condition?(context: NonNullable<GroupContextType>): boolean;
+    condition?(context: NonNullable<GroupContextType>, canI: CanI_SyncFunction): boolean;
 };
 
 export type GroupTabsProps = {
@@ -26,6 +26,8 @@ export  function GroupTabs(props: GroupTabsProps){
     const context = useContext(GroupContext);
     const auth = useContext(AuthContext);
     const [joined, setJoined] = useState(auth.profile != null ? context?.loggedData.isParticipant : false)
+
+    const canI = useCanI();
 
     useEffect(()=>{
         setJoined(auth.profile != null ? context?.loggedData.isParticipant : false)
@@ -62,7 +64,7 @@ export  function GroupTabs(props: GroupTabsProps){
         {
             TABS.map(t => {
                 const isCurrentTab = t.value === props.currentTab;
-                const render = t.condition?.(context!) ?? true;
+                const render = t.condition?.(context!, canI) ?? true;
 
                 return render && <button className={`group-tab-button`} value={t.value} key={t.value} onClick={() => { window.location.hash = t.value; props.changeTab(t.value); }} data-current-tab={isCurrentTab ? "" : undefined}>
                     {t.name}
@@ -102,40 +104,40 @@ const TABS: GroupTabDefinition[] = [
         name: 'Publicações',
         value: 'feed',
         renderer: GroupFeed,
-        condition(context) {
-            return Boolean(canI("FEED", Permission.READ, context.group))
+        condition(context, canI) {
+            return canI("FEED", Permission.READ, context.group);
         },
     },
     {
         name: 'Conteúdos',
         value: "contents",
         renderer: GroupContents,
-        condition(context) {
-            return Boolean(canI("CONTENT", Permission.READ, context.group))
+        condition(context, canI) {
+            return canI("CONTENT", Permission.READ, context.group);
         },
     },
     {
         name: "Grupos",
         value: "groups",
         renderer: GroupGroups,
-        condition(context) {
-            return Boolean(canI("GROUP", Permission.READ, context.group))
+        condition(context, canI) {
+            return canI("GROUP", Permission.READ, context.group);
         },
     },
     {
         name: "Pessoas",
         value: "people",
         renderer: GroupPeople,
-        condition(context) {
-            return Boolean(canI("PEOPLE", Permission.READ, context.group))
+        condition(context, canI) {
+            return canI("PEOPLE", Permission.READ, context.group);
         },
     },
     {
         name: "Competências",
         value: "competences",
         renderer: GroupCompetences,
-        condition(context) {
-            return Boolean(canI("COMPETENCE", Permission.READ, context.group))
+        condition(context, canI) {
+            return canI("COMPETENCE", Permission.READ, context.group);
         },
     },
 ];

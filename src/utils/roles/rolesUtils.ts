@@ -1,124 +1,98 @@
 import UniversimeApi from "@/services/UniversimeApi";
-import { FeatureTypes, Roles, RolesFeature, Permission } from "@/types/Roles";
-import { Profile, ProfileClass } from "@/types/Profile";
-import { AuthContext } from "@/contexts/Auth";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { FeatureTypes, RoleDTO, Permission } from "@/types/Roles";
+import { Profile } from "@/types/Profile";
 import { Group } from "@/types/Group";
 
+export type CanI_AsyncFunction = (feature: FeatureTypes, permission?: Permission, optionalGroup?: Group | undefined, optionalProfile?: Profile | undefined) => Promise<boolean>;
+
 /**
- * Check if the user has permission to do something
- * @param featureType The feature type
- * @param permission The permission, if not provided, will return number of permission of user
- * @param profile The profile
- * @param group The group
- * @returns The permission or false if the user does not have permission
+ * Similar to the `useCanI` hook, but doesn't return a function. Uses localStorage
+ * data when available and does API request when not. Can be used without a DOM
+ * and is asynchronous.
+ *
+ * @param feature The `FeatureTypes` being checked
+ * @param permission The `Permission` required on the feature. Uses `Permission.READ` by default.
+ * @param group The `Group` being checked. Uses the current organization by default.
+ * @param profile The `Profile` being checked. Uses the logged user by default.
+ * 
+ * @example
+ * const canReadFeed = await canI_API("FEED", Permission.READ, groupContext.group);
+ * const canPost = await canI_API("FEED", Permission.READ_WRITE, groupContext.group);
  */
-export function canI(featureType: FeatureTypes, permission?: Permission, group?: Group, profile?: Profile): boolean | number  {
-  let returnValueAsBoolean = (permission != null || permission != undefined);
+export async function canI_API(feature: FeatureTypes, permission: Permission = Permission.READ, group?: Group, profile?: Profile): Promise<boolean> {
+    const roles = await fetchRoles();
 
-  // get roles from local storage
-  let roles = getRolesFromLocalStorage();
-  if(roles ===  null || !roles) {
-    // fetch roles from API
-    return UniversimeApi.Roles.listRoles().then((data : any) => {
-      if(data.success && data.body.roles) {
+    if (roles === undefined)
+        return false;
+
+    [profile, group] = await Promise.all([
+        profile ?? (await UniversimeApi.Profile.profile()).body?.profile,
+        group ?? (await UniversimeApi.User.organization()).body?.organization ?? undefined,
+    ]);
+
+    if (!profile || !group)
+        return false;
+
+    return findFeaturePermission(feature, profile, group, roles) >= permission;
+}
+
+/**
+ * Fetch current user roles from local storage (if available) or refetch from API (if not)
+ */
+export async function fetchRoles(): Promise<RoleDTO[] | undefined> {
+    return getRolesFromLocalStorage() ?? await updateRolesLocalStorage();
+}
+
+export async function updateRolesLocalStorage() {
+    const data = await UniversimeApi.Roles.listRoles();
+
+    if (data.success) {
         saveRolesLocalStorage(data.body.roles);
-      }
-      return canI(featureType, permission, group, profile);
-    });
-  }
-
-  // get feature from roles, based in group and profile
-  let roleBasedInGroup : any = getRolesProfile(profile, group, roles);
-
-  if (roleBasedInGroup) {
-    let featureR = roleBasedInGroup.features.findLast((f :any) => f.featureType === featureType) ??
-                        getDefaultRolesForProfile(profile, group, roles)?.features.findLast((f :any) => f.featureType === featureType);
-    if(featureR) {
-      if(returnValueAsBoolean) {
-        return (featureR.permission >= permission!);
-      } else {
-        return featureR.permission;
-      }
+        return data.body.roles;
+    } else {
+        removeRolesLocalStorage();
+        return undefined;
     }
-  }
-
-  return returnValueAsBoolean ? false : Permission.NONE;
 }
 
-
-export function getRolesProfile(profile? : Profile, group?: Group, roles?: Roles[]) : Roles {
-  let getGroup = group ?? useContext(AuthContext).organization;
-  let getProfile = profile ?? useContext(AuthContext).profile;
-
-  let getRolesVar : any = roles && roles?.length > 0? roles:null  ?? getRoles() ?? useContext(AuthContext).roles;
-
-  if(!getRolesVar) {
-    return getRolesProfile(profile, group, roles);
-  }
-
-  return getRolesVar.findLast((r :any) => r.group === getGroup?.id && r.profile === getProfile?.id) ??
-          getDefaultRolesForProfile(getProfile, getGroup, getRolesVar);
+const ROLES_LOCAL_STORAGE_KEY = "roles";
+function saveRolesLocalStorage(roles: RoleDTO[]) {
+    if(roles.length) {
+        localStorage.setItem(ROLES_LOCAL_STORAGE_KEY, JSON.stringify(roles));
+    }
 }
 
-function getDefaultRolesForProfile(profile? : Profile | ProfileClass | null, group?: Group | null, roles?: Roles[]) {
-  let getGroup = group ?? useContext(AuthContext).organization;
-  let getProfile = profile ?? useContext(AuthContext).profile;
-  let getRolesVar : any = roles ?? getRoles() ?? useContext(AuthContext).roles;
-
-  let defaultAdmin = getRolesVar?.findLast((r :any) => r.group === null && isAdminRole(r) && r.profile === getProfile?.id);
-  let defaultUser = getRolesVar?.findLast((r :any) => r.group === null && !isAdminRole(r) && r.profile === getProfile?.id);
-
-  // check if gruop administrator
-  if(group?.admin?.id == getProfile?.id ||
-     (getGroup?.administrators as any)?.findLast((a :any) => a.id === getProfile?.id) ||
-     getProfile?.user?.accessLevel == 'ROLE_ADMIN') {
-    return defaultAdmin;
-  }
-
-  return defaultUser;
+function removeRolesLocalStorage() {
+    localStorage.removeItem(ROLES_LOCAL_STORAGE_KEY);
 }
 
-
-// get roles from local storage or refetch API
-export function getRoles(): any {
-
-  let roles = null;
-
-  // get roles from local storage
-  roles = getRolesFromLocalStorage();
-
-  if(roles ===  null || !roles) {
-    // fetch roles from API
-    return UniversimeApi.Roles.listRoles().then((data : any) => {
-      if(data.success && data.body.roles) {
-        saveRolesLocalStorage(data.body.roles);
-        roles = data.body.roles;
-        return getRoles();
-      }
-    });
-    
-  }
-
-  return roles;
+function getRolesFromLocalStorage(): RoleDTO[] | null {
+    const item = localStorage.getItem(ROLES_LOCAL_STORAGE_KEY);
+    return item && JSON.parse(item);
 }
 
-
-export function saveRolesLocalStorage(roles : any) {
-  if(roles && Object.keys(roles).length !== 0) {
-    localStorage.setItem('roles', JSON.stringify(roles));
-  }
-}
-
-export function removeRolesLocalStorage() {
-  localStorage.removeItem('roles');
-}
-
-export function getRolesFromLocalStorage() {
-  return localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles') as string) : null;
-}
-
-
-function isAdminRole(role : Roles) {
+function isAdminRole(role : RoleDTO) {
   return role != null && role.id == '00000000-0000-0000-0000-000000000001';
+}
+
+function findGroupRole(profile: Profile, group: Group, roles: RoleDTO[]) {
+    let groupRole = roles.find(r => r.group === group.id && r.profile === profile.id);
+    if (groupRole)
+        return groupRole;
+
+    const systemRoles = roles.filter(r => r.group === null && r.profile === profile.id);
+    return systemRoles.find(isAdminRole)
+        ?? systemRoles.find(r => !isAdminRole(r));
+}
+
+export function findFeaturePermission(feature: FeatureTypes, profile: Profile, group: Group, roles: RoleDTO[]): Permission {
+    const role = findGroupRole(profile, group, roles);
+
+    if (role === undefined)
+        return Permission.NONE;
+
+    return role.features
+        .find(f => f.featureType === feature)
+        ?.permission
+            ?? Permission.NONE;
 }

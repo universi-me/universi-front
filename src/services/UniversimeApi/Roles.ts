@@ -1,7 +1,8 @@
-import { Roles, RolesProfile } from "@/types/Roles";
+import { RoleDTO, Roles } from "@/types/Roles";
 import { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
 import UniversimeApi from "@/services/UniversimeApi";
+import { Profile } from "@/types/Profile";
 
 export type RolesCreate_RequestDTO = {
     groupId:        string;
@@ -39,12 +40,13 @@ export type RolesList_RequestDTO = {
 }
 
 export type RolesCreate_ResponseDTO = ApiResponse <{ roles:  Roles }>;
-export type RolesGet_ResponseDTO =    ApiResponse <{ roles:  Roles }>;
+export type RolesGet_ResponseDTO =    ApiResponse <{ roles:  RoleDTO }>;
 export type RolesEdit_ResponseDTO =   ApiResponse <{ roles:  Roles }>;
 export type RolesList_ResponseDTO =   ApiResponse <{ roles: Roles[] }>;
-export type RolesParticipantsList_ResponseDTO =   ApiResponse <{ participants: RolesProfile[] }>;
+export type RolesParticipantsList_ResponseDTO =   ApiResponse <{ participants: Profile[] }>;
 export type RolesRemove_ResponseDTO = ApiResponse;
 export type RolesAssign_ResponseDTO = ApiResponse;
+export type RolesAssigned_ResponseDTO = ApiResponse<{ roles: Roles }>;
 
 export async function get(body:RolesGet_RequestDTO) {
     return (await api.post<RolesGet_ResponseDTO>("/roles/get", {
@@ -89,7 +91,7 @@ export async function listParticipants(body: RolesList_RequestDTO) {
 
 
 export async function assign(body:  RolesAssign_RequestDTO) {
-    return (await api.post<RolesRemove_ResponseDTO>("/roles/assign", {
+    return (await api.post<RolesAssign_ResponseDTO>("/roles/assign", {
         rolesId:                 body.rolesId,
         groupId:                 body.groupId,
         profileId:               body.profileId
@@ -97,7 +99,7 @@ export async function assign(body:  RolesAssign_RequestDTO) {
 }
 
 export async function assigned(body:  RolesAssigned_RequestDTO) {
-    return (await api.post<RolesRemove_ResponseDTO>("/roles/assigned", {
+    return (await api.post<RolesAssigned_ResponseDTO>("/roles/assigned", {
         groupId:                 body.groupId,
         profileId:               body.profileId
     })).data;

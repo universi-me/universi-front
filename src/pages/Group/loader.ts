@@ -6,7 +6,7 @@ import type { Group } from "@/types/Group";
 import type { Folder } from "@/types/Capacity";
 import { Link } from "@/types/Link";
 import { GroupPost } from "@/types/Feed";
-import { canI, getRoles } from "@/utils/roles/rolesUtils";
+import { canI_API, fetchRoles } from "@/utils/roles/rolesUtils";
 import { Permission } from "@/types/Roles";
 
 export type GroupPageLoaderResponse = {
@@ -28,7 +28,7 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     const [groupRes, profileRes] = await Promise.all([
         UniversimeApi.Group.get({groupPath: props.groupPath}),
         UniversimeApi.Profile.profile(),
-        getRoles()
+        fetchRoles()
     ]);
     if (!groupRes.success || !groupRes.body || !profileRes.success || !profileRes.body) {
         return FAILED_TO_LOAD;
@@ -37,10 +37,10 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     const group = groupRes.body.group;
     const profile = profileRes.body.profile;
     
-    const canISubgroups =    canI('GROUP',   Permission.READ, group, profile);
-    const canIParticipants = canI('PEOPLE',  Permission.READ, group, profile);
-    const canIFolders =      canI('CONTENT', Permission.READ, group, profile);
-    const canIFeed =         canI('FEED',    Permission.READ, group, profile);
+    const canISubgroups =    await canI_API('GROUP',   Permission.READ, group, profile);
+    const canIParticipants = await canI_API('PEOPLE',  Permission.READ, group, profile);
+    const canIFolders =      await canI_API('CONTENT', Permission.READ, group, profile);
+    const canIFeed =         await canI_API('FEED',    Permission.READ, group, profile);
 
     const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes, groupPostsRes] = await Promise.all([
         canISubgroups ? UniversimeApi.Group.subgroups({groupId: group.id})       : undefined,

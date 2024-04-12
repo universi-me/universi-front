@@ -5,28 +5,21 @@ import { UniversimeApi } from "@/services/UniversimeApi";
 import { goTo } from "@/services/routes";
 import type { Group } from "@/types/Group";
 import type { Link } from "@/types/Link";
-import { getRoles, saveRolesLocalStorage, removeRolesLocalStorage } from "@/utils/roles/rolesUtils";
+import { updateRolesLocalStorage } from "@/utils/roles/rolesUtils";
+import { RoleDTO } from "@/types/Roles";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [profile, setProfile] = useState<ProfileClass | null>(null);
-  const [profileLinks, setProfileLinks] = useState<Link[]>([]);
-  const [profileGroups, setProfileGroups] = useState<Group[]>([]);
-  const [organization, setOrganization] = useState<Group | null>(null);
-  const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
-  const user = profile?.user ?? null;
-  const [roles, setRoles] = useState<any>(getRoles());
+    const [profile, setProfile] = useState<ProfileClass | null>(null);
+    const [profileLinks, setProfileLinks] = useState<Link[]>([]);
+    const [profileGroups, setProfileGroups] = useState<Group[]>([]);
+    const [organization, setOrganization] = useState<Group | null>(null);
+    const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
+    const user = profile?.user ?? null;
+    const [roles, setRoles] = useState<RoleDTO[] | null>(null);
 
-  useEffect(() => {
-    updateLoggedUser()
-  }, []);
-
-  useEffect(() => {
-    if(roles && Object.keys(roles).length !== 0) {
-        saveRolesLocalStorage(roles);
-    } else {
-        removeRolesLocalStorage();
-    }
-  }, [roles]);
+    useEffect(() => {
+        updateLoggedUser()
+    }, []);
 
     if (user?.needProfile) {
         goTo("/manage-profile");
@@ -83,12 +76,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const profile = await getLoggedProfile();
         setProfile(profile);
 
+        const organization = updateOrganization();
+
         if (profile !== null) await Promise.all([
-            updateOrganization(),
             updateLinks(profile),
             updateGroups(profile),
             updateRoles(),
         ]);
+
+        await organization;
 
         setFinishedLogin(true);
         return profile;
@@ -103,12 +99,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     async function updateRoles() {
-        return UniversimeApi.Roles.listRoles().then((data : any) => {
-            if(data.success && data.body.roles) {
-                setRoles(data.body.roles);
-                return data.body.roles;
-            }
-        });
+        const roles = (await updateRolesLocalStorage()) ?? [];
+
+        setRoles(roles);
+        return roles;
     }
 
     async function updateLinks(profile: ProfileClass) {

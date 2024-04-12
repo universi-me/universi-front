@@ -1,9 +1,10 @@
-import { RolesProfile, Roles } from "@/types/Roles";
+import { Roles } from "@/types/Roles";
 import UniversimeApi from "@/services/UniversimeApi";
+import { Profile } from "@/types/Profile";
 
 export type RolesResponse = {
     roles: Roles[] | undefined;
-    participants: RolesProfile[] | undefined;
+    participants: Profile[] | undefined;
 };
 
 export async function RolesFetch(groupId: string): Promise<RolesResponse> {
@@ -12,7 +13,7 @@ export async function RolesFetch(groupId: string): Promise<RolesResponse> {
 
     const roles = await UniversimeApi.Roles.list({ groupId });
     
-    const participants = await UniversimeApi.Roles.listPaticipants({ groupId });
+    const participants = await UniversimeApi.Roles.listParticipants({ groupId });
 
     if(!roles.success ) {
         return FAILED_TO_LOAD;

@@ -1,5 +1,5 @@
-import { useReducer, useContext, useState, useEffect } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useContext, useState, useEffect, ChangeEvent } from "react";
+import { useLoaderData } from "react-router-dom";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import { AuthContext } from "@/contexts/Auth";
@@ -12,11 +12,11 @@ import { ValidationComposite } from "@/components/UniversiForm/Validation/Valida
 
 import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 
-import { FeatureTypesToLabel, type FeatureTypes, Roles, RolesFeature, Permission } from "@/types/Roles";
+import { FeatureTypes, FeatureTypesToLabel, Permission, Roles } from "@/types/Roles";
 
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
-import { ProfileClass, type Profile } from "@/types/Profile";
+import { ProfileClass } from "@/types/Profile";
 
 import { type RolesResponse, RolesFetch } from "./RolesLoader";
 
@@ -32,21 +32,19 @@ type RolesPageProps = {
 const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     const auth = useContext(AuthContext);
     const data = useLoaderData() as RolesResponse;
-    const navigate = useNavigate();
 
     const [manageRolesMode, setManageRolesMode] = useState(false);
 
-    const [editMode, setEditMode] = useState(true);
+    const editMode = true;
 
     const [showRolesForm, setShowRolesForm] = useState(false);
     const [rolesEdit, setRolesEdit] = useState(null as Roles | null);
 
     const [rows, setRows] = useState(null as Roles[] | null);
-    const [columns, setColumns] = useState(null as string[] | null);
 
     const [participants, setParticipants] = useState(null as ProfileClass[] | null);
 
-    const CHANGE_PAPER_OPTIONS: OptionInMenu<Roles>[] = rows!?.map((roles) => ({
+    const CHANGE_PAPER_OPTIONS: OptionInMenu<ProfileClass>[] = rows!?.map((roles) => ({
         text: roles.name,
         onSelect(data) {
             UniversimeApi.Roles.assign({rolesId: roles.id, groupId: group!?.id, profileId: data.id}).then(
@@ -60,14 +58,14 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
         refreshPage();
     }, [data]);
     
-    const handleFeatureCheckboxChange = (e : any, row : Roles, column : any) => {
-        UniversimeApi.Feature.toggle({rolesId: row.id, feature: column, value: e.target.value}).then(
+    const handleFeatureCheckboxChange = (e : ChangeEvent<HTMLSelectElement>, row : Roles, column : FeatureTypes) => {
+        UniversimeApi.Feature.toggle({rolesId: row.id, feature: column, value: parseInt(e.target.value)}).then(
             refreshPage
         );
     };
 
-    const isFeatureChecked = (row : Roles, column : any) => {
-        let rolesFeature = (row!?.rolesFeatures as any)?.findLast((feature: { featureType: any; }) => feature.featureType == column);
+    const isFeatureChecked = (row : Roles, column : FeatureTypes) => {
+        let rolesFeature = row.rolesFeatures.find(feature => feature.featureType == column);
         if(rolesFeature) {
             return rolesFeature.permission;
         }
@@ -127,13 +125,13 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                     <tr>
                       <th></th>
                       { Object.keys(FeatureTypesToLabel).map((key, index, value) => (
-                        <th key={key}>{(FeatureTypesToLabel as any)[key]}</th>
+                        <th key={key}>{FeatureTypesToLabel[key as FeatureTypes]}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {rows!?.map((row) => (
-                      <tr key={row.id} className="row-diasbled">
+                      <tr key={row.id} className="row-disabled">
                         <td title={row.description}>{row.name} { (editMode && !row.isDefault) &&
                             <button onClick={()=>{ setRolesEdit(row); setShowRolesForm(true); }} className={`edit-button ${editMode ? 'active' : ''}`}>
                                 <div className={`icon-edit ${editMode ? 'active' : ''}`}>
@@ -144,8 +142,8 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                         {Object.keys(FeatureTypesToLabel).map((key, index, value) => (
                           <td key={key}>
                             <select
-              value={isFeatureChecked(row, key)}
-              onChange={(e) => handleFeatureCheckboxChange(e, row, key)}
+              value={isFeatureChecked(row, key as FeatureTypes)}
+              onChange={(e) => handleFeatureCheckboxChange(e, row, key as FeatureTypes)}
               disabled={row.isDefault === true}
             >
               <option value={ Permission.DISABLED }>Desabilitada</option>
@@ -188,13 +186,13 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild /*disabled={isOwnProfile}*/ title={isOwnProfile ? "Você não pode alterar seu próprio nível de acesso" : undefined}>
                         <button type="button" className="set-role-trigger">
-                            { profile.roles!?.name! }
+                            { profile.roles!.name }
                             <span className="bi"/>
                         </button>
                     </DropdownMenu.Trigger>
 
                     <DropdownMenu.Content className="set-role-menu">
-                        { CHANGE_PAPER_OPTIONS.map(def => renderOption(profile as any, def)) }
+                        { CHANGE_PAPER_OPTIONS.map(def => renderOption(profile, def)) }
                     </DropdownMenu.Content>
                 </DropdownMenu.Root>
             </div>
@@ -213,13 +211,13 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
         setValuesWithData(newData);
     }
 
-    function setValuesWithData(data : any) {
-        setColumns((data!.features! ?? []).sort((a :any,b : any) => a.name.localeCompare(b.name)) );
-        setRows((data!.roles! ?? [])
-            .sort((a :any,b : any) => a.name.localeCompare(b.name))
-            .sort((a :any,b : any) => (b.isDefault ?? 0).toString().localeCompare((a.isDefault ?? 0).toString()))
+    function setValuesWithData(data: RolesResponse) {
+        // setColumns((data.features! ?? []).sort((a, b) => a.name.localeCompare(b.name)) );
+        setRows((data.roles ?? [])
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .sort((a, b) => (b.isDefault ?? 0).toString().localeCompare((a.isDefault ?? 0).toString()))
         );
-        setParticipants(data!.participants!?.map(ProfileClass.new));
+        setParticipants(data.participants?.map(ProfileClass.new) ?? []);
     }
 }
 

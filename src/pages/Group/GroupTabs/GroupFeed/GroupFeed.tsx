@@ -8,13 +8,14 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { useContext, useState } from "react";
 import { GroupContext, GroupFeedPost } from "@/pages/Group";
 import "./GroupFeed.less";
-import { canI } from "@/utils/roles/rolesUtils";
+import useCanI from "@/hooks/useCanI";
 import { Permission } from "@/types/Roles";
 
 export function GroupFeed(){
 
     const [filterPosts, setFilterPosts] = useState<string>("");
     const groupContext = useContext(GroupContext);
+    const canI = useCanI();
 
     if(!groupContext)
         return null;
