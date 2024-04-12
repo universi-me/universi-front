@@ -62,9 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setFinishedLogin(false);
 
         await UniversimeApi.Auth.logout();
-        setProfile(null);
-
-        setRoles(null);
+        await updateLoggedUser();
 
         goTo("");
 
@@ -76,15 +74,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const profile = await getLoggedProfile();
         setProfile(profile);
 
-        const organization = updateOrganization();
-
-        if (profile !== null) await Promise.all([
-            updateLinks(profile),
-            updateGroups(profile),
+        await Promise.all([
+            updateOrganization(),
+            updateLinks(),
+            updateGroups(),
             updateRoles(),
         ]);
-
-        await organization;
 
         setFinishedLogin(true);
         return profile;
@@ -105,8 +100,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return roles;
     }
 
-    async function updateLinks(profile: ProfileClass) {
-        if (profile === null) return;
+    async function updateLinks() {
+        if (!profile) {
+            setProfileLinks([]);
+            return [];
+        }
+
         const fetchLinks = await UniversimeApi.Profile.links({ username: profile.user.name });
         const links = fetchLinks.success ? fetchLinks.body.links : [];
 
@@ -114,8 +113,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return links;
     }
 
-    async function updateGroups(profile: ProfileClass) {
-        if (profile === null) return;
+    async function updateGroups() {
+        if (!profile) {
+            setProfileGroups([]);
+            return [];
+        }
+
         const fetchGroups = await UniversimeApi.Profile.groups({ username: profile.user.name });
         const groups = fetchGroups.success ? fetchGroups.body.groups : [];
 
