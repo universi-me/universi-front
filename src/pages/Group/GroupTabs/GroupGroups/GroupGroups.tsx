@@ -16,6 +16,7 @@ import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdown
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
+import { isAdminRole } from "@/utils/roles/rolesUtils";
 
 export function GroupGroups() {
     const groupContext = useContext(GroupContext);
@@ -79,7 +80,7 @@ export function GroupGroups() {
                 groupContext.setGroupConfigModalOpen(true);
             },
             hidden(){
-                return !(groupContext.group.canEdit);
+                return authContext.roles?.find(isAdminRole) !== undefined;
             }
         }
     ];
@@ -113,7 +114,7 @@ export function GroupGroups() {
                 <div className="go-right">
                     <Filter setter={setFilterGroups} placeholderMessage={`Buscar grupos em ${groupContext.group.name}`}/>
                     <div className="group-options-container">
-                        { !hasAvailableOption(GROUP_OPTIONS, groupContext.group) ? null :
+                        { hasAvailableOption(GROUP_OPTIONS, groupContext.group) &&
                             <DropdownMenu.Root>
                                 <DropdownMenu.Trigger asChild>
                                     <button className="group-options-button">
