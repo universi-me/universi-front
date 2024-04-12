@@ -57,6 +57,9 @@
         flex-direction: row;
         align-items: center;
 
+        &.top-container{
+            justify-content: flex-end;
+        }
 
         .tab-icon {
             @side: 1.35em !important;
@@ -83,7 +86,7 @@
         }
 
         .go-right {
-
+            width: max-content;
             display: flex;
             gap: 1rem;
 
@@ -98,8 +101,4 @@
         font-style: italic;
     }
 }
-.top-container{
 
-    justify-content: flex-end;
-
-}
