@@ -1,7 +1,8 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useRef, useState } from "react"
 
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { arrayBufferToBase64 } from "@/utils/fileUtils";
+import CropperComponent from "@/components/ImageCropper/ImageCropper";
 
 export type ManageProfileImageProps = {
     currentImage: string | null;
@@ -10,6 +11,7 @@ export type ManageProfileImageProps = {
 
 export function ManageProfileImage(props: ManageProfileImageProps) {
     const [imageBuffer, setImageBuffer] = useState<ArrayBuffer | null>(null);
+    const [showCrop, setShowCrop] = useState<boolean>(false);
     const image = imageBuffer
         ? "data:image/jpeg;base64," + arrayBufferToBase64(imageBuffer)
         : props.currentImage;
@@ -19,6 +21,7 @@ export function ManageProfileImage(props: ManageProfileImageProps) {
             <legend className="required-input">Alterar imagem do perfil</legend>
             <input id="image" name="image" accept="image/*" type="file" onChange={changeImage} />
             <label htmlFor="image"><ProfileImage imageUrl={image} id="profile-image-view" /></label>
+            <CropperComponent show={showCrop} src={image as string} selectImage={updateImage} willClose={() => setShowCrop(false)} options={{aspectRatio: 1,}} />
         </fieldset>
     );
 
@@ -35,9 +38,14 @@ export function ManageProfileImage(props: ManageProfileImageProps) {
 
     function readerLoadImage(this: FileReader, ev: ProgressEvent<FileReader>) {
         if (ev.target?.readyState === this.DONE) {
-            setImageBuffer(ev.target.result as ArrayBuffer);
-            props.setImage(getProfileImage());
+            updateImage(ev.target.result as ArrayBuffer);
+            setShowCrop(true);
         }
+    }
+
+    function updateImage(imageBuff: ArrayBuffer) {
+        setImageBuffer(imageBuff);
+        props.setImage(imageBuff ? new File([new Blob([imageBuff])], '') : getProfileImage());
     }
 
     function getProfileImage() {
