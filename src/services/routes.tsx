@@ -11,11 +11,6 @@ import Singin from "@/pages/singin/Singin";
 import { OAuth2Element } from './oauth2-google';
 import { KeyCloakOAuth2Element } from "./oauth2-keycloak";
 
-import CapacityPage from "@/pages/Capacity/Capacity";
-import CategoryPage from "@/pages/Capacity/Category";
-import VideoPage from "@/pages/Capacity/VideoPlayer";
-import FolderPage from "@/pages/Capacity/Folder";
-import ManagerCapacity from "@/pages/Capacity/ManagerCapacity";
 import SignUpPage from "@/pages/SignUp";
 import Recovery from "@/pages/Recovery/Recovery";
 import NewPassword from "@/pages/NewPassword/NewPassword";
@@ -35,26 +30,6 @@ export const router = createBrowserRouter([{
     {
       path: "/",
       element: <Homepage />
-    },
-    {
-      path: "/capacitacao/",
-      element: <CapacityPage />
-    },
-    {
-      path: "/capacitacao/categoria/:category",
-      element: <CategoryPage />
-    },
-    {
-      path: "/capacitacao/play/:videoId",
-      element: <VideoPage />
-    },
-    {
-      path: "/capacitacao/folder/:folderId",
-      element: <FolderPage />
-    },
-    {
-      path: "/capacitacao/gerenciador", 
-      element: <ManagerCapacity/>
     },
     {
       path: "/quiz/:id",
