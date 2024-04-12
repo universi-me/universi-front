@@ -13,6 +13,8 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 import { stringEqualsIgnoreCase } from "@/utils/stringUtils"
+import { update } from "@/services/UniversimeApi/Group"
+import CropperComponent from "../ImageCropper/ImageCropper"
 
 export type cancelPopup = {
     confirmCancel? : boolean,
@@ -61,6 +63,8 @@ export type FormObjectRadio<T = string | number>  = FormObjectBase<FormInputs.RA
 
 export type FormObjectImage = FormObjectBase<FormInputs.IMAGE, string> & {
     defaultImageUrl?: string;
+    aspectRatio?: number;
+    crop?: boolean;
 };
 
 export type FormObjectFile = FormObjectBase<FormInputs.FILE, File> & {
@@ -260,6 +264,7 @@ export function UniversiForm(props : formProps){
     function getImageInput(object : FormObjectImage, index : number){
         const [imageFile, setImageFile] = useState<File>();
         const [imageBuffer, setImageBuffer] = useState<ArrayBuffer>();
+        const [showCrop, setShowCrop] = useState<boolean>(false);
 
         useEffect(() => {
             if (!imageFile) {
@@ -274,6 +279,10 @@ export function UniversiForm(props : formProps){
 
                     if (!imageFile)
                         return;
+
+                    if(object.crop && showCrop) {
+                        return;
+                    }
 
                     const res = await UniversimeApi.Image.upload({image: imageFile})
                     if(res.success && res.body)
@@ -296,15 +305,31 @@ export function UniversiForm(props : formProps){
             imageBuffer ? "default-image" : undefined,
         ]);
 
+        const changeImage = (imageFile: File | undefined) => {
+            if(object.crop) {
+                setShowCrop(true);
+            }
+            setImageFile(imageFile)
+        }
+
+        function updateImageFromCrop(imageBuff: ArrayBuffer) {
+            if(!imageBuff) {
+                return;
+            }
+            setImageBuffer(imageBuff);
+            setImageFile(new File([new Blob([imageBuff])], ''));
+        }
+
         return(
             <div className="image-wrapper">
                 <img src={renderedImageUrl} className={className}/>
                 <fieldset className="label-button">
                     <legend>{object.label}</legend>
-                    <input type="file" style={{display: "none"}} id="file-input" accept="image/*" onChange={(e) =>{ setImageFile(e.currentTarget.files?.item(0) ?? undefined) }} required={object.required}/>
-                    <label htmlFor="file-input" className="image-button">
+                    <input type="file" style={{display: "none"}} id={object.DTOName} accept="image/*" onChange={(e) =>{ changeImage(e.currentTarget.files?.item(0) ?? undefined) }} required={object.required}/>
+                    <label htmlFor={object.DTOName} className="image-button">
                         Selecionar arquivo
                     </label>
+                    <CropperComponent show={showCrop} src={renderedImageUrl as string} selectImage={updateImageFromCrop} willClose={() => setShowCrop(false)} options={{aspectRatio: object.aspectRatio,}} />
                 </fieldset>
             </div>
         )

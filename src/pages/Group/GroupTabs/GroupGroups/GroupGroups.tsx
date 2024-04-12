@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
-import { groupImageUrl } from "@/utils/apiUtils";
+import { groupImageUrl, groupBannerUrl, groupHeaderUrl } from "@/utils/apiUtils";
 
 import { GroupTypeToLabel, type Group, type GroupType } from "@/types/Group";
 import "./GroupGroups.less";
@@ -128,8 +128,9 @@ export function GroupGroups() {
                     formTitle={groupContext.editGroup == null ? "Criar grupo" : "Editar grupo"}
                     objects={[
                         {
-                            DTOName: "nickname", label: "Apelido do grupo", type: groupContext.editGroup == null ? FormInputs.TEXT : FormInputs.HIDDEN, value: undefined, required: true, 
-                            validation: new ValidationComposite<string>().addValidation(new TextValidation())
+                            DTOName: "nickname", label: "Apelido do grupo", type: groupContext.editGroup == null ? FormInputs.TEXT : FormInputs.HIDDEN, value: undefined,
+                            required: groupContext.editGroup == null,
+                            validation: groupContext.editGroup == null ? new ValidationComposite<string>().addValidation(new TextValidation()) : undefined
                         }, {
                             DTOName: "name", label: "Nome do grupo", type: FormInputs.TEXT, value: groupContext.editGroup?.name, required: true, 
                             validation: new ValidationComposite<string>().addValidation(new TextValidation())
@@ -139,8 +140,19 @@ export function GroupGroups() {
                         }, {
                              DTOName: "imageUrl", label: "Imagem do grupo", type: FormInputs.IMAGE, value:undefined, 
                              defaultImageUrl: groupContext.editGroup ? groupImageUrl(groupContext.editGroup) : undefined,
+                             crop: true, aspectRatio: 1,
                              required: false
-                        }, { 
+                        }, {
+                            DTOName: "bannerImageUrl", label: "Banner do grupo", type: FormInputs.IMAGE, value:undefined, 
+                            defaultImageUrl: groupContext.editGroup ? groupBannerUrl(groupContext.editGroup) : undefined,
+                            crop: true, aspectRatio: 2.5,
+                            required: false
+                        }, {
+                            DTOName: "headerImageUrl", label: "Header do grupo", type: (groupContext.editGroup != null && groupContext.editGroup.rootGroup) ? FormInputs.IMAGE : FormInputs.HIDDEN, value:undefined, 
+                            defaultImageUrl: groupContext.editGroup ? groupHeaderUrl(groupContext.editGroup) : undefined,
+                            crop: true, //aspectRatio: 2.5,
+                            required: false
+                        }, {
                             DTOName: "groupType", label: "Tipo do grupo", type: FormInputs.SELECT_SINGLE, 
                             value: groupContext.editGroup ?  {value : groupContext.editGroup.type, label : groupContext.editGroup.type } : undefined, 
                             options: availableGroupTypes, required: true
@@ -155,7 +167,7 @@ export function GroupGroups() {
                         }, {
                             DTOName: "parentGroupId", label: "Id do grupo pai (grupo atual)", type: FormInputs.HIDDEN, value: groupContext.group.id
                         }, {
-                           DTOName: "everyoneCanPost", label: "Todos usuários podem postar", type: FormInputs.BOOLEAN, value: groupContext.group.everyoneCanPost
+                            DTOName: "everyoneCanPost", label: "Todos usuários podem postar", type: FormInputs.BOOLEAN, value: groupContext.group.everyoneCanPost
                         }, {
                             DTOName: "groupPath", label: "path", type: FormInputs.HIDDEN, value: groupContext.editGroup?.path
                         },
