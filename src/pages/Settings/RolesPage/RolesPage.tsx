@@ -111,6 +111,10 @@ export function RolesPage() {
         setShowActionPopup(false);
     }
 
+    function cleanSelection() {
+        setSelectionProfile([]);
+    }
+
     function cancelChanges() {
         participantsDispatch({ type: "SET_ALL", setParticipants: participants!.map(p => new ProfileOnList(p)) });
     }
@@ -134,9 +138,14 @@ export function RolesPage() {
                 <>
                     {!showActionPopup ? <button type="button" onClick={showSelectionAction} className="submit"><h2 className="bi-grip-vertical" />Ação para Seleção</button>
                     :
+                    <>
                     <button type="button" className="submit" onClick={() => applySelection()} style={{display: 'inline-block' }}>
                         <span className="bi bi-check2-all"/> Aplicar seleção
                     </button>
+                    <button type="button" className="submit" onClick={() => cleanSelection()} style={{display: 'inline-block' }}>
+                        <span className="bi bi-eraser-fill"/> Limpar seleção
+                    </button>
+                    </>
                     }
 
                     <button type="button" onClick={cancelSelection} className="submit"><h2 className="bi-x-circle" />Cancelar Seleção</button>
