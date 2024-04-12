@@ -1,8 +1,8 @@
 name: Build, Test, and Push Docker Image
 
 on:
-  push:
-    branches: [ "prod", "development", "main" ]
+  release:
+    types: [published]
 
 jobs:
   build-test-and-push:
@@ -37,7 +37,7 @@ jobs:
       
     - name: Set VITE_BUILD_HASH environment variable
       id: set-build-hash
-      run: echo "VITE_BUILD_HASH=${{ github.sha }}" >> $GITHUB_ENV
+      run: echo "VITE_BUILD_HASH=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
       
     - name: Run Build
       run: npm run build
@@ -57,11 +57,11 @@ jobs:
         docker buildx create --use
         tag_name=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
         [ "$tag_name" == "prod" ] && tag_name='latest'
-        echo "${{ github.sha }}" > ./build.hash
+        echo "${{ github.event.release.tag_name }}" > ./build.hash
         docker buildx build \
           --platform linux/arm64,linux/amd64 \
-          --build-arg VITE_BUILD_HASH=${{ github.sha }} \
+          --build-arg VITE_BUILD_HASH=${{ github.event.release.tag_name }} \
           -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:$tag_name \
-          -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:${{ github.sha }} \
+          -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name || github.event.repository.name }}:${{ github.event.release.tag_name }} \
           --push \
           .
