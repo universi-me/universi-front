@@ -148,7 +148,7 @@ export function GroupGroups() {
                             crop: true, aspectRatio: 2.5,
                             required: false
                         }, {
-                            DTOName: "headerImageUrl", label: "Header do grupo", type: (groupContext.editGroup != null && groupContext.editGroup.rootGroup) ? FormInputs.IMAGE : FormInputs.HIDDEN, value:undefined, 
+                            DTOName: "headerImageUrl", label: "Logo da Organização", type: (groupContext.editGroup != null && groupContext.editGroup.rootGroup) ? FormInputs.IMAGE : FormInputs.HIDDEN, value:undefined, 
                             defaultImageUrl: groupContext.editGroup ? groupHeaderUrl(groupContext.editGroup) : undefined,
                             crop: true, //aspectRatio: 2.5,
                             required: false
