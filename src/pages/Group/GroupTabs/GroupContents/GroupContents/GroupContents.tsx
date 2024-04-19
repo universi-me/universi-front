@@ -18,6 +18,8 @@ import { ProfileClass } from "@/types/Profile";
 import { makeClassName } from "@/utils/tsxUtils";
 import { arrayRemoveEquals } from "@/utils/arrayUtils";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
+import useCanI from "@/hooks/useCanI";
+import { Permission } from "@/types/Roles";
 
 function SelectPeople(){
     const groupContext = useContext(GroupContext)
@@ -152,6 +154,8 @@ export function GroupContents() {
     const [importContentAvailable, setImportContentAvailable] = useState<Folder[]>();
     const [duplicateContentId, setDuplicateContentId] = useState<string | undefined> ();
 
+    const canI = useCanI();
+
     if (!groupContext)
         return null;
 
@@ -230,7 +234,7 @@ export function GroupContents() {
                 <div className="go-right">
                     <Filter setter={setFilterContents} placeholderMessage={`Buscar em Conteúdos ${groupContext.group.name}`}/>
                     {  
-                        groupContext.group.canEdit &&
+                        canI("CONTENT", Permission.READ_WRITE, groupContext.group) &&
                         <ActionButton name="Adicionar conteúdo" buttonProps={{ onClick: handleAddContent }} />
                     }
                 </div>

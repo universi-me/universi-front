@@ -105,7 +105,8 @@ const TABS: GroupTabDefinition[] = [
         value: 'feed',
         renderer: GroupFeed,
         condition(context, canI) {
-            return canI("FEED", Permission.READ, context.group);
+            return canI("FEED", Permission.READ_WRITE, context.group) ||
+                (canI("FEED", Permission.READ, context.group) && context.posts.length > 0);
         },
     },
     {
@@ -113,7 +114,11 @@ const TABS: GroupTabDefinition[] = [
         value: "contents",
         renderer: GroupContents,
         condition(context, canI) {
-            return canI("CONTENT", Permission.READ, context.group);
+            if (!canI("CONTENT", Permission.READ, context.group))
+                return false;
+
+            return context.folders.length > 0
+                || canI("CONTENT", Permission.READ_WRITE, context.group);
         },
     },
     {
@@ -121,7 +126,8 @@ const TABS: GroupTabDefinition[] = [
         value: "groups",
         renderer: GroupGroups,
         condition(context, canI) {
-            return canI("GROUP", Permission.READ, context.group);
+            return canI("GROUP", Permission.READ_WRITE, context.group) ||
+                (canI("GROUP", Permission.READ, context.group) && context.subgroups.length > 0);
         },
     },
     {
