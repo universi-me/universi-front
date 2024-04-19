@@ -178,23 +178,23 @@ export function RolesPage() {
             return <div className="profile-item" key={profile.id}>
                 <div style={{  display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', justifyContent: 'space-between',  width: '100%', }}>
 
-                <div style={{margin: 0, padding: 0, width: '9%'}}>
+                <div style={{margin: 0, padding: 0, width: '5%'}}>
                     { isSelectionActive && <h2 onClick={() => toggleSelection(profile) } className={isSelectionProfile(profile) ? "bi-check-circle-fill" : "bi-check-circle"} /> }
                     { profile.blockedAccount && <><br/><h2 className="bi-ban" style={{color: 'red'}}/></> }
                 </div>
 
-                <div style={{width: '40%'}}>
+                <div style={{width: '15%'}}>
                     <ProfileImage imageUrl={profile.imageUrl} className="profile-image" />
                 </div>
 
-                <div className="info" style={{width: '50%'}}>
+                <div className="info" style={{width: '40%'}}>
                     <h2 className="profile-name">{profile.fullname}</h2>
                     <p className="profile-bio">{profile.bio}</p>
                 </div>
                 
-                <div style={{display: 'inline-block', padding: 0, marginBottom: 5, width: '40%'}}>
+                <div style={{display: 'flex', padding: 0, marginBottom: 5, width: '60%'}}>
 
-                <div style={{ marginBottom: 25}}>
+                <div style={{ marginBottom: 25, marginRight: 5,}}>
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild disabled={isOwnProfile} title={isOwnProfile ? "Você não pode alterar seu próprio nível de acesso" : undefined}>
                         <button type="button" className="set-role-trigger">
@@ -209,7 +209,7 @@ export function RolesPage() {
                 </DropdownMenu.Root>
                 </div>
 
-                <div>
+                <div style={{marginTop: '0.5em'}}>
                     <section id="search-submit-wrapper">
                         <button type="button" className="submit" onClick={() => blockProfile(profile, !profile.blockedAccount)} style={{display: 'inline-block' }}>
                             { profile.blockedAccount ? <><span className="bi bi-lock-fill"/> Bloqueado</> : <><span className="bi bi-unlock-fill"/> Habilitado</> }
