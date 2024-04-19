@@ -8,6 +8,7 @@ export type User = {
     needProfile:    boolean;
     accessLevel?:   UserAccessLevel;
     hasPassword?:   boolean;
+    blocked_account?: boolean;
 }
 
 export const UserAccessLevelLabel: { [k in UserAccessLevel]: string } = {
