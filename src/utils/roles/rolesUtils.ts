@@ -1,5 +1,5 @@
 import UniversimeApi from "@/services/UniversimeApi";
-import { FeatureTypes, RoleDTO, Permission } from "@/types/Roles";
+import { FeatureTypes, RoleDTO, Permission, RolesFeature } from "@/types/Roles";
 import { Profile } from "@/types/Profile";
 import { Group } from "@/types/Group";
 
@@ -91,7 +91,7 @@ export function findFeaturePermission(feature: FeatureTypes, profile: Profile, g
     if (role === undefined)
         return Permission.NONE;
 
-    return role.features
+    return (role.features ?? [])
         .find(f => f.featureType === feature)
         ?.permission
             ?? Permission.NONE;
