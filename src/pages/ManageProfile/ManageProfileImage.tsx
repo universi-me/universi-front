@@ -3,12 +3,9 @@ import { ChangeEvent, useRef, useState } from "react"
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { arrayBufferToBase64 } from "@/utils/fileUtils";
 import CropperComponent from "@/components/ImageCropper/ImageCropper";
-import Compressor from "compressorjs";
-import { ProfileClass } from "@/types/Profile";
 
 export type ManageProfileImageProps = {
     currentImage: string | null;
-    profile?: ProfileClass;
     setImage(image: File | undefined): any;
 };
 
@@ -35,7 +32,6 @@ export function ManageProfileImage(props: ManageProfileImageProps) {
             return;
 
         setMimeType(image.type);
-        console.log('image.type: '+ image.type)
         loadImageFile(new Blob([image], {type: mimeType}));
     }
 
