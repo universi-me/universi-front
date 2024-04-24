@@ -14,9 +14,9 @@ const CropperPopup = ({ src, onClose, options }: { src: string, onClose: (imageB
   const cropperRef = createRef<ReactCropperElement>();
 
   const onApply = () => {
-    onClose(new Blob([Buffer.from(cropperRef!.current!?.cropper!?.getCroppedCanvas().toDataURL().split(",")[1], 'base64').buffer as ArrayBuffer], {
-      type: src.startsWith('http') ? 'image/jpeg' : src.split(";")[0].split(":")[1]
-    }));
+    cropperRef!.current!?.cropper!?.getCroppedCanvas().toBlob((blob) => {
+      onClose(blob as Blob);
+    }, src.startsWith('http') ? 'image/jpeg' : src.split(";")[0].split(":")[1]);
   };
   
   const onCancel = () => {
@@ -41,6 +41,8 @@ const CropperPopup = ({ src, onClose, options }: { src: string, onClose: (imageB
           src={src}
           viewMode={1}
           dragMode='move'
+          zoomable= {true}
+          movable= {true}
           minCropBoxHeight={100}
           minCropBoxWidth={100}
           background={false}
