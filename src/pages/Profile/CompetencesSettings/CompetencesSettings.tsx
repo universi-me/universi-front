@@ -12,8 +12,16 @@ export function CompetencesSettings() {
     const editCompetence = profileContext?.editCompetence ?? null;
 
     const competenceTypeOptions = useMemo(() => {
-        return orderByName(profileContext?.allTypeCompetence ?? [])
+        return orderByName(availableCompetencesForAdd(profileContext?.allTypeCompetence ?? []));
     }, [profileContext?.allTypeCompetence]);
+
+    //filtering the competence types that are not in the profile
+    function availableCompetencesForAdd(competences : CompetenceType[]){
+        return competences
+            .filter((comp) => {
+                return !profileContext?.profileListData.competences.some((c) => c.competenceType.id === comp.id)
+            }) ?? [];
+    }
 
     function orderByName(competences : CompetenceType[]){
         return competences
