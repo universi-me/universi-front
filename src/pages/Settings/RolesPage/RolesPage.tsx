@@ -112,6 +112,10 @@ export function RolesPage() {
         setShowActionPopup(false);
     }
 
+    function selectAllProfiles() {
+        setSelectionProfile(filteredParticipants!.map(p => p));
+    }
+
     function cleanSelection() {
         setSelectionProfile([]);
     }
@@ -137,16 +141,24 @@ export function RolesPage() {
         <section id="search-submit-wrapper">
             { isSelectionActive ?
                 <>
-                    {!showActionPopup ? <button type="button" onClick={showSelectionAction} className="submit"><h2 className="bi-grip-vertical" />Ação para Seleção</button>
+                    {!showActionPopup && selectionProfile.length ?
+                    <>
+                        <button type="button" onClick={showSelectionAction} className="submit"><h2 className="bi-grip-vertical" />Ação para Seleção</button>
+                    </>
                     :
                     <>
-                    <button type="button" className="submit" onClick={() => applySelection()} style={{display: 'inline-block' }}>
-                        <span className="bi bi-check2-all"/> Aplicar seleção
-                    </button>
-                    <button type="button" className="submit" onClick={() => cleanSelection()} style={{display: 'inline-block' }}>
-                        <span className="bi bi-eraser-fill"/> Limpar seleção
-                    </button>
+                        
                     </>
+                    }
+
+                    { selectionProfile.length ?
+                        <button type="button" className="submit" onClick={() => cleanSelection()} style={{display: 'inline-block' }}>
+                            <span className="bi bi-eraser-fill"/> Limpar seleção {selectionProfile.length ?  ' ('+selectionProfile.length+' perfis)' : ''}
+                        </button>
+                    :
+                        <button type="button" className="submit" onClick={() => selectAllProfiles()} style={{display: 'inline-block' }}>
+                            <span className="bi bi-plus-circle-dotted"/> Selecionar Tudo
+                        </button>
                     }
 
                     <button type="button" onClick={cancelSelection} className="submit"><h2 className="bi-x-circle" />Cancelar Seleção</button>
@@ -157,14 +169,21 @@ export function RolesPage() {
         </section>
 
         { (showActionPopup && isSelectionActive) && <>
-        <div className="actions-popup" style={{backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: 10, padding: 10, marginBottom: 20}}>
-                <section id="search-submit-wrapper">
+        <div className="actions-popup" style={{backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 10, padding: 10, marginBottom: 20}}>
+                <section id="search-submit-wrapper" style={{display: 'block'}}>
+
+                    <div style={{display: 'flex', justifyContent: 'space-around', marginTop: 20}}>
                     <h3>Ação para a seleção{selectionProfile.length ?  ' ('+selectionProfile.length+' perfis)' : '' }: </h3>
                     <button type="button" className="submit" onClick={() => setActionSelectionBlock(!actionSelectionBlock)} style={{display: 'inline-block' }}>
                         { actionSelectionBlock ? <><span className="bi bi-lock-fill"/> Bloqueado</> : <><span className="bi bi-unlock-fill"/> Habilitado</> }
                     </button>
+                    </div>
 
-                    
+                    <div style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
+                        <button type="button" className="submit" onClick={() => applySelection()} style={{display: 'inline-block' }}>
+                            <span className="bi bi-check2-all"/> Aplicar seleção
+                        </button>
+                    </div>
                 </section>
         </div>
         </>
@@ -192,9 +211,9 @@ export function RolesPage() {
                     <p className="profile-bio">{profile.bio}</p>
                 </div>
                 
-                <div style={{display: 'flex', padding: 0, marginBottom: 5, width: '60%'}}>
+                <div style={{display: 'flex', padding: 0, alignItems: 'center'}}>
 
-                <div style={{ marginBottom: 25, marginRight: 5,}}>
+                <div style={{  marginRight: 5,}}>
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild disabled={isOwnProfile} title={isOwnProfile ? "Você não pode alterar seu próprio nível de acesso" : undefined}>
                         <button type="button" className="set-role-trigger">
@@ -209,8 +228,8 @@ export function RolesPage() {
                 </DropdownMenu.Root>
                 </div>
 
-                <div style={{marginTop: '0.5em'}}>
-                    <section id="search-submit-wrapper">
+                <div>
+                    <section id="search-submit-wrapper" style={{marginBottom: 'auto'}}>
                         <button type="button" className="submit" onClick={() => blockProfile(profile, !profile.blockedAccount)} style={{display: 'inline-block' }}>
                             { profile.blockedAccount ? <><span className="bi bi-lock-fill"/> Bloqueado</> : <><span className="bi bi-unlock-fill"/> Habilitado</> }
                         </button>
