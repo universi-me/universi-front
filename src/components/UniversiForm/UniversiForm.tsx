@@ -263,6 +263,7 @@ export function UniversiForm(props : formProps){
 
     function getImageInput(object : FormObjectImage, index : number){
         const [imageFile, setImageFile] = useState<File>();
+        const [mimeType, setMimeType] = useState<string>('image/jpeg');
         const [imageBuffer, setImageBuffer] = useState<ArrayBuffer>();
         const [showCrop, setShowCrop] = useState<boolean>(false);
 
@@ -275,6 +276,7 @@ export function UniversiForm(props : formProps){
             const reader = new FileReader();
             reader.onloadend = async function (this, ev) {
                 if (ev.target?.readyState == FileReader.DONE && ev.target.result) {
+                    setMimeType(imageFile.type)
                     setImageBuffer(ev.target.result as ArrayBuffer);
 
                     if (!imageFile)
@@ -295,7 +297,7 @@ export function UniversiForm(props : formProps){
         }, [imageFile]);
 
         const renderedImageUrl = imageBuffer != undefined
-            ? "data:image/jpeg;base64, " + arrayBufferToBase64(imageBuffer)
+            ? "data:" + mimeType + ";base64, " + arrayBufferToBase64(imageBuffer)
             : object.defaultImageUrl ? 
                 object.defaultImageUrl
             : DEFAULT_IMAGE_PATH;
@@ -312,12 +314,13 @@ export function UniversiForm(props : formProps){
             setImageFile(imageFile)
         }
 
-        function updateImageFromCrop(imageBuff: ArrayBuffer) {
-            if(!imageBuff) {
+        function updateImageFromCrop(imageBlob: Blob) {
+            if(!imageBlob) {
                 return;
             }
-            setImageBuffer(imageBuff);
-            setImageFile(new File([new Blob([imageBuff])], ''));
+            imageBlob.arrayBuffer().then((buff) => setImageBuffer(buff));
+            setMimeType(imageBlob.type);
+            setImageFile(new File([imageBlob], '', {type: mimeType}));
         }
 
         return(

@@ -3,19 +3,22 @@ import { ChangeEvent, useRef, useState } from "react"
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { arrayBufferToBase64 } from "@/utils/fileUtils";
 import CropperComponent from "@/components/ImageCropper/ImageCropper";
+import Compressor from "compressorjs";
+import { ProfileClass } from "@/types/Profile";
 
 export type ManageProfileImageProps = {
     currentImage: string | null;
+    profile?: ProfileClass;
     setImage(image: File | undefined): any;
 };
 
 export function ManageProfileImage(props: ManageProfileImageProps) {
     const [imageBuffer, setImageBuffer] = useState<ArrayBuffer | null>(null);
+    const [mimeType, setMimeType] = useState<string>('image/jpeg');
     const [showCrop, setShowCrop] = useState<boolean>(false);
     const image = imageBuffer
-        ? "data:image/jpeg;base64," + arrayBufferToBase64(imageBuffer)
+        ? "data:" + mimeType + ";base64," + arrayBufferToBase64(imageBuffer)
         : props.currentImage;
-
     return (
         <fieldset id="fieldset-image">
             <legend className="required-input">Alterar imagem do perfil</legend>
@@ -31,21 +34,19 @@ export function ManageProfileImage(props: ManageProfileImageProps) {
         if (!files || !image)
             return;
 
-        const reader = new FileReader();
-        reader.onloadend = readerLoadImage;
-        reader.readAsArrayBuffer(image);
+        setMimeType(image.type);
+        console.log('image.type: '+ image.type)
+        loadImageFile(new Blob([image], {type: mimeType}));
     }
 
-    function readerLoadImage(this: FileReader, ev: ProgressEvent<FileReader>) {
-        if (ev.target?.readyState === this.DONE) {
-            updateImage(ev.target.result as ArrayBuffer);
-            setShowCrop(true);
-        }
+    function loadImageFile(imageFile: Blob) {
+        updateImage(imageFile);
+        setShowCrop(true);
     }
 
-    function updateImage(imageBuff: ArrayBuffer) {
-        setImageBuffer(imageBuff);
-        props.setImage(imageBuff ? new File([new Blob([imageBuff])], '') : getProfileImage());
+    function updateImage(imageBlob: Blob) {
+        imageBlob.arrayBuffer().then((buff) => setImageBuffer(buff))
+        props.setImage(imageBlob ? new File([imageBlob], '', {type: mimeType}) : getProfileImage());
     }
 
     function getProfileImage() {
