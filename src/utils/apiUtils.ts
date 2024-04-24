@@ -7,6 +7,10 @@ export function groupBannerUrl(group: Group) {
     if(!group.bannerImage)
         return "/assets/imgs/default_bg.jpg"
 
+    if (group.bannerImage.startsWith("/")) {
+        return import.meta.env.VITE_UNIVERSIME_API + group.bannerImage;
+    }
+
     return `${import.meta.env.VITE_UNIVERSIME_API}/group/banner/${group.id}`;
 }
 
@@ -20,6 +24,10 @@ export function groupHeaderUrl(group: Group) {
 export function groupImageUrl(group: Group) {
     if(!group.image)
         return "/assets/imgs/group.png"
+
+    if (group.image.startsWith("/")) {
+        return import.meta.env.VITE_UNIVERSIME_API + group.image;
+    }
 
     return `${import.meta.env.VITE_UNIVERSIME_API}/group/image/${group.id}`;
 }

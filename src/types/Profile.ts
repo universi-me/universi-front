@@ -61,6 +61,10 @@ export class ProfileClass implements Profile {
         if (this.image === null)
             return IMG_DEFAULT_PROFILE;
 
+        if (this.image.startsWith("/")) {
+            return import.meta.env.VITE_UNIVERSIME_API + this.image;
+        }
+
         return import.meta.env.VITE_UNIVERSIME_API + "/profile/image/" + this.id;
     }
 
