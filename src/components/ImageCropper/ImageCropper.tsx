@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, createRef } from 'react';
-import Cropper, { ReactCropperElement } from "react-cropper";
+import Cropper, { ReactCropperElement, ReactCropperProps } from "react-cropper";
 import { Buffer } from 'buffer';
 import "cropperjs/dist/cropper.css";
 import './ImageCropper.css';
@@ -7,9 +7,8 @@ import Compressor from "compressorjs";
 
 type ImageCropperProps = {
   title?: string;
-  aspectRatio?: number;
   compression?: number;
-}
+} & ReactCropperProps;
 
 const CropperPopup = ({ src, onClose, options }: { src: string, onClose: (imageBlob: Blob) => void, options: ImageCropperProps }) => {
   const cropperRef = createRef<ReactCropperElement>();
@@ -41,6 +40,7 @@ const CropperPopup = ({ src, onClose, options }: { src: string, onClose: (imageB
           style={{ height: '100%' , width: '100%'}}
           src={src}
           viewMode={1}
+          dragMode='move'
           minCropBoxHeight={100}
           minCropBoxWidth={100}
           background={false}
