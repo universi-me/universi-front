@@ -3,6 +3,7 @@ import { User } from "@/types/User";
 import { type ProfileClass } from "@/types/Profile";
 import type { Group } from "@/types/Group";
 import type { Link } from "@/types/Link";
+import { RoleDTO } from "@/types/Roles";
 
 export type AuthContextType = {
     user : User | null;
@@ -10,6 +11,7 @@ export type AuthContextType = {
     profileLinks: Link[];
     profileGroups: Group[];
     organization: Group | null;
+    roles: RoleDTO[] | null;
 
     signin: (email : string, password: string, recaptchaToken: string | null) => Promise<ProfileClass | null>;
     signinGoogle: () => Promise<ProfileClass | null>;

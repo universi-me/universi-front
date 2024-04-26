@@ -1,17 +1,20 @@
 import { useContext, type ReactElement, useState, useEffect } from "react";
-import { GroupContents, GroupContext, GroupGroups, GroupPeople,GroupFeed} from "@/pages/Group";
+import { GroupContents, GroupContext, GroupGroups, GroupPeople, GroupFeed, GroupContextType } from "@/pages/Group";
 import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
 import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 import { GroupCompetences } from "./GroupCompetences/GroupCompetences";
+import useCanI, { CanI_SyncFunction } from "@/hooks/useCanI";
+import { Permission } from "@/types/Roles";
 
-export type AvailableTabs = "feed" | "contents" | "files" | "groups" | "people" | "competences";
+export type AvailableTabs = "feed" | "contents" | "groups" | "people" | "competences";
 
 export type GroupTabDefinition = {
     name: string,
     value: AvailableTabs,
     renderer(): ReactElement | null,
+    condition?(context: NonNullable<GroupContextType>, canI: CanI_SyncFunction): boolean;
 };
 
 export type GroupTabsProps = {
@@ -23,6 +26,8 @@ export  function GroupTabs(props: GroupTabsProps){
     const context = useContext(GroupContext);
     const auth = useContext(AuthContext);
     const [joined, setJoined] = useState(auth.profile != null ? context?.loggedData.isParticipant : false)
+
+    const canI = useCanI();
 
     useEffect(()=>{
         setJoined(auth.profile != null ? context?.loggedData.isParticipant : false)
@@ -52,19 +57,18 @@ export  function GroupTabs(props: GroupTabsProps){
         };
     }
 
-
+    
 
     return (
         <nav id="group-tabs"> 
         {
             TABS.map(t => {
                 const isCurrentTab = t.value === props.currentTab;
+                const render = t.condition?.(context!, canI) ?? true;
 
-                return (
-                    <button className={`group-tab-button`} value={t.value} key={t.value} onClick={() => { window.location.hash = t.value; props.changeTab(t.value); }} data-current-tab={isCurrentTab ? "" : undefined}>
-                        {t.name}
-                    </button>
-                );
+                return render && <button className={`group-tab-button`} value={t.value} key={t.value} onClick={() => { window.location.hash = t.value; props.changeTab(t.value); }} data-current-tab={isCurrentTab ? "" : undefined}>
+                    {t.name}
+                </button>;
             })
         }
         
@@ -100,30 +104,46 @@ const TABS: GroupTabDefinition[] = [
         name: 'Publicações',
         value: 'feed',
         renderer: GroupFeed,
+        condition(context, canI) {
+            return canI("FEED", Permission.READ_WRITE, context.group) ||
+                (canI("FEED", Permission.READ, context.group) && context.posts.length > 0);
+        },
     },
     {
         name: 'Conteúdos',
         value: "contents",
         renderer: GroupContents,
+        condition(context, canI) {
+            if (!canI("CONTENT", Permission.READ, context.group))
+                return false;
+
+            return context.folders.length > 0
+                || canI("CONTENT", Permission.READ_WRITE, context.group);
+        },
     },
-    // {
-    //     name: "Arquivos",
-    //     value: "files",
-    //     renderer: GroupFiles,
-    // },
     {
         name: "Grupos",
         value: "groups",
         renderer: GroupGroups,
+        condition(context, canI) {
+            return canI("GROUP", Permission.READ_WRITE, context.group) ||
+                (canI("GROUP", Permission.READ, context.group) && context.subgroups.length > 0);
+        },
     },
     {
         name: "Pessoas",
         value: "people",
         renderer: GroupPeople,
+        condition(context, canI) {
+            return canI("PEOPLE", Permission.READ, context.group);
+        },
     },
     {
         name: "Competências",
         value: "competences",
         renderer: GroupCompetences,
+        condition(context, canI) {
+            return canI("COMPETENCE", Permission.READ, context.group);
+        },
     },
 ];

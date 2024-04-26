@@ -8,11 +8,14 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { useContext, useState } from "react";
 import { GroupContext, GroupFeedPost } from "@/pages/Group";
 import "./GroupFeed.less";
+import useCanI from "@/hooks/useCanI";
+import { Permission } from "@/types/Roles";
 
 export function GroupFeed(){
 
     const [filterPosts, setFilterPosts] = useState<string>("");
     const groupContext = useContext(GroupContext);
+    const canI = useCanI();
 
     if(!groupContext)
         return null;
@@ -21,14 +24,7 @@ export function GroupFeed(){
         if (!groupContext)
             return false;
 
-        if (groupContext.group.canEdit)
-            return true;
-
-        if (groupContext.group.everyoneCanPost)
-            // return is participant
-            return groupContext.participants.some(p => p.id === groupContext.loggedData.profile.id);
-
-        return false;
+       return canI("FEED", Permission.READ_WRITE, groupContext.group);
     }
 
     if(groupContext == null)
@@ -40,11 +36,8 @@ export function GroupFeed(){
                 <div className="go-right">
                     <Filter setter={setFilterPosts} placeholderMessage={`Buscar publicação em ${groupContext.group.name}`}/>
                     {
-                        canCreatePost()
-                        ?
+                        canCreatePost() &&
                             <ActionButton name="Criar publicação" buttonProps={{onClick(){groupContext.setEditPost(null)}}}/>
-                        :
-                            <></>
                     }
                 </div>
             </div>
