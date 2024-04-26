@@ -4,6 +4,7 @@ import { ICON_DELETE_BLACK, ICON_EDIT_BLACK } from '@/utils/assets';
 import './CurriculumEducation.css'
 import UniversimeApi from '@/services/UniversimeApi';
 import * as SwalUtils from "@/utils/sweetalertUtils";
+import { dateWithoutTimezone } from '@/utils/dateUtils';
 
 export function CurriculumEducation() {
     const profileContext = useContext(ProfileContext);
@@ -70,7 +71,7 @@ export function CurriculumEducation() {
 
   const formatDate = (dateString: string) => {
     const options = { year: "numeric", month: "2-digit", day: "2-digit" };
-    const formattedDate = new Date(dateString).toLocaleDateString("pt-BR");
+    const formattedDate = dateWithoutTimezone(dateString).toLocaleDateString("pt-BR");
     return formattedDate;
   };
 
