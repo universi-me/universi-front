@@ -1,19 +1,22 @@
 import React, { useRef, useState, useEffect, createRef } from 'react';
-import Cropper, { ReactCropperElement } from "react-cropper";
+import Cropper, { ReactCropperElement, ReactCropperProps } from "react-cropper";
 import { Buffer } from 'buffer';
 import "cropperjs/dist/cropper.css";
 import './ImageCropper.css';
+import Compressor from "compressorjs";
 
 type ImageCropperProps = {
   title?: string;
-  aspectRatio?: number;
-}
+  compression?: number;
+} & ReactCropperProps;
 
-const CropperPopup = ({ src, onClose, options }: { src: string, onClose: (imageBuffer: ArrayBuffer) => void, options: ImageCropperProps }) => {
+const CropperPopup = ({ src, onClose, options }: { src: string, onClose: (imageBlob: Blob) => void, options: ImageCropperProps }) => {
   const cropperRef = createRef<ReactCropperElement>();
 
   const onApply = () => {
-    onClose(Buffer.from(cropperRef!.current!?.cropper!?.getCroppedCanvas().toDataURL().split(",")[1], 'base64').buffer as ArrayBuffer);
+    cropperRef!.current!?.cropper!?.getCroppedCanvas().toBlob((blob) => {
+      onClose(blob as Blob);
+    }, src.startsWith('http') ? 'image/jpeg' : src.split(";")[0].split(":")[1]);
   };
   
   const onCancel = () => {
@@ -35,9 +38,11 @@ const CropperPopup = ({ src, onClose, options }: { src: string, onClose: (imageB
         <Cropper
           ref={cropperRef}
           style={{ height: '100%' , width: '100%'}}
-          zoomTo={0.5}
           src={src}
           viewMode={1}
+          dragMode='move'
+          zoomable= {true}
+          movable= {true}
           minCropBoxHeight={100}
           minCropBoxWidth={100}
           background={false}
@@ -60,11 +65,22 @@ const CropperPopup = ({ src, onClose, options }: { src: string, onClose: (imageB
   );
   };
   
-const CropperComponent = ({ src, selectImage, show, willClose, options }: { src: string, selectImage: (imageBuffer: ArrayBuffer) => void, show: boolean, willClose: () => void, options?: ImageCropperProps }) => {
+const CropperComponent = ({ src, selectImage, show, willClose, options }: { src: string, selectImage: (imageBlob: Blob) => void, show: boolean, willClose: () => void, options?: ImageCropperProps }) => {
 
-    const onClose = (imageArr: ArrayBuffer) => {
+    const onClose = (imageBlob: Blob) => {
       willClose();
-      selectImage(imageArr);
+      if(imageBlob) {
+        if(imageBlob.type != 'image/png') {
+          // compress image if not png
+          new Compressor(new File([imageBlob], '', {type: 'image/jpeg'}), {
+            quality: (options ?? {}).compression ?? 0.7,
+            success: (result) => selectImage(result),
+            error: () => selectImage(imageBlob)
+          });
+        } else {
+          selectImage(imageBlob);
+        }
+      }
     };
   
     return (

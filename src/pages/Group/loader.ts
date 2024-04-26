@@ -6,6 +6,8 @@ import type { Group } from "@/types/Group";
 import type { Folder } from "@/types/Capacity";
 import { Link } from "@/types/Link";
 import { GroupPost } from "@/types/Feed";
+import { canI_API, fetchRoles } from "@/utils/roles/rolesUtils";
+import { Permission } from "@/types/Roles";
 
 export type GroupPageLoaderResponse = {
     group: Group | undefined;
@@ -26,6 +28,7 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     const [groupRes, profileRes] = await Promise.all([
         UniversimeApi.Group.get({groupPath: props.groupPath}),
         UniversimeApi.Profile.profile(),
+        fetchRoles()
     ]);
     if (!groupRes.success || !groupRes.body || !profileRes.success || !profileRes.body) {
         return FAILED_TO_LOAD;
@@ -34,27 +37,32 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     const group = groupRes.body.group;
     const profile = profileRes.body.profile;
     
+    const canISubgroups =    await canI_API('GROUP',   Permission.READ, group, profile);
+    const canIParticipants = await canI_API('PEOPLE',  Permission.READ, group, profile);
+    const canIFolders =      await canI_API('CONTENT', Permission.READ, group, profile);
+    const canIFeed =         await canI_API('FEED',    Permission.READ, group, profile);
+
     const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes, groupPostsRes] = await Promise.all([
-        UniversimeApi.Group.subgroups({groupId: group.id}),
-        UniversimeApi.Group.participants({groupId: group.id}),
-        UniversimeApi.Group.folders({groupId: group.id}),
+        canISubgroups ? UniversimeApi.Group.subgroups({groupId: group.id})       : undefined,
+        canIParticipants ? UniversimeApi.Group.participants({groupId: group.id}) : undefined,
+        canIFolders ? UniversimeApi.Group.folders({groupId: group.id})           : undefined,
         UniversimeApi.Profile.groups({profileId: profile.id}),
         UniversimeApi.Profile.links({profileId: profile.id}),
-        UniversimeApi.Feed.getGroupPosts({groupId: group.id}),
+        canIFeed ? UniversimeApi.Feed.getGroupPosts({groupId: group.id}) : undefined,
     ]);
     
     return {
         group: group,
-        folders: foldersRes.body?.folders ?? [],
-        participants: participantsRes.body?.participants ?? [],
-        subGroups: subgroupsRes.body?.subgroups ?? [],
-        posts: groupPostsRes.body?.posts ?? [],
+        folders: foldersRes?.success ? foldersRes.body.folders : [],
+        participants: participantsRes?.success ? participantsRes.body.participants : [],
+        subGroups: subgroupsRes?.success ? subgroupsRes.body.subgroups : [],
+        posts: groupPostsRes?.success ? groupPostsRes.body.posts : [],
         loggedData: {
             profile: profile,
             groups: profileGroupsRes.body?.groups ?? [],
             links: profileLinksRes.body?.links ?? [],
-            isParticipant: participantsRes.body?.participants
-            .find(p => p.user.name === profile.user?.name) !== undefined,
+            isParticipant: participantsRes?.body?.participants
+            .find((p : any) => p.user.name === profile.user?.name) !== undefined,
         }
     };
 }

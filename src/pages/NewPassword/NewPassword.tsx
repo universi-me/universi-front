@@ -6,9 +6,7 @@ import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLo
 import * as SwalUtils from "@/utils/sweetalertUtils"
 
 export default function NewPassword(){
-
-    const token = location.pathname.split("/").pop()
-    const [msg, setMsg] = useState<null | string>(null)
+    const { id: token } = useParams();
     const [password, setPassword] = useState<string>("")
     const [showPassword, setShowPassword] = useState(false)
 
@@ -21,11 +19,13 @@ export default function NewPassword(){
         SwalUtils.fireToasty({title: "Verificando dados"})
 
         UniversimeApi.User.newPassword({password, token})
-        .then(res =>{
-            if(res.success)
-                setMsg(res.message ?? "Houve um erro")
-        })
     }
+
+    const validPasswordLength = minimumLength(password);
+    const validPasswordCase = upperAndLowerCase(password);
+    const validPasswordSpecial = numberOrSpecialChar(password);
+
+    const canChangePassword = validPasswordLength && validPasswordCase && validPasswordSpecial;
 
     return(
         <div>
@@ -51,14 +51,14 @@ export default function NewPassword(){
                             </span>
                         </span>
                     </div>
-                    <div className="form-group" style={{color: "var(--font-color-v1)"}}>
+                    <div className="password-validation-box">
                         <h3>Sua senha precisa conter:</h3>
                         <p className={`bi min-length ${passwordValidationClass(minimumLength(password))}`}>Tamanho mínimo de oito caracteres</p>
                         <p className={`bi upper-lower-case ${passwordValidationClass(upperAndLowerCase(password))}`}>Letras minúsculas e maiúsculas</p>
                         <p className={`bi number-special-char ${passwordValidationClass(numberOrSpecialChar(password))}`}>Números ou caracteres especiais</p>
                     </div>
 
-                    <button
+                    <button disabled={!canChangePassword}
                         type="submit"
                         value="Entrar"
                         className="btn_form"

@@ -2,6 +2,7 @@ import { compareAccessLevel, type User } from "@/types/User";
 import { type Nullable } from "@/types/utils";
 import { IMG_DEFAULT_PROFILE } from "@/utils/assets";
 import { Competence } from "./Competence";
+import { Roles } from "./Roles";
 
 export type Gender = "M" | "F" | "O";
 export const GENDER_OPTIONS: {[k in Gender]: string} = {
@@ -20,6 +21,7 @@ export type Profile = {
     bio:          string | null;
     creationDate: string;
     competences:  Competence[] | null;
+    roles?:       Roles | undefined | null;
 }
 
 export class ProfileClass implements Profile {
@@ -60,6 +62,10 @@ export class ProfileClass implements Profile {
     get imageUrl() {
         if (this.image === null)
             return IMG_DEFAULT_PROFILE;
+
+        if (this.image.startsWith("/")) {
+            return import.meta.env.VITE_UNIVERSIME_API + this.image;
+        }
 
         return import.meta.env.VITE_UNIVERSIME_API + "/profile/image/" + this.id;
     }
@@ -150,4 +156,7 @@ export class ProfileClass implements Profile {
     set competences(competences : Nullable<Competence[]>) {this.competences = competences}
 
     get creationDate() { return this.profile.creationDate }
+
+    get roles(): Roles | undefined | null { return this.profile.roles }
+    set roles(roles: Roles | undefined | null) { this.profile.roles = roles }
 }

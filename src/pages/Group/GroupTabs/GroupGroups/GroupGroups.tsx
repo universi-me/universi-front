@@ -8,7 +8,6 @@ import { GroupTypeToLabel, type Group, type GroupType } from "@/types/Group";
 import "./GroupGroups.less";
 import { Filter } from "@/components/Filter/Filter";
 import { AuthContext } from "@/contexts/Auth";
-import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { TextValidation } from "@/components/UniversiForm/Validation/TextValidation";
 import UniversimeApi from "@/services/UniversimeApi";
@@ -50,6 +49,7 @@ export function GroupGroups() {
 
     //<ActionButton name="Editar este grupo" buttonProps={{onClick(){groupContext.setEditGroup(groupContext.group); console.log(groupContext.group)}}}/>
     //<ActionButton name="Criar grupo" buttonProps={{onClick(){groupContext.setEditGroup(null)}}}/>
+    //<ActionButton name="Configurações" buttonProps={{onClick(){ groupContext.setGroupConfigModalOpen(true); }}}/>
     const GROUP_OPTIONS: OptionInMenu<Group>[] = [
         {
             text: "Editar este grupo",
@@ -69,6 +69,16 @@ export function GroupGroups() {
             },
             hidden(){
                 return !(groupContext.group.canEdit);
+            }
+        },
+        {
+            text: "Configurações",
+            biIcon: "gear",
+            onSelect(data) {
+                groupContext.setGroupConfigModalOpen(true);
+            },
+            hidden(){
+                return authContext.user?.accessLevel !== "ROLE_ADMIN";
             }
         }
     ];
@@ -102,7 +112,7 @@ export function GroupGroups() {
                 <div className="go-right">
                     <Filter setter={setFilterGroups} placeholderMessage={`Buscar grupos em ${groupContext.group.name}`}/>
                     <div className="group-options-container">
-                        { !hasAvailableOption(GROUP_OPTIONS, groupContext.group) ? null :
+                        { hasAvailableOption(GROUP_OPTIONS, groupContext.group) &&
                             <DropdownMenu.Root>
                                 <DropdownMenu.Trigger asChild>
                                     <button className="group-options-button">
@@ -148,7 +158,7 @@ export function GroupGroups() {
                             crop: true, aspectRatio: 2.5,
                             required: false
                         }, {
-                            DTOName: "headerImageUrl", label: "Header do grupo", type: (groupContext.editGroup != null && groupContext.editGroup.rootGroup) ? FormInputs.IMAGE : FormInputs.HIDDEN, value:undefined, 
+                            DTOName: "headerImageUrl", label: "Logo da Organização", type: (groupContext.editGroup != null && groupContext.editGroup.rootGroup) ? FormInputs.IMAGE : FormInputs.HIDDEN, value:undefined, 
                             defaultImageUrl: groupContext.editGroup ? groupHeaderUrl(groupContext.editGroup) : undefined,
                             crop: true, //aspectRatio: 2.5,
                             required: false

@@ -11,6 +11,8 @@ import { hasAvailableOption, renderOption, type OptionInMenu } from "@/utils/dro
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import { type GroupPost } from "@/types/Feed";
+import useCanI from "@/hooks/useCanI";
+import { Permission } from "@/types/Roles";
 
 export type GroupFeedPostProps = Readonly<{
     post: GroupPost;
@@ -23,6 +25,8 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
     const groupContext = useContext(GroupContext);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [readMore, setReadMore] = useState<"NOT_SHOW" | "SHOW_MORE" | "SHOW_LESS">();
+
+    const canI = useCanI();
 
     const loadReadMore = () => {
         const state = descriptionState();
@@ -64,7 +68,8 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
                 groupContext.setEditPost(data);
             },
             hidden(data) {
-                return !data.author.user.ownerOfSession;
+                let canEdit = (data.author.user.ownerOfSession);
+                return  !canEdit;
             },
         },
         {
@@ -73,7 +78,8 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             className: "delete",
             onSelect: handleDeletePost,
             hidden(data) {
-                return !groupContext.group.canEdit && !data.author.user.ownerOfSession;
+                return !data.author.user.ownerOfSession
+                    || !canI("FEED", Permission.READ_WRITE_DELETE, groupContext.group);
             },
         }
     ]

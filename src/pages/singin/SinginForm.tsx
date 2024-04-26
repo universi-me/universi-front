@@ -33,7 +33,9 @@ export default function SinginForm() {
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     const logged = await auth.signin(email, password, recaptchaToken);
-    recaptchaRef.reset();
+    if(recaptchaRef) {
+      recaptchaRef.reset();
+    }
   };
 
   const isButtonDisable = email.length && password.length > 0 ? false : true;
