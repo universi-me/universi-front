@@ -2,6 +2,7 @@ import type { ApiResponse } from "@/types/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import axios from "axios";
 import { goTo } from "@/services/routes";
+import { LOGIN_REDIRECT_PARAM } from "@/pages/singin/Singin";
 
 export const api = axios.create({
     baseURL: import.meta.env.VITE_UNIVERSIME_API,
@@ -23,7 +24,16 @@ api.interceptors.response.use(function (response) {
 export const handleForResponseData = (response: ApiResponse<any>, isModalAsDefault: boolean, isError: boolean) => {
     // handle redirect
     if(response.redirectTo) {
-        goTo(response.redirectTo);
+        let redirectUrl = response.redirectTo;
+
+        if (redirectUrl === "/login") {
+            const currentURL = new URL(window.location.href);
+
+            redirectUrl += `?${LOGIN_REDIRECT_PARAM}=` +
+                encodeURIComponent(currentURL.searchParams.get(LOGIN_REDIRECT_PARAM) ?? location.href.substring(location.origin.length))
+        }
+
+        goTo(redirectUrl);
     }
     // handle alert
     if(response.message) {
