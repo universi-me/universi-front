@@ -1,4 +1,5 @@
 @import url(/src/layouts/spacing.less);
+@import url(/src/layouts/utils.less);
 
 .profile-info-component {
     display: grid;
@@ -16,7 +17,7 @@
         width: 15rem;
     }
 
-    @media screen and (max-width: 800px) {
+    @media @onMobile {
         display: flex;
         flex-direction: column;
 
