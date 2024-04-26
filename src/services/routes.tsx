@@ -19,13 +19,14 @@ import Homepage from "@/pages/Homepage";
 import SettingsPage, { GroupEmailFilterPage, GroupEmailFilterLoader, RolesPage, RolesPageLoader, EnvironmentsPage, EnvironmentsLoader, CompetencesSettingsPage, CompetencesSettingsLoader, GroupThemeColorPage} from "@/pages/Settings";
 import ContentPage from "@/pages/Content";
 import { ContentPageLoader } from "@/pages/Content/ContentPageLoader";
+import PageNotFound from "@/pages/PageNotFound/PageNotFound";
 
 
 
 export const router = createBrowserRouter([{
   path: "/",
   element: <App/>,
-  //todo: errorElement: Erro404page,
+  errorElement: <PageNotFound />,
   children: [
     {
       path: "/",

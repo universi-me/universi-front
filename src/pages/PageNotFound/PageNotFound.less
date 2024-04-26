@@ -1,0 +1,34 @@
+@import "/src/layouts/colors.less";
+@import "/src/layouts/border-radius.less";
+
+#page-not-found {
+    width: 99vw;
+    height: 99vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    #universi-logo {
+        max-width: 25vw;
+        min-width: 200px;
+    }
+
+    #title-not-found, #desc-not-found {
+        text-align: center;
+    }
+
+    #back-to-home {
+        color: @font-color-v1;
+        text-decoration: none;
+
+        font-size: 1.25rem;
+
+        background-color: @primary-color;
+        border-radius: @border-radius;
+        padding: 1em;
+
+        margin-top: .75em;
+    }
+}
