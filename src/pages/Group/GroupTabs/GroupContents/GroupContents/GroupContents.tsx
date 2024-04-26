@@ -153,6 +153,7 @@ export function GroupContents() {
     const [filterContents, setFilterContents] = useState<string>("");
     const [importContentAvailable, setImportContentAvailable] = useState<Folder[]>();
     const [duplicateContentId, setDuplicateContentId] = useState<string | undefined> ();
+    const [moveContentReference, setMoveContentReference] = useState<string>();
 
     const canI = useCanI();
 
@@ -225,6 +226,16 @@ export function GroupContents() {
             hidden(){
                 return !groupContext.group.canEdit;
             },
+        },
+        {
+            text: "Mover conteúdo",
+            biIcon: "folder-symlink-fill",
+            onSelect(data) {
+                setMoveContentReference(data.reference);
+            },
+            hidden(data) {
+                return !canI("CONTENT", Permission.READ_WRITE_DELETE, groupContext.group);
+            }
         }
     ]
 
@@ -274,6 +285,18 @@ export function GroupContents() {
                 requisition={UniversimeApi.Capacity.duplicateContent}
                 saveButtonText="Copiar"
                 />
+                : moveContentReference !== undefined ? <UniversiForm formTitle="Mover conteúdo" objects={[
+                    { DTOName: "folderReference", label: "", type: FormInputs.HIDDEN, value: moveContentReference },
+                    { DTOName: "originalGroupPath", label: "", type: FormInputs.HIDDEN, value: groupContext.group.path },
+                    {
+                        DTOName: "newGroupPath", label: "Mover para:",
+                        type: FormInputs.SELECT_SINGLE, required: true,
+                        options: groupContext.loggedData.groups
+                            .filter(g => g.id !== groupContext.group.id && canI("GROUP", Permission.READ_WRITE, g))
+                            .map(g => ({value: g.path, label: g.name}))
+                    },
+                ]} callback={() => { groupContext.refreshData().then(() => setMoveContentReference(undefined)) }} requisition={UniversimeApi.Capacity.moveFolderToAnotherGroup}
+                saveButtonText="Mover" cancelButtonText="Cancelar" />
                 :
                 <></>
             }

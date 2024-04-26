@@ -67,6 +67,12 @@ export type FolderWatchProgress_RequestDTO = {
     folderReference?: string;
 };
 
+export type FolderMoveToGroup_RequestDTO = {
+    folderReference:   string;
+    originalGroupPath: string;
+    newGroupPath:      string;
+};
+
 export type FolderGet_ResponseDTO =               ApiResponse<{ folder: Folder }>;
 export type FolderCreate_ResponseDTO =            ApiResponse<{ contentId : string }>;
 export type FolderEdit_ResponseDTO =              ApiResponse;
@@ -79,6 +85,7 @@ export type FolderUnfavorite_ResponseDTO =        ApiResponse;
 export type FolderAssignedTo_ResponseDTO =        ApiResponse<{ profilesIds: Profile[] }>;
 export type FoldersAssignedBy_ResponseDTO =       ApiResponse<{ folders: FolderProfile[] }>;
 export type FolderWatchProgress_ResponseDTO =     ApiResponse<{ folder: Folder, watching: Profile, contentWatches: WatchProfileProgress[] }>;
+export type FolderMoveToGroup_ResponseDTO =       ApiResponse;
 
 export async function getFolder(body: FolderId_RequestDTO) {
     return (await api.post<FolderGet_ResponseDTO>("/capacity/folder/get", {
@@ -179,4 +186,14 @@ export async function watchProfileProgress(body: FolderWatchProgress_RequestDTO)
         folderId: body.folderId,
         folderReference: body.folderReference,
     })).data;
+}
+
+export async function moveFolderToAnotherGroup(body: FolderMoveToGroup_RequestDTO) {
+    const res = await api.post<FolderMoveToGroup_ResponseDTO>("/capacity/folder/move-to-folder", {
+        folderReference: body.folderReference,
+        originalGroupPath: body.originalGroupPath,
+        newGroupPath: body.newGroupPath,
+    });
+
+    return res.data;
 }
