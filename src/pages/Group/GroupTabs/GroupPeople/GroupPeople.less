@@ -1,12 +1,7 @@
 @import url(/src/layouts/colors.less);
 @import url(/src/layouts/fonts.less);
-@import url(/src/layouts/utils.less);
 
 #group-page #people .people-list {
-    @media @onMobile {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -56,6 +51,12 @@
                 text-align: justify;
             }
         }
+    }
+}
+
+@media screen and (max-width: 800px){
+    #group-page #people .people-list {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
