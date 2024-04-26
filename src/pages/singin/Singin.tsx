@@ -1,13 +1,16 @@
 import { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
 import { AuthContext } from "@/contexts/Auth";
 import SinginForm from "./SinginForm";
 import "./signin.css";
 
 export default function Singin() {
     const authContext = useContext(AuthContext);
-    if (authContext.profile)
-        return <Navigate to="/" />
+    const [searchParams] = useSearchParams()
+
+    if (authContext.profile) {
+        return <Navigate to={ searchParams.get(LOGIN_REDIRECT_PARAM) ?? "/" } />
+    }
 
     return (
     <div>
@@ -36,3 +39,5 @@ export default function Singin() {
     </div>
   );
 }
+
+export const LOGIN_REDIRECT_PARAM = "redirect"
