@@ -20,7 +20,7 @@ ENV VITE_BUILD_HASH=${VITE_BUILD_HASH}
 #  Build app
 RUN npm run build:docker
 
-FROM nginx:alpine
+FROM nginx:latest
 
 RUN rm -rf /usr/share/nginx/html/*
 

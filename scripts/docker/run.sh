@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 replace_var() {
     if [[ -z "$1" ]]; then
