@@ -1,11 +1,18 @@
 import YouTube from "react-youtube";
-import { useEffect, useState } from "react"
+import { MouseEvent, useState } from "react";
 
-import "./VideoPopup.css"
+import "./VideoPopup.css";
 import { Content } from "@/types/Capacity";
 import { getYouTubeVideoIdFromUrl } from "@/utils/regexUtils";
 
-export function VideoPopup({material, handleClose, handleWatched, handleMinimized} : {material : Content, handleClose : (id : string, symbol : string) => void, handleWatched : (event : any) => void, handleMinimized : (material: Content) => void}){
+export type VideoPopupProps = {
+    material: Content;
+    handleClose: (id: string, symbol: string) => any;
+    handleWatched: (event: MouseEvent<HTMLDivElement>) => any;
+    handleMinimized: (material: Content) => any;
+};
+
+export function VideoPopup({material, handleClose, handleWatched, handleMinimized} : Readonly<VideoPopupProps>){
 
     const [status, setStatus] = useState(material.status)
     const id = getYouTubeVideoIdFromUrl(material.url);
