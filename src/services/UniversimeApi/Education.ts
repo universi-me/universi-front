@@ -47,12 +47,12 @@ export async function create(body:EducationCreate_RequestDTO) {
 
 export async function update(body: EducationUpdate_RequestDTO) {
     return (await api.post<EducationUpdate_ResponseDTO>(`/curriculum/education/atualizar`, {
-        educationId:   body.educationId,
-        typeEducation: body.typeEducationId,
-        institution:   body.institutionId,
-        startDate:     body.startDate,
-        endDate:       body.endDate,
-        presentDate:   body.presentDate,
+        educationId:     body.educationId,
+        typeEducationId: body.typeEducationId,
+        institutionId:   body.institutionId,
+        startDate:       body.startDate,
+        endDate:         body.endDate,
+        presentDate:     body.presentDate,
     })).data;
 }
 
