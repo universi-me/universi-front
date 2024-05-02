@@ -14,6 +14,7 @@ import { Filter } from "@/components/Filter/Filter";
 import { YouTubePlayerContext } from "@/contexts/YouTube";
 import { makeClassName } from "@/utils/tsxUtils";
 import { getYouTubeVideoIdFromUrl } from "@/utils/regexUtils";
+import { MATERIAL_THUMB_FILE, MATERIAL_THUMB_LINK, MATERIAL_THUMB_VIDEO } from "@/utils/assets";
 
 export function GroupContentMaterials() {
     const groupContext = useContext(GroupContext);
@@ -69,7 +70,7 @@ export function GroupContentMaterials() {
                 </div>
             </div>
 
-            <div className="material-list tab-list"> { makeMaterialsList(materials, filterMaterials) } </div>
+            <MaterialsList materials={materials} filter={filterMaterials} />
             { groupContext.editMaterial !== undefined &&
                 <ManageMaterial material={groupContext.editMaterial} content={groupContext.currentContent} afterSave={()=>{ refreshMaterials(); groupContext.setEditMaterial(undefined) }} />
             }
@@ -102,7 +103,10 @@ export function GroupContentMaterials() {
             });
     }
 
-    function makeMaterialsList(materials: Content[], filter: string) {
+    type MaterialsListProps = { materials: Content[]; filter: string };
+    function MaterialsList(props: Readonly<MaterialsListProps>) {
+        const {materials, filter} = props;
+
         if (materials.length === 0) {
             return <p className={EMPTY_LIST_CLASS}>Esse conteúdo não possui materiais.</p>
         }
@@ -115,11 +119,14 @@ export function GroupContentMaterials() {
             return <p className={EMPTY_LIST_CLASS}>Nenhum material encontrado com a pesquisa.</p>
         }
 
-        return filteredMaterials
-            .map(renderMaterial);
+        return <div className="material-list tab-list">
+            { filteredMaterials.map(m => <RenderMaterial material={m} />) }
+        </div>
     }
 
-    function renderMaterial(material: Content) {
+    type RenderMaterialProps = { material: Content };
+    function RenderMaterial(props: Readonly<RenderMaterialProps>) {
+        const { material } = props;
         const youTubeVideoId = getYouTubeVideoIdFromUrl(material.url);
 
         return (
@@ -135,12 +142,12 @@ export function GroupContentMaterials() {
                             {
                                 material.type === "FILE"
                                     ?
-                                        <img src={`/assets/imgs/file.png`} className="material-image"></img>
+                                        <img src={MATERIAL_THUMB_FILE} className="material-image"></img>
                                 : material.type === "FOLDER"
                                     ?
-                                        <img src={`/assets/imgs/file.png`} className="material-image"></img>
+                                        <img src={MATERIAL_THUMB_FILE} className="material-image"></img>
                                 :
-                                        <img src={`/assets/imgs/link.png`} className="material-image"></img>
+                                        <img src={MATERIAL_THUMB_LINK} className="material-image"></img>
                             }
                         </Link>
                 }
@@ -148,7 +155,7 @@ export function GroupContentMaterials() {
                 {
                     youTubeVideoId !== null
                     ?
-                        <div className="material-name" onClick={() => { const videoId = youTubeVideoId; if(!isMiniature || videoId!= playingVideo) youTubeContext.playMaterial(material)}}>
+                        <div className="material-name" onClick={() => { const videoId = youTubeVideoId; if(!isMiniature || videoId!= playingVideo) youTubeContext.playMaterial(material, refreshMaterials)}}>
                             {material.title}
                         </div>
                     :
@@ -179,8 +186,8 @@ export function GroupContentMaterials() {
 
     function renderYouTubeEmbed(videoId: string, material : Content) {
         return (
-            <div className="icon-container" id={`icon-container-${videoId}`} onClick={() => {if(!isMiniature || videoId != playingVideo) youTubeContext?.playMaterial(material)}}>
-                <img src="/assets/imgs/video.png" className="material-image"></img>
+            <div className="icon-container" id={`icon-container-${videoId}`} onClick={() => {if(!isMiniature || videoId != playingVideo) youTubeContext?.playMaterial(material, refreshMaterials)}}>
+                <img src={MATERIAL_THUMB_VIDEO} className="material-image"></img>
             </div>
         )
     }

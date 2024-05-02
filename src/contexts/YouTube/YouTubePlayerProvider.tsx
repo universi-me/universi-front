@@ -1,4 +1,4 @@
-import { PropsWithChildren, useMemo, useState } from "react";
+import { MouseEvent, PropsWithChildren, useMemo, useState } from "react";
 import { YouTubePlayerContext } from "@/contexts/YouTube";
 
 import { ContentStatusEnum, type Content } from "@/types/Capacity";
@@ -11,6 +11,8 @@ type YouTubePlayerProviderProps = Readonly<PropsWithChildren<{}>>;
 export function YouTubePlayerProvider({children}: YouTubePlayerProviderProps) {
     const [currentMaterial, setCurrentMaterial] = useState<Content>();
     const [playingInMiniature, setPlayingInMiniature] = useState<boolean>(false);
+
+    const [onChangeStatus, setOnChangeStatus] = useState<null|((material: Content) => any)>(null);
 
     const currentVideoId = useMemo(() => {
         if (!currentMaterial) return undefined;
@@ -34,7 +36,7 @@ export function YouTubePlayerProvider({children}: YouTubePlayerProviderProps) {
         </YouTubePlayerContext.Provider>
     );
 
-    async function playMaterial(material: {id: string}) {
+    async function playMaterial(material: Content, onChangeStatus?: (material: Content) => any) {
         const fetchApiMaterial = await UniversimeApi.Capacity.getContent({ id: material.id });
         const apiMaterial = fetchApiMaterial.success ? fetchApiMaterial.body.content : undefined;
 
@@ -46,6 +48,7 @@ export function YouTubePlayerProvider({children}: YouTubePlayerProviderProps) {
             return false;
         }
 
+        setOnChangeStatus(() => onChangeStatus);
         handleVideoClick(apiMaterial);
         return true;
     }
@@ -70,6 +73,7 @@ export function YouTubePlayerProvider({children}: YouTubePlayerProviderProps) {
         if(symbol == "✖"){
             setCurrentMaterial(undefined);
             setPlayingInMiniature(false);
+            setOnChangeStatus(null);
             return;
         }
 
@@ -92,21 +96,22 @@ export function YouTubePlayerProvider({children}: YouTubePlayerProviderProps) {
         setPlayingInMiniature(false);
     }
 
-    async function handleWatchedButton(material : Content, event : any){
+    async function handleWatchedButton(material: Content, event: MouseEvent){
         event.stopPropagation();
 
-        let nextStatus : ContentStatusEnum = material.status == "DONE" ? "NOT_VIEWED" : "DONE"
+        let nextStatus: ContentStatusEnum = material.status == "DONE" ? "NOT_VIEWED" : "DONE"
 
         await UniversimeApi.Capacity.createContentStatus({contentId : material.id});
-        await UniversimeApi.Capacity.editContentStatus({contentId: material.id, contentStatusType : nextStatus}).then(
-            (data) => {
-                if (!data.success) return;
 
-                const status = data.body.contentStatus.status;
-                if(status == "DONE" || status == "NOT_VIEWED")
-                    setCurrentMaterial({...material, status});
-            }
-        )
+        const data = await UniversimeApi.Capacity.editContentStatus({contentId: material.id, contentStatusType : nextStatus});
+
+        if (!data.success) return;
+
+        const status = data.body.contentStatus.status;
+        if(status == "DONE" || status == "NOT_VIEWED") {
+            setCurrentMaterial({...material, status});
+            await onChangeStatus?.(material);
+        }
     }
 
     function handleVideoClick(material : Content){

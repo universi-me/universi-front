@@ -40,7 +40,7 @@ type RenderMaterialProps = {
 
 function RenderMaterial(props: Readonly<RenderMaterialProps>) {
     const { material, contexts, beingWatched } = props;
-    const { imageUrl, onInteract } = getMaterialVariantData(material, contexts.youTubePlayerContext);
+    const { imageUrl, onInteract } = getMaterialVariantData(material);
 
     const materialUrl = isAbsoluteUrl(material.url)
         ? material.url
@@ -131,29 +131,29 @@ function RenderMaterial(props: Readonly<RenderMaterialProps>) {
                     contexts.contentContext.refreshMaterials();
             })
     }
-}
 
-function getMaterialVariantData(material: Content, youTubePlayerContext: YouTubePlayerContextType) {
-    let imageUrl = MATERIAL_THUMB_LINK;
-    let onInteract = undefined;
+    function getMaterialVariantData(material: Content) {
+        let imageUrl = MATERIAL_THUMB_LINK;
+        let onInteract = undefined;
 
-    if (material.type === "VIDEO") {
-        imageUrl = MATERIAL_THUMB_VIDEO;
-        const isYouTubeVideo = !!getYouTubeVideoIdFromUrl(material.url);
+        if (material.type === "VIDEO") {
+            imageUrl = MATERIAL_THUMB_VIDEO;
+            const isYouTubeVideo = !!getYouTubeVideoIdFromUrl(material.url);
 
-        if (isYouTubeVideo) onInteract = ( e: MouseEvent ) => {
-            e.preventDefault();
-            youTubePlayerContext.playMaterial(material);
+            if (isYouTubeVideo) onInteract = ( e: MouseEvent ) => {
+                e.preventDefault();
+                contexts.youTubePlayerContext.playMaterial(material, () => {contexts.contentContext.refreshMaterials()});
+            }
         }
-    }
 
-    else if (material.type === "FILE") {
-        imageUrl = MATERIAL_THUMB_FILE;
-    }
+        else if (material.type === "FILE") {
+            imageUrl = MATERIAL_THUMB_FILE;
+        }
 
-    else if (material.type === "FOLDER") {
-        imageUrl = MATERIAL_THUMB_FILE;
-    }
+        else if (material.type === "FOLDER") {
+            imageUrl = MATERIAL_THUMB_FILE;
+        }
 
-    return { imageUrl, onInteract, }
+        return { imageUrl, onInteract, }
+    }
 }
