@@ -33,7 +33,7 @@ export function ManageProfilePage() {
     const isLastnameFull = (lastname.length) >= LAST_NAME_MAX_LENGTH;
 
     const hasImage = (image !== undefined) || !!profile.image;
-    const canSaveProfile = !!firstname && !!lastname && hasImage;
+    const canSaveProfile = !!firstname && !!lastname;
 
     return <div id="manage-profile-page">
         <h1 className="heading">Editar meu perfil</h1>
