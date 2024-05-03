@@ -25,24 +25,17 @@ export type GroupTabsProps = {
 export  function GroupTabs(props: GroupTabsProps){
     const context = useContext(GroupContext);
     const auth = useContext(AuthContext);
-    const [joined, setJoined] = useState(auth.profile != null ? context?.loggedData.isParticipant : false)
-
     const canI = useCanI();
-
-    useEffect(()=>{
-        setJoined(auth.profile != null ? context?.loggedData.isParticipant : false)
-    },[context?.group])
 
     async function join(){
         if(!context?.group.canEnter || context.group.id == null)
             return;
 
         const resData = await UniversimeApi.Group.join({groupId: context.group.id});
-        if(resData.success) {
-            setJoined(true)
-            auth.updateLoggedUser()
-                .then(() => context.refreshData())
-        };
+        await Promise.all([
+            context.refreshData(),
+            auth.updateLoggedUser(),
+        ])
     }
 
     async function leave(){
@@ -50,14 +43,17 @@ export  function GroupTabs(props: GroupTabsProps){
             return;
 
         const resData = await UniversimeApi.Group.exit({groupId: context.group.id});
-        if(resData.success) {
-            setJoined(false)
-            auth.updateLoggedUser()
-                .then(() => context.refreshData())
-        };
+        await Promise.all([
+            context.refreshData(),
+            auth.updateLoggedUser(),
+        ])
     }
 
-    
+    if (!context)
+        return <></>;
+
+    const joined = context.loggedData.isParticipant;
+    const renderJoinOrLeave = !context.group.rootGroup && (joined || context.group.canEnter);
 
     return (
         <nav id="group-tabs"> 
@@ -71,14 +67,11 @@ export  function GroupTabs(props: GroupTabsProps){
                 </button>;
             })
         }
-        
-         
-         {   context?.group.canEnter && !context.group.rootGroup?
-                joined && !context.group.rootGroup?
-                <GroupSubmenu leave={leave}/>
-                :
-                <button className="group-tab-participacao" onClick={join}>Participar</button> 
-            : <></>
+
+
+        {   !renderJoinOrLeave ? null :
+                (joined && <GroupSubmenu leave={leave}/>) ||
+                <button className="group-tab-participacao" onClick={join}>Participar</button>
         }
 
          </nav>

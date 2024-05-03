@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return (
         <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser, organization, roles, profileGroups, profileLinks  }}>
-        { finishedLogin ? children : null }
+        { children }
         </AuthContext.Provider>
     );
 
