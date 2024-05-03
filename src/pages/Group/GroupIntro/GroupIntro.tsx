@@ -14,10 +14,12 @@ export function GroupIntro() {
         <div id="group-intro">
             <div id="banner-wrapper">
                 <img id="organization-banner" src={groupBannerUrl(groupContext.group)} />
+                { !groupContext.group.bannerImage && <>
                 <div className="image-overlay"></div>
                 <h3 id="group-name">
                     { groupContext.group.name }
                 </h3>
+                </> }
             </div>
         </div>
     );
