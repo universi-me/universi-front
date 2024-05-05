@@ -127,12 +127,11 @@ export function GroupContentMaterials() {
     type RenderMaterialProps = { material: Content };
     function RenderMaterial(props: Readonly<RenderMaterialProps>) {
         const { material } = props;
-        const youTubeVideoId = getYouTubeVideoIdFromUrl(material.url);
-        const materialUrl = youTubeVideoId
+        const materialUrl = isAbsoluteUrl(material.url)
             ? material.url
-            : isAbsoluteUrl(material.url)
-                ? material.url
-                : "http://" + material.url;
+            : "http://" + material.url;
+
+        const youTubeVideoId = getYouTubeVideoIdFromUrl(materialUrl);
 
         return (
             <div className="material-item tab-item" key={material.id}>
