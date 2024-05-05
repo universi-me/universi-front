@@ -13,7 +13,7 @@ import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { Filter } from "@/components/Filter/Filter";
 import { YouTubePlayerContext } from "@/contexts/YouTube";
 import { makeClassName } from "@/utils/tsxUtils";
-import { getYouTubeVideoIdFromUrl } from "@/utils/regexUtils";
+import { getYouTubeVideoIdFromUrl, isAbsoluteUrl } from "@/utils/regexUtils";
 import { MATERIAL_THUMB_FILE, MATERIAL_THUMB_LINK, MATERIAL_THUMB_VIDEO } from "@/utils/assets";
 
 export function GroupContentMaterials() {
@@ -127,7 +127,11 @@ export function GroupContentMaterials() {
     type RenderMaterialProps = { material: Content };
     function RenderMaterial(props: Readonly<RenderMaterialProps>) {
         const { material } = props;
-        const youTubeVideoId = getYouTubeVideoIdFromUrl(material.url);
+        const materialUrl = isAbsoluteUrl(material.url)
+            ? material.url
+            : "http://" + material.url;
+
+        const youTubeVideoId = getYouTubeVideoIdFromUrl(materialUrl);
 
         return (
             <div className="material-item tab-item" key={material.id}>
@@ -138,7 +142,7 @@ export function GroupContentMaterials() {
                     youTubeVideoId !== undefined
                         ? renderYouTubeEmbed(youTubeVideoId, material)
                         :
-                        <Link to={material.url} target="_blank" className="material-name icon-container">
+                        <Link to={materialUrl} target="_blank" className="material-name icon-container">
                             {
                                 material.type === "FILE"
                                     ?
@@ -153,13 +157,13 @@ export function GroupContentMaterials() {
                 }
                 <div className="info">
                 {
-                    youTubeVideoId !== null
+                    youTubeVideoId
                     ?
                         <div className="material-name" onClick={() => { const videoId = youTubeVideoId; if(!isMiniature || videoId!= playingVideo) youTubeContext.playMaterial(material, refreshMaterials)}}>
                             {material.title}
                         </div>
                     :
-                        <Link to={material.url} target="_blank" className="material-name">
+                        <Link to={materialUrl} target="_blank" className="material-name">
                             {material.title}
                         </Link>
                 }

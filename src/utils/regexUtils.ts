@@ -25,4 +25,4 @@ const emailPattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{
 const urlSchemePattern = /^[a-z][-+.a-z0-9]*:\/\//i
 
 /** Checks if a string is a YouTube video URL */
-const youTubeVideoUrlPattern = /^(?:https:\/\/)?(?:(?:(?:[a-z0-9]+\.)?youtube\.com\/watch\?v=([-A-Za-z0-9_]{11,}))|(?:youtu\.be\/([-A-Za-z0-9_]{11,})))/;
+const youTubeVideoUrlPattern = /^(?:http(?:s)?:\/\/)?(?:(?:(?:[a-z0-9]+\.)?youtube\.com\/watch\?v=([-A-Za-z0-9_]{11,}))|(?:youtu\.be\/([-A-Za-z0-9_]{11,})))/;
