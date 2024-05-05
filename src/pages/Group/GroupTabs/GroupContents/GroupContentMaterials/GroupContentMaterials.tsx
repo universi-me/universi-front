@@ -60,7 +60,12 @@ export function GroupContentMaterials() {
     return (
         <section id="materials" className="group-tab">
             <div className="heading top-container">
-                <div className="content-title">{groupContext.currentContent.name}</div>
+                <div id="back-name-wrapper">
+                    <button type="button" id="back-to-contents" onClick={() => groupContext.setCurrentContent(undefined)} title="Voltar para conteúdos">
+                        <i className="bi bi-arrow-left-circle"/>
+                    </button>
+                    <div className="content-title">{groupContext.currentContent.name}</div>
+                </div>
                 <div className="go-right">
                     <Filter setter={setFilterMaterials} placeholderMessage={`Buscar em ${groupContext.group.name}`}/>
                         {  
