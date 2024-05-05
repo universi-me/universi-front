@@ -50,7 +50,7 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
                     DTOName: "url", label: "Link do material", type: FormInputs.URL, value: material?.url, required: true
                 }, {
                     DTOName: "type", label: "Tipo do material", type: FormInputs.SELECT_SINGLE, 
-                    options: AVAILABLE_MATERIAL_TYPES.map(t => ({ label: MATERIAL_TYPES_TEXT[t], value: t })), required: false,
+                    options: AVAILABLE_MATERIAL_TYPES.map(t => ({ label: MATERIAL_TYPES_TEXT[t], value: t })), required: true,
                     value: material?.type ? { value: material.type, label: material.type } : undefined,
                 }, {
                     DTOName: "addCategoriesByIds", label: "Categorias", type: FormInputs.SELECT_MULTI, 
