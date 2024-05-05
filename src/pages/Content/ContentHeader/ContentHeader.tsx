@@ -26,61 +26,63 @@ export function ContentHeader() {
     const shownMaterialPercentage = isNaN(materialPercentage) ? 0 : materialPercentage;
 
     return <div id="content-header">
-        <img id="content-header-image" src={contentImageUrl(context.content)} alt="" />
-        <div id="content-main-info">
-            <h2 id="content-name">
-                {context.content.name}
+        <div id="content-image-name">
+            <img id="content-header-image" src={contentImageUrl(context.content)} alt="" />
+            <div id="content-main-info">
+                <h2 id="content-name">
+                    {context.content.name}
 
-                { context.content.favorite && !context.watchingProfile &&
-                    <i id="content-favorite" className="bi bi-star-fill" title={`Você favoritou ${context.content.name}`} />
-                }
-            </h2>
+                    { context.content.favorite && !context.watchingProfile &&
+                        <i id="content-favorite" className="bi bi-star-fill" title={`Você favoritou ${context.content.name}`} />
+                    }
+                </h2>
 
-            { context.content.categories.length > 1 &&
-                <div id="content-categories">
-                { context.content.categories.map(c =>
-                    <div key={c.id} className="content-category-item">
-                        { c.name }
-                    </div>
-                ) }
-                </div>
-            }
-
-            { assignedBy &&
-                <div id="assigned-info">
-                    <i id="assigned-by-icon" className="bi bi-pin-angle-fill" />
-                    Atribuído a você por
-                    <Link id="assigned-by-link" to={`/profile/${assignedBy.user.name}`}>{ assignedBy.fullname }</Link>
-                </div>
-            }
-
-            <div id="created-info">
-                Criado
-                {/* {" "} em { new Date(context.content.createdAt).toLocaleDateString() } */}
-                {" "} por <Link to={`/profile/${author.user.name}`}> { author.fullname } </Link>
-            </div>
-
-            {
-                context.content.description &&
-                <p id="content-description">{context.content.description}</p>
-            }
-
-            { context.watchingProfile && 
-                <div id="watch-data">
-                    <p id="watching-info">
-                        <i className="bi bi-eye" />
-                        Você está acompanhando o progresso de <Link to={`/profile/${context.watchingProfile.user.name}`}>{context.watchingProfile.fullname}</Link>
-                    </p>
-                    <div id="progress-container">
-                        <div id="progress-bar-total">
-                            <div id="progress-bar-done" style={{width: `${shownMaterialPercentage}%`}} />
+                { context.content.categories.length > 1 &&
+                    <div id="content-categories">
+                    { context.content.categories.map(c =>
+                        <div key={c.id} className="content-category-item">
+                            { c.name }
                         </div>
-                        <p>{context.watchingProfile.firstname} concluiu {materialsDone} de {materialCount} materiais ({
-                            shownMaterialPercentage.toLocaleString(undefined, { maximumFractionDigits: 2 })
-                        }%) </p>
+                    ) }
                     </div>
+                }
+
+                { assignedBy &&
+                    <div id="assigned-info">
+                        <i id="assigned-by-icon" className="bi bi-pin-angle-fill" />
+                        Atribuído a você por
+                        <Link id="assigned-by-link" to={`/profile/${assignedBy.user.name}`}>{ assignedBy.fullname }</Link>
+                    </div>
+                }
+
+                <div id="created-info">
+                    Criado
+                    {/* {" "} em { new Date(context.content.createdAt).toLocaleDateString() } */}
+                    {" "} por <Link to={`/profile/${author.user.name}`}> { author.fullname } </Link>
                 </div>
-            }
+
+                {
+                    context.content.description &&
+                    <p id="content-description">{context.content.description}</p>
+                }
+
+                { context.watchingProfile && 
+                    <div id="watch-data">
+                        <p id="watching-info">
+                            <i className="bi bi-eye" />
+                            Você está acompanhando o progresso de <Link to={`/profile/${context.watchingProfile.user.name}`}>{context.watchingProfile.fullname}</Link>
+                        </p>
+                        <div id="progress-container">
+                            <div id="progress-bar-total">
+                                <div id="progress-bar-done" style={{width: `${shownMaterialPercentage}%`}} />
+                            </div>
+                            <p>{context.watchingProfile.firstname} concluiu {materialsDone} de {materialCount} materiais ({
+                                shownMaterialPercentage.toLocaleString(undefined, { maximumFractionDigits: 2 })
+                            }%) </p>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
         { context.content.canEdit &&
             <div id="content-admin-buttons">

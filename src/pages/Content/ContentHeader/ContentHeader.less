@@ -2,126 +2,128 @@
 @import url(/src/layouts/fonts.less);
 
 #content-page #content-page-content #content-header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
     @x-gap: 2rem;
     @admin-buttons-width: 12rem;
     @image-width: 15rem;
 
     width: 100%;
-    gap: 0 @x-gap;
 
-    #content-header-image {
-        height: @image-width;
-        aspect-ratio: 1;
-
-        border-radius: 1rem;
-        object-fit: cover;
-    }
-
-    #content-main-info {
+    #content-image-name {
         display: flex;
-        flex-direction: column;
-        width: calc(100% - 2*@x-gap - @image-width - @admin-buttons-width);
+        flex-direction: row;
+        width: 100%;
+        gap: 0 @x-gap;
 
-        #content-name {
+        #content-header-image {
+            height: @image-width;
+            aspect-ratio: 1;
+
+            border-radius: 1rem;
+            object-fit: cover;
+        }
+
+        #content-main-info {
             display: flex;
-            flex-direction: row;
-            align-items: center;
+            flex-direction: column;
+            width: calc(100% - @x-gap - @image-width);
 
-            font-size: 2rem;
-
-            #content-favorite {
-                color: @primary-color;
-                margin-left: .25em;
-            }
-        }
-
-        #content-categories {
-            display: flex;
-            flex-direction: row;
-            gap: .5em;
-
-            .content-category-item {
-                background-color: @primary-color;
-                color: @font-color-v1;
-                font-weight: @font-weight-semibold;
-
-                padding: .25em .5em;
-                border-radius: 5px;
-            }
-        }
-
-        #assigned-info {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-
-            #assigned-by-icon {
-                margin-right: .25em;
-            }
-
-            #assigned-by-link {
-                margin-left: .25em;
-            }
-        }
-
-        #created-info {
-            margin-top: .5em;
-            font-size: .9em;
-        }
-
-        #content-description {
-            margin-top: 1em;
-        }
-
-        #watch-data {
-            width: 100%;
-
-            #watching-info {
-                margin-top: 1em;
-                width: fit-content;
-
+            #content-name {
                 display: flex;
                 flex-direction: row;
-                align-items: center;
+                align-items: start;
 
-                .bi {
-                    font-size: 1.5em;
-                    width: fit-content;
-                    margin-right: .25em;
-                }
+                font-size: 2rem;
 
-                a {
+                #content-favorite {
+                    color: @primary-color;
                     margin-left: .25em;
                 }
             }
 
-            #progress-container {
-                width: 100%;
+            #content-categories {
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
+                gap: .5em;
+
+                .content-category-item {
+                    background-color: @primary-color;
+                    color: @font-color-v1;
+                    font-weight: @font-weight-semibold;
+
+                    padding: .25em .5em;
+                    border-radius: 5px;
+                }
+            }
+
+            #assigned-info {
+                display: flex;
+                flex-direction: row;
                 align-items: center;
 
-                #progress-bar-total {
-                    @bar-height: .5rem;
-                    @bar-radius: calc(2 * @bar-height);
+                #assigned-by-icon {
+                    margin-right: .25em;
+                }
 
+                #assigned-by-link {
+                    margin-left: .25em;
+                }
+            }
+
+            #created-info {
+                margin-top: .5em;
+                font-size: .9em;
+            }
+
+            #content-description {
+                margin-top: 1em;
+            }
+
+            #watch-data {
+                width: 100%;
+
+                #watching-info {
+                    margin-top: 1em;
+                    width: fit-content;
+
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+
+                    .bi {
+                        font-size: 1.5em;
+                        width: fit-content;
+                        margin-right: .25em;
+                    }
+
+                    a {
+                        margin-left: .25em;
+                    }
+                }
+
+                #progress-container {
                     width: 100%;
-                    height: @bar-height;
-                    border-radius: @bar-radius;
-                    overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
 
-                    background-color: gray;
+                    #progress-bar-total {
+                        @bar-height: .5rem;
+                        @bar-radius: calc(2 * @bar-height);
 
-                    margin-bottom: .5rem;
+                        width: 100%;
+                        height: @bar-height;
+                        border-radius: @bar-radius;
+                        overflow: hidden;
 
-                    #progress-bar-done {
-                        background-color:  @primary-color;
-                        height: inherit;
-                        border-radius: inherit;
+                        background-color: gray;
+
+                        margin-bottom: .5rem;
+
+                        #progress-bar-done {
+                            background-color:  @primary-color;
+                            height: inherit;
+                            border-radius: inherit;
+                        }
                     }
                 }
             }
@@ -130,15 +132,14 @@
 
     #content-admin-buttons {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: .5rem;
+        margin-top: .5rem;
 
         height: 100%;
 
-        width: @admin-buttons-width;
-
         .action-button-container {
-            width: 100%;
+            width: @admin-buttons-width;
         }
     }
 }
