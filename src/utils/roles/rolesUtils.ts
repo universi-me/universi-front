@@ -81,8 +81,12 @@ function findGroupRole(profile: Profile, group: Group, roles: RoleDTO[]) {
         return groupRole;
 
     const systemRoles = roles.filter(r => r.group === null && r.profile === profile.id);
-    return systemRoles.find(isAdminRole)
-        ?? systemRoles.find(r => !isAdminRole(r));
+    const adminRole = systemRoles.find(isAdminRole);
+    const userRole = systemRoles.find(r => !isAdminRole(r));
+
+    return profile.user.accessLevel === "ROLE_ADMIN"
+        ? (adminRole ?? userRole)
+        : userRole;
 }
 
 export function findFeaturePermission(feature: FeatureTypes, profile: Profile, group: Group, roles: RoleDTO[]): Permission {
