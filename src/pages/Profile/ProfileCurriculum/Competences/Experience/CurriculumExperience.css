@@ -77,14 +77,16 @@
     align-items: left;
 }
 
-.direction-dateStart{
-    position: fixed;
-    right: 240px;
+.experience-item .direction-dateStart{
+    position: relative;
+    right: auto;
+    left: auto;
 }
 
-.direction-dateEnd{
-    position: fixed;
-    right: 80px;
+.experience-item .direction-dateEnd{
+    position: relative;
+    right: auto;
+    left: auto;
 }
 
 .title {
@@ -92,11 +94,10 @@
     font-weight: 600;
 }
 
-.direction-description{
+.experience-item .direction-description{
     position: relative;
-    top: 50px;
-    left: -340px;
-    height: 80px;
+    right: auto;
+    left: auto;
 }
 
 .description-text {
@@ -147,7 +148,11 @@
 
     background: var(--font-color-v5);
     border-radius: 20px;
-    height: 150px;
+
+    flex-wrap: wrap;
+
+    gap: 2rem;
+
 }
 
 #item-competence .experience .experience-list .experience-item:not(:last-of-type) {
