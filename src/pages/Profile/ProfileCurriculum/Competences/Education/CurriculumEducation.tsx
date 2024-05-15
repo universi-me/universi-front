@@ -78,22 +78,29 @@ export function CurriculumEducation() {
   return (
     <div className="education">
       <div className="heading">
-        Formações Acadêmicas
-        {profileContext.accessingLoggedUser ? (
-          <button className="add-button" onClick={addEducation}>
-            Adicionar Formação
-            <div className="icon-button">
-              <i className="bi bi-plus-circle-fill" />
-            </div>
-          </button>
-        ) : null}
-        { profileContext.accessingLoggedUser &&
-            <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
-            <div className={`icon-edit ${isEditing ? 'active' : ''}`}>
-                <i className="bi bi-pencil-fill" />
-            </div>
+        <div className='education-left-buttons'>
+          <div className="education-title">
+            Formações Acadêmicas
+          </div>
+          { profileContext.accessingLoggedUser &&
+              <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
+              <div className={`icon-edit ${isEditing ? 'active' : ''}`}>
+                  <i className="bi bi-pencil-fill" />
+              </div>
+              </button>
+          }
+        </div>
+        <div className='education-right-buttons'>
+          {profileContext.accessingLoggedUser ? (
+            <button className="add-button" onClick={addEducation}>
+              Adicionar Formação
+              <div className="icon-button">
+                <i className="bi bi-plus-circle-fill" />
+              </div>
             </button>
-        }
+          ) : null}
+
+        </div>
       </div>
       <div className="education-list">
         {profileContext.profileListData.education &&
