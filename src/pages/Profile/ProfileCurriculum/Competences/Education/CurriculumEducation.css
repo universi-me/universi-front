@@ -68,6 +68,10 @@
 
     background: var(--font-color-v5);
     border-radius: 20px;
+
+    gap: 2rem;
+
+    flex-wrap: wrap;
 }
 
 #item-competence .education .education-list .education-item:not(:last-of-type) {
@@ -94,14 +98,14 @@
     align-items: left;
 }
 
-.direction-dateStart{
-    position: fixed;
-    right: 240px;
+.education-item .direction-dateStart{
+    position: relative;
+    right: auto;
 }
 
-.direction-dateEnd{
-    position: fixed;
-    right: 80px;
+.education-item .direction-dateEnd{
+    position: relative;
+    right: auto;
 }
 
 .title-date {
