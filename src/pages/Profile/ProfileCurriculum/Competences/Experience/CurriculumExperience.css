@@ -23,6 +23,7 @@
     padding: 2px 0px 2px 0px;
 
     flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .experience .heading .experience-left-buttons{

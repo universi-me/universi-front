@@ -70,24 +70,30 @@ export function CurriculumAbility() {
   return (
     <div className="competence">
             <div className="heading">
-                Competências
-                {
-                    profileContext.accessingLoggedUser ?
-                        <button className="add-button" onClick={addCompetence}>
-                            Adicionar Competência
-                            <div className="icon-button">
-                                <i className="bi bi-plus-circle-fill" />
+                <div className="competence-left-buttons">
+                    <div className="competence-title">
+                        Competências
+                    </div>
+                    { profileContext.accessingLoggedUser &&
+                        <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
+                            <div className={`icon-edit ${isEditing ? 'active' : ''}`}>
+                                <i className="bi bi-pencil-fill" />
                             </div>
                         </button>
-                    : null
-                }
-                { profileContext.accessingLoggedUser &&
-                    <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
-                        <div className={`icon-edit ${isEditing ? 'active' : ''}`}>
-                            <i className="bi bi-pencil-fill" />
-                        </div>
-                    </button>
-                }
+                    }
+                </div>
+                <div className="competence-right-buttons">
+                    {
+                        profileContext.accessingLoggedUser ?
+                            <button className="add-button" onClick={addCompetence}>
+                                Adicionar Competência
+                                <div className="icon-button">
+                                    <i className="bi bi-plus-circle-fill" />
+                                </div>
+                            </button>
+                        : null
+                    }
+                </div>
             </div>
             <div className="competence-list">
                     {profileContext.profileListData.competences.length > 0
