@@ -14,21 +14,29 @@
 #item-competence .experience .heading {
     display: flex;
     align-items: initial;
-    justify-content: initial;
+    justify-content: space-between;
     margin: 20px 10px 0px 18px;
     border-radius: 20px 20px 0px 0px;
 
     font-size: 1.2em;
     font-weight: 600;
     padding: 2px 0px 2px 0px;
+
+    flex-wrap: wrap;
 }
+
+.experience .heading .experience-left-buttons{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
 
 #item-competence .experience .add-button {
     display: flex;
-    position: absolute;
     align-items: center;
-    right: 2rem;
-    top: 0.8rem;
 
     color: var(--primary-color);
     font-size: 1rem;
