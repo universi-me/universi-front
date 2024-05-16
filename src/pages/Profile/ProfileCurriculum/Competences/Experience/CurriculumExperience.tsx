@@ -78,22 +78,28 @@ export function CurriculumExperience() {
   return (
     <div className="experience">
       <div className="heading">
-        Experiência
-        {profileContext.accessingLoggedUser ? (
-          <button className="add-button" onClick={addExperience}>
-            Adicionar Experiência
-            <div className="icon-button">
-              <i className="bi bi-plus-circle-fill" />
-            </div>
-        </button>
-        ) : null}
-        { profileContext.accessingLoggedUser &&
-            <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
-            <div className={`icon-edit ${isEditing ? 'active' : ''}`}>
-                <i className="bi bi-pencil-fill" />
-            </div>
-            </button>
-        }
+        <div className="experience-left-buttons">
+          <div className="experience-title">
+            Experiência
+          </div>
+          { profileContext.accessingLoggedUser &&
+              <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
+              <div className={`icon-edit ${isEditing ? 'active' : ''}`}>
+                  <i className="bi bi-pencil-fill" />
+              </div>
+              </button>
+          }
+        </div>
+        <div className="experience-right-buttons">
+          {profileContext.accessingLoggedUser ? (
+            <button className="add-button" onClick={addExperience}>
+              Adicionar Experiência
+              <div className="icon-button">
+                <i className="bi bi-plus-circle-fill" />
+              </div>
+          </button>
+          ) : null}
+        </div>
       </div>
       <div className="experience-list">
         {profileContext.profileListData.experience &&

@@ -14,21 +14,38 @@
 #item-competence .education .heading {
     display: flex;
     align-items: initial;
-    justify-content: initial;
+    justify-content: space-between;
     margin: 20px 10px 0px 18px;
     border-radius: 20px 20px 0px 0px;
 
     font-size: 1.2em;
     font-weight: 600;
     padding: 2px 0px 2px 0px;
+
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
+
+
+.education .heading .education-left-buttons{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+.education .heading .education-right-buttons{
+
+    justify-content: center;
+
+}
+
 
 #item-competence .education .add-button {
     display: flex;
-    position: absolute;
     align-items: center;
-    right: 2rem;
-    top: 0.8rem;
 
     color: var(--primary-color);
     font-size: 1rem;
@@ -68,6 +85,10 @@
 
     background: var(--font-color-v5);
     border-radius: 20px;
+
+    gap: 2rem;
+
+    flex-wrap: wrap;
 }
 
 #item-competence .education .education-list .education-item:not(:last-of-type) {
@@ -92,16 +113,17 @@
     display: flex;
     flex-direction: column;
     align-items: left;
+    width: 25rem;
 }
 
-.direction-dateStart{
-    position: fixed;
-    right: 240px;
+.education-item .direction-dateStart{
+    position: relative;
+    right: auto;
 }
 
-.direction-dateEnd{
-    position: fixed;
-    right: 80px;
+.education-item .direction-dateEnd{
+    position: relative;
+    right: auto;
 }
 
 .title-date {

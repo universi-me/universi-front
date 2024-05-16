@@ -14,21 +14,30 @@
 #item-competence .experience .heading {
     display: flex;
     align-items: initial;
-    justify-content: initial;
+    justify-content: space-between;
     margin: 20px 10px 0px 18px;
     border-radius: 20px 20px 0px 0px;
 
     font-size: 1.2em;
     font-weight: 600;
     padding: 2px 0px 2px 0px;
+
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
+
+.experience .heading .experience-left-buttons{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
 
 #item-competence .experience .add-button {
     display: flex;
-    position: absolute;
     align-items: center;
-    right: 2rem;
-    top: 0.8rem;
 
     color: var(--primary-color);
     font-size: 1rem;
@@ -75,16 +84,19 @@
     display: flex;
     flex-direction: column;
     align-items: left;
+    width: 25rem;
 }
 
-.direction-dateStart{
-    position: fixed;
-    right: 240px;
+.experience-item .direction-dateStart{
+    position: relative;
+    right: auto;
+    left: auto;
 }
 
-.direction-dateEnd{
-    position: fixed;
-    right: 80px;
+.experience-item .direction-dateEnd{
+    position: relative;
+    right: auto;
+    left: auto;
 }
 
 .title {
@@ -92,11 +104,10 @@
     font-weight: 600;
 }
 
-.direction-description{
+.experience-item .direction-description{
     position: relative;
-    top: 50px;
-    left: -340px;
-    height: 80px;
+    right: auto;
+    left: auto;
 }
 
 .description-text {
@@ -147,7 +158,11 @@
 
     background: var(--font-color-v5);
     border-radius: 20px;
-    height: 150px;
+
+    flex-wrap: wrap;
+
+    gap: 2rem;
+
 }
 
 #item-competence .experience .experience-list .experience-item:not(:last-of-type) {
@@ -165,7 +180,7 @@
     margin-right: .5em;
     text-transform: uppercase;
     font-weight: var(--font-weight-bold);
-    width: 300px;
+    word-break: normal;
 }
 #item-competence .experience .experience-list .experience-item .icon {
     margin-right: 1.75em;
