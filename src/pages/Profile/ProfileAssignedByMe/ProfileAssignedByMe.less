@@ -13,6 +13,24 @@
         .tab-title {
             font-weight: 500;
         }
+
+        #filters {
+            display: flex;
+            flex-direction: row;
+            align-items: end;
+            gap: 0.5rem;
+
+            #completion-selector {
+                font-size: 1rem;
+                padding: 0.25em 0.5em;
+
+                background-color: #FFF;
+                border: 2px solid @primary-color;
+                border-radius: .5em;
+
+                cursor: pointer;
+            }
+        }
     }
 
     #assigned-by-me-wrapper {
@@ -69,8 +87,11 @@
                         background-color: gray;
                         margin-bottom: 0.5em;
 
+                        overflow: hidden;
+
                         .folder-progress-until-now {
                             background-color: @primary-color;
+                            border-radius: @border-radius;
                             height: 100%;
                         }
                     }
