@@ -60,11 +60,14 @@
                     width: 100%;
                     text-align: center;
 
+                    margin-bottom: 1rem;
+
                     .folder-progress-bar-container {
                         width: 100%;
                         height: @bar-heigth;
                         border-radius: @border-radius;
                         background-color: gray;
+                        margin-bottom: 0.5em;
 
                         .folder-progress-until-now {
                             background-color: @primary-color;
@@ -159,6 +162,8 @@
 
                 transition-duration: 250ms;
                 transition-property: rotate;
+
+                cursor: pointer;
 
                 &.collapsed {
                     transition-timing-function: ease-in;

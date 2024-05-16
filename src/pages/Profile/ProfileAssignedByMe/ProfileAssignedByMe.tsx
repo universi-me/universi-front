@@ -81,6 +81,10 @@ function WatchFolderProgress({fp, folder}: Readonly<WatchFolderProgressProps>) {
 
     const folderShownPercentage = isNaN(assignCompletePercentage) ? 0 : assignCompletePercentage;
 
+    const textFolderPercent = folderShownPercentage.toLocaleString('pt-BR', {
+        maximumFractionDigits: 1,
+    });
+
     return <div className="folder-profile-item">
         <Link to={`/content/${folder.reference}`} target="_blank">
             <img src={contentImageUrl(folder)} alt="" className="folder-image" />
@@ -92,7 +96,7 @@ function WatchFolderProgress({fp, folder}: Readonly<WatchFolderProgressProps>) {
                 <div className="folder-progress-bar-container">
                     <div className="folder-progress-until-now" style={{width: `${folderShownPercentage}%`}} />
                 </div>
-                {profilesComplete.length} / {fp.length} pessoas completaram o conteúdo
+                {profilesComplete.length} / {fp.length} pessoas ({textFolderPercent}%) completaram o conteúdo
             </div>
 
             <div className={makeClassName("profile-watcher-wrapper", isExpanded ? "expanded" : "collapsed")}>
