@@ -5,6 +5,7 @@ import { ProfileContext } from "@/pages/Profile";
 import { Filter } from "@/components/Filter/Filter";
 import { groupArray } from "@/utils/arrayUtils";
 import { contentImageUrl } from "@/utils/apiUtils";
+import { makeClassName } from "@/utils/tsxUtils";
 
 import { type Folder, type FolderProfile } from "@/types/Capacity";
 import { ProfileClass } from "@/types/Profile";
@@ -69,14 +70,32 @@ type WatchFolderProgressProps = {
 };
 
 function WatchFolderProgress({fp, folder}: Readonly<WatchFolderProgressProps>) {
+    const [isExpanded, setIsExpanded] = useState(false);
+
     if (fp.length === 0) return null;
 
+    const profilesComplete = fp
+        .filter(fp => fp.doneUntilNow === fp.folderSize);
+
+    const assignCompletePercentage = profilesComplete.length / fp.length * 100;
+
+    const folderShownPercentage = isNaN(assignCompletePercentage) ? 0 : assignCompletePercentage;
+
     return <div className="folder-profile-item">
-        <Link to={`/content/${folder.reference}`} target="_blank" className="folder-name">
+        <Link to={`/content/${folder.reference}`} target="_blank">
             <img src={contentImageUrl(folder)} alt="" className="folder-image" />
         </Link>
+
         <div className="folder-data">
             <Link to={`/content/${folder.reference}`} target="_blank" className="folder-name">{folder.name}</Link>
+            <div className="folder-bar-wrapper">
+                <div className="folder-progress-bar-container">
+                    <div className="folder-progress-until-now" style={{width: `${folderShownPercentage}%`}} />
+                </div>
+                {profilesComplete.length} / {fp.length} pessoas completaram o conteúdo
+            </div>
+
+            <div className={makeClassName("profile-watcher-wrapper", isExpanded ? "expanded" : "collapsed")}>
             { fp.map(w => {
                 const percentage = w.doneUntilNow / w.folderSize * 100;
                 const shownPercentage = isNaN(percentage) ? 0 : percentage;
@@ -98,6 +117,15 @@ function WatchFolderProgress({fp, folder}: Readonly<WatchFolderProgressProps>) {
                     </div>
                 </Link>
             }) }
+            </div>
         </div>
+
+        <button onClick={toggleExpand} className={makeClassName("expand-button", isExpanded ? "expanded": "collapsed")}>
+            <span className="bi bi-chevron-down" />
+        </button>
     </div>
+
+    function toggleExpand() {
+        setIsExpanded(exp => !exp)
+    }
 }
