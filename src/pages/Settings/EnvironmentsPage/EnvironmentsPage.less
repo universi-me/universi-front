@@ -5,8 +5,43 @@
 
 #environments-settings {
 
+    .environments-item {
+        &:first-of-type {
+            @margin-size: .5rem;
+
+            padding-bottom: @margin-size;
+            margin-bottom: 1rem;
+            border-bottom: solid 1px @card-item-color;
+        }
+    }
+    .environments-item + .environments-item {
+        @margin-size: .5rem;
+
+        padding-bottom: @margin-size;
+        margin-bottom: 1rem;
+        border-bottom: solid 1px @card-item-color;
+    }
+
+    .environments-row-content {
+        @margin-size: .5rem;
+
+        margin-left: 2rem;
+
+        padding-top: @margin-size;
+        margin-top: @margin-size;
+    }
+    .environments-row-content + .environments-row-content {
+        @margin-size: .5rem;
+
+        padding-top: @margin-size;
+        margin-top: @margin-size;
+        border-top: solid 1px @card-item-color;
+    }
+
     .environments-list {
         margin-top: 1rem;
+
+       
 
         .environments-item {
 
@@ -22,41 +57,28 @@
             }
 
             .environments-label {
+                padding: .5rem;
                 display: flex;
                 font-size: 1rem;
-                margin-bottom: .5rem;
                 margin-left: 0;
                 text-align: left;
                 align-items: center;
             }
 
-            &:not(:last-of-type) {
-                @margin-size: .75rem;
-
-                padding-bottom: @margin-size;
-                margin-bottom: @margin-size;
-                border-bottom: solid 1px @card-item-color;
-            }
-
             .enabled-delete-wrapper {
 
-                margin-bottom: .5rem;
+                padding: .2rem;
                 display: flex;
                 justify-content: space-between;
-                margin-left: 2rem;
                 align-items: center;
 
-                &:not(:last-of-type) {
-                    @margin-size: .5rem;
-                    
-                    padding-bottom: @margin-size;
-                    margin-bottom: @margin-size;
-                    border-bottom: solid 1px @card-item-color;
-                }
+                
 
                 .enabled-wrapper {
                     display: flex;
                     align-items: center;
+
+                    
 
                     .filter-enabled-root {
                         
@@ -140,6 +162,27 @@
 
                     }
                 }
+                
+            }
+
+            .environments-text-area {
+                width: 100%;
+                border-radius: .625rem;
+                padding: 1rem;
+                margin-left: 1rem;
+                font-size: .9rem;
+            }
+
+            .environments-description {
+                font-size: 1rem;
+                margin-left: 2rem;
+                color: #5a5a5a;
+                white-space: pre;
+                display:flex;
+                justify-content:flex-start;  
+                flex-direction: column;
+                padding: .9rem;
+                
             }
 
         }

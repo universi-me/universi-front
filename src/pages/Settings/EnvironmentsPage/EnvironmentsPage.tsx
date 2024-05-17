@@ -50,6 +50,37 @@ export function EnvironmentsPage() {
                 ]
             },
             {
+                title: "Notificações via Email",
+                items: [
+                    {
+                        name: "Notificar Novo Conteúdo No Grupo",
+                        key: "message_new_content_enabled",
+                        type: "boolean",
+                        defaultValue: true,
+                    },
+                    {
+                        name: "Template de Email para Novo Conteúdo",
+                        key: "message_template_new_content",
+                        type: "textbox",
+                        defaultValue: "Olá, {{ groupName }} tem um novo conteúdo: {{ contentName }}.\nAcesse: {{ contentUrl }}",
+                        description: "groupName: Nome do Grupo\ncontentName: Nome do Conteúdo\ncontentUrl: Link do Conteúdo",
+                    },
+                    {
+                        name: "Notificar Conteúdo Atribuído",
+                        key: "message_assigned_content_enabled",
+                        type: "boolean",
+                        defaultValue: true,
+                    },
+                    {
+                        name: "Template de Email para Conteúdo Atribuído",
+                        key: "message_template_assigned_content",
+                        type: "textbox",
+                        defaultValue: "Olá {{ toUser }}, você recebeu um novo conteúdo de {{ fromUser }}: {{ contentName }}.\nAcesse: {{ contentUrl }}",
+                        description: "fromUser: Nome do Usuário que atribuiu.\ntoUser: Nome do Usuário que foi atribuido.\ncontentName: Nome do Conteúdo\ncontentUrl: Link do Conteúdo",
+                    },
+                ]
+            },
+            {
                 title: "Login via Google",
                 items: [
                     {
@@ -149,8 +180,11 @@ export function EnvironmentsPage() {
             <div className="environments-item" key={section.title}>
             <h3>{section.title}</h3>
             {section.items.map((item : any) => (
+                <div className="environments-row-content">
+
                 <div className="enabled-delete-wrapper" key={item.name}>
                     <div className="environments-label">{item.name}</div>
+                    <div className="row-item">
                     { item.type === "boolean" ? (
                         <div className="enabled-delete-wrapper">
                             <div className="enabled-wrapper">
@@ -166,7 +200,24 @@ export function EnvironmentsPage() {
                             <input type="text" className="environments-text-input" value={getValue(item)??""} onChange={(e) => setTextValue(item, e)} />
                         </div>
                     ) : null}
-            </div>
+                    
+                    </div>
+                </div>
+
+                { item.type === "textbox" ? (
+                    <div className="">
+                        <div className="enabled-delete-wrapper row-item environments-text-wrapper environments-text-input">
+                            <textarea rows={8} className="environments-text-area" value={getValue(item)??""} onChange={(e) => setTextValue(item, e)} />
+                        </div>
+                        </div>
+                    ) : null}
+
+                { item.description ? (
+                    <div className="environments-description">
+                        {item.description}
+                    </div>
+                ) : null}
+                </div>
             ))}
             </div>
         ))}
@@ -182,7 +233,7 @@ export function EnvironmentsPage() {
         return editedItems[item.key] !== undefined ? editedItems[item.key] : fetchEnvironmentsItems[item.key] ?? item.defaultValue;
     }
 
-    function setTextValue(item: any, event: React.ChangeEvent<HTMLInputElement>) {
+    function setTextValue(item: any, event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
         setEditedItems({ type: 'EDIT', id: item.key, value: event.target.value });
     }
 
