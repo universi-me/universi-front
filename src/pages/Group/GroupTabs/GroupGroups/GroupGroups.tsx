@@ -15,6 +15,7 @@ import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdown
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
+import { ActionButton } from "@/components/ActionButton/ActionButton";
 
 export function GroupGroups() {
     const groupContext = useContext(GroupContext);
@@ -48,40 +49,19 @@ export function GroupGroups() {
     ];    
 
     //<ActionButton name="Editar este grupo" buttonProps={{onClick(){groupContext.setEditGroup(groupContext.group); console.log(groupContext.group)}}}/>
-    //<ActionButton name="Criar grupo" buttonProps={{onClick(){groupContext.setEditGroup(null)}}}/>
     //<ActionButton name="Configurações" buttonProps={{onClick(){ groupContext.setGroupConfigModalOpen(true); }}}/>
-    const GROUP_OPTIONS: OptionInMenu<Group>[] = [
-        {
-            text: "Editar este grupo",
-            biIcon: "pencil-fill",
-            onSelect(data) {
-                groupContext.setEditGroup(groupContext.group)
-            },
-            hidden() {
-                return !(groupContext.group.canEdit);
-            },
-        },
-        {
-            text: "Criar grupo",
-            biIcon: "plus-lg",
-            onSelect(data) {
-                groupContext.setEditGroup(null);
-            },
-            hidden(){
-                return !(groupContext.group.canEdit);
-            }
-        },
-        {
-            text: "Configurações",
-            biIcon: "gear",
-            onSelect(data) {
-                groupContext.setGroupConfigModalOpen(true);
-            },
-            hidden(){
-                return authContext.user?.accessLevel !== "ROLE_ADMIN";
-            }
-        }
-    ];
+    // const GROUP_OPTIONS: OptionInMenu<Group>[] = [
+    //     {
+    //         text: "Criar grupo",
+    //         biIcon: "plus-lg",
+    //         onSelect(data) {
+    //             groupContext.setEditGroup(null);
+    //         },
+    //         hidden(){
+    //             return !(groupContext.group.canEdit);
+    //         }
+    //     }
+    // ];
 
     function handleRemoveGroup(group : Group){
         let groupParentPath = group.path.substring(0, group.path.lastIndexOf("/"))
@@ -102,93 +82,21 @@ export function GroupGroups() {
         })
     }
 
-    const availableGroupTypes = Object.entries(GroupTypeToLabel)
-        .sort((a, b) => a[1].localeCompare(b[1]))
-        .map((t) => ({ value: t[0] as GroupType, label: t[1] }));
 
     return (
         <section id="groups" className="group-tab">
             <div className="heading top-container">
                 <div className="go-right">
                     <Filter setter={setFilterGroups} placeholderMessage={`Buscar grupos em ${groupContext.group.name}`}/>
-                    <div className="group-options-container">
-                        { hasAvailableOption(GROUP_OPTIONS, groupContext.group) &&
-                            <DropdownMenu.Root>
-                                <DropdownMenu.Trigger asChild>
-                                    <button className="group-options-button">
-                                        <i className="bi bi-three-dots-vertical" />
-                                    </button>
-                                </DropdownMenu.Trigger>
-
-                                <DropdownMenu.Content className="group-options" side="left">
-                                    { GROUP_OPTIONS.map(def => renderOption(groupContext.group, def)) }
-                                    <DropdownMenu.Arrow className="group-options-arrow" height=".5rem" width="1rem" />
-                                </DropdownMenu.Content>
-                            </DropdownMenu.Root>
-                        }
-                    </div>
+                    {
+                        groupContext.group.canEdit ?
+                            <ActionButton name="Criar grupo" buttonProps={{onClick(){groupContext.setEditGroup(null)}}}/>
+                        : <></>
+                    }
                 </div>
             </div>
 
             <div className="group-list tab-list"> { makeGroupList(groupContext.subgroups, filterGroups) } </div>
-            {
-                groupContext.editGroup !== undefined ?
-
-                <UniversiForm
-                    formTitle={groupContext.editGroup == null ? "Criar grupo" : "Editar grupo"}
-                    objects={[
-                        {
-                            DTOName: "nickname", label: "Apelido do grupo", type: groupContext.editGroup == null ? FormInputs.TEXT : FormInputs.HIDDEN, value: undefined,
-                            required: groupContext.editGroup == null,
-                            validation: groupContext.editGroup == null ? new ValidationComposite<string>().addValidation(new TextValidation()) : undefined
-                        }, {
-                            DTOName: "name", label: "Nome do grupo", type: FormInputs.TEXT, value: groupContext.editGroup?.name, required: true, 
-                            validation: new ValidationComposite<string>().addValidation(new TextValidation())
-                        }, {
-                            DTOName: "description", label: "Descrição do grupo", type: FormInputs.LONG_TEXT, value: groupContext.editGroup?.description, required: true, charLimit: 200,
-                            validation: new ValidationComposite<string>().addValidation(new TextValidation())
-                        }, {
-                             DTOName: "imageUrl", label: "Imagem do grupo", type: FormInputs.IMAGE, value:undefined, 
-                             defaultImageUrl: groupContext.editGroup ? groupImageUrl(groupContext.editGroup) : undefined,
-                             crop: true, aspectRatio: 1,
-                             required: false
-                        }, {
-                            DTOName: "bannerImageUrl", label: "Banner do grupo", type: FormInputs.IMAGE, value:undefined, 
-                            defaultImageUrl: groupContext.editGroup ? groupBannerUrl(groupContext.editGroup) : undefined,
-                            crop: true, aspectRatio: 2.5,
-                            required: false
-                        }, {
-                            DTOName: "headerImageUrl", label: "Logo da Organização", type: (groupContext.editGroup != null && groupContext.editGroup.rootGroup) ? FormInputs.IMAGE : FormInputs.HIDDEN, value:undefined, 
-                            defaultImageUrl: groupContext.editGroup ? groupHeaderUrl(groupContext.editGroup) : undefined,
-                            crop: true, //aspectRatio: 2.5,
-                            required: false
-                        }, {
-                            DTOName: "groupType", label: "Tipo do grupo", type: FormInputs.SELECT_SINGLE, 
-                            value: groupContext.editGroup ?  {value : groupContext.editGroup.type, label : groupContext.editGroup.type } : undefined, 
-                            options: availableGroupTypes, required: true
-                        }, {
-                            DTOName: "canHaveSubgroup", label: "Pode criar grupo", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.canCreateGroup
-                        }, {
-                            DTOName: "isPublic", label: "Grupo público", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.publicGroup
-                        }, {
-                            DTOName: "canJoin", label: "Usuários podem entrar", type: FormInputs.BOOLEAN, value: groupContext.editGroup?.canEnter
-                        }, {
-                            DTOName: "isRootGroup", label: "Grupo raiz", type: FormInputs.HIDDEN, value: groupContext.editGroup?.rootGroup ?? false
-                        }, {
-                            DTOName: "parentGroupId", label: "Id do grupo pai (grupo atual)", type: FormInputs.HIDDEN, value: groupContext.group.id
-                        }, {
-                            DTOName: "everyoneCanPost", label: "Todos usuários podem postar", type: FormInputs.BOOLEAN, value: groupContext.group.everyoneCanPost
-                        }, {
-                            DTOName: "groupPath", label: "path", type: FormInputs.HIDDEN, value: groupContext.editGroup?.path
-                        },
-
-                    ]}
-                    requisition={groupContext.editGroup ? UniversimeApi.Group.update : UniversimeApi.Group.create}
-                    callback={()=>{groupContext.setEditGroup(undefined); groupContext.refreshData()}}
-                />
-                :
-                <></>
-            }
         </section>
     );
     function makeGroupList(groups: Group[], filter: string) {
