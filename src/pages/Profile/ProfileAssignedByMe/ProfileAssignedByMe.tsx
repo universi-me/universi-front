@@ -1,10 +1,12 @@
-import { useContext, useMemo, useState } from "react";
+import { ChangeEvent, useContext, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { ProfileContext } from "@/pages/Profile";
 import { Filter } from "@/components/Filter/Filter";
 import { groupArray } from "@/utils/arrayUtils";
 import { contentImageUrl } from "@/utils/apiUtils";
+import { makeClassName } from "@/utils/tsxUtils";
+import stringUtils from "@/utils/stringUtils";
 
 import { type Folder, type FolderProfile } from "@/types/Capacity";
 import { ProfileClass } from "@/types/Profile";
@@ -14,7 +16,9 @@ import "./ProfileAssignedByMe.less";
 export function ProfileAssignedByMe() {
     const context = useContext(ProfileContext);
     const [filter, setFilter] = useState<string>("");
-    const groupedFolders = useMemo(() => {
+    const [completionFilter, setCompletionFilter] = useState<CompletionFilter>(() => (() => true));
+
+    const groupedFolders: Map<string, FolderProfileClass[]> = useMemo(() => {
         if (!context) return new Map();
 
         return groupArray(
@@ -27,11 +31,8 @@ export function ProfileAssignedByMe() {
                         return a.folder.name.localeCompare(b.folder.name);
                 })
                 .filter(fp => {
-                    const filterLow = filter.toLocaleLowerCase();
-                    const folderLow = fp.folder.name.toLocaleLowerCase();
-                    const profileLow = fp.profile.fullname?.toLocaleLowerCase() ?? "";
-
-                    return folderLow.includes(filterLow) || profileLow.includes(filterLow)
+                    return stringUtils.includesIgnoreCase(fp.folder.name, filter)
+                        || stringUtils.includesIgnoreCase(fp.profile.fullname ?? "", filter);
                 }),
             fp => fp.folder.reference,
         )
@@ -46,7 +47,16 @@ export function ProfileAssignedByMe() {
     return <div id="profile-assigned-by-me-tab">
         <div className="title-filter-wrapper">
             <h1 className="tab-title">{tabTitle}</h1>
-            <Filter placeholderMessage="Filtrar atribuições" setter={setFilter} />
+            <div id="filters">
+                <Filter placeholderMessage="Filtrar atribuições" setter={setFilter} />
+                <div id="completion-filter">
+                    <select name="completion-selector" id="completion-selector" defaultValue="all" onChange={changeCompletionFilter}>
+                        <option value="all">Exibir todos</option>
+                        <option value="complete">Exibir apenas completos</option>
+                        <option value="incomplete">Exibir apenas incompletos</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div id="assigned-by-me-wrapper">
         {
@@ -56,28 +66,71 @@ export function ProfileAssignedByMe() {
                     : null;
 
                 return folder &&
-                    <WatchFolderProgress fp={assignments} folder={folder} key={reference} />
+                    <WatchFolderProgress fp={assignments} folder={folder} key={reference} completionFilter={completionFilter} />
             })
         }
         </div>
     </div>;
+
+    function changeCompletionFilter(e: ChangeEvent<HTMLSelectElement>) {
+        const setTo = e.currentTarget.value;
+        let filter: CompletionFilter;
+
+        if (setTo === "complete")
+            filter = fp => fp.doneUntilNow === fp.folderSize;
+        else if (setTo === "incomplete")
+            filter = fp => fp.doneUntilNow < fp.folderSize;
+        else
+            filter = fp => true;
+
+        setCompletionFilter(() => filter);
+    }
 }
 
+type FolderProfileClass = FolderProfile & { profile: ProfileClass };
+type CompletionFilter = (fp: FolderProfileClass) => boolean;
+
 type WatchFolderProgressProps = {
-    fp: (FolderProfile & {profile: ProfileClass})[];
+    fp: FolderProfileClass[];
     folder: Folder;
+    completionFilter: CompletionFilter;
 };
 
-function WatchFolderProgress({fp, folder}: Readonly<WatchFolderProgressProps>) {
-    if (fp.length === 0) return null;
+function WatchFolderProgress(props: Readonly<WatchFolderProgressProps>) {
+    const {fp, folder, completionFilter} = props;
+
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const filteredFp = fp.filter(completionFilter);
+    if (filteredFp.length === 0) return null;
+
+    const profilesComplete = fp
+        .filter(fp => fp.doneUntilNow === fp.folderSize);
+
+    const assignCompletePercentage = profilesComplete.length / fp.length * 100;
+
+    const folderShownPercentage = isNaN(assignCompletePercentage) ? 0 : assignCompletePercentage;
+
+    const textFolderPercent = folderShownPercentage.toLocaleString('pt-BR', {
+        maximumFractionDigits: 1,
+    });
 
     return <div className="folder-profile-item">
-        <Link to={`/content/${folder.reference}`} target="_blank" className="folder-name">
+        <Link to={`/content/${folder.reference}`} target="_blank">
             <img src={contentImageUrl(folder)} alt="" className="folder-image" />
         </Link>
+
         <div className="folder-data">
             <Link to={`/content/${folder.reference}`} target="_blank" className="folder-name">{folder.name}</Link>
-            { fp.map(w => {
+            <div className="folder-bar-wrapper">
+                <div className="folder-progress-bar-container">
+                    <div className="folder-progress-until-now" style={{width: `${folderShownPercentage}%`}} />
+                </div>
+                {profilesComplete.length} / {fp.length} pessoas ({textFolderPercent}%) completaram o conteúdo
+            </div>
+
+            <div className={makeClassName("profile-watcher-wrapper", isExpanded ? "expanded" : "collapsed")}>
+            { filteredFp.map(w => {
                 const percentage = w.doneUntilNow / w.folderSize * 100;
                 const shownPercentage = isNaN(percentage) ? 0 : percentage;
 
@@ -98,6 +151,15 @@ function WatchFolderProgress({fp, folder}: Readonly<WatchFolderProgressProps>) {
                     </div>
                 </Link>
             }) }
+            </div>
         </div>
+
+        <button onClick={toggleExpand} className={makeClassName("expand-button", isExpanded ? "expanded": "collapsed")}>
+            <span className="bi bi-chevron-down" />
+        </button>
     </div>
+
+    function toggleExpand() {
+        setIsExpanded(exp => !exp)
+    }
 }
