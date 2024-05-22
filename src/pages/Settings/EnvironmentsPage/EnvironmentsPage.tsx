@@ -50,6 +50,47 @@ export function EnvironmentsPage() {
                 ]
             },
             {
+                title: "Email",
+                items: [
+                    {
+                        name: "Habilitar",
+                        key: "email_enabled",
+                        type: "boolean",
+                        defaultValue: false,
+                    },
+                    {
+                        name: "Email Host",
+                        key: "email_host",
+                        type: "string",
+                        defaultValue: "",
+                    },
+                    {
+                        name: "Email Port",
+                        key: "email_port",
+                        type: "string",
+                        defaultValue: "587",
+                    },
+                    {
+                        name: "Email Protocol",
+                        key: "email_protocol",
+                        type: "string",
+                        defaultValue: "smtp",
+                    },
+                    {
+                        name: "Email User",
+                        key: "email_username",
+                        type: "string",
+                        defaultValue: "",
+                    },
+                    {
+                        name: "Email Password",
+                        key: "email_password",
+                        type: "string",
+                        defaultValue: "",
+                    },
+                ]
+            },
+            {
                 title: "Notificações via Email",
                 items: [
                     {
@@ -116,7 +157,7 @@ export function EnvironmentsPage() {
                         name: "Redirect URL",
                         key: "keycloak_redirect_url",
                         type: "string",
-                        defaultValue: "",
+                        defaultValue: window.location.origin + "/keycloak-oauth-redirect",
                     },
                     {
                         name: "Realm",
