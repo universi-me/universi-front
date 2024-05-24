@@ -1,4 +1,4 @@
-import { RoleDTO, Roles } from "@/types/Roles";
+import { Roles } from "@/types/Roles";
 import { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
 import UniversimeApi from "@/services/UniversimeApi";
@@ -40,7 +40,7 @@ export type RolesList_RequestDTO = {
 }
 
 export type RolesCreate_ResponseDTO = ApiResponse <{ roles:  Roles }>;
-export type RolesGet_ResponseDTO =    ApiResponse <{ roles:  RoleDTO }>;
+export type RolesGet_ResponseDTO =    ApiResponse <{ roles:  Roles }>;
 export type RolesEdit_ResponseDTO =   ApiResponse <{ roles:  Roles }>;
 export type RolesList_ResponseDTO =   ApiResponse <{ roles: Roles[] }>;
 export type RolesParticipantsList_ResponseDTO =   ApiResponse <{ participants: Profile[] }>;

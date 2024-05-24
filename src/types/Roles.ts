@@ -8,7 +8,7 @@ export enum Permission {
     DEFAULT = READ_WRITE_DELETE,
 }
 
-
+export type RoleType = "ADMINISTRATOR" | "PARTICIPANT" | "VISITOR" | "CUSTOM";
 
 export type FeatureTypes = "FEED" | "CONTENT" | "GROUP" | "PEOPLE" | "COMPETENCE";
 
@@ -20,29 +20,19 @@ export const FeatureTypesToLabel: { [k in FeatureTypes]: string } = {
     "COMPETENCE":   "Competência"
 };
 
-export type RoleDTO = {
-    id: string;
-    name: string;
-
-    profile: string;
-    group: string | null;
-    features: RolesFeature[];
-}
-
 export type Roles = {
     id: string;
     name: string;
     description: string;
     created: string;
-    rolesFeatures: RolesFeature[]
-    isDefault?: boolean;
-}
+    roleType: RoleType;
 
-export type RolesFeature = {
-    id: string;
-    roles: string;
-    featureType: FeatureTypes;
-    permission: number;
+    canBeEdited: boolean;
+    canBeAssigned: boolean;
+
+    permissions: {
+        [k in FeatureTypes]: number;
+    }
 }
 
 export type RolesProfile = {

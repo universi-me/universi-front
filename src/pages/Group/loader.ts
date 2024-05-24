@@ -37,10 +37,10 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     const group = groupRes.body.group;
     const profile = profileRes.body.profile;
     
-    const canISubgroups =    await canI_API('GROUP',   Permission.READ, group, profile);
-    const canIParticipants = await canI_API('PEOPLE',  Permission.READ, group, profile);
-    const canIFolders =      await canI_API('CONTENT', Permission.READ, group, profile);
-    const canIFeed =         await canI_API('FEED',    Permission.READ, group, profile);
+    const canISubgroups =    await canI_API('GROUP',   Permission.READ, group);
+    const canIParticipants = await canI_API('PEOPLE',  Permission.READ, group);
+    const canIFolders =      await canI_API('CONTENT', Permission.READ, group);
+    const canIFeed =         await canI_API('FEED',    Permission.READ, group);
 
     const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes, groupPostsRes] = await Promise.all([
         canISubgroups ? UniversimeApi.Group.subgroups({groupId: group.id})       : undefined,

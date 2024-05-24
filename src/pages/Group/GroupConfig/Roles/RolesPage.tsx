@@ -23,6 +23,7 @@ import { type RolesResponse, RolesFetch } from "./RolesLoader";
 
 import "./Roles.less";
 import { Group } from "@/types/Group";
+import { rolesSorter } from "@/utils/roles/rolesUtils";
 
 type RolesPageProps = {
     group: Group | undefined;
@@ -65,11 +66,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     };
 
     const isFeatureChecked = (row : Roles, column : FeatureTypes) => {
-        let rolesFeature = row.rolesFeatures.find(feature => feature.featureType == column);
-        if(rolesFeature) {
-            return rolesFeature.permission;
-        }
-        return Permission.DEFAULT;
+        return row.permissions[column];
     };
 
     return <div id="roles-settings">
@@ -84,7 +81,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                             validation: new ValidationComposite<string>().addValidation(new TextValidation())
                         }, {
                             DTOName: "description", label: "Descrição", type: FormInputs.LONG_TEXT, value: rolesEdit?.description, required: false,
-                            charLimit: 130,
+                            charLimit: 130
                         },
                         {
                             DTOName: "groupId", label: "id", type: FormInputs.HIDDEN,
@@ -132,8 +129,8 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                   <tbody>
                     {rows!?.map((row) => (
                       <tr key={row.id} className="row-disabled">
-                        <td title={row.description}>{row.name} { (editMode && !row.isDefault) &&
-                            <button onClick={()=>{ setRolesEdit(row); setShowRolesForm(true); }} className={`edit-button ${editMode ? 'active' : ''}`}>
+                        <td title={row.description}>{row.name} { (editMode && row.canBeEdited) &&
+                            <button onClick={()=>{ setRolesEdit(row); setShowRolesForm(true); }} className={`edit-button ${editMode && row.canBeEdited ? 'active' : ''}`}>
                                 <div className={`icon-edit ${editMode ? 'active' : ''}`}>
                                     <i className="bi bi-pencil-fill" />
                                 </div>
@@ -144,7 +141,6 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                             <select
               value={isFeatureChecked(row, key as FeatureTypes)}
               onChange={(e) => handleFeatureCheckboxChange(e, row, key as FeatureTypes)}
-              disabled={row.isDefault === true}
             >
               <option value={ Permission.DISABLED }>Desabilitada</option>
               <option value={ Permission.READ }>Ver</option>
@@ -214,10 +210,17 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     function setValuesWithData(data: RolesResponse) {
         // setColumns((data.features! ?? []).sort((a, b) => a.name.localeCompare(b.name)) );
         setRows((data.roles ?? [])
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .sort((a, b) => (b.isDefault ?? 0).toString().localeCompare((a.isDefault ?? 0).toString()))
+            .sort(rolesSorter)
         );
-        setParticipants(data.participants?.map(ProfileClass.new) ?? []);
+        setParticipants(data.participants
+            ?.map(ProfileClass.new)
+            .sort((a, b) => {
+                if (a.roles && b.roles && a.roles !== b.roles)
+                    return rolesSorter(a.roles, b.roles)
+
+                return ProfileClass.compare(a, b);
+            }) ?? []
+        );
     }
 }
 
