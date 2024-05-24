@@ -184,7 +184,7 @@ export function GroupGroups() {
 
                     ]}
                     requisition={groupContext.editGroup ? UniversimeApi.Group.update : UniversimeApi.Group.create}
-                    callback={()=>{groupContext.setEditGroup(undefined); groupContext.refreshData()}}
+                    callback={async()=>{groupContext.setEditGroup(undefined); await groupContext.refreshData()}}
                 />
                 :
                 <></>

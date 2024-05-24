@@ -83,7 +83,7 @@ export function ExperienceSettings() {
                 }
             ]}
             requisition={ profileContext?.editExperience?.id ? UniversimeApi.Experience.update : UniversimeApi.Experience.create }
-            callback={()=>{ profileContext?.reloadPage() }}
+            callback={async ()=>await profileContext?.reloadPage() }
         />
     );
 

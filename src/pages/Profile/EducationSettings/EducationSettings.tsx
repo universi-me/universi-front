@@ -90,7 +90,7 @@ export function EducationSettings() {
                 }
             ]}
             requisition={ profileContext?.editEducation?.id ? UniversimeApi.Education.update : UniversimeApi.Education.create }
-            callback={()=>{ profileContext?.reloadPage() }}
+            callback={async()=> await profileContext?.reloadPage() }
         />
     );
 
