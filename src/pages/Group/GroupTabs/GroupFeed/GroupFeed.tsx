@@ -80,7 +80,7 @@ export function GroupFeed(){
                         }
                     ]}
                     requisition={groupContext.editPost ? UniversimeApi.Feed.editGroupPost : UniversimeApi.Feed.createGroupPost}
-                    callback={() => {groupContext.refreshData()}}
+                    callback={async() => await groupContext.refreshData()}
                 />
                 :
                 <></>

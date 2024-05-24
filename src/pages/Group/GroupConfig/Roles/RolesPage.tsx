@@ -96,7 +96,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                         },
                     ]}
                     requisition={rolesEdit ? UniversimeApi.Roles.edit : UniversimeApi.Roles.create}
-                    callback={()=>{setRolesEdit(null); setShowRolesForm(false); refreshPage()}}
+                    callback={async () => {setRolesEdit(null); setShowRolesForm(false); await refreshPage()}}
                 />
             }
 

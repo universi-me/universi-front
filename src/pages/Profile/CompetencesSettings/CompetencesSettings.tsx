@@ -74,7 +74,7 @@ export function CompetencesSettings() {
                 }
             ]}
             requisition={ editCompetence?.id ? UniversimeApi.Competence.update : UniversimeApi.Competence.create }
-            callback={()=>{ profileContext?.reloadPage() }}
+            callback={()=> {profileContext.reloadPage()} }
         />
     );
     

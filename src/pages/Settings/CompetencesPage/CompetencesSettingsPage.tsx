@@ -108,7 +108,7 @@ export function CompetencesSettingsPage() {
                     DTOName: "remainingCompetenceTypeId", label: `Substituir "${mergeCompetence.name}" por:`, type: FormInputs.SELECT_SINGLE,
                     canCreate: false, options: reviewedCompetenceTypes.map(ct => ({ label: ct.name, value: ct.id })), required: true,
                 }
-            ]} requisition={mergeCompetences} callback={() => {setMergeCompetence(undefined); refreshCompetenceTypes()}}/>
+            ]} requisition={mergeCompetences} callback={async() => {setMergeCompetence(undefined); await refreshCompetenceTypes()}}/>
         }
     </div>;
 
