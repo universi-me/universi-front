@@ -89,16 +89,7 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
         )
 
         UniversimeApi.Capacity.createFolder(dto)
-            .then((response)=>{
-                if(response.success && canPost && dto.groupId){
-                    UniversimeApi.Feed.createGroupPost({
-                        authorId: groupContext.loggedData.profile.id,
-                        content: `<p>Conteúdo <a href="/group${dto.groupPath}#contents/${response.body.contentId}">${dto.name}<a/> foi cadastrado.<p/>`,
-                        groupId: dto.groupId
-                    }).then(()=>{groupContext.refreshData()})
-                }
-
-            })
+            .then(()=>{groupContext.refreshData()})
 
     }
 
