@@ -1,7 +1,7 @@
 import type { ApiResponse } from "@/types/UniversimeApi";
 import type { User } from "@/types/User";
 import { api } from "./api";
-import { RoleDTO } from "@/types/Roles";
+import { Roles } from "@/types/Roles";
 
 export type SignIn_RequestDTO = {
     username: string;
@@ -17,7 +17,7 @@ export type KeyCloakSignIn_RequestDTO = {
     code: string;
 };
 
-export type GetAccount_ResponseDTO = ApiResponse<{ user: User, roles: RoleDTO[] }>;
+export type GetAccount_ResponseDTO = ApiResponse<{ user: User, roles: Roles[] }>;
 export type SignIn_ResponseDTO =     ApiResponse<{ user: User }>;
 export type LogOut_ResponseDTO =     ApiResponse;
 

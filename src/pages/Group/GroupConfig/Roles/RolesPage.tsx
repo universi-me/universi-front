@@ -23,6 +23,10 @@ import { type RolesResponse, RolesFetch } from "./RolesLoader";
 
 import "./Roles.less";
 import { Group } from "@/types/Group";
+import { rolesSorter } from "@/utils/roles/rolesUtils";
+import { removeFalsy } from "@/utils/arrayUtils";
+import { Filter } from "@/components/Filter/Filter";
+import stringUtils from "@/utils/stringUtils";
 
 type RolesPageProps = {
     group: Group | undefined;
@@ -39,19 +43,22 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
 
     const [showRolesForm, setShowRolesForm] = useState(false);
     const [rolesEdit, setRolesEdit] = useState(null as Roles | null);
+    const [filterParticipant, setFilterParticipant] = useState("");
 
     const [rows, setRows] = useState(null as Roles[] | null);
 
     const [participants, setParticipants] = useState(null as ProfileClass[] | null);
 
-    const CHANGE_PAPER_OPTIONS: OptionInMenu<ProfileClass>[] = rows!?.map((roles) => ({
-        text: roles.name,
-        onSelect(data) {
-            UniversimeApi.Roles.assign({rolesId: roles.id, groupId: group!?.id, profileId: data.id}).then(
-                refreshPage
-            );
-        },
-    }));
+    const CHANGE_PAPER_OPTIONS: OptionInMenu<ProfileClass>[] = rows
+        ?.filter(r => r.canBeAssigned)
+        .map((roles) => ({
+            text: roles.name,
+            onSelect(data) {
+                UniversimeApi.Roles.assign({rolesId: roles.id, groupId: group!?.id, profileId: data.id}).then(
+                    refreshPage
+                );
+            },
+        })) ?? [];
 
     useEffect(() => {
         setValuesWithData(data);
@@ -65,11 +72,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     };
 
     const isFeatureChecked = (row : Roles, column : FeatureTypes) => {
-        let rolesFeature = row.rolesFeatures.find(feature => feature.featureType == column);
-        if(rolesFeature) {
-            return rolesFeature.permission;
-        }
-        return Permission.DEFAULT;
+        return row.permissions[column];
     };
 
     return <div id="roles-settings">
@@ -84,7 +87,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                             validation: new ValidationComposite<string>().addValidation(new TextValidation())
                         }, {
                             DTOName: "description", label: "Descrição", type: FormInputs.LONG_TEXT, value: rolesEdit?.description, required: false,
-                            charLimit: 130,
+                            charLimit: 130
                         },
                         {
                             DTOName: "groupId", label: "id", type: FormInputs.HIDDEN,
@@ -99,9 +102,6 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                     callback={async () => {setRolesEdit(null); setShowRolesForm(false); await refreshPage()}}
                 />
             }
-
-            <p/>
-            <br/>
 
         { manageRolesMode ? <div>
             
@@ -132,8 +132,8 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                   <tbody>
                     {rows!?.map((row) => (
                       <tr key={row.id} className="row-disabled">
-                        <td title={row.description}>{row.name} { (editMode && !row.isDefault) &&
-                            <button onClick={()=>{ setRolesEdit(row); setShowRolesForm(true); }} className={`edit-button ${editMode ? 'active' : ''}`}>
+                        <td title={row.description}>{row.name} { (editMode && row.canBeEdited) &&
+                            <button onClick={()=>{ setRolesEdit(row); setShowRolesForm(true); }} className={`edit-button ${editMode && row.canBeEdited ? 'active' : ''}`}>
                                 <div className={`icon-edit ${editMode ? 'active' : ''}`}>
                                     <i className="bi bi-pencil-fill" />
                                 </div>
@@ -144,7 +144,6 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                             <select
               value={isFeatureChecked(row, key as FeatureTypes)}
               onChange={(e) => handleFeatureCheckboxChange(e, row, key as FeatureTypes)}
-              disabled={row.isDefault === true}
             >
               <option value={ Permission.DISABLED }>Desabilitada</option>
               <option value={ Permission.READ }>Ver</option>
@@ -166,16 +165,22 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
         
         </div> : <div>
 
-            <p className="edit_button">
+            <div className="edit_button">
                 <ActionButton name="Gerenciar Papéis" buttonProps={{
                     onClick() { setManageRolesMode(true) },
                     className: "create-new-filter",
                 }}/>
-            </p>
+
+                <Filter placeholderMessage="Filtrar participantes" setter={setFilterParticipant} />
+            </div>
             <br/>
             <section id="participants-list">
-        { participants!?.map(profile => {
+        { participants?.filter(p => stringUtils.includesIgnoreCase(p.fullname ?? "", filterParticipant)).map(profile => {
             const isOwnProfile = auth.profile!.id === profile.id;
+            const options = removeFalsy(CHANGE_PAPER_OPTIONS.map(def => renderOption(profile, def)));
+
+            if (options.length === 0)
+                return null;
 
             return <div className="profile-item" key={profile.id}>
                 <ProfileImage imageUrl={profile.imageUrl} className="profile-image" />
@@ -184,7 +189,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                     <p className="profile-bio">{profile.bio}</p>
                 </div>
                 <DropdownMenu.Root>
-                    <DropdownMenu.Trigger asChild /*disabled={isOwnProfile}*/ title={isOwnProfile ? "Você não pode alterar seu próprio nível de acesso" : undefined}>
+                    <DropdownMenu.Trigger asChild disabled={isOwnProfile} title={isOwnProfile ? "Você não pode alterar seu próprio nível de acesso" : undefined}>
                         <button type="button" className="set-role-trigger">
                             { profile.roles?.name }
                             <span className="bi"/>
@@ -192,7 +197,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                     </DropdownMenu.Trigger>
 
                     <DropdownMenu.Content className="set-role-menu">
-                        { CHANGE_PAPER_OPTIONS.map(def => renderOption(profile, def)) }
+                        { options }
                     </DropdownMenu.Content>
                 </DropdownMenu.Root>
             </div>
@@ -212,12 +217,18 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     }
 
     function setValuesWithData(data: RolesResponse) {
-        // setColumns((data.features! ?? []).sort((a, b) => a.name.localeCompare(b.name)) );
         setRows((data.roles ?? [])
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .sort((a, b) => (b.isDefault ?? 0).toString().localeCompare((a.isDefault ?? 0).toString()))
+            .sort(rolesSorter)
         );
-        setParticipants(data.participants?.map(ProfileClass.new) ?? []);
+        setParticipants(data.participants
+            ?.map(ProfileClass.new)
+            .sort((a, b) => {
+                if (a.roles && b.roles && a.roles !== b.roles)
+                    return rolesSorter(a.roles, b.roles)
+
+                return ProfileClass.compare(a, b);
+            }) ?? []
+        );
     }
 }
 
