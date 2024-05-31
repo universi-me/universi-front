@@ -3,7 +3,6 @@ import { App } from "@/src/App";
 import GroupPage, { GroupPageLoader } from "@/pages/Group";
 import { ProfilePage, ProfilePageLoader } from "@/pages/Profile";
 import { About } from "@/pages/About";
-import ManageGroupPage, { ManageGroupLoader } from "@/pages/ManageGroup";
 
 import { createBrowserRouter } from 'react-router-dom';
 import Singin from "@/pages/singin/Singin";
@@ -44,16 +43,6 @@ export const router = createBrowserRouter([{
     { path: "/manage-profile", element: <ManageProfilePage />, loader: ManageProfileLoader },
     { path: "/group/*", element: <GroupPage />, loader: GroupPageLoader },
     { path: "/recovery-password/:id", element: <NewPassword/>},
-    {//identificador unico - dynamic routes
-      //path: "perfil/:id",
-      //element: <></>
-    },
-    {//navigate para paginas não existentes - redireciona o caminho de paginas que uma vez existiram, 
-     // mas não existem mais, para o caminho novo, certo.
-      // path: "caminhoantigo",
-      // element: <Navigate to = "/novocaminho"/>
-
-    },
     {
       path: "/login",
       element: <Singin/>
@@ -73,11 +62,6 @@ export const router = createBrowserRouter([{
     {
       path: "/keycloak-oauth-redirect",
       element: <KeyCloakOAuth2Element/>
-    },
-    {
-        path: "/manage-group",
-        element: <ManageGroupPage />,
-        loader: ManageGroupLoader,
     },
     {
         path: "/settings",

@@ -53,7 +53,7 @@ export  function GroupTabs(props: GroupTabsProps){
         return <></>;
 
     const joined = context.loggedData.isParticipant;
-    const renderJoinOrLeave = !context.group.rootGroup && (joined || context.group.canEnter);
+    const renderJoinOrLeave = (joined || context.group.canEnter);
 
     return (
         <nav id="group-tabs"> 
