@@ -2,19 +2,25 @@
 @import url(/src/layouts/utils.less);
 
 .profile-info-component {
+    @bioWrapperWidth: 15rem;
+    @gapWidth: 1rem;
+    @contentWidth: calc(@maxScreenWidth - @bioWrapperWidth - @gapWidth);
+
     display: grid;
     grid-template-columns: max-content auto;
-    column-gap: 2rem;
+    column-gap: @gapWidth;
 
-    padding: 0 @left-page-padding;
     margin-top: @top-page-margin;
     margin-bottom: @top-page-margin;
 
-    min-width: 100%;
-    max-width: 1920px;
+    width: 100%;
 
     .profile-bio-groups-container{
-        width: 15rem;
+        width: @bioWrapperWidth;
+    }
+
+    .profile-info-content {
+        width: @contentWidth;
     }
 
     @media @onMobile {
@@ -30,9 +36,4 @@
 
         }
     }
-
-    .group-page-container{
-        width: 100%;
-    }
-
 }

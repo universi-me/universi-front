@@ -23,7 +23,7 @@ export function ProfileInfo(props: ProfileInfoProps) {
             { profile ? <ProfileBio profile={profile} links={links ?? []} organization={organization} /> : null }
             { groups ? <ProfileGroups groups={groups} /> : null }
         </div>
-        <div id="group-page-container" className="group-page-container">
+        <div className="profile-info-content">
             { children }
         </div>
     </div>
