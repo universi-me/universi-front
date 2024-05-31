@@ -1,4 +1,5 @@
 import type { Profile } from "@/types/Profile";
+import type { FeatureTypes } from "@/types/Roles";
 
 export type Group = {
     id:                string;
@@ -21,6 +22,10 @@ export type Group = {
     organization:      Group | null;
     canEdit:           boolean;
     everyoneCanPost:   boolean;
+
+    permissions: {
+        [k in FeatureTypes]: number;
+    }
 };
 
 export type GroupEmailFilter = {

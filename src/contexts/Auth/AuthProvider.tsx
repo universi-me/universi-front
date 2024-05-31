@@ -5,8 +5,6 @@ import { UniversimeApi } from "@/services/UniversimeApi";
 import { goTo } from "@/services/routes";
 import type { Group } from "@/types/Group";
 import type { Link } from "@/types/Link";
-import { updateRolesLocalStorage } from "@/utils/roles/rolesUtils";
-import { RoleDTO } from "@/types/Roles";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [profile, setProfile] = useState<ProfileClass | null>(null);
@@ -15,7 +13,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [organization, setOrganization] = useState<Group | null>(null);
     const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
     const user = profile?.user ?? null;
-    const [roles, setRoles] = useState<RoleDTO[] | null>(null);
 
     useEffect(() => {
         updateLoggedUser()
@@ -26,7 +23,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser, organization, roles, profileGroups, profileLinks  }}>
+        <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser, organization, profileGroups, profileLinks  }}>
         { children }
         </AuthContext.Provider>
     );
@@ -78,7 +75,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             updateOrganization(),
             updateLinks(),
             updateGroups(),
-            updateRoles(),
         ]);
 
         setFinishedLogin(true);
@@ -91,13 +87,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setOrganization(usedOrganization);
         return usedOrganization;
-    }
-
-    async function updateRoles() {
-        const roles = (await updateRolesLocalStorage()) ?? [];
-
-        setRoles(roles);
-        return roles;
     }
 
     async function updateLinks() {

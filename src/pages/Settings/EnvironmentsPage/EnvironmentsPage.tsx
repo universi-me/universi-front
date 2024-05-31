@@ -2,6 +2,9 @@ import { useReducer, useState, useEffect } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import * as Switch from "@radix-ui/react-switch"
 
+import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
+
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import UniversimeApi from "@/services/UniversimeApi";
 
@@ -50,6 +53,48 @@ export function EnvironmentsPage() {
                 ]
             },
             {
+                title: "Email",
+                items: [
+                    {
+                        name: "Habilitar",
+                        key: "email_enabled",
+                        type: "boolean",
+                        defaultValue: false,
+                    },
+                    {
+                        name: "Email Host",
+                        key: "email_host",
+                        type: "string",
+                        defaultValue: "",
+                    },
+                    {
+                        name: "Email Port",
+                        key: "email_port",
+                        type: "string",
+                        defaultValue: "587",
+                    },
+                    {
+                        name: "Email Protocol",
+                        key: "email_protocol",
+                        type: "string",
+                        defaultValue: "smtp",
+                    },
+                    {
+                        name: "Email User",
+                        key: "email_username",
+                        type: "string",
+                        defaultValue: "",
+                    },
+                    {
+                        name: "Email Password",
+                        key: "email_password",
+                        secure: true,
+                        type: "string",
+                        defaultValue: "",
+                    },
+                ]
+            },
+            {
                 title: "Notificações via Email",
                 items: [
                     {
@@ -61,9 +106,9 @@ export function EnvironmentsPage() {
                     {
                         name: "Template de Email para Novo Conteúdo",
                         key: "message_template_new_content",
-                        type: "textbox",
-                        defaultValue: "Olá, {{ groupName }} tem um novo conteúdo: {{ contentName }}.\nAcesse: {{ contentUrl }}",
-                        description: "groupName: Nome do Grupo\ncontentName: Nome do Conteúdo\ncontentUrl: Link do Conteúdo",
+                        type: "textbox-html",
+                        defaultValue: "Olá, {{ groupName }} tem um novo conteúdo: {{ contentName }}.<br/><br/>Acesse: {{ contentUrl }}",
+                        description: "groupName: Nome do Grupo.\ncontentName: Nome do Conteúdo.\ncontentUrl: Link do Conteúdo.",
                     },
                     {
                         name: "Notificar Conteúdo Atribuído",
@@ -74,9 +119,9 @@ export function EnvironmentsPage() {
                     {
                         name: "Template de Email para Conteúdo Atribuído",
                         key: "message_template_assigned_content",
-                        type: "textbox",
-                        defaultValue: "Olá {{ toUser }}, você recebeu um novo conteúdo de {{ fromUser }}: {{ contentName }}.\nAcesse: {{ contentUrl }}",
-                        description: "fromUser: Nome do Usuário que atribuiu.\ntoUser: Nome do Usuário que foi atribuido.\ncontentName: Nome do Conteúdo\ncontentUrl: Link do Conteúdo",
+                        type: "textbox-html",
+                        defaultValue: "Olá {{ toUser }}, você recebeu um novo conteúdo de {{ fromUser }}: {{ contentName }}.<br/><br/>Acesse: {{ contentUrl }}",
+                        description: "contentName: Nome do Conteúdo.\ncontentUrl: Link do Conteúdo.\nfromUser: Nome do autor da atribuição.\ntoUser: Nome do usuário que foi alvo da atribuição.",
                     },
                 ]
             },
@@ -116,7 +161,7 @@ export function EnvironmentsPage() {
                         name: "Redirect URL",
                         key: "keycloak_redirect_url",
                         type: "string",
-                        defaultValue: "",
+                        defaultValue: window.location.origin + "/keycloak-oauth-redirect",
                     },
                     {
                         name: "Realm",
@@ -134,6 +179,7 @@ export function EnvironmentsPage() {
                         name: "Client Secret",
                         key: "keycloak_client_secret",
                         type: "string",
+                        secure: true,
                         defaultValue: "",
                     },
                 ]
@@ -197,7 +243,7 @@ export function EnvironmentsPage() {
                     ) : null}
                     { item.type === "string" ? (
                         <div className="environments-text-wrapper">
-                            <input type="text" className="environments-text-input" value={getValue(item)??""} onChange={(e) => setTextValue(item, e)} />
+                            <input type={item.secure ? "password" : "text"} className="environments-text-input" value={getValue(item)??""} onChange={(e) => setTextValue(item, e)} />
                         </div>
                     ) : null}
                     
@@ -208,6 +254,14 @@ export function EnvironmentsPage() {
                     <div className="">
                         <div className="enabled-delete-wrapper row-item environments-text-wrapper environments-text-input">
                             <textarea rows={8} className="environments-text-area" value={getValue(item)??""} onChange={(e) => setTextValue(item, e)} />
+                        </div>
+                        </div>
+                    ) : null}
+
+                { item.type === "textbox-html" ? (
+                    <div className="">
+                        <div className="enabled-delete-wrapper row-item environments-text-wrapper environments-text-input">
+                            <ReactQuill theme="snow" value={getValue(item)??""} onChange={(e) => setTextValueString(item, e)} />
                         </div>
                         </div>
                     ) : null}
@@ -234,7 +288,11 @@ export function EnvironmentsPage() {
     }
 
     function setTextValue(item: any, event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        setEditedItems({ type: 'EDIT', id: item.key, value: event.target.value });
+        setTextValueString(item, event.target.value);
+    }
+
+    function setTextValueString(item: any, value: string) {
+        setEditedItems({ type: 'EDIT', id: item.key, value: value });
     }
 
     function makeToggleFilter(item: any) {

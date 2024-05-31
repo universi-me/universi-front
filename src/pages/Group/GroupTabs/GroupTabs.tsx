@@ -1,4 +1,4 @@
-import { useContext, type ReactElement, useState, useEffect } from "react";
+import { useContext, type ReactElement } from "react";
 import { GroupContents, GroupContext, GroupGroups, GroupPeople, GroupFeed, GroupContextType } from "@/pages/Group";
 import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
@@ -60,7 +60,7 @@ export  function GroupTabs(props: GroupTabsProps){
         {
             TABS.map(t => {
                 const isCurrentTab = t.value === props.currentTab;
-                const render = t.condition?.(context!, canI) ?? true;
+                const render = t.condition?.(context, canI) ?? true;
 
                 return render && <button className={`group-tab-button`} value={t.value} key={t.value} onClick={() => { window.location.hash = t.value; props.changeTab(t.value); }} data-current-tab={isCurrentTab ? "" : undefined}>
                     {t.name}
@@ -98,8 +98,10 @@ const TABS: GroupTabDefinition[] = [
         value: 'feed',
         renderer: GroupFeed,
         condition(context, canI) {
-            return canI("FEED", Permission.READ_WRITE, context.group) ||
-                (canI("FEED", Permission.READ, context.group) && context.posts.length > 0);
+            return canI("FEED", Permission.READ, context.group) && (
+                context.posts.length > 0
+                || canI("FEED", Permission.READ_WRITE, context.group)
+            );
         },
     },
     {
@@ -107,11 +109,10 @@ const TABS: GroupTabDefinition[] = [
         value: "contents",
         renderer: GroupContents,
         condition(context, canI) {
-            if (!canI("CONTENT", Permission.READ, context.group))
-                return false;
-
-            return context.folders.length > 0
-                || canI("CONTENT", Permission.READ_WRITE, context.group);
+            return canI("CONTENT", Permission.READ, context.group) && (
+                context.folders.length > 0
+                || canI("CONTENT", Permission.READ_WRITE, context.group)
+            );
         },
     },
     {
@@ -119,8 +120,10 @@ const TABS: GroupTabDefinition[] = [
         value: "groups",
         renderer: GroupGroups,
         condition(context, canI) {
-            return canI("GROUP", Permission.READ_WRITE, context.group) ||
-                (canI("GROUP", Permission.READ, context.group) && context.subgroups.length > 0);
+            return canI("GROUP", Permission.READ, context.group) && (
+                context.subgroups.length > 0
+                || canI("GROUP", Permission.READ_WRITE, context.group)
+            );
         },
     },
     {

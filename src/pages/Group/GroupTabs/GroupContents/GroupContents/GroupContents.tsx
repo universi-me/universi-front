@@ -265,7 +265,7 @@ export function GroupContents() {
                 duplicateContentId !== undefined
                 ?
                 <UniversiForm
-                callback={() => {setDuplicateContentId(undefined); groupContext.refreshData()}}
+                callback={async () => {setDuplicateContentId(undefined); await groupContext.refreshData()}}
                 formTitle="Criar uma cópia"
                 objects={[
                     {
@@ -295,7 +295,7 @@ export function GroupContents() {
                             .filter(g => g.id !== groupContext.group.id && canI("GROUP", Permission.READ_WRITE, g))
                             .map(g => ({value: g.path, label: g.name}))
                     },
-                ]} callback={() => { groupContext.refreshData().then(() => setMoveContentReference(undefined)) }} requisition={UniversimeApi.Capacity.moveFolderToAnotherGroup}
+                ]} callback={async () => { await groupContext.refreshData().then(() => setMoveContentReference(undefined)) }} requisition={UniversimeApi.Capacity.moveFolderToAnotherGroup}
                 saveButtonText="Mover" cancelButtonText="Cancelar" />
                 :
                 <></>
@@ -457,7 +457,7 @@ function ImportContent(props: Readonly<ImportContentProps>) {
         },
         ]}
         requisition={handleImport}
-        callback={resetContents}
+        callback={async () => await resetContents()}
     />;
 
     async function handleImport(formData: {contentIds: string[]}) {
