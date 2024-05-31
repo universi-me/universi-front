@@ -2,20 +2,18 @@ import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
-import { groupImageUrl, groupBannerUrl, groupHeaderUrl } from "@/utils/apiUtils";
+import { groupImageUrl } from "@/utils/apiUtils";
 
-import { GroupTypeToLabel, type Group, type GroupType } from "@/types/Group";
+import { type Group } from "@/types/Group";
 import "./GroupGroups.less";
 import { Filter } from "@/components/Filter/Filter";
 import { AuthContext } from "@/contexts/Auth";
-import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
-import { TextValidation } from "@/components/UniversiForm/Validation/TextValidation";
 import UniversimeApi from "@/services/UniversimeApi";
 import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdownMenuUtils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
+import { ManageGroup } from "@/components/ManageGroup/ManageGroup";
 
 export function GroupGroups() {
     const groupContext = useContext(GroupContext);
@@ -47,21 +45,6 @@ export function GroupGroups() {
             }
         }
     ];    
-
-    //<ActionButton name="Editar este grupo" buttonProps={{onClick(){groupContext.setEditGroup(groupContext.group); console.log(groupContext.group)}}}/>
-    //<ActionButton name="Configurações" buttonProps={{onClick(){ groupContext.setGroupConfigModalOpen(true); }}}/>
-    // const GROUP_OPTIONS: OptionInMenu<Group>[] = [
-    //     {
-    //         text: "Criar grupo",
-    //         biIcon: "plus-lg",
-    //         onSelect(data) {
-    //             groupContext.setEditGroup(null);
-    //         },
-    //         hidden(){
-    //             return !(groupContext.group.canEdit);
-    //         }
-    //     }
-    // ];
 
     function handleRemoveGroup(group : Group){
         let groupParentPath = group.path.substring(0, group.path.lastIndexOf("/"))
@@ -97,6 +80,16 @@ export function GroupGroups() {
             </div>
 
             <div className="group-list tab-list"> { makeGroupList(groupContext.subgroups, filterGroups) } </div>
+            { groupContext.editGroup !== undefined &&
+                <ManageGroup
+                    group={groupContext.editGroup}
+                    parentGroup={groupContext.group}
+                    callback={ async () => {
+                        await groupContext.refreshData()
+                        .then( newContext => newContext.setEditGroup(undefined) );
+                    }}
+                />
+            }
         </section>
     );
     function makeGroupList(groups: Group[], filter: string) {
