@@ -10,11 +10,10 @@ import { RequiredValidation } from "./Validation/RequiredValidation"
 import { ValidationComposite } from "./Validation/ValidationComposite"
 import { makeClassName } from "@/utils/tsxUtils"
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import ReactQuill from "react-quill"
-import "react-quill/dist/quill.snow.css"
 import { stringEqualsIgnoreCase } from "@/utils/stringUtils"
 import { update } from "@/services/UniversimeApi/Group"
 import CropperComponent from "../ImageCropper/ImageCropper"
+import TextboxFormatted from "../TextboxFormatted/TextboxFormatted"
 
 export type cancelPopup = {
     confirmCancel? : boolean,
@@ -253,7 +252,7 @@ export function UniversiForm(props : formProps){
                     object.type == FormInputs.LONG_TEXT ? 
                         <textarea rows={5} className="field-input" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)} required={object.required}/>
                     : object.type == FormInputs.FORMATED_TEXT ?
-                        <ReactQuill theme="snow" value={valueState} onChange={setValueState}/>
+                        <TextboxFormatted value={valueState} onChange={setValueState}/>
                     :
                         <input className="field-input" type="text" defaultValue={object.value} onChange={(e) => {handleChange(index, e.target.value)}} maxLength={getCharLimit(object)} required={object.required}/>
                 }

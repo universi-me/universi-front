@@ -2,14 +2,12 @@ import { useReducer, useState, useEffect } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import * as Switch from "@radix-ui/react-switch"
 
-import ReactQuill from "react-quill"
-import "react-quill/dist/quill.snow.css"
-
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import UniversimeApi from "@/services/UniversimeApi";
 
 import { type EnvironmentsLoaderResponse, EnvironmentsFetch } from "./EnvironmentsLoader";
 import "./EnvironmentsPage.less";
+import TextboxFormatted from "@/components/TextboxFormatted/TextboxFormatted";
 
 export function EnvironmentsPage() {
     const data = useLoaderData() as EnvironmentsLoaderResponse;
@@ -261,7 +259,7 @@ export function EnvironmentsPage() {
                 { item.type === "textbox-html" ? (
                     <div className="">
                         <div className="enabled-delete-wrapper row-item environments-text-wrapper environments-text-input">
-                            <ReactQuill theme="snow" value={getValue(item)??""} onChange={(e) => setTextValueString(item, e)} />
+                            <TextboxFormatted value={getValue(item)??""} onChange={(e) => setTextValueString(item, e)} />
                         </div>
                         </div>
                     ) : null}
