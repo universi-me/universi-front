@@ -1,41 +1,41 @@
 import type { Profile } from '@/types/Profile'
 
 export type Competence = {
-    id:             string;
-    description:    string;
-    level:          Level;
-    creationDate:   string;
+    id: string;
+    description: string;
+    level: Level;
+    creationDate: string;
     competenceType: CompetenceType;
-    profile:        Profile;
-    title:          string | null;
-    startDate:      string | null;
-    presentDate:    string | null;
-    endDate:        string | null;
+    profile: Profile;
+    title: string | null;
+    startDate: string | null;
+    presentDate: string | null;
+    endDate: string | null;
 };
 
 export type CompetenceType = {
-    id:   string;
+    id: string;
     name: string;
     reviewed: boolean;
 };
 
 
-export type Level = 0 | 1 | 2 | 3 ;
+export type Level = 0 | 1 | 2 | 3;
 
-export function intToLevel(int : number) : Level {
-    return int%4 as Level;
+export function intToLevel(int: number): Level {
+    return int % 4 as Level;
 }
 
-export const LevelToLabel: {[l in Level]: string} = {
-    0 : "📚Aprendiz",
-    1 : "🌱Iniciante",
-    2 : "🛠️Intermediário",
-    3 : "💪Experiente",
+export const LevelToLabel: { [l in Level]: string } = {
+    0: "📚Aprendiz",
+    1: "🌱Iniciante",
+    2: "🛠️Intermediário",
+    3: "💪Experiente",
 };
 
-export const LevelToDescription: {[l in Level]: string} = {
-    0: "Você ainda está seguindo tutoriais e cursos sobre esse assunto. Não desanime!",
-    1: "Você já começou a se virar, mas ainda tem certa dificuldade e precisa voltar às anotações de vez em quando.",
-    2: "Você está indo muito bem! Ainda não sabe tudo que tem para saber, mas já tem certo domínio sobre esse assunto.",
-    3: "Você é um profissional nesse assunto!",
+export const LevelToDescription: { [l in Level]: string } = {
+    0: "Você está aprendendo a tecnologia. Sabe fazer exemplos básicos e segue tutoriais.",
+    1: "Você já consegue fazer projetos simples, mas não entende de aspectos mais complexos.",
+    2: "Você consegue fazer projetos complexos, sem precisar ficar consultando questões básicas. Você consegue ensinar pessoas iniciantes.",
+    3: "Você consegue fazer projetos complexos e atuar em melhorias sobre a tecnologia. Consegue explorar aspectos profundos sobre este conhecimento. Você consegue ensinar pessoas com nível intermediário.",
 }
