@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         updateLoggedUser()
-    }, []);
+    }, [profile]);
 
     if (user?.needProfile) {
         goTo("/manage-profile");

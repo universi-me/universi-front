@@ -2,18 +2,16 @@ import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 
 import {
-    ProfileRecommendSettingsButton,
-    ProfileSettings, CompetencesSettings, ProfileDiscardChanges, ProfileContext,
+    ProfileRecommendSettingsButton, ProfileContext,
     type ProfileContextType, type ProfilePageLoaderResponse, fetchProfilePageData
 } from '@/pages/Profile';
 import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
-import { UniversiModal } from "@/components/UniversiModal";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { AuthContext } from "@/contexts/Auth";
 import { SelectionBar } from "./SelectionBar/SelectionBar";
 
 import { ProfileClass } from "@/types/Profile";
-import './Profile.css';
+import './ProfilePage.less';
 
 export function ProfilePage() {
     const auth = useContext(AuthContext);

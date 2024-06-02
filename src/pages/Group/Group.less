@@ -2,20 +2,9 @@
 
 #group-page {
     width: 100%;
-
-
     display: flex;
 
-    padding: 0 var(--left-page-padding);
-
-    margin-top: var(--top-page-margin);
-
-    max-width: 1920px;
-
     @media @onMobile {
-        width: 100%;
-
-        display: flex;
         flex-direction: column;
         column-gap: 2%;
         gap: 4%;
@@ -44,10 +33,11 @@
             margin-top: 1.5rem;
         }
 
+        width: max-content;
+
         display: flex;
         flex-direction: column;
         align-items: center;
-
     }
 
     .in-front-container {
