@@ -1,12 +1,9 @@
-import type { Profile } from '@/types/Profile'
-
 export type Competence = {
     id: string;
     description: string;
     level: Level;
     creationDate: string;
     competenceType: CompetenceType;
-    profile: Profile;
     title: string | null;
     startDate: string | null;
     presentDate: string | null;
@@ -18,6 +15,10 @@ export type CompetenceType = {
     name: string;
     reviewed: boolean;
 };
+
+export type CompetenceProfileDTO = Competence & {
+    hasBadge: boolean;
+}
 
 
 export type Level = 0 | 1 | 2 | 3;

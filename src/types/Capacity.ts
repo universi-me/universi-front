@@ -1,5 +1,6 @@
 import { Group } from "@/types/Group";
 import { Profile } from "@/types/Profile";
+import { CompetenceType } from "@/types/Competence";
 
 
 export type ContentStatusEnum = "VIEW" | "DONE" | "NOT_VIEWED"
@@ -55,6 +56,8 @@ export type Folder = {
     assignedBy?:         Profile;
     favorite?:           true;
     canEdit:             boolean;
+
+    grantsBadgeToCompetences: CompetenceType[]
 };
 
 export type FolderProfile = {

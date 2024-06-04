@@ -12,6 +12,7 @@ import type { Group } from "@/types/Group";
 import "./ManageContent.less";
 import { GroupContext } from "@/pages/Group";
 import { FolderCreate_RequestDTO } from "@/services/UniversimeApi/Capacity";
+import { CompetenceType } from "@/types/Competence";
 
 export type ManageContentProps = {
     /** A null `content` means a content is being created, while a value means
@@ -31,6 +32,7 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
     const [group, setGroup] = useState(props.group);
 
     const [availableCategories, setAvailableCategories] = useState<Category[]>();
+    const [availableCompetenceTypes, setAvailableCompetenceTypes] = useState<CompetenceType[]>();
 
     const groupContext = useContext(GroupContext)
 
@@ -39,12 +41,15 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
         setGroup(props.group);
 
         updateCategories();
+        updateCompetenceTypes();
     }, [props]);
 
-    if (availableCategories === undefined) return null;
+    if (availableCategories === undefined || availableCompetenceTypes === undefined)
+        return null;
 
     const isNewContent = content === null;
-    const availableOptions = availableCategories.map(c => ({ label: c.name, value: c.id }));
+    const availableCategoriesOptions = availableCategories.map(c => ({ label: c.name, value: c.id }));
+    const availableCompetenceTypeOptions = availableCompetenceTypes.map(c => ({ label: c.name, value: c.id }));
 
     return <UniversiForm
         formTitle = { isNewContent ? "Criar conteúdo" : "Editar conteúdo" }
@@ -63,8 +68,13 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
             }, {
                 DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.SELECT_MULTI,
                 value: content?.categories.map(t => ({ label: t.name, value: t.id })) ?? [],
-                options: availableOptions,
-                canCreate: true, required: false, onCreate: handleCreateOption,
+                options: availableCategoriesOptions,
+                canCreate: true, required: false, onCreate: handleCreateCategory,
+            }, {
+                DTOName: "addCompetenceTypeBadgeIds", label: "Selos de Competência", type: FormInputs.SELECT_MULTI,
+                value: content?.grantsBadgeToCompetences.map(ct => ({ label: ct.name, value: ct.id })) ?? [],
+                options: availableCompetenceTypeOptions,
+                canCreate: true, required: false, onCreate: handleCreateCompetenceType
             }, {
                 DTOName: "groupId", label: "Id do grupo", type: FormInputs.HIDDEN, value: group?.id,
             }, {
@@ -93,7 +103,7 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
 
     }
 
-    async function handleCreateOption(value: string){
+    async function handleCreateCategory(value: string){
         const createResponse = await UniversimeApi.Capacity.createCategory({ name: value, image: "" });
         if (!createResponse.success) return [];
 
@@ -103,9 +113,27 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
         return response.body.categories.map(t => ({ value: t.id, label: t.name }));
     }
 
+    async function handleCreateCompetenceType(value: string){
+        const createResponse = await UniversimeApi.CompetenceType.create({ name: value });
+        if (!createResponse.success) return [];
+
+        const response = await updateCompetenceTypes();
+        if (!response.success) return [];
+
+        return response.body.list.map(t => ({ value: t.id, label: t.name }));
+    }
+
     async function updateCategories() {
         const res = await UniversimeApi.Capacity.categoryList();
         if (res.success) setAvailableCategories(res.body.categories);
+
+        return res;
+    }
+
+    async function updateCompetenceTypes() {
+        const res = await UniversimeApi.CompetenceType.list();
+        if (res.success)
+            setAvailableCompetenceTypes(res.body.list);
 
         return res;
     }

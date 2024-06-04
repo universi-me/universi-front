@@ -1,4 +1,4 @@
-import type { Competence } from "@/types/Competence";
+import type { CompetenceProfileDTO } from "@/types/Competence";
 import type { Group } from "@/types/Group";
 import type { Link } from "@/types/Link";
 import type { Profile } from "@/types/Profile";
@@ -31,7 +31,7 @@ export type ProfileFolders_RequestDTO = ProfileIdAndUsername_RequestDTO & {
 export type ProfileGet_ResponseDTO =             ApiResponse<{ profile: Profile }>;
 export type ProfileEdit_ResponseDTO =            ApiResponse;
 export type ProfileGroups_ResponseDTO =          ApiResponse<{ groups: Group[] }>;
-export type ProfileCompetences_ResponseDTO =     ApiResponse<{ competences: Competence[] }>;
+export type ProfileCompetences_ResponseDTO =     ApiResponse<{ competences: CompetenceProfileDTO[] }>;
 export type ProfileEducation_ResponseDTO =     ApiResponse<{ educations: Education[] }>;
 export type ProfileExperience_ResponseDTO =     ApiResponse<{ experiences: Experience[] }>;
 export type ProfileLinks_ResponseDTO =           ApiResponse<{ links: Link[] }>;

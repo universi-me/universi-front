@@ -19,7 +19,7 @@ export function CompetencesSettings() {
     function availableCompetencesForAdd(competences : CompetenceType[]){
         return competences
             .filter((comp) => {
-                return !profileContext?.profileListData.competences.some((c) => c.competenceType.id === comp.id)
+                return editCompetence?.competenceType.id === comp.id || !profileContext?.profileListData.competences.some((c) => c.competenceType.id === comp.id)
             }) ?? [];
     }
 
@@ -31,10 +31,7 @@ export function CompetencesSettings() {
     }
 
     const levelOptions = Object.entries(LevelToLabel)
-        .map(([level, label]) => ({
-            value: level,
-            label: `${label}: ${LevelToDescription[parseInt(level) as Level]}`,
-        }));
+        .map(([level]) => makeLevelOption(parseInt(level) as Level));
 
     return (
         profileContext &&
@@ -60,8 +57,8 @@ export function CompetencesSettings() {
                     })
                 },
                 {
-                    DTOName: "level", label: "Nível de Experiência", type: FormInputs.RADIO, 
-                    value: editCompetence?.level ? {value: editCompetence?.level , label: editCompetence?.level } : undefined,
+                    DTOName: "level", label: "Nível de Experiência", type: FormInputs.RADIO,
+                    value: editCompetence?.level ? makeLevelOption(editCompetence.level) : undefined,
                     options: levelOptions, required: true
                 },
                 {
@@ -77,5 +74,11 @@ export function CompetencesSettings() {
             callback={()=> {profileContext.reloadPage()} }
         />
     );
-    
+
+    function makeLevelOption(level: Level) {
+        return {
+            value: level,
+            label: `${LevelToLabel[level]}: ${LevelToDescription[level]}`,
+        };
+    }
 }

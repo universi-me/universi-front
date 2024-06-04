@@ -5,6 +5,7 @@ import { ICON_DELETE_BLACK } from '@/utils/assets';
 import './CurriculumAbility.css';
 import UniversimeApi from '@/services/UniversimeApi';
 import * as SwalUtils from "@/utils/sweetalertUtils";
+import { IconVerificated } from '@/components/UniversiSvg';
 
 export function CurriculumAbility() {
   const profileContext = useContext(ProfileContext);
@@ -101,10 +102,13 @@ export function CurriculumAbility() {
                             return (
                                 <div className="competence-item" key={competence.id}>
 
-                                <div className="competence-initial" title={ competence.competenceType.reviewed ? undefined : "Esta competência não foi revisada por um administrador e não é visível publicamente" }>
+                                <div className="competence-initial">
+                                    { competence.hasBadge &&
+                                        <IconVerificated className='competence-badge' title={(profileContext.profile.user.ownerOfSession ? "Você" : profileContext.profile.firstname) + " possui um selo nesta competência"} />
+                                    }
                                     <h4 className="competence-type">{competence.competenceType.name}</h4>
                                     { competence.competenceType.reviewed ||
-                                        <i className="bi bi-exclamation-diamond-fill unreviewed-competence-warning"/>
+                                        <i className="bi bi-exclamation-diamond-fill unreviewed-competence-warning" title="Esta competência não foi revisada por um administrador e não é visível publicamente"/>
                                     }
                                 </div>
                                 <div className="level-container">

@@ -17,6 +17,7 @@ export type FolderCreate_RequestDTO = {
     description?:        string;
     rating?:             number;
     addCategoriesByIds?: string | string[];
+    addCompetenceTypeBadgeIds?: string[];
     groupId?:            string;
     groupPath?:          string;
 };
@@ -32,6 +33,8 @@ export type FolderEdit_RequestDTO = {
     addCategoriesByIds?:    string | string[];
     addGrantedAccessGroupByIds?:    string | string[];
     removeGrantedAccessGroupByIds?: string | string[];
+    addCompetenceTypeBadgeIds?:     string[];
+    removeCompetenceTypeBadgeIds?:  string[];
 };
 
 export type FolderFavorite_RequestDTO = {
@@ -103,6 +106,7 @@ export async function createFolder(body: FolderCreate_RequestDTO) {
         addCategoriesByIds: body.addCategoriesByIds,
         groupId:            body.groupId,
         groupPath:          body.groupPath,
+        addCompetenceTypeBadgeIds: body.addCompetenceTypeBadgeIds,
     })).data;
 }
 
@@ -118,6 +122,8 @@ export async function editFolder(body: FolderEdit_RequestDTO) {
         addCategoriesByIds:    body.addCategoriesByIds,
         addGrantedAccessGroupByIds:    body.addGrantedAccessGroupByIds,
         removeGrantedAccessGroupByIds: body.removeGrantedAccessGroupByIds,
+        addCompetenceTypeBadgeIds:     body.addCompetenceTypeBadgeIds,
+        removeCompetenceTypeBadgeIds:  body.removeCompetenceTypeBadgeIds,
     })).data;
 }
 
