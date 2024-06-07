@@ -7,10 +7,9 @@ import type { Link } from "@/types/Link";
 import type { Achievements } from "@/types/Achievements";
 import type { Folder, FolderProfile } from "@/types/Capacity";
 import { Education } from "@/types/Education";
-import { Experience } from "@/types/Experience";
+import { Experience, ExperienceLocal, TypeExperience } from "@/types/Experience";
 import { Institution } from "@/types/Institution";
 import { TypeEducation } from "@/types/TypeEducation";
-import { TypeExperience } from "@/types/TypeExperience";
 
 export type ProfileContextType = null | {
     accessingLoggedUser: boolean;
@@ -29,6 +28,7 @@ export type ProfileContextType = null | {
     allTypeCompetence:  CompetenceType[];
     allTypeEducation:    TypeEducation[];
     allTypeExperience:   TypeExperience[];
+    allExperienceLocal:  ExperienceLocal[];
 
     profileListData: {
         groups:                  Group[];

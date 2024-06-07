@@ -6,6 +6,7 @@ import { UniversimeApi } from "@/services/UniversimeApi"
 import './ExperienceSetting.less'
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
+import { ExperienceLocal } from "@/types/Experience";
 
 export function ExperienceSettings() {
     const profileContext = useContext(ProfileContext)
@@ -39,10 +40,10 @@ export function ExperienceSettings() {
                     required: true
                 },
                 {
-                    DTOName: "local", label: "Local", type: FormInputs.TEXT,
-                    value: profileContext?.editExperience?.local,
-                    charLimit: 30,
-                    required: true
+                    DTOName: "localId", label: "Local", type: FormInputs.SELECT_SINGLE,
+                    value: profileContext?.editExperience?.local ? makeExperienceLocalOption(profileContext?.editExperience?.local) : undefined,
+                    options: profileContext.allExperienceLocal.map(makeExperienceLocalOption),
+                    required: true, canCreate: true, onCreate: handleCreateExperienceLocal
                 },
                 {
                     DTOName: "startDate", label: "Data de Inicio", type: FormInputs.DATE,
@@ -87,6 +88,20 @@ export function ExperienceSettings() {
         />
     );
 
+    function makeExperienceLocalOption(el: ExperienceLocal) {
+        return {
+            label: el.name,
+            value: el.id,
+        }
+    }
+
+    async function handleCreateExperienceLocal(name: string){
+        const response = await UniversimeApi.ExperienceLocal.create({ name: name });
+        if (!response.success) return [];
+
+        const listResponse = await UniversimeApi.ExperienceLocal.listAll();
+        if (!listResponse.success) return [];
+
+        return listResponse.body.list.map(makeExperienceLocalOption);
+    }
 }
-
-
