@@ -1,7 +1,7 @@
 import { createContext } from "react"
 import type { ProfileClass } from "@/types/Profile";
 import type { Group } from "@/types/Group";
-import type { Competence, CompetenceType, Level } from "@/types/Competence";
+import type { Competence, CompetenceProfileDTO, CompetenceType, Level } from "@/types/Competence";
 import type { Recommendation } from "@/types/Recommendation";
 import type { Link } from "@/types/Link";
 import type { Achievements } from "@/types/Achievements";
@@ -34,7 +34,7 @@ export type ProfileContextType = null | {
         groups:                  Group[];
         education:               Education[];
         experience:              Experience[];
-        competences:             Competence[];
+        competences:             CompetenceProfileDTO[];
         links:                   Link[];
         recommendationsSend:     Recommendation[];
         recommendationsReceived: Recommendation[];

@@ -1,7 +1,7 @@
 import UniversimeApi from "@/services/UniversimeApi";
 import type { Achievements } from "@/types/Achievements";
 import type { Folder, FolderProfile } from "@/types/Capacity";
-import type { Competence, CompetenceType } from "@/types/Competence";
+import type { CompetenceProfileDTO, CompetenceType } from "@/types/Competence";
 import { Education } from "@/types/Education";
 import { Experience } from "@/types/Experience";
 import type { Group } from "@/types/Group";
@@ -24,7 +24,7 @@ export type ProfilePageLoaderResponse = {
 
     profileListData: {
         groups:                  Group[];
-        competences:             Competence[];
+        competences:             CompetenceProfileDTO[];
         education:               Education[];
         experience:              Experience[];
         links:                   Link[];

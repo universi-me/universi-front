@@ -95,6 +95,13 @@
     font-weight: var(--font-weight-bold);
 }
 
+#item-competence .competence .competence-list .competence-item .competence-badge {
+    width: 1.5em;
+    height: 1.5em;
+
+    margin-right: .25em;
+}
+
 #item-competence .competence .competence-list .competence-item .unreviewed-competence-warning {
     color: var(--warning-color);
     font-size: 1.25em;
