@@ -112,7 +112,7 @@ export function CurriculumExperience() {
                     <img className="experience-image" src="/assets/icons/experience-black.svg"/>
                     <h4 className="experience-type">{experience.typeExperience.name}</h4>
                   </div>
-                  <h4 className="learning experience-local">{experience.local.name}</h4>
+                  <h4 className="learning experience-local">{experience.institution.name}</h4>
                 </div>
                 <div className="direction-dateStart">
                   <h4 className="title-date">Data de Inicio</h4>

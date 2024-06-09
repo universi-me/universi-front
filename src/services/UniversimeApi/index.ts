@@ -17,7 +17,6 @@ import * as Admin from "./Admin"
 import * as Feed from "./Feed"
 import * as Roles from "./Roles"
 import * as Feature from "./Feature"
-import * as ExperienceLocal from "./ExperienceLocal"
 
 export const UniversimeApi = {
     api,
@@ -39,7 +38,6 @@ export const UniversimeApi = {
     Feed,
     Roles,
     Feature,
-    ExperienceLocal,
 };
 
 export default UniversimeApi;

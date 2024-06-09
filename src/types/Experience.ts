@@ -1,10 +1,11 @@
+import { Institution } from "@/types/Institution";
 import { Profile } from "./Profile";
 
 export type Experience = {
     id:                 string;
     profile:            Profile;
     typeExperience:     TypeExperience;
-    local:              ExperienceLocal;
+    institution:        Institution;
     description:        string;
     startDate:          string;
     endDate:        string;
@@ -15,10 +16,4 @@ export type Experience = {
 export type TypeExperience = {
     id:             string;
     name:           string;
-}
-
-export type ExperienceLocal = {
-    id:           string;
-    name:         string;
-    creationDate: string;
 }

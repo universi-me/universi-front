@@ -3,7 +3,7 @@ import type { Achievements } from "@/types/Achievements";
 import type { Folder, FolderProfile } from "@/types/Capacity";
 import type { CompetenceProfileDTO, CompetenceType } from "@/types/Competence";
 import { Education } from "@/types/Education";
-import { Experience, ExperienceLocal, TypeExperience } from "@/types/Experience";
+import { Experience, TypeExperience } from "@/types/Experience";
 import type { Group } from "@/types/Group";
 import { Institution } from "@/types/Institution";
 import type { Link } from "@/types/Link";
@@ -19,8 +19,7 @@ export type ProfilePageLoaderResponse = {
     allTypeCompetence:  CompetenceType[];
     allTypeEducation:    TypeEducation[];
     allTypeExperience:   TypeExperience[]; 
-    allExperienceLocal:  ExperienceLocal[];
-    allInstitution:      Institution[];
+    allInstitution:  Institution[];
 
     profileListData: {
         groups:                  Group[];
@@ -46,7 +45,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
         UniversimeApi.CompetenceType.list(),
         UniversimeApi.TypeEducation.list(),
         UniversimeApi.TypeExperience.list(),
-        UniversimeApi.Institution.list(),
+        UniversimeApi.Institution.listAll(),
     ]);
 
     if (!fetchProfile.success || !fetchProfile.body?.profile )
@@ -54,7 +53,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
 
     const isOwnProfile = fetchProfile.body.profile.user.ownerOfSession;
 
-    const [fetchGroups, fetchCompetences, fetchLinks, fetchRecommendations, fetchFolders, fetchEducations, fetchExperiences, fetchAssignedByMe, fetchExperienceLocals] = await Promise.all([
+    const [fetchGroups, fetchCompetences, fetchLinks, fetchRecommendations, fetchFolders, fetchEducations, fetchExperiences, fetchAssignedByMe] = await Promise.all([
         UniversimeApi.Profile.groups({username}),
         UniversimeApi.Profile.competences({username}),
         UniversimeApi.Profile.links({username}),
@@ -63,7 +62,6 @@ export async function fetchProfilePageData(username: string | undefined): Promis
         UniversimeApi.Profile.educations({username}),
         UniversimeApi.Profile.experiences({username}),
         isOwnProfile ? UniversimeApi.Capacity.foldersAssignedBy({username}) : Promise.resolve(undefined),
-        UniversimeApi.ExperienceLocal.listAll()
     ]);
 
     return {
@@ -72,8 +70,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
         allTypeCompetence: fetchCompetenceTypes.body?.list ?? [],
         allTypeEducation: fetchEducationTypes.body?.lista ?? [],
         allTypeExperience: fetchExperienceTypes.body?.lista ?? [],
-        allInstitution: fetchInstitutions.body?.lista ?? [],
-        allExperienceLocal: fetchExperienceLocals.body?.list ?? [],
+        allInstitution: fetchInstitutions.body?.list ?? [],
 
         profileListData: {
             achievements: [], // todo: fetch achievements,
@@ -111,7 +108,6 @@ const FAILED_TO_LOAD: ProfilePageLoaderResponse = {
     allTypeEducation: [],
     allTypeExperience: [],
     allInstitution: [],
-    allExperienceLocal: [],
     profileListData: {
         achievements: [],
         competences: [],

@@ -6,7 +6,7 @@ import { UniversimeApi } from "@/services/UniversimeApi"
 import './ExperienceSetting.less'
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
-import { ExperienceLocal } from "@/types/Experience";
+import { Institution } from "@/types/Institution";
 
 export function ExperienceSettings() {
     const profileContext = useContext(ProfileContext)
@@ -41,9 +41,9 @@ export function ExperienceSettings() {
                 },
                 {
                     DTOName: "localId", label: "Local", type: FormInputs.SELECT_SINGLE,
-                    value: profileContext?.editExperience?.local ? makeExperienceLocalOption(profileContext?.editExperience?.local) : undefined,
-                    options: profileContext.allExperienceLocal.map(makeExperienceLocalOption),
-                    required: true, canCreate: true, onCreate: handleCreateExperienceLocal
+                    value: profileContext?.editExperience?.institution ? makeInstitutionOption(profileContext?.editExperience?.institution) : undefined,
+                    options: profileContext.allInstitution.map(makeInstitutionOption),
+                    required: true, canCreate: true, onCreate: handleCreateInstitution
                 },
                 {
                     DTOName: "startDate", label: "Data de Inicio", type: FormInputs.DATE,
@@ -88,20 +88,20 @@ export function ExperienceSettings() {
         />
     );
 
-    function makeExperienceLocalOption(el: ExperienceLocal) {
+    function makeInstitutionOption(el: Institution) {
         return {
             label: el.name,
             value: el.id,
         }
     }
 
-    async function handleCreateExperienceLocal(name: string){
-        const response = await UniversimeApi.ExperienceLocal.create({ name: name });
+    async function handleCreateInstitution(name: string){
+        const response = await UniversimeApi.Institution.create({ name: name });
         if (!response.success) return [];
 
-        const listResponse = await UniversimeApi.ExperienceLocal.listAll();
+        const listResponse = await UniversimeApi.Institution.listAll();
         if (!listResponse.success) return [];
 
-        return listResponse.body.list.map(makeExperienceLocalOption);
+        return listResponse.body.list.map(makeInstitutionOption);
     }
 }
