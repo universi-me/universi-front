@@ -49,7 +49,7 @@ export function ManageJob(props: Readonly<ManageJobsProps>) {
             }, {
                 DTOName: "institutionId", label: "Instituição ofertante",
                 type: isCreating ? FormInputs.SELECT_SINGLE : FormInputs.HIDDEN,
-                required: true, value: job?.institution ? makeInstitutionOption(job?.institution) : undefined,
+                required: isCreating, value: undefined,
                 canCreate: true, onCreate: handleCreateInstitution,
                 options: institutions.map(makeInstitutionOption),
             }, {

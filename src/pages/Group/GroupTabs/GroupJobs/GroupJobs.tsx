@@ -3,6 +3,8 @@ import DOMPurify from "dompurify";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 import useCanI from "@/hooks/useCanI";
+import UniversimeApi from "@/services/UniversimeApi";
+
 import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { ManageJob } from "@/components/ManageJob/ManageJob";
@@ -16,7 +18,6 @@ import { Job } from "@/types/Job";
 import { Permission } from "@/types/Roles";
 
 import "./GroupJobs.less";
-import UniversimeApi from "@/services/UniversimeApi";
 
 export function GroupJobs() {
     const groupContext = useContext(GroupContext);
