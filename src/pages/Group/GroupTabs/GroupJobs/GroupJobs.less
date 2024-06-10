@@ -19,6 +19,23 @@
                 flex-direction: row;
                 align-items: start;
 
+                .competences {
+                    margin-top: .25em;
+
+                    .requirement {
+                        margin-right: .5em;
+                        background-color: @primary-color;
+                        color: @font-color-v1;
+
+                        padding: .1em .25em;
+                        border-radius: .4em;
+
+                        .unreviewed-competence-warning {
+                            margin-left: .25em;
+                        }
+                    }
+                }
+
                 .go-right {
                     margin-left: auto;
                     display: flex;
@@ -108,6 +125,10 @@
                         }
                     }
                 }
+            }
+
+            .job-long_description {
+                margin-top: .75rem;
             }
         }
     }

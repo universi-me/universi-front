@@ -115,7 +115,21 @@ function RenderJob(props: Readonly<RenderJobProps>) {
         <div className="job-header">
             <div>
                 <h3 className="job-title">{ job.title }</h3>
+                <h4 className="job-institution">Ofertante: { job.institution.name }</h4>
                 <p className="job-short_description">{ job.shortDescription }</p>
+
+                { job.requiredCompetences.length > 0 &&
+                    <p className="competences">
+                        Competências necessárias: {
+                            job.requiredCompetences.map(c => <span key={c.id} className="requirement">
+                                {c.name}
+                                { c.reviewed ||
+                                    <i className="bi bi-exclamation-diamond-fill unreviewed-competence-warning" title="Esta competência não foi revisada por um administrador e não é visível publicamente"/>
+                                }
+                            </span>)
+                        }
+                    </p>
+                }
             </div>
 
             <div className="go-right">
