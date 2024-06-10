@@ -8,6 +8,7 @@ import { Link } from "@/types/Link";
 import { GroupPost } from "@/types/Feed";
 import { canI_API, fetchRoles } from "@/utils/roles/rolesUtils";
 import { Permission } from "@/types/Roles";
+import { Job } from "@/types/Job";
 
 export type GroupPageLoaderResponse = {
     group: Group | undefined;
@@ -15,6 +16,7 @@ export type GroupPageLoaderResponse = {
     participants: Profile[];
     folders: Folder[];
     posts: GroupPost[];
+    jobs: Job[] | undefined;
 
     loggedData: undefined | {
         profile: Profile;
@@ -42,21 +44,23 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     const canIFolders =      await canI_API('CONTENT', Permission.READ, group);
     const canIFeed =         await canI_API('FEED',    Permission.READ, group);
 
-    const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes, groupPostsRes] = await Promise.all([
+    const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes, groupPostsRes, jobsRes] = await Promise.all([
         canISubgroups ? UniversimeApi.Group.subgroups({groupId: group.id})       : undefined,
         canIParticipants ? UniversimeApi.Group.participants({groupId: group.id}) : undefined,
         canIFolders ? UniversimeApi.Group.folders({groupId: group.id})           : undefined,
         UniversimeApi.Profile.groups({profileId: profile.id}),
         UniversimeApi.Profile.links({profileId: profile.id}),
         canIFeed ? UniversimeApi.Feed.getGroupPosts({groupId: group.id}) : undefined,
+        group.rootGroup ? UniversimeApi.Job.listAll() : undefined,
     ]);
-    
+
     return {
         group: group,
         folders: foldersRes?.success ? foldersRes.body.folders : [],
         participants: participantsRes?.success ? participantsRes.body.participants : [],
         subGroups: subgroupsRes?.success ? subgroupsRes.body.subgroups : [],
         posts: groupPostsRes?.success ? groupPostsRes.body.posts : [],
+        jobs: jobsRes?.body?.list,
         loggedData: {
             profile: profile,
             groups: profileGroupsRes.body?.groups ?? [],
@@ -78,5 +82,6 @@ const FAILED_TO_LOAD: GroupPageLoaderResponse = {
     folders: [],
     participants: [],
     subGroups: [],
-    posts: []
+    posts: [],
+    jobs: [],
 };

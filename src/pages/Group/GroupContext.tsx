@@ -4,6 +4,7 @@ import { type ProfileClass } from "@/types/Profile";
 import type { Content, Folder } from "@/types/Capacity";
 import { Link } from "@/types/Link";
 import { GroupPost } from "@/types/Feed";
+import { Job } from "@/types/Job";
 
 export type GroupContextType = null | {
     group:         Group;
@@ -11,6 +12,7 @@ export type GroupContextType = null | {
     participants:  ProfileClass[];
     folders:       Folder[];
     posts:         GroupPost[];
+    jobs:          Job[] | undefined;
 
     currentContent: Folder | undefined;
     setCurrentContent(content: Folder | undefined): any;
@@ -62,6 +64,15 @@ export type GroupContextType = null | {
      */
     assignFolder: Folder | undefined;
     setAssignFolder(group: Folder | undefined) : any;
+
+    /**
+     * The job being edited/created.
+     *
+     * If `null`, should handle creation of a job. If has a value, should handle
+     * job edit. If `undefined`, no job is being edited nor created.
+     */
+    editJob: Job | null | undefined;
+    setEditJob(job: Job | null | undefined) : any;
 
     loggedData: {
         isParticipant: boolean;

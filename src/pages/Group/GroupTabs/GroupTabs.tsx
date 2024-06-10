@@ -1,5 +1,5 @@
 import { useContext, type ReactElement } from "react";
-import { GroupContents, GroupContext, GroupGroups, GroupPeople, GroupFeed, GroupContextType } from "@/pages/Group";
+import { GroupContents, GroupContext, GroupGroups, GroupPeople, GroupFeed, GroupContextType, GroupJobs } from "@/pages/Group";
 import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
 import { AuthContext } from "@/contexts/Auth";
@@ -8,7 +8,7 @@ import { GroupCompetences } from "./GroupCompetences/GroupCompetences";
 import useCanI, { CanI_SyncFunction } from "@/hooks/useCanI";
 import { Permission } from "@/types/Roles";
 
-export type AvailableTabs = "feed" | "contents" | "groups" | "people" | "competences";
+export type AvailableTabs = "feed" | "contents" | "groups" | "people" | "competences" | "jobs";
 
 export type GroupTabDefinition = {
     name: string,
@@ -140,6 +140,17 @@ const TABS: GroupTabDefinition[] = [
         renderer: GroupCompetences,
         condition(context, canI) {
             return canI("COMPETENCE", Permission.READ, context.group);
+        },
+    },
+    {
+        name: "Vagas",
+        value: "jobs",
+        renderer: GroupJobs,
+        condition(context, canI) {
+            return canI("JOBS", Permission.READ, context.group) && (
+                (context.jobs && context.jobs.length > 0)
+                || canI("JOBS", Permission.READ_WRITE, context.group)
+            );
         },
     },
 ];

@@ -1,0 +1,109 @@
+@import url(/src/layouts/border-radius.less);
+@import url(/src/layouts/colors.less);
+
+#group-page #jobs.group-tab {
+    #jobs-list.tab-list {
+        .job-item {
+            border-radius: @border-radius;
+            background-color: @card-item-color;
+
+            padding: 1rem 0.5rem;
+
+            .job-header {
+                display: flex;
+                flex-direction: row;
+                align-items: start;
+
+                .go-right {
+                    margin-left: auto;
+                    display: flex;
+                    gap: 1rem;
+
+                    .job-expand {
+                        background-color: transparent;
+                        border: none;
+
+                        font-size: 1.5rem;
+                        will-change: rotate;
+
+                        transition-duration: 150ms;
+                        transition-property: rotate;
+                        transition-timing-function: ease-in;
+
+                        cursor: pointer;
+
+                        &.expanded {
+                            transition-timing-function: ease-out;
+                            rotate: 180deg;
+                        }
+                    }
+
+                    .options-button {
+                        background: none;
+                        border: none;
+                        font-size: 1.25rem;
+
+                        cursor: pointer;
+                    }
+
+                    .job-options {
+                        background-color: @card-background-color;
+                        border-radius: .625rem;
+                        padding: .25rem .5rem;
+
+                        min-width: 7rem;
+
+                        .options-arrow {
+                            fill: @card-background-color;
+                        }
+
+                        .dropdown-options-item {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            width: 100%;
+
+                            padding: .25rem .5rem;
+                            border-radius: .625rem;
+
+                            font-size: .9rem;
+
+                            cursor: pointer;
+
+                            &:hover {
+                                background-color: @button-hover-color;
+                                outline: none;
+
+                                &.delete {
+                                    background-color: @alert-color;
+                                    color: @font-color-v1;
+                                }
+                            }
+
+                            &[data-disabled] {
+                                color: @font-disabled-color;
+
+                                &:hover {
+                                    background-color: transparent;
+                                }
+                            }
+
+                            &:not(:last-child) {
+                                margin-bottom: .25rem;
+                            }
+
+                            .right-slot {
+                                width: fit-content;
+                                margin-left: auto;
+
+                                &.bi {
+                                    font-size: 1.2em;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

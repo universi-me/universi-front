@@ -10,14 +10,15 @@ export enum Permission {
 
 export type RoleType = "ADMINISTRATOR" | "PARTICIPANT" | "VISITOR" | "CUSTOM";
 
-export type FeatureTypes = "FEED" | "CONTENT" | "GROUP" | "PEOPLE" | "COMPETENCE";
+export type FeatureTypes = "FEED" | "CONTENT" | "GROUP" | "PEOPLE" | "COMPETENCE" | "JOBS";
 
 export const FeatureTypesToLabel: { [k in FeatureTypes]: string } = {
     "FEED":         "Publicações",
     "CONTENT":      "Conteúdo",
     "GROUP":        "Grupo",
     "PEOPLE":       "Pessoas",
-    "COMPETENCE":   "Competência"
+    "COMPETENCE":   "Competência",
+    "JOBS":         "Vagas",
 };
 
 export type Roles = {

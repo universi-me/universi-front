@@ -21,7 +21,6 @@ export type JobUpdate_RequestDTO = {
     title?:                  string;
     shortDescription?:       string;
     longDescription?:        string;
-    institutionId?:          string;
     requiredCompetencesIds?: string[];
 };
 
@@ -30,7 +29,7 @@ export type JobClose_RequestDTO = {
 };
 
 export type JobGet_ResponseDTO =    ApiResponse<{ job: Job }>;
-export type JobList_ResponseDTO =   ApiResponse<{ list: Job }>;
+export type JobList_ResponseDTO =   ApiResponse<{ list: Job[] }>;
 export type JobCreate_ResponseDTO = ApiResponse<{ job: Job }>;
 export type JobUpdate_ResponseDTO = ApiResponse<{ job: Job }>;
 export type JobClose_ResponseDTO =  ApiResponse<{ job: Job }>;
