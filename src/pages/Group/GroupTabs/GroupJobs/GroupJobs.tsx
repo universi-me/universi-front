@@ -21,20 +21,28 @@ import "./GroupJobs.less";
 
 export function GroupJobs() {
     const groupContext = useContext(GroupContext);
+    const hasOpenJob = groupContext?.jobs?.find(j => !j.closed) !== undefined;
+
     const [filter, setFilter] = useState<string>("");
+    const [filterOnlyOpen, setFilterOnlyOpen] = useState(hasOpenJob);
     const canI = useCanI();
 
     if (!groupContext || groupContext.jobs === undefined)
         return null;
 
     const filteredJobs = groupContext?.jobs
-        ?.filter(j => stringUtils.includesIgnoreCase(j.title, filter)
+        ?.filter(j => !filterOnlyOpen || !j.closed)
+        .filter(j => stringUtils.includesIgnoreCase(j.title, filter)
             || stringUtils.includesIgnoreCase(j.shortDescription, filter));
 
     return <section id="jobs" className="group-tab">
         <div className="heading top-container">
             <div className="go-right">
                 <Filter placeholderMessage="Pesquisar vagas" setter={setFilter} />
+                <div>
+                    <input type="checkbox" name="only-open" defaultChecked={hasOpenJob} onChange={() => setFilterOnlyOpen(o => !o)} />
+                    <label htmlFor="only-open">Apenas abertas</label>
+                </div>
 
                 { canI("JOBS", Permission.READ_WRITE, groupContext.group) &&
                     <ActionButton name="Criar vaga" buttonProps={{ onClick: () => groupContext.setEditJob(null) }} />
@@ -86,7 +94,7 @@ function RenderJob(props: Readonly<RenderJobProps>) {
             text: "Editar",
             biIcon: "pencil-fill",
             hidden(data) {
-                return !data.author.user.ownerOfSession;
+                return data.closed || !data.author.user.ownerOfSession;
             },
             onSelect(data) {
                 contexts.group.setEditJob(data);
@@ -95,7 +103,7 @@ function RenderJob(props: Readonly<RenderJobProps>) {
         {
             text: "Concluir",
             hidden(data) {
-                return !data.author.user.ownerOfSession;
+                return data.closed || !data.author.user.ownerOfSession;
             },
             async onSelect(data) {
                 const res = await SwalUtils.fireAreYouSure({
@@ -111,10 +119,16 @@ function RenderJob(props: Readonly<RenderJobProps>) {
         }
     ];
 
+    const hoverMessage = job.closed
+        ? "Essa vaga já está fechada"
+        : undefined; 
+
     return <div className="job-item" key={job.id}>
-        <div className="job-header">
+        <div className={makeClassName("job-header", job.closed && "job-closed")} title={hoverMessage}>
             <div>
-                <h3 className="job-title">{ job.title }</h3>
+                <h3 className="job-title">
+                    { job.title }
+                </h3>
                 <h4 className="job-institution">Ofertante: { job.institution.name }</h4>
                 <p className="job-short_description">{ job.shortDescription }</p>
 

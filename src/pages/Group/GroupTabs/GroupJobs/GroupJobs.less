@@ -2,6 +2,10 @@
 @import url(/src/layouts/colors.less);
 
 #group-page #jobs.group-tab {
+    .heading [name="only-open"] {
+        margin-right: .25em;
+    }
+
     #jobs-list.tab-list {
         display: flex;
         flex-direction: column;
@@ -18,6 +22,10 @@
                 display: flex;
                 flex-direction: row;
                 align-items: start;
+
+                &.job-closed {
+                    color: @font-color-v3;
+                }
 
                 .competences {
                     margin-top: .25em;
