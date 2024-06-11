@@ -4,7 +4,7 @@ import "./SelectionBar.css"
 import { ProfileContext, ProfileContentListing, ProfileGroupListing, ProfileCurriculum, ProfileAssignedByMe, ProfileContextType } from "@/pages/Profile";
 import { makeClassName } from "@/utils/tsxUtils";
 
-const INITIAL_TAB: AvailableTabs = "groups";
+const INITIAL_TAB: AvailableTabs = "curriculum";
 export function SelectionBar(){
     const profileContext = useContext(ProfileContext);
     const [currentTab, setCurrentTab] = useState<AvailableTabs>(INITIAL_TAB);
@@ -48,12 +48,12 @@ type TabDefinition = {
 
 const TABS: TabDefinition[] = [
     {
-        name: "Grupos",
-        value: "groups",
-    },
-    {
         name: "Currículo",
         value: "curriculum",
+    },
+    {
+        name: "Grupos",
+        value: "groups",
     },
     {
         name: "Conteúdos",
