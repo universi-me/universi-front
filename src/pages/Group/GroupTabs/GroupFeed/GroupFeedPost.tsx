@@ -109,7 +109,34 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             { readMore !== "NOT_SHOW" && <p className="ler-button" onClick={toggleReadMore}>
                 { readMore === "SHOW_MORE" ? "Ler mais" : "Ler menos" }
             </p> }
+
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <div className="reactions">
+                <button className="reaction-button">
+                    <p>❤️</p>
+                    <p>1</p>
+                </button>
+                <button className="reaction-button">
+                    <p>👏</p>
+                    <p>0</p>
+                </button>
+                <button className="reaction-button">
+                    <p>👍</p>
+                    <p>0</p>
+                </button>
+                <button className="reaction-button">
+                    <p>😞</p>
+                    <p>0</p>
+                </button>
+            </div>
+            
         </div>
+
+        
+
     </div>
 
     function descriptionState() {
