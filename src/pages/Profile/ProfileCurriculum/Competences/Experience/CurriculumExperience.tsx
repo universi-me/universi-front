@@ -80,7 +80,7 @@ export function CurriculumExperience() {
       <div className="heading">
         <div className="experience-left-buttons">
           <div className="experience-title">
-            Experiência
+            Experiências
           </div>
           { profileContext.accessingLoggedUser &&
               <button onClick={toggleEditing} className={`edit-button ${isEditing ? 'active' : ''}`}>
