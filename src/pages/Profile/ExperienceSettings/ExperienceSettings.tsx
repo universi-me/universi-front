@@ -6,6 +6,7 @@ import { UniversimeApi } from "@/services/UniversimeApi"
 import './ExperienceSetting.less'
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
+import { Institution } from "@/types/Institution";
 
 export function ExperienceSettings() {
     const profileContext = useContext(ProfileContext)
@@ -39,10 +40,10 @@ export function ExperienceSettings() {
                     required: true
                 },
                 {
-                    DTOName: "local", label: "Local", type: FormInputs.TEXT,
-                    value: profileContext?.editExperience?.local,
-                    charLimit: 30,
-                    required: true
+                    DTOName: "localId", label: "Local", type: FormInputs.SELECT_SINGLE,
+                    value: profileContext?.editExperience?.institution ? makeInstitutionOption(profileContext?.editExperience?.institution) : undefined,
+                    options: profileContext.allInstitution.map(makeInstitutionOption),
+                    required: true, canCreate: true, onCreate: handleCreateInstitution
                 },
                 {
                     DTOName: "startDate", label: "Data de Inicio", type: FormInputs.DATE,
@@ -87,6 +88,20 @@ export function ExperienceSettings() {
         />
     );
 
+    function makeInstitutionOption(el: Institution) {
+        return {
+            label: el.name,
+            value: el.id,
+        }
+    }
+
+    async function handleCreateInstitution(name: string){
+        const response = await UniversimeApi.Institution.create({ name: name });
+        if (!response.success) return [];
+
+        const listResponse = await UniversimeApi.Institution.listAll();
+        if (!listResponse.success) return [];
+
+        return listResponse.body.list.map(makeInstitutionOption);
+    }
 }
-
-

@@ -29,7 +29,7 @@ export type formProps = {
 
     objects: FormObject[],
     requisition : any,
-    callback : () => any,
+    callback?: () => any,
     formTitle : string,
     cancelProps? : cancelPopup,
     saveButtonText? : string,
@@ -636,7 +636,7 @@ export function UniversiForm(props : formProps){
 
     async function handleCallback() {
         try {
-            await props.callback();
+            await props.callback?.();
         } catch {
         }
         setTimeout(() => {

@@ -3,14 +3,13 @@ import type { Achievements } from "@/types/Achievements";
 import type { Folder, FolderProfile } from "@/types/Capacity";
 import type { CompetenceProfileDTO, CompetenceType } from "@/types/Competence";
 import { Education } from "@/types/Education";
-import { Experience } from "@/types/Experience";
+import { Experience, TypeExperience } from "@/types/Experience";
 import type { Group } from "@/types/Group";
 import { Institution } from "@/types/Institution";
 import type { Link } from "@/types/Link";
 import type { Profile } from "@/types/Profile";
 import type { Recommendation } from "@/types/Recommendation";
 import { TypeEducation } from "@/types/TypeEducation";
-import { TypeExperience } from "@/types/TypeExperience";
 import { removeFalsy } from "@/utils/arrayUtils";
 import type { LoaderFunctionArgs } from "react-router-dom";
 
@@ -20,7 +19,7 @@ export type ProfilePageLoaderResponse = {
     allTypeCompetence:  CompetenceType[];
     allTypeEducation:    TypeEducation[];
     allTypeExperience:   TypeExperience[]; 
-    allInstitution:      Institution[];
+    allInstitution:  Institution[];
 
     profileListData: {
         groups:                  Group[];
@@ -46,7 +45,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
         UniversimeApi.CompetenceType.list(),
         UniversimeApi.TypeEducation.list(),
         UniversimeApi.TypeExperience.list(),
-        UniversimeApi.Institution.list(),
+        UniversimeApi.Institution.listAll(),
     ]);
 
     if (!fetchProfile.success || !fetchProfile.body?.profile )
@@ -71,8 +70,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
         allTypeCompetence: fetchCompetenceTypes.body?.list ?? [],
         allTypeEducation: fetchEducationTypes.body?.lista ?? [],
         allTypeExperience: fetchExperienceTypes.body?.lista ?? [],
-        allInstitution: fetchInstitutions.body?.lista ?? [],
-        
+        allInstitution: fetchInstitutions.body?.list ?? [],
 
         profileListData: {
             achievements: [], // todo: fetch achievements,

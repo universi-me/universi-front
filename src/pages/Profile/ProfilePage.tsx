@@ -67,14 +67,9 @@ export function ProfilePage() {
         // some values are using "!" even though they can be undefined
 
         return {
-            accessingLoggedUser: data.accessingLoggedUser,
-            allInstitution: data.allInstitution,
-            allTypeCompetence: data.allTypeCompetence,
-            allTypeEducation: data.allTypeEducation,
-            allTypeExperience: data.allTypeExperience,
-            profile: new ProfileClass(data.profile!),
-            profileListData: data.profileListData,
+            ...data,
 
+            profile: new ProfileClass(data.profile!),
             reloadPage: refreshProfileData,
 
             editCompetence: undefined,
