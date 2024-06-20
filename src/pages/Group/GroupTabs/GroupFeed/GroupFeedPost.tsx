@@ -85,10 +85,10 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
     ]
 
     const REACTIONS_LIST = [
-        { reaction: '1', icon: "❤️" },
-        { reaction: '2', icon: "👏" },
-        { reaction: '3', icon: "👍" },
-        { reaction: '4', icon: "😞" },
+        { reaction: 'heart',            icon: "❤️" },
+        { reaction: 'clap',             icon: "👏" },
+        { reaction: 'thumb',            icon: "👍" },
+        { reaction: 'disappointment',   icon: "😞" },
     ]
     
     return <div className="feed-item tab-item">
