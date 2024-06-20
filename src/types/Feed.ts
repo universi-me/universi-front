@@ -7,3 +7,9 @@ export type GroupPost = {
     authorId : string;
     author : Profile;
 }
+
+export type GroupPostReaction = {
+    reaction: string;
+    postId: string;
+    authorId: string;
+}
