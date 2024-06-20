@@ -117,12 +117,14 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
                 { readMore === "SHOW_MORE" ? "Ler mais" : "Ler menos" }
             </p> }
 
-            <br/><br/><br/><br/>
+            <br/><br/><br/>
             <div className="reactions">
                 {REACTIONS_LIST.map(reaction => (
-                    <button className="reaction-button" onClick={reactToPost(post, reaction.reaction.toString())}>
+                    <button className={isMyReaction(post, reaction.reaction.toString()) ? "reaction-button reaction-button-selected":"reaction-button"} onClick={reactToPost(post, reaction.reaction.toString())}>
                         <p>{reaction.icon}</p>
-                        <p>{getReactionCount(post, reaction.reaction.toString())}</p>
+                        { getReactionCount(post, reaction.reaction.toString()) !== "0" &&
+                            <p>{getReactionCount(post, reaction.reaction.toString())}</p>
+                        }
                     </button>
                 ))}
             </div>
@@ -178,13 +180,17 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             UniversimeApi.Feed.reactGroupPost({
                 groupId: post.groupId,
                 groupPostId: post.postId,
-                reaction: reaction.toString(),
+                reaction: isMyReaction(post, reaction) ? '0' : reaction.toString(),
             }).then(() => groupContext!.refreshData());
         }
     }
 
     function getReactionCount(post: GroupPost, reaction: string): string {
-        return post.reactions.filter(r => r.reaction === reaction).length.toString();
+        return (post.reactions ?? ([] as GroupPostReaction[])).filter(r => r.reaction === reaction).length.toString();
+    }
+
+    function isMyReaction(post: GroupPost, reaction: string): boolean {
+        return (post.reactions ?? ([] as GroupPostReaction[])).some(r => r.reaction === reaction && r.authorId === groupContext!.loggedData.profile.id);
     }
 
 }
