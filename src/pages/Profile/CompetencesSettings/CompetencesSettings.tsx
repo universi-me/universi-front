@@ -3,9 +3,12 @@ import { useContext, useMemo } from "react";
 import { ProfileContext } from "@/pages/Profile";
 import { CompetenceType, Level, LevelToDescription, LevelToLabel } from "@/types/Competence";
 import { UniversimeApi } from "@/services/UniversimeApi";
-import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
 import './CompetencesSettings.less'
+import { UniversiForm2 } from "@/components/UniversiForm/UniversiForm2";
+import { SelectSingle } from "@/components/UniversiForm/Presets/SelectSingle";
+import stringUtils from "@/utils/stringUtils";
+import { Hidden } from "@/components/UniversiForm/Presets/Hidden";
 
 export function CompetencesSettings() {
     const profileContext = useContext(ProfileContext)
@@ -27,7 +30,8 @@ export function CompetencesSettings() {
         return competences
             .slice()
             .sort((c1,c2) => c1.name.localeCompare(c2.name))
-            .map((t)=> ({value: t.id, label: t.name})) ?? [];
+            // .map((t)=> ({value: t.id, label: t.name}))
+            ?? [];
     }
 
     const levelOptions = Object.entries(LevelToLabel)
@@ -35,50 +39,48 @@ export function CompetencesSettings() {
 
     return (
         profileContext &&
-        <UniversiForm
-            formTitle={editCompetence?.id ? "Editar competência" : "Adicionar competência"}
-            objects={[
-                {
-                    DTOName: "competenceTypeId", label: "Tipo de Competência", type: FormInputs.SELECT_SINGLE, 
-                    value: editCompetence?.competenceType ? {value: editCompetence?.competenceType.id, label: editCompetence?.competenceType.name } : undefined,
-                    options: competenceTypeOptions,
-                    required: true,
-                    canCreate: true,
-                    onCreate: (value: any) => UniversimeApi.CompetenceType.create({name: value}).then(response => {
-                        if (response.success) {
-                            // return updated competence types
-                            return UniversimeApi.CompetenceType.list().then(response => {
-                                if (response.success && response.body) {
-                                    let options = orderByName(response.body.list)
-                                    return options;
-                                }
-                            })
-                        }
-                    })
-                },
-                {
-                    DTOName: "level", label: "Nível de Experiência", type: FormInputs.RADIO,
-                    value: editCompetence?.level ? makeLevelOption(editCompetence.level) : undefined,
-                    options: levelOptions, required: true
-                },
-                {
-                    DTOName: "description", label: "description", type: FormInputs.HIDDEN,
-                    value: editCompetence?.description ?? ""
-                },
-                {
-                    DTOName: "competenceId", label: "competenceId", type: FormInputs.HIDDEN,
-                    value: editCompetence?.id
-                }
-            ]}
+        <UniversiForm2 asModal title={editCompetence?.id ? "Editar competência" : "Adicionar competência"}
             requisition={ editCompetence?.id ? UniversimeApi.Competence.update : UniversimeApi.Competence.create }
-            callback={()=> {profileContext.reloadPage()} }
-        />
+            callBack={ () => profileContext.reloadPage() }
+        >
+            <SelectSingle param="competenceTypeId" label="Tipo de Competência"
+                defaultObject={ editCompetence?.competenceType } options={competenceTypeOptions} required
+                getLabel={ ct => ct.name } getValue={ ct => ct.id }
+                createValue={ handleCreateCompetenceType }
+            />
+
+            {/* level */}
+
+            <Hidden param="description" defaultObject={ editCompetence?.description ?? "" } />
+            <Hidden param="competenceId" defaultObject={ editCompetence?.id } />
+        </UniversiForm2>
+        //         {
+        //             DTOName: "level", label: "Nível de Experiência", type: FormInputs.RADIO,
+        //             value: editCompetence?.level ? makeLevelOption(editCompetence.level) : undefined,
+        //             options: levelOptions, required: true
+        //         },
+        // />
     );
 
     function makeLevelOption(level: Level) {
         return {
             value: level,
             label: `${LevelToLabel[level]}: ${LevelToDescription[level]}`,
+        };
+    }
+
+    async function handleCreateCompetenceType(name : string) {
+        const createRes = await UniversimeApi.CompetenceType.create({ name });
+        if (!createRes.success) return;
+
+        const listRes = await UniversimeApi.CompetenceType.list();
+        if (!listRes.success) return;
+
+        const newOptions = orderByName(listRes.body.list);
+
+        return {
+            createdObject: newOptions.find(ct => stringUtils.equalsIgnoreCase(ct.name, name))!,
+            newOptions,
         };
     }
 }
