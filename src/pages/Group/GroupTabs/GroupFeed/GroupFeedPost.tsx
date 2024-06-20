@@ -10,7 +10,7 @@ import { ProfileClass } from "@/types/Profile";
 import { hasAvailableOption, renderOption, type OptionInMenu } from "@/utils/dropdownMenuUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
-import { type GroupPost } from "@/types/Feed";
+import { GroupPostReaction, type GroupPost } from "@/types/Feed";
 import useCanI from "@/hooks/useCanI";
 import { Permission } from "@/types/Roles";
 
@@ -83,6 +83,13 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             },
         }
     ]
+
+    const REACTIONS_LIST = [
+        { reaction: 1, icon: "❤️" },
+        { reaction: 2, icon: "👏" },
+        { reaction: 3, icon: "👍" },
+        { reaction: 4, icon: "😞" },
+    ]
     
     return <div className="feed-item tab-item">
         <Link to={`/profile/${author.user.name}`} className="feed-user-info">
@@ -110,27 +117,14 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
                 { readMore === "SHOW_MORE" ? "Ler mais" : "Ler menos" }
             </p> }
 
-            <br/>
-            <br/>
-            <br/>
-            <br/>
+            <br/><br/><br/><br/>
             <div className="reactions">
-                <button className="reaction-button">
-                    <p>❤️</p>
-                    <p>1</p>
-                </button>
-                <button className="reaction-button">
-                    <p>👏</p>
-                    <p>0</p>
-                </button>
-                <button className="reaction-button">
-                    <p>👍</p>
-                    <p>0</p>
-                </button>
-                <button className="reaction-button">
-                    <p>😞</p>
-                    <p>0</p>
-                </button>
+                {REACTIONS_LIST.map(reaction => (
+                    <button className="reaction-button" onClick={reactToPost(post, reaction.reaction.toString())}>
+                        <p>{reaction.icon}</p>
+                        <p>{getReactionCount(post, reaction.reaction.toString())}</p>
+                    </button>
+                ))}
             </div>
             
         </div>
@@ -177,6 +171,20 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
                     .then(() => groupContext!.refreshData());
             }
         })
+    }
+
+    function reactToPost(post: GroupPost, reaction: string) {
+        return () => {
+            UniversimeApi.Feed.reactGroupPost({
+                groupId: post.groupId,
+                groupPostId: post.postId,
+                reaction: reaction.toString(),
+            }).then(() => groupContext!.refreshData());
+        }
+    }
+
+    function getReactionCount(post: GroupPost, reaction: string): string {
+        return post.reactions.filter(r => r.reaction === reaction).length.toString();
     }
 
 }

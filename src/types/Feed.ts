@@ -1,6 +1,7 @@
 import { type Profile } from "./Profile";
 
 export type GroupPost = {
+    reactions: GroupPostReaction[];
     postId: string;
     groupId: string;
     content : string;
@@ -10,6 +11,7 @@ export type GroupPost = {
 
 export type GroupPostReaction = {
     reaction: string;
-    postId: string;
+    groupId: string;
+    groupPostId: string;
     authorId: string;
 }

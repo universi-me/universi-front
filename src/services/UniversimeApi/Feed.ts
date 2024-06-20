@@ -56,14 +56,3 @@ export type GroupPostReactionResponseDTO = ApiResponse<{reactions: GroupPostReac
 export async function reactGroupPost(body: GroupPostReaction_RequestDTO): Promise<GroupPostReactionResponseDTO> {
     return (await api.post<GroupPostReactionResponseDTO>(`/feed/groups/${body.groupId}/posts/${body.groupPostId}/reactions`, body)).data;
 }
-
-export type GetGroupPostReactions_RequestDTO = {
-        groupId : string;
-        groupPostId : string;
-}
-
-export type GetGroupPostReactionsResponseDTO = ApiResponse<{reactions: GroupPostReaction[]}>;
-
-export async function getGroupPostReactions(body: GetGroupPostReactions_RequestDTO): Promise<GetGroupPostReactionsResponseDTO> {
-    return (await api.get<GetGroupPostReactionsResponseDTO>(`/feed/groups/${body.groupId}/posts/${body.groupPostId}/reactions`)).data;
-}
