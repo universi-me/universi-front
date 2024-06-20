@@ -33,11 +33,11 @@ export function ProfileCurriculum() {
                 </div>
 
                 <div id="item-competence">
-                    <CurriculumEducation />
+                    <CurriculumExperience />
                 </div>
 
                 <div id="item-competence">
-                    <CurriculumExperience />
+                    <CurriculumEducation />
                 </div>
             </div>
 

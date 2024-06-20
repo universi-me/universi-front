@@ -1,6 +1,6 @@
-import { Dispatch, SetStateAction, MouseEvent } from "react";
+import { MouseEvent } from "react";
 
-export function setStateAsValue<T>(setter: Dispatch<SetStateAction<T>>) {
+export function setStateAsValue<T>(setter: (value: T) => any) {
     return function(event: {currentTarget: {value: T}}) {
         setter(event.currentTarget.value);
     }

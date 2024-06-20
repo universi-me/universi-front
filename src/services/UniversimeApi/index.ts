@@ -17,9 +17,9 @@ import * as Admin from "./Admin"
 import * as Feed from "./Feed"
 import * as Roles from "./Roles"
 import * as Feature from "./Feature"
+import * as Job from "./Job"
 
 export const UniversimeApi = {
-    api,
     Auth,
     Capacity,
     Competence,
@@ -38,6 +38,7 @@ export const UniversimeApi = {
     Feed,
     Roles,
     Feature,
+    Job,
 };
 
 export default UniversimeApi;

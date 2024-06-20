@@ -91,6 +91,7 @@ export function GroupPage() {
         return {
             folders: data.folders,
             posts: data.posts,
+            jobs: data.jobs,
             group: data.group!,
             loggedData: {
                 isParticipant: data.loggedData?.isParticipant!,
@@ -142,6 +143,11 @@ export function GroupPage() {
             assignFolder: undefined,
             setAssignFolder(c) {
                 setContext({...this, assignFolder: c})
+            },
+
+            editJob: undefined,
+            setEditJob(j) {
+                setContext({...this, editJob: j})
             },
 
             refreshData: refreshGroupData,
