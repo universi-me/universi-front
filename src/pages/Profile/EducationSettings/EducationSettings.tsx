@@ -21,12 +21,12 @@ export function EducationSettings() {
                     options: profileContext.allInstitution.map((t) => ({value: t.id, label: t.name})),
                     required: true,
                     canCreate: true,
-                    onCreate: (value: any) => UniversimeApi.Institution.create({name: value, description: value}).then(response => {
+                    onCreate: (value: any) => UniversimeApi.Institution.create({name: value}).then(response => {
                         if (response.success) {
                             // return updated institution
-                            return UniversimeApi.Institution.list().then(response => {
+                            return UniversimeApi.Institution.listAll().then(response => {
                                 if (response.success && response.body) {
-                                    let options = response.body.lista.map(t => ({ value: t.id, label: t.name }));
+                                    let options = response.body.list.map(t => ({ value: t.id, label: t.name }));
                                     return options;
                                 }
                             })

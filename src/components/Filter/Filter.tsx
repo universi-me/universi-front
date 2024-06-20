@@ -3,7 +3,7 @@ import { setStateAsValue } from "@/utils/tsxUtils";
 import "./Filter.less"
 
 interface FilterProps{
-    setter: React.Dispatch<React.SetStateAction<string>>,
+    setter: (value: string) => any,
     placeholderMessage : string
 }
 

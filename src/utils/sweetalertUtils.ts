@@ -28,3 +28,17 @@ export function fireToasty<T = any>(options: SweetAlertOptions) {
         showCloseButton: true,
     });
 }
+
+export function fireAreYouSure<T = any>(options: SweetAlertOptions) {
+    return fireModal({
+        title: "Tem certeza que deseja fazer isso?",
+        text: "Essa ação não pode ser desfeita",
+
+        showConfirmButton: true,
+        confirmButtonText: "Proceder",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+
+        ...options,
+    })
+}

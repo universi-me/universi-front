@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
-import { TypeEducation } from "@/types/TypeEducation";
+import { Institution } from "@/types/Institution";
 
 
 export type typeEducation_RequestDTO = {
@@ -11,8 +11,8 @@ export type ypeEducationCreate_RequestDTO = {
     name: string;
 }
 
-export type TypeEducationGet_ResponseDTO = ApiResponse<{ typeEducation: TypeEducation }>;
-export type TypeEducationList_ResponseDTO = ApiResponse<{lista: TypeEducation[]}>;
+export type TypeEducationGet_ResponseDTO = ApiResponse<{ typeEducation: Institution }>;
+export type TypeEducationList_ResponseDTO = ApiResponse<{lista: Institution[]}>;
 export type ypeEducationCreate_ResponseDTO = ApiResponse<{  }>;
 
 export async function get(body: typeEducation_RequestDTO) {

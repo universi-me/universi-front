@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
-import { TypeExperience } from "@/types/TypeExperience";
+import { TypeExperience } from "@/types/Experience";
 
 export type typeExperience_RequestDTO = {
     typeExperienceId: string;
