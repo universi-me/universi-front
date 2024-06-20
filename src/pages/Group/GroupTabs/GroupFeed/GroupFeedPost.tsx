@@ -85,10 +85,10 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
     ]
 
     const REACTIONS_LIST = [
-        { reaction: 1, icon: "❤️" },
-        { reaction: 2, icon: "👏" },
-        { reaction: 3, icon: "👍" },
-        { reaction: 4, icon: "😞" },
+        { reaction: '1', icon: "❤️" },
+        { reaction: '2', icon: "👏" },
+        { reaction: '3', icon: "👍" },
+        { reaction: '4', icon: "😞" },
     ]
     
     return <div className="feed-item tab-item">
@@ -120,10 +120,10 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             <br/><br/><br/>
             <div className="reactions">
                 {REACTIONS_LIST.map(reaction => (
-                    <button className={isMyReaction(post, reaction.reaction.toString()) ? "reaction-button reaction-button-selected":"reaction-button"} onClick={reactToPost(post, reaction.reaction.toString())}>
+                    <button className={isMyReaction(post, reaction.reaction) ? "reaction-button reaction-button-selected" : "reaction-button"} onClick={reactToPost(post, reaction.reaction)}>
                         <p>{reaction.icon}</p>
-                        { getReactionCount(post, reaction.reaction.toString()) !== "0" &&
-                            <p>{getReactionCount(post, reaction.reaction.toString())}</p>
+                        { getReactionCount(post, reaction.reaction) !== '0' &&
+                            <p>{getReactionCount(post, reaction.reaction)}</p>
                         }
                     </button>
                 ))}
@@ -180,7 +180,7 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             UniversimeApi.Feed.reactGroupPost({
                 groupId: post.groupId,
                 groupPostId: post.postId,
-                reaction: isMyReaction(post, reaction) ? '0' : reaction.toString(),
+                reaction: isMyReaction(post, reaction) ? '0' : reaction,
             }).then(() => groupContext!.refreshData());
         }
     }
