@@ -1,12 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
-import { AuthContext } from "@/contexts/Auth";
-import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
+import AuthContext from "@/contexts/Auth";
+import ProfileInfo from "@/components/ProfileInfo";
+import ManageJob from "@/components/ManageJob";
 
 import {
     JobContext, JobContextType, JobHeader, JobCompetences, JobShortDescription,
-    JobLongDescription, JobPageLoaderResponse
+    JobLongDescription, JobPageLoaderResponse, fetchJobPageData, JobActions
 } from "@/pages/JobPage";
 
 import "./JobPage.less";
@@ -30,9 +31,14 @@ export function JobPage() {
             <section id="job-content">
                 <JobHeader />
                 <JobCompetences />
-
                 <JobShortDescription />
+                <JobActions />
+
                 <JobLongDescription />
+
+                { context.editing &&
+                    <ManageJob job={context.job} callback={ async () => refreshJobData() } />
+                }
             </section>
         </ProfileInfo>
     </JobContext.Provider>
@@ -41,6 +47,21 @@ export function JobPage() {
         if (!data.success) return undefined;
         else return {
             job: data.job,
+
+            editing: false,
+            setEditing(b) {
+                setContext({...this, editing: b})
+            },
+
+            refresh: refreshJobData,
         }
+    }
+
+    async function refreshJobData() {
+        const data = await fetchJobPageData(context!.job.id);
+        const newContext = makeContext(data);
+
+        setContext(newContext);
+        return newContext;
     }
 }
