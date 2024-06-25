@@ -19,8 +19,6 @@ export function JobHeader(props: Readonly<JobHeaderProps>) {
 
         <h2 id="job-title">{ job.title }</h2>
         <h3 id="job-institution">Ofertante: { job.institution.name }</h3>
-
-        
     </div>
 }
 

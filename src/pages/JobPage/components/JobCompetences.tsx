@@ -9,13 +9,14 @@ import { JobContext } from "@/pages/JobPage";
 export function JobCompetences(props : Readonly<JobCompetencesProps>) {
     const context = useContext(JobContext);
     const job = props.job ?? context?.job;
-    if (!job) return null;
 
     const competences = useMemo(() => {
-        return [...job.requiredCompetences].sort((a, b) => a.name.localeCompare(b.name))
-    }, [job.requiredCompetences]);
+        if (!job) return undefined;
 
-    if (job.requiredCompetences.length === 0)
+        return [...job.requiredCompetences].sort((a, b) => a.name.localeCompare(b.name))
+    }, [job?.requiredCompetences]);
+
+    if (!competences || competences.length === 0)
         return null;
 
     return <div id="job-competences">

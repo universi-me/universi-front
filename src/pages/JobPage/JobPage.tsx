@@ -9,6 +9,8 @@ import {
     JobLongDescription, JobPageLoaderResponse
 } from "@/pages/JobPage";
 
+import "./JobPage.less";
+
 export function JobPage() {
     const data = useLoaderData() as JobPageLoaderResponse;
     const auth = useContext(AuthContext);
