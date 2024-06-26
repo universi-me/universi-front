@@ -11,7 +11,6 @@ export type GroupPost = {
 
 export type GroupPostReaction = {
     reaction: string;
-    groupId: string;
     groupPostId: string;
     authorId: string;
 }

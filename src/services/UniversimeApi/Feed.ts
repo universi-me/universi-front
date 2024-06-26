@@ -40,13 +40,12 @@ export async function editGroupPost(body : EditGroupPost_RequestDTO) : Promise<A
 }
 
 export async function deleteGroupPost(body: DeleteGroupPost_RequestDTO): Promise<ApiResponse<string>> {
-        const response = await api.delete<ApiResponse<string>>(`/feed/groups/${body.groupId}/posts/${body.postId}`);
+        const response = await api.delete<ApiResponse<string>>(`/feed/posts/${body.postId}`);
         return response.data;
 }
 
 
 export type GroupPostReaction_RequestDTO = {
-        groupId : string;
         groupPostId : string;
         reaction : string;
 }
@@ -54,5 +53,5 @@ export type GroupPostReaction_RequestDTO = {
 export type GroupPostReactionResponseDTO = ApiResponse<{reactions: GroupPostReaction}>;
 
 export async function reactGroupPost(body: GroupPostReaction_RequestDTO): Promise<GroupPostReactionResponseDTO> {
-    return (await api.post<GroupPostReactionResponseDTO>(`/feed/groups/${body.groupId}/posts/${body.groupPostId}/reactions`, body)).data;
+    return (await api.post<GroupPostReactionResponseDTO>(`/feed/posts/${body.groupPostId}/reactions`, body)).data;
 }

@@ -178,7 +178,6 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
     function reactToPost(post: GroupPost, reaction: string) {
         return () => {
             UniversimeApi.Feed.reactGroupPost({
-                groupId: post.groupId,
                 groupPostId: post.postId,
                 reaction: isMyReaction(post, reaction) ? '0' : reaction,
             }).then(() => groupContext!.refreshData());
