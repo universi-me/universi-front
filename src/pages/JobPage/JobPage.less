@@ -1,0 +1,47 @@
+@import url(/src/layouts/colors.less);
+
+#job-page #job-content {
+    #job-header {
+        #job-closed-message {
+            color: gray;
+            text-align: center;
+
+            margin-bottom: .25em;
+        }
+    }
+
+    #job-competences {
+        .job-requirement {
+            margin-left: .25em;
+            background-color: @primary-color;
+            color: @font-color-v1;
+
+            padding: .1em .25em;
+            border-radius: .4em;
+
+            .unreviewed-competence-warning {
+                margin-left: .25em;
+            }
+        }
+    }
+
+    #job-short-description {
+        margin: 1rem 0;
+    }
+
+    #job-actions {
+        display: flex;
+        align-items: center;
+        gap: .5em;
+    }
+
+    #job-long-description {
+        margin-top: 2rem;
+        text-align: justify;
+
+        #job-long-description-header {
+            margin-bottom: .5em;
+            text-align: center;
+        }
+    }
+}
