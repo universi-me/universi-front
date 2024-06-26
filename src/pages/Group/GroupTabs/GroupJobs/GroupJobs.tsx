@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
@@ -10,7 +10,7 @@ import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { ManageJob } from "@/components/ManageJob/ManageJob";
 import { GroupContext, GroupContextType } from "@/pages/Group";
 
-import stringUtils from "@/utils/stringUtils";
+import StringUtils from "@/utils/stringUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { makeClassName } from "@/utils/tsxUtils";
 import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdownMenuUtils";
@@ -18,37 +18,53 @@ import { Job } from "@/types/Job";
 import { Permission } from "@/types/Roles";
 
 import "./GroupJobs.less";
+import UniversiForm, { FormInputs } from "@/components/UniversiForm";
+import { CompetenceType } from "@/types/Competence";
 
 export function GroupJobs() {
     const groupContext = useContext(GroupContext);
-    const hasOpenJob = groupContext?.jobs?.find(j => !j.closed) !== undefined;
+    const [jobsFetched, setJobsFetched] = useState(groupContext?.jobs);
 
-    const [filter, setFilter] = useState<string>("");
-    const [filterOnlyOpen, setFilterOnlyOpen] = useState(hasOpenJob);
+    const [filterText, setFilterText] = useState<string>("");
+    const filterOnlyOpen = useRef(false);
+    const filterCompetenceTypes = useRef<CompetenceType[]>([]);
+    const [renderFilterForm, setRenderFilterForm] = useState(false);
+
     const canI = useCanI();
 
-    if (!groupContext || groupContext.jobs === undefined)
+    if (!groupContext || jobsFetched === undefined)
         return null;
 
-    const filteredJobs = groupContext?.jobs
-        ?.filter(j => !filterOnlyOpen || !j.closed)
-        .filter(j => stringUtils.includesIgnoreCase(j.title, filter)
-            || stringUtils.includesIgnoreCase(j.shortDescription, filter));
+    const filteredJobs = jobsFetched
+        .filter(j => StringUtils.includesIgnoreCase(j.title, filterText)
+            || StringUtils.includesIgnoreCase(j.shortDescription, filterText));
 
     return <section id="jobs" className="group-tab">
         <div className="heading top-container">
             <div className="go-right">
-                <Filter placeholderMessage="Pesquisar vagas" setter={setFilter} />
-                <div>
-                    <input type="checkbox" name="only-open" defaultChecked={hasOpenJob} onChange={() => setFilterOnlyOpen(o => !o)} />
-                    <label htmlFor="only-open">Apenas abertas</label>
-                </div>
+                <Filter placeholderMessage="Pesquisar vagas" setter={setFilterText} />
+
+                <button type="button" id="filter-jobs-button" onClick={ () => setRenderFilterForm(r => !r) } title="Filtrar vagas">
+                    <span className="bi bi-filter-circle-fill" />
+                </button>
 
                 { canI("JOBS", Permission.READ_WRITE, groupContext.group) &&
                     <ActionButton name="Criar vaga" buttonProps={{ onClick: () => groupContext.setEditJob(null) }} />
                 }
             </div>
         </div>
+
+        { (filterCompetenceTypes.current.length > 0 || filterOnlyOpen.current) &&
+            <div id="filters-wrapper">
+                Filtrar competências: {
+                    filterOnlyOpen.current && <span className="filter-item">Abertas</span>
+                } {
+                    filterCompetenceTypes.current.map(
+                        ct => <span className="filter-item" key={ct.id}>{ ct.name }</span>
+                    )
+                }
+            </div>
+        }
 
         <div id="jobs-list" className="tab-list">
             <RenderManyJobs jobs={filteredJobs} contexts={{ group: groupContext }} />
@@ -57,7 +73,41 @@ export function GroupJobs() {
         { groupContext.editJob !== undefined &&
             <ManageJob job={groupContext.editJob} callback={groupContext.refreshData} />
         }
+
+        { renderFilterForm &&
+            <UniversiForm formTitle="Filtrar por Competências" objects={[
+                {
+                    DTOName: "competences", label: "Deve ter as competências:", type: FormInputs.SELECT_MULTI,
+                    canCreate: false, options: groupContext.competenceTypes.map(ct => ({ label: ct.name, value: ct.id })),
+                    required: false, value: filterCompetenceTypes.current.map(ct => ({ label: ct.name, value: ct.id })),
+                }, {
+                    DTOName: "onlyOpen", label: "Apenas vagas abertas?", type: FormInputs.BOOLEAN,
+                    value: filterOnlyOpen.current, required: false,
+                }
+            ]} requisition={ handleFilterJobs } callback={() => setRenderFilterForm(false)} />
+        }
     </section>;
+
+    async function handleFilterJobs(form: { competences: string[], onlyOpen: boolean }) {
+        filterOnlyOpen.current = form.onlyOpen;
+
+        filterCompetenceTypes.current = form.competences.map(
+            ctId => groupContext!.competenceTypes
+                .find(ct => ct.id === ctId))
+                .filter(ct => ct !== undefined) as CompetenceType[];
+
+        await refreshJobs();
+    }
+
+    async function refreshJobs() {
+        const res = await UniversimeApi.Job.list({ filters: {
+            onlyOpen: filterOnlyOpen.current,
+            competenceTypesIds: filterCompetenceTypes.current.map(ct => ct.id),
+        } });
+
+        if (!res.success) return;
+        setJobsFetched(res.body.list);
+    }
 }
 
 type RenderManyJobsProps = {

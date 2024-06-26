@@ -8,6 +8,13 @@ export type JobGet_RequestDTO = {
     jobId: string;
 };
 
+export type JobList_RequestDTO = {
+    filters?: {
+        onlyOpen?: boolean;
+        competenceTypesIds?: string[];
+    };
+}
+
 export type JobCreate_RequestDTO = {
     title:                  string;
     shortDescription:       string;
@@ -39,13 +46,8 @@ export async function get(body: JobGet_RequestDTO) {
     return res.data;
 }
 
-export async function listAll() {
-    const res = await api.post<JobList_ResponseDTO>(BASE_PATH + "list", {});
-    return res.data;
-}
-
-export async function listOpen() {
-    const res = await api.post<JobList_ResponseDTO>(BASE_PATH + "list-open", {});
+export async function list(body: JobList_RequestDTO) {
+    const res = await api.post<JobList_ResponseDTO>(BASE_PATH + "list", body);
     return res.data;
 }
 
