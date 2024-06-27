@@ -19,6 +19,7 @@ import SettingsPage, { GroupEmailFilterPage, GroupEmailFilterLoader, RolesPage, 
 import ContentPage from "@/pages/Content";
 import { ContentPageLoader } from "@/pages/Content/ContentPageLoader";
 import PageNotFound from "@/pages/PageNotFound/PageNotFound";
+import JobPage, { JobPageLoader } from "@/pages/JobPage";
 
 
 
@@ -97,6 +98,11 @@ export const router = createBrowserRouter([{
         path: "/content/:id",
         element: <ContentPage />,
         loader: ContentPageLoader,
+    },
+    {
+        path: "/job/:id",
+        element: <JobPage />,
+        loader: JobPageLoader
     }
   ]
 },
