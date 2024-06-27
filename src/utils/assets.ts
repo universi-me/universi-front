@@ -19,3 +19,11 @@ export const ICON_DELETE_BLACK = "/assets/icons/delete-black.svg"
 export const MATERIAL_THUMB_VIDEO = "/assets/imgs/video.png";
 export const MATERIAL_THUMB_LINK =  "/assets/imgs/link.png";
 export const MATERIAL_THUMB_FILE =  "/assets/imgs/file.png";
+
+export const ICON_LIKE = "/assets/icons/like.svg";
+export const ICON_CLAP = "/assets/icons/clap.svg";
+export const ICON_HEART = "/assets/icons/heart.svg";
+export const ICON_SUPPORT = "/assets/icons/support.svg";
+export const ICON_GENIUS = "/assets/icons/genius.svg";
+export const ICON_HAPPY = "/assets/icons/happy.svg";
+
