@@ -5,6 +5,7 @@ import type { Content, Folder } from "@/types/Capacity";
 import { Link } from "@/types/Link";
 import { GroupPost } from "@/types/Feed";
 import { Job } from "@/types/Job";
+import { CompetenceType } from "@/types/Competence";
 
 export type GroupContextType = null | {
     group:         Group;
@@ -13,6 +14,8 @@ export type GroupContextType = null | {
     folders:       Folder[];
     posts:         GroupPost[];
     jobs:          Job[] | undefined;
+
+    competenceTypes: CompetenceType[];
 
     currentContent: Folder | undefined;
     setCurrentContent(content: Folder | undefined): any;

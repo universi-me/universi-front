@@ -92,6 +92,7 @@ export function GroupPage() {
             folders: data.folders,
             posts: data.posts,
             jobs: data.jobs,
+            competenceTypes: data.competenceTypes,
             group: data.group!,
             loggedData: {
                 isParticipant: data.loggedData?.isParticipant!,
