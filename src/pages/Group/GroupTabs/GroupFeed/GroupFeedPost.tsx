@@ -166,7 +166,7 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
                         ))}
                     </div>
                     <div className="reaction-count" onClick={() => setShowReactionsPost(post)}>
-                        {countReactions(post)} pessoas reagiram
+                        {countReactions(post)} pessoa(s) reagiram
                     </div>
                 </div>
             }
@@ -212,7 +212,7 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
           </div>
         )}
       </div>
-      <div className="comment-button">💬 Comentar</div>
+      <div className="comment-button" hidden>💬 Comentar</div>
     </div>
 
             
