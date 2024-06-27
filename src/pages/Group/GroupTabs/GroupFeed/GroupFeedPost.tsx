@@ -99,6 +99,8 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
     const [selectedReaction, setSelectedReaction] = useState<any>(null);
     const [hoveredReaction, setHoveredReaction] = useState<any>(null);
 
+    const [showReactionsPost, setShowReactionsPost] = useState<GroupPost | null>(null);
+
     useEffect(() => {
         REACTIONS_LIST.map((reaction) => (
             isMyReaction(post, reaction.reaction) && setSelectedReaction(reaction)
@@ -110,6 +112,26 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             <img src={author.imageUrl} alt="" className="feed-image" />
             <p>{author.fullname}</p>
         </Link>
+
+        {showReactionsPost && (
+            <div className="reactions-modal" onClick={() => setShowReactionsPost(null)}>
+                <div className="reactions-modal-content" onClick={(e) => e.stopPropagation()}>
+                    <div className="reactions-modal-header">
+                        <h3>Reações</h3>
+                        <button className="reactions-modal-close" onClick={() => setShowReactionsPost(null)}>✖</button>
+                    </div>
+                    <div className="reactions-modal-body">
+                        {REACTIONS_LIST.map((reaction) => (
+                            countReaction(showReactionsPost, reaction.reaction) > 0 &&
+                            <div key={reaction.name} className="reaction-modal">
+                                <img src={reaction.icon} height={18} width={18} />
+                                <p>{countReaction(showReactionsPost, reaction.reaction)} {reaction.name}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        )}
 
         { hasAvailableOption(OPTIONS_DEFINITION, post) && <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
@@ -143,7 +165,7 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
                             </div>
                         ))}
                     </div>
-                    <div className="reaction-count">
+                    <div className="reaction-count" onClick={() => setShowReactionsPost(post)}>
                         {countReactions(post)} pessoas reagiram
                     </div>
                 </div>
