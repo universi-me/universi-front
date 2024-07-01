@@ -12,6 +12,8 @@ import { enableSignUp } from "./helperFunctions";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import "./SignUpModal.less"
+import NewPasswordInput from "@/components/NewPasswordInput/NewPasswordInput";
+import { NullableBoolean } from "@/types/utils";
 
 export type SignUpModalProps = {
     toggleModal: (state: boolean) => any;
@@ -32,7 +34,7 @@ export function SignUpModal(props: SignUpModalProps) {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
-    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [isPasswordValid, setIsPasswordValid] = useState<NullableBoolean>(false);
 
     const [usernameAvailable, setUsernameAvailable] = useState<boolean>(false);
     const [usernameAvailableChecked, setUsernameAvailableChecked] = useState<boolean>(false);
@@ -51,7 +53,6 @@ export function SignUpModal(props: SignUpModalProps) {
     const canSignUp = enableSignUp(username, email, password);
 
     const closeModal = () => props.toggleModal(false);
-    const togglePassword = () => setShowPassword(!showPassword);
 
     const handleRecaptchaChange = (token: string | null) => {
         setRecaptchaToken(token);
@@ -159,21 +160,8 @@ export function SignUpModal(props: SignUpModalProps) {
 
                     <fieldset id="password-fieldset">
                         <legend>Senha</legend>
-                        <input type={showPassword ? "text" : "password"} name="password"
-                            placeholder="Insira sua senha" required
-                            onChange={e => setPassword(e.currentTarget.value)}
-                        />
-                        <button type="button" onClick={togglePassword} id="toggle-password-visibility" title="Alterar visibilidade da senha">
-                            <span className={`bi ${showPassword ? "bi-eye-fill" : "bi-eye-slash-fill"}`} />
-                        </button>
+                        <NewPasswordInput password={password} setPassword={setPassword} valid={isPasswordValid} setValid={setIsPasswordValid}/>
                     </fieldset>
-
-                    <section className="password-requirements">
-                        <h3>Sua senha precisa conter:</h3>
-                        <p className={`bi min-length ${passwordValidationClass(minimumLength(password))}`}>Tamanho mínimo de oito caracteres</p>
-                        <p className={`bi upper-lower-case ${passwordValidationClass(upperAndLowerCase(password))}`}>Letras minúsculas e maiúsculas</p>
-                        <p className={`bi number-special-char ${passwordValidationClass(numberOrSpecialChar(password))}`}>Números ou caracteres especiais</p>
-                    </section>
 
                     {
                         !ENABLE_RECAPTCHA ? null :
