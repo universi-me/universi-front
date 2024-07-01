@@ -64,7 +64,7 @@ const NewPasswordInput: React.FC<NewPasswordInputProps> = ({ password, setPasswo
             />
             <span className="toggle" onClick={toggleShowPassword}>
               <span className="material-symbols-outlined">
-                {showPassword ? "visibility_off" : "visibility"}
+                {showPassword ? "visibility" : "visibility_off"}
               </span>
             </span>
           </div>
@@ -84,7 +84,7 @@ const NewPasswordInput: React.FC<NewPasswordInputProps> = ({ password, setPasswo
                 />
                 <span className="toggle" onClick={toggleShowPasswordRepeat}>
                 <span className="material-symbols-outlined">
-                    {showPasswordRepeat ? "visibility_off" : "visibility"}
+                    {showPasswordRepeat ? "visibility" : "visibility_off"}
                 </span>
                 </span>
             </div>
