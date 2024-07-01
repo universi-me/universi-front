@@ -7,7 +7,6 @@ import UniversimeApi from "@/services/UniversimeApi";
 import { isEmail } from "@/utils/regexUtils";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
-import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
 import { enableSignUp } from "./helperFunctions";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
