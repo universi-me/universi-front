@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import UniversimeApi from "@/services/UniversimeApi";
-import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
+import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase, equality } from "@/utils/passwordValidation";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import { NullableBoolean } from "@/types/utils";
 
@@ -31,12 +31,12 @@ const NewPasswordInput: React.FC<NewPasswordInputProps> = ({ password, setPasswo
         setValidPasswordLength(minimumLength(password));
         setValidPasswordCase(upperAndLowerCase(password));
         setValidPasswordSpecial(numberOrSpecialChar(password));
-        setValidPasswordEquality((((password == null || password.length==0) || (passwordRepeat == null || passwordRepeat.length==0)) ? null : (password === passwordRepeat)));
+        setValidPasswordEquality(equality(password, passwordRepeat));
 
         let isOk = minimumLength(password) &&
                    upperAndLowerCase(password) &&
                    numberOrSpecialChar(password) &&
-                   ((((password == null || password.length==0) || (passwordRepeat == null || passwordRepeat.length==0)) ? null : (password === passwordRepeat)));
+                   equality(password, passwordRepeat);
 
         setValid(isOk);
 
