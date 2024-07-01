@@ -164,6 +164,209 @@
                     }
                 }
             }
+
+            .learn-more {
+                color: @primary-color;
+                cursor: pointer;
+                margin-left: 32px;
+            }
+
+            .learn-more:hover {
+                text-decoration: underline;
+            }
+            
+            .post-actions {
+                display: flex;
+                gap: 10px;
+              }
+              
+            .like-button, .comment-button {
+                position: relative;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+              }
+
+            .like-button-selected {
+                background-color: #dedede;
+              }
+
+            .like-button-content {
+                display: flex;
+                //gap: 5px;
+                //center content
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                gap: 5px;
+              }
+              
+            .like-button:hover, .comment-button:hover {
+                background-color: #f0f0f0;
+              }
+              
+            .reaction-popup {
+                position: absolute;
+                top: -69px;
+                left: 0;
+                display: flex;
+                gap: 5px;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 15px;
+                background-color: white;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                animation: fadeIn 0.3s ease;
+              }
+              
+            .reaction {
+                padding: 5px;
+                border-radius: 15px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+              }
+
+            .reaction-selected {
+                background-color: #dedede;
+              }
+              
+            .reaction:hover {
+                //background-color: #f0f0f0;
+                animation: PopUp  0.6s alternate-reverse infinite;
+              }
+
+            .post-separator {
+                border-bottom:1px solid #94949437;
+                margin-top: 5px;
+                margin-bottom: 10px;
+              }
+
+            .post-info-reaction {
+                display: flex;
+                gap: 0px;
+                margin-left: 14px;
+                margin-top: 15px;
+
+                .reaction-icons {
+                    display: flex;
+                  }
+    
+                .reaction-icon {
+                    margin-left: -6px;
+                }
+
+                .reaction-count {
+                    font-size: 0.9em;
+                    color: #949494;
+                    margin-left: 5px;
+                    cursor: pointer;
+                }
+                .reaction-count:hover {
+                    color: #6d6d6d;
+                    text-decoration: underline;
+                }
+
+            }
+
+            
+              
+            @keyframes fadeIn {
+                from {
+                  opacity: 0;
+                  transform: translateY(-30px);
+                }
+                to {
+                  opacity: 1;
+                  transform: translateY(0);
+                }
+            }
+
+            @keyframes PopUp {
+                from {
+                  opacity: 1;
+                  transform: translateY(-3px);
+                  scale : 1.2;
+                }
+                to {
+                  opacity: 1;
+                  transform: translateY(1px);
+                  scale: 1.2;
+                }
+            }
+
+            .reaction-tooltip {
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                margin-bottom: 5px;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: white;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                white-space: nowrap;
+              }
+
         }
+
+        // reactions-modal
+        .reactions-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+          }
+
+        .reactions-modal-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 5px 8px rgba(0,0,0,0.1);
+            width: 300px;
+          }
+
+        .reactions-modal-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+          }
+
+        .reactions-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+        .reactions-modal-body {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0px;
+
+            display: flex;
+            flex-direction: column;
+          }
+
+        .reaction-modal {
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            padding: 5px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+          }
     }
 }
