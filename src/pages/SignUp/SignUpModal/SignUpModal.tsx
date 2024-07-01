@@ -50,7 +50,7 @@ export function SignUpModal(props: SignUpModalProps) {
     const isFirstnameFull = (firstname.length) >= FIRST_NAME_MAX_LENGTH;
     const isLastnameFull = (lastname.length) >= LAST_NAME_MAX_LENGTH;
 
-    const canSignUp = enableSignUp(username, email, password);
+    const canSignUp = enableSignUp(username, email, password) && isPasswordValid && usernameAvailable && emailAvailable;
 
     const closeModal = () => props.toggleModal(false);
 
