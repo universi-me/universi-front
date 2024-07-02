@@ -26,6 +26,13 @@ export function numberOrSpecialChar(password: string): NullableBoolean {
     return RegExp(/[^A-Za-zçÇ]/).exec(password) !== null;
 }
 
+export function equality(password: string, passwordRepeat: string): NullableBoolean {
+    if (((password == null || password.length==0) || (passwordRepeat == null || passwordRepeat.length==0)))
+        return null;
+
+    return (password === passwordRepeat);
+}
+
 export function passwordValidationClass(validPassword: NullableBoolean): string {
     if (validPassword === null)
         return "";
