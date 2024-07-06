@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 export type OptionInMenu<T> = {
@@ -6,6 +7,7 @@ export type OptionInMenu<T> = {
     biIcon?:    string;
     className?: string;
 
+    href?:     (data: T) => string;
     onSelect?: (data: T) => any;
     disabled?: (data: T) => boolean;
     hidden?:   (data: T) => boolean;
@@ -19,15 +21,23 @@ export function renderOption<T>(data: T, option: OptionInMenu<T>) {
     const className = "dropdown-options-item" + (option.className ? ` ${option.className}` : "");
     const disabled = isDisabled(option, data);
     const title = getTitle(option, data);
+    const href = getHref(option, data);
     const key = option.text.toString();
     const onSelect = function() {
         if (!disabled && option.onSelect)
             option.onSelect(data);
     };
 
-    return <DropdownMenu.Item {...{className, disabled, onSelect, key, title}}>
+    const children = <>
         { option.text }
         { option.biIcon ? <i className={`bi bi-${option.biIcon} right-slot`}/> : null }
+    </>
+
+    return <DropdownMenu.Item {...{className, disabled, onSelect, key, title}}>
+        { href
+            ? <Link to={href}>{children}</Link>
+            : children
+        }
     </DropdownMenu.Item>
 }
 
@@ -46,4 +56,8 @@ function isDisabled<T>(option: OptionInMenu<T>, data: T) {
 
 function getTitle<T>(option: OptionInMenu<T>, data: T) {
     return option.title ? option.title(data) : undefined;
+}
+
+function getHref<T>(option: OptionInMenu<T>, data: T) {
+    return option.href ? option.href(data) : undefined;
 }
