@@ -1,12 +1,14 @@
 import { useContext, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
+
 import { AuthContext } from "@/contexts/Auth";
+import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { IMG_DEFAULT_PROFILE } from "@/utils/assets";
 import { OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
+
 import { ProfileClass } from "@/types/Profile";
 import "./WelcomeUser.less"
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 
 export function WelcomeUser() {
     const auth = useContext(AuthContext);
