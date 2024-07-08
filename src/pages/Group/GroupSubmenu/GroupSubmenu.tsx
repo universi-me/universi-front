@@ -19,12 +19,12 @@ export function GroupSubmenu(){
     return <DropdownMenu.Root>
         <div id="group-submenu">
             <DropdownMenu.Trigger asChild>
-                <button style={{all: "unset"}}>
-                    <span className="bi bi-three-dots-vertical dots" />
+                <button id="group-submenu-trigger">
+                    <span className="bi bi-three-dots-vertical" />
                 </button>
             </DropdownMenu.Trigger>
 
-            <DropdownMenu.Content side="bottom">
+            <DropdownMenu.Content side="bottom" id="group-submenu-options">
                 { options.map(o => renderOption(context.group, o)) }
             </DropdownMenu.Content>
         </div>
@@ -34,8 +34,7 @@ export function GroupSubmenu(){
         return [
         {
             text: "Sair deste grupo",
-            biIcon: "door-open",
-            className: "box",
+            biIcon: "door-open-fill",
             hidden(data) {
                 return !!data.rootGroup;
             },
@@ -49,7 +48,6 @@ export function GroupSubmenu(){
         }, {
             text: "Editar este grupo",
             biIcon: "pencil-fill",
-            className: "box",
             hidden(data) {
                 return !data.canEdit;
             },
@@ -59,7 +57,6 @@ export function GroupSubmenu(){
         }, {
             text: "Configurações",
             biIcon: "gear-fill",
-            className: "box",
             hidden(data) {
                 return authContext.user?.accessLevel !== "ROLE_ADMIN";
             },
