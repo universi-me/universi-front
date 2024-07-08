@@ -10,8 +10,10 @@ export function Header() {
   const authContext = useContext(AuthContext);
   const imageLogoRef = createRef<HTMLImageElement>();
 
-  function imgLogoLoadError(): any {
-    imageLogoRef.current!.src = "";
+  function imgLogoLoadError() {
+    if (!imageLogoRef.current) return;
+
+    imageLogoRef.current.src = "";
   }
 
     return (
@@ -28,6 +30,8 @@ export function Header() {
                     className="organization-logo" onError={imgLogoLoadError}
                     ref={imageLogoRef} title={authContext.organization?.name}
                 />
+
+                { imageLogoRef.current?.src === undefined && authContext.organization.name }
             </Link>
         }
       </div>

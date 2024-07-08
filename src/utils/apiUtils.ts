@@ -1,11 +1,11 @@
 import { Group } from "@/types/Group";
-import { IMG_DEFAULT_CONTENT } from "@/utils/assets";
+import { IMG_DEFAULT_BANNER, IMG_DEFAULT_CONTENT, IMG_DEFAULT_GROUP } from "@/utils/assets";
 import { type Folder } from "@/types/Capacity";
 import { isAbsoluteUrl } from "./regexUtils";
 
 export function groupBannerUrl(group: Group) {
     if(!group.bannerImage)
-        return "/assets/imgs/default_bg.jpg"
+        return IMG_DEFAULT_BANNER;
 
     if (group.bannerImage.startsWith("/")) {
         return import.meta.env.VITE_UNIVERSIME_API + group.bannerImage;
@@ -15,15 +15,21 @@ export function groupBannerUrl(group: Group) {
 }
 
 export function groupHeaderUrl(group: Group) {
-    if(group?.headerImage) {
-        return  group?.headerImage.startsWith('/') ? import.meta.env.VITE_UNIVERSIME_API + group?.headerImage : group?.headerImage;
+    if(group.headerImage) {
+        return isAbsoluteUrl(group.headerImage)
+            ? group.headerImage
+            : import.meta.env.VITE_UNIVERSIME_API + group.headerImage;
     }
-    return `/assets/imgs/organization-headers/${group?.nickname ?? `codata`}.png`
+
+    if (group.organization)
+        return groupHeaderUrl(group.organization);
+
+    return undefined;
 }
 
 export function groupImageUrl(group: Group) {
     if(!group.image)
-        return "/assets/imgs/group.png"
+        return IMG_DEFAULT_GROUP;
 
     if (group.image.startsWith("/")) {
         return import.meta.env.VITE_UNIVERSIME_API + group.image;
