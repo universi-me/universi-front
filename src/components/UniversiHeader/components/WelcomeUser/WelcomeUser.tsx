@@ -1,4 +1,5 @@
 import { useContext, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { AuthContext } from "@/contexts/Auth";
 import { IMG_DEFAULT_PROFILE } from "@/utils/assets";
@@ -9,6 +10,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 
 export function WelcomeUser() {
     const auth = useContext(AuthContext);
+    const navigate = useNavigate();
     const [profileClicked, setProfileClicked] = useState(false)
 
     const isLogged = useMemo(() => {
@@ -36,18 +38,18 @@ export function WelcomeUser() {
         return [{
             text: "Perfil",
             className: "submenu-item",
-            href(data) {
-                return `/profile/${data.user.name}`;
-            },
+            onSelect(data) {
+                navigate(`/profile/${data.user.name}`);
+            }
         }, {
             text: "Configurações",
             className: "submenu-item",
             hidden(data) {
                 return data.user.accessLevel !== "ROLE_ADMIN";
             },
-            href() {
-                return `/settings`;
-            },
+            onSelect(data) {
+                navigate(`/settings`);
+            }
         }, {
             text: "Sair",
             className: "submenu-item",
