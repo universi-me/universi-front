@@ -1,36 +1,72 @@
-import { useContext, useState } from "react"
-import "../GroupTabs/GroupTabs.less"
+import { useContext, useMemo } from "react"
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import "./GroupSubmenu.css"
 import { GroupContext } from "../GroupContext"
 import { AuthContext } from "@/contexts/Auth"
+import UniversimeApi from "@/services/UniversimeApi"
+import { hasAvailableOption, OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils"
+import { Group } from "@/types/Group"
 
-export function GroupSubmenu({leave} : {leave : () => void}){
-
-    const [isVisible, setIsVisible] = useState(false)
-
+export function GroupSubmenu(){
     const context = useContext(GroupContext);
     const authContext = useContext(AuthContext);
 
-    return(
+    const options = useMemo(makeGroupOptions, [context?.group.id]);
+
+    if (!context || !hasAvailableOption(options, context.group))
+        return null;
+
+    return <DropdownMenu.Root>
         <div className="submenu">
-            <i className="bi bi-three-dots-vertical dots" onClick={() => setIsVisible(!isVisible)}></i>
-            <div className={`box ${isVisible && !context?.group.rootGroup ? "visible" : "hidden"}`} 
-            onClick={leave}>
-                <i className="bi bi-door-open"></i>
-                <p>Sair deste grupo</p>
-            </div>
+            <DropdownMenu.Trigger asChild>
+                <button style={{all: "unset"}}>
+                    <span className="bi bi-three-dots-vertical dots" />
+                </button>
+            </DropdownMenu.Trigger>
 
-            <div className={`box ${isVisible && context?.group.canEdit ? "visible" : "hidden"}`}
-            onClick={() => {context?.setEditGroup(context.group);}}>
-                <i className="bi bi-pencil-fill"></i>
-                <p>Editar este grupo</p>
-            </div>
-            <div className={`box ${isVisible && authContext.user?.accessLevel == "ROLE_ADMIN" ? "visible" : "hidden"}`}
-            onClick={() => {context?.setGroupConfigModalOpen(true)}}>
-                <i className="bi bi-gear"></i>
-                <p>Configurações</p>
-            </div>
+            <DropdownMenu.Content side="bottom">
+                { options.map(o => renderOption(context.group, o)) }
+            </DropdownMenu.Content>
         </div>
-    )
+    </DropdownMenu.Root>;
 
+    function makeGroupOptions(): OptionInMenu<Group>[] {
+        return [
+        {
+            text: "Sair deste grupo",
+            biIcon: "door-open",
+            className: "box",
+            hidden(data) {
+                return !!data.rootGroup;
+            },
+            async onSelect(data) {
+                await UniversimeApi.Group.exit({groupId: data.id});
+                return await Promise.all([
+                    context!.refreshData(),
+                    authContext.updateLoggedUser(),
+                ])
+            },
+        }, {
+            text: "Editar este grupo",
+            biIcon: "pencil-fill",
+            className: "box",
+            hidden(data) {
+                return !data.canEdit;
+            },
+            onSelect(data) {
+                context!.setEditGroup(data);
+            }
+        }, {
+            text: "Configurações",
+            biIcon: "gear-fill",
+            className: "box",
+            hidden(data) {
+                return authContext.user?.accessLevel !== "ROLE_ADMIN";
+            },
+            onSelect(data) {
+                context?.setGroupConfigModalOpen(true);
+            },
+        }
+        ];
+    }
 }
