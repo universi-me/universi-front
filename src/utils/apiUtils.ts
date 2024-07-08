@@ -2,6 +2,7 @@ import { Group } from "@/types/Group";
 import { IMG_DEFAULT_BANNER, IMG_DEFAULT_CONTENT, IMG_DEFAULT_GROUP } from "@/utils/assets";
 import { type Folder } from "@/types/Capacity";
 import { isAbsoluteUrl } from "./regexUtils";
+import { Optional } from "@/types/utils";
 
 export function groupBannerUrl(group: Group) {
     if(!group.bannerImage)
@@ -14,7 +15,7 @@ export function groupBannerUrl(group: Group) {
     return `${import.meta.env.VITE_UNIVERSIME_API}/group/banner/${group.id}`;
 }
 
-export function groupHeaderUrl(group: Group) {
+export function groupHeaderUrl(group: Group): Optional<string> {
     if(group.headerImage) {
         return isAbsoluteUrl(group.headerImage)
             ? group.headerImage
