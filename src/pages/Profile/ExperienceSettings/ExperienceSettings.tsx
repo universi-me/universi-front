@@ -40,7 +40,7 @@ export function ExperienceSettings() {
                     required: true
                 },
                 {
-                    DTOName: "localId", label: "Local", type: FormInputs.SELECT_SINGLE,
+                    DTOName: "institutionId", label: "Instituição", type: FormInputs.SELECT_SINGLE,
                     value: profileContext?.editExperience?.institution ? makeInstitutionOption(profileContext?.editExperience?.institution) : undefined,
                     options: profileContext.allInstitution.map(makeInstitutionOption),
                     required: true, canCreate: true, onCreate: handleCreateInstitution
