@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
 import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, isTabAvailable, type GroupContextType, type GroupPageLoaderResponse, RefreshGroupOptions } from "@/pages/Group";
+import ManageGroup from "@/components/ManageGroup";
 import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
 import { AuthContext } from "@/contexts/Auth";
 import "./Group.less";
@@ -61,6 +62,14 @@ export function GroupPage() {
                 </div>
             </ProfileInfo>
         </div>
+
+        { context.editGroup !== undefined &&
+            <ManageGroup group={context.editGroup} parentGroup={context.group}
+                callback={ async () => {
+                    await context.refreshData().then( newContext => newContext.setEditGroup(undefined) )
+                }}
+            />
+        }
         </GroupContext.Provider>
     );
 
