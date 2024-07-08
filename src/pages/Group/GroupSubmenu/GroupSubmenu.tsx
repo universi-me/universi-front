@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react"
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
-import "./GroupSubmenu.css"
+import "./GroupSubmenu.less"
 import { GroupContext } from "../GroupContext"
 import { AuthContext } from "@/contexts/Auth"
 import UniversimeApi from "@/services/UniversimeApi"
@@ -17,7 +17,7 @@ export function GroupSubmenu(){
         return null;
 
     return <DropdownMenu.Root>
-        <div className="submenu">
+        <div id="group-submenu">
             <DropdownMenu.Trigger asChild>
                 <button style={{all: "unset"}}>
                     <span className="bi bi-three-dots-vertical dots" />

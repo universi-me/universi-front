@@ -1,0 +1,48 @@
+#group-page #group-submenu {
+    color: white;
+    cursor: pointer;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    width: 10rem;
+    position: absolute;
+    top: -11rem;
+    left: calc(100% - 6rem);
+    gap: 0.2rem;
+
+    .dots {
+        width: inherit;
+        height: inherit;
+        text-align: center;
+        display: block;
+        filter: drop-shadow(0px 0px 3px var(--font-color-v2));
+        font-size: 1.5rem;
+    }
+
+    .box{
+        background-color: white;
+        display: block;
+        padding: 5px;
+        color: var(--font-color-v2);
+        border: 1px solid var(--primary-color);
+        border-radius: 10px;
+        transition: 0.2s linear;
+        width: 11rem;
+        text-align: center;
+        margin-right: 2rem;
+        display: flex;
+
+        &:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .bi {
+            padding-left: 5px;
+            padding-right: 6px;
+            max-height: 2rem;
+            max-width: 2rem;
+        }
+    }
+}
