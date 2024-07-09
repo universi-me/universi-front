@@ -38,17 +38,6 @@ export  function GroupTabs(props: GroupTabsProps){
         ])
     }
 
-    async function leave(){
-        if(context?.group.id == null)
-            return;
-
-        const resData = await UniversimeApi.Group.exit({groupId: context.group.id});
-        await Promise.all([
-            context.refreshData(),
-            auth.updateLoggedUser(),
-        ])
-    }
-
     if (!context)
         return <></>;
 
@@ -70,7 +59,7 @@ export  function GroupTabs(props: GroupTabsProps){
 
 
         {   !renderJoinOrLeave ? null :
-                (joined && <GroupSubmenu leave={leave}/>) ||
+                (joined && <GroupSubmenu />) ||
                 <button className="group-tab-participacao" onClick={join}>Participar</button>
         }
 

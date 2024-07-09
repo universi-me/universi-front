@@ -80,16 +80,6 @@ export function GroupGroups() {
             </div>
 
             <div className="group-list tab-list"> { makeGroupList(groupContext.subgroups, filterGroups) } </div>
-            { groupContext.editGroup !== undefined &&
-                <ManageGroup
-                    group={groupContext.editGroup}
-                    parentGroup={groupContext.group}
-                    callback={ async () => {
-                        await groupContext.refreshData()
-                        .then( newContext => newContext.setEditGroup(undefined) );
-                    }}
-                />
-            }
         </section>
     );
     function makeGroupList(groups: Group[], filter: string) {
