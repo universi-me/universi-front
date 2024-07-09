@@ -22,48 +22,51 @@
         div.logged-user-image {
             display: none;
         }
-
     }
-}
 
-img.logged-user-image {
-    height: 3rem;
-    width: auto !important;
+    .image-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
-    border: 3px solid @background-color;
-    background-color: @background-color;
+        .logged-user-image {
+            height: 3rem;
+            width: auto !important;
+        
+            border: 3px solid @background-color;
+            background-color: @background-color;
+        
+            cursor: pointer;
+        }
 
-    cursor: pointer;
-}
+        .profile-options-arrow {
+            fill: @card-background-color;
+        }
 
-.image-container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+        .submenu-profile{
+            background-color: var(--card-background-color);
+            border-radius: 0.675rem;
+            border: solid 1px var(--card-background-color);
+            overflow: hidden;
+            margin-right: 1rem;
+            padding: 5px 0;
 
-.submenu-profile{
-    background-color: var(--card-background-color);
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: center;
-    align-self: center;
-    border-radius: 0.675rem;
-    border: solid 1px var(--card-background-color);
-    cursor: pointer;
-    overflow: hidden;
-    margin-top: 3.5rem;
-    z-index: 9999;
-    margin-right: 2rem;
-}
+            .submenu-item {
+                padding: 0.25rem 1rem;
+                width: 100%;
+                cursor: pointer;
 
-.submenu-item{
-    padding: 0.25rem 1rem;
-    width: 100%;
-}
+                &:hover {
+                    background-color: var(--card-item-color);
+                    border: none;
+                    outline: none;
+                }
 
-.submenu-item:hover{
-    background-color: var(--card-item-color);
+                a {
+                    text-decoration: none;
+                    color: inherit;
+                }
+            }
+        }
+    }
 }

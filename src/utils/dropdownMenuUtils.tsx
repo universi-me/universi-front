@@ -25,9 +25,13 @@ export function renderOption<T>(data: T, option: OptionInMenu<T>) {
             option.onSelect(data);
     };
 
-    return <DropdownMenu.Item {...{className, disabled, onSelect, key, title}}>
+    const children = <>
         { option.text }
         { option.biIcon ? <i className={`bi bi-${option.biIcon} right-slot`}/> : null }
+    </>
+
+    return <DropdownMenu.Item {...{className, disabled, onSelect, key, title}}>
+        {children}
     </DropdownMenu.Item>
 }
 
