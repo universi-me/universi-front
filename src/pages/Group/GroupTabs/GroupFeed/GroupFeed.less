@@ -202,6 +202,67 @@
                 text-align: center;
                 gap: 5px;
               }
+
+            .comment-button {
+                display: flex;
+                //gap: 5px;
+                //center content
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                gap: 5px;
+              }
+
+            .comment-area {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 10px;
+              }
+
+            .comment-area-expanded {
+
+              .comment-area-content {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 10px;
+                margin-bottom: 15px;
+
+                .comment-area-comments {
+                  padding: 20px;
+
+                  .post-separator, .post-actions, .post-actions-info, .comment-area {
+                    display: none;
+                  }
+
+                  .feed-item:not(:last-of-type) {
+                    margin-bottom: .7rem;
+                  }
+
+                  .feed-description {
+                    margin-top: .8rem;
+                  }
+                }
+
+
+                .comment-button {
+                  margin-left: 70%;
+                  margin-right: 2%;
+                }
+
+                .quill {
+                  border-radius: 0.625rem;
+                  padding: 10px;
+                  min-height: 150px;
+                  overflow-y: auto;
+                  .ql-editor {
+                    min-height: 150px;
+                    border-radius: 0.625rem;
+                  }
+                }
+              }
+            }
               
             .like-button:hover, .comment-button:hover {
                 background-color: #f0f0f0;
@@ -243,7 +304,18 @@
                 margin-bottom: 10px;
               }
 
-            .post-info-reaction {
+            .post-actions-info {
+                display: flex;
+                gap: 10px;
+                margin-top: 10px;
+
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                padding-right: 10px;
+              }
+
+            .post-info-reaction, .post-info-comments {
                 display: flex;
                 gap: 0px;
                 margin-left: 14px;
@@ -257,13 +329,13 @@
                     margin-left: -6px;
                 }
 
-                .reaction-count {
+                .reaction-count, .comments-count {
                     font-size: 0.9em;
                     color: #949494;
                     margin-left: 5px;
                     cursor: pointer;
                 }
-                .reaction-count:hover {
+                .reaction-count:hover, .comments-count:hover {
                     color: #6d6d6d;
                     text-decoration: underline;
                 }

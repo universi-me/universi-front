@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/types/UniversimeApi";
 import { api } from "./api";
-import {GroupPost, GroupPostReaction} from "@/types/Feed"
+import {GroupPost, GroupPostComment, GroupPostReaction} from "@/types/Feed"
  
 export type CreateGroupPost_RequestDTO = {
     content  : string;
@@ -54,4 +54,16 @@ export type GroupPostReactionResponseDTO = ApiResponse<{reactions: GroupPostReac
 
 export async function reactGroupPost(body: GroupPostReaction_RequestDTO): Promise<GroupPostReactionResponseDTO> {
     return (await api.post<GroupPostReactionResponseDTO>(`/feed/posts/${body.groupPostId}/reactions`, body)).data;
+}
+
+
+export type GroupPostComment_RequestDTO = {
+        groupPostId : string;
+        content : string;
+}
+
+export type GroupPostCommentResponseDTO = ApiResponse<{comments: GroupPostComment}>;
+
+export async function commentGroupPost(body: GroupPostComment_RequestDTO): Promise<GroupPostCommentResponseDTO> {
+    return (await api.post<GroupPostCommentResponseDTO>(`/feed/posts/${body.groupPostId}/comments`, body)).data;
 }
