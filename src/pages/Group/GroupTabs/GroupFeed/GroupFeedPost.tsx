@@ -303,9 +303,15 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
             icon: "warning",
         }).then(value => {
             if (value.isConfirmed) {
-                UniversimeApi.Feed
+                if(isComment) {
+                    UniversimeApi.Feed
+                    .deleteGroupPostComment({ commentId: (post as GroupPostComment).id })
+                    .then(() => groupContext!.refreshData());
+                } else {
+                    UniversimeApi.Feed
                     .deleteGroupPost({ postId: post.postId, groupId: post.groupId })
                     .then(() => groupContext!.refreshData());
+                }
             }
         })
     }

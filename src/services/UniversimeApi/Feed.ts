@@ -67,3 +67,20 @@ export type GroupPostCommentResponseDTO = ApiResponse<{comments: GroupPostCommen
 export async function commentGroupPost(body: GroupPostComment_RequestDTO): Promise<GroupPostCommentResponseDTO> {
     return (await api.post<GroupPostCommentResponseDTO>(`/feed/posts/${body.groupPostId}/comments`, body)).data;
 }
+
+export type GroupPostCommentEdit_RequestDTO = {
+        commentId : string;
+        content : string;
+}
+
+export async function editGroupPostComment(body : GroupPostCommentEdit_RequestDTO) : Promise<GroupPostCommentResponseDTO> {
+    return (await api.post<GroupPostCommentResponseDTO>(`/feed/comments/${body.commentId}/edit`, body)).data;
+}
+
+export type GroupPostCommentDelete_RequestDTO = {
+        commentId : string;
+}
+
+export async function deleteGroupPostComment(body : GroupPostCommentDelete_RequestDTO) : Promise<ApiResponse<string>> {
+    return (await api.delete<ApiResponse<string>>(`/feed/comments/${body.commentId}`)).data;
+}
