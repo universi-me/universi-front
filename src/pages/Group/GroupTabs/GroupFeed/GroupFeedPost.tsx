@@ -229,7 +229,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
       <div className="comment-button" onClick={toggleComment}>{ <img src={ICON_COMMENT} height={20} width={20} /> } Comentar</div>
     </div>
 
-    <div className={(isCommentExpanded || isShowComments) ? "comment-area-expanded" : "comment-area"}>
+    <div className={(isCommentExpanded || (isShowComments && countComment(post) > 0)) ? "comment-area-expanded" : "comment-area"}>
         {(isCommentExpanded || isShowComments) && <div className="comment-area-content">
 
             {isCommentExpanded && <div className="comment-area-input">
@@ -240,7 +240,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
             </div>}
 
             {isShowComments && <div className="comment-area-comments">
-                { 
+                {
                     post.comments
                     .slice()
                     .reverse()
