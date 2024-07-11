@@ -177,6 +177,8 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
                 </div>
             }
 
+            <div/>
+
             {countComment(post) > 0 && <div className="post-info-comments">
                     <div className="comments-count" onClick={toggleShowComments}>
                         {getCommentCount(post)} comentário(s)
