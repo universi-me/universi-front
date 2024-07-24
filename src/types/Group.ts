@@ -23,6 +23,10 @@ export type Group = {
     canEdit:           boolean;
     everyoneCanPost:   boolean;
 
+    groupSettings: {
+        theme: GroupTheme;
+    };
+
     permissions: {
         [k in FeatureTypes]: number;
     }
@@ -48,7 +52,6 @@ export const GroupEmailFilterTypeToLabel = {
 };
 
 export type GroupTheme ={
-    id:                     string;
     primaryColor:           string;
     secondaryColor:         string;
     tertiaryColor:          string;
