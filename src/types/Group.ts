@@ -22,9 +22,11 @@ export type Group = {
     organization:      Group | null;
     canEdit:           boolean;
     everyoneCanPost:   boolean;
+    buildHash?: string;
 
     groupSettings: {
         theme: GroupTheme;
+        environment?: GroupEnvironment;
     };
 
     permissions: {
@@ -74,6 +76,44 @@ export type GroupTheme ={
     successColor:           string;
     wrongInvalidColor:      string;
     rankColor:              string;
+};
+
+export type GroupEnvironment = {
+    // Signup
+    signup_enabled: boolean;
+    signup_confirm_account_enabled: boolean;
+
+    // Google OAuth Login
+    login_google_enabled: boolean;
+    google_client_id: string;
+
+    // Google Recaptcha
+    recaptcha_enabled: boolean;
+    recaptcha_api_key: string;
+    recaptcha_api_project_id: string;
+    recaptcha_site_key: string;
+
+    // KeyCloak
+    keycloak_enabled: boolean;
+    keycloak_client_id: string;
+    keycloak_client_secret: string;
+    keycloak_realm: string;
+    keycloak_url: string;
+    keycloak_redirect_url: string;
+
+    // Email
+    email_enabled: boolean;
+    email_protocol: string;
+    email_host: string;
+    email_port: string;
+    email_username: string;
+    email_password?: string;
+
+    // Email Notifications
+    message_new_content_enabled: boolean;
+    message_template_new_content: string;
+    message_assigned_content_enabled: string;
+    message_template_assigned_content: string;
 };
 
 export type GroupType = "INSTITUTION" | "CAMPUS" | "COURSE" | "PROJECT" | "CLASSROOM" | "MONITORIA" | "LABORATORY"
