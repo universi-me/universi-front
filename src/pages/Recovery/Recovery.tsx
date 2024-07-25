@@ -1,5 +1,5 @@
 import "./Recovery.css"
-import "../singin/signinForm.less"
+import "../singin/SignInForm.less"
 import {useState, useContext} from "react"
 import UniversimeApi from "@/services/UniversimeApi"
 import { AuthContext } from "@/contexts/Auth/AuthContext";
