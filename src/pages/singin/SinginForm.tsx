@@ -7,7 +7,7 @@ import { oauthSignInUrl } from "@/services/oauth2-google";
 import { IMG_DCX_LOGO } from "@/utils/assets";
 import * as SweetAlertUtils from "@/utils/sweetalertUtils"
 
-import "./signinForm.css";
+import "./SignInForm.less";
 
 export default function SinginForm() {
   const auth = useContext(AuthContext);
@@ -62,10 +62,7 @@ export default function SinginForm() {
   const RECAPTCHA_SITE_KEY = organizationEnv?.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
   const ENABLE_KEYCLOAK_LOGIN = organizationEnv?.keycloak_enabled ?? false;
   
-  return (
-  <>
-  
-  <div className="container">
+  return <div className="container">
       <form action="/login" method="post" className="form-container">
         <div className="form-group">
           <div className="label-form">
@@ -126,14 +123,14 @@ export default function SinginForm() {
       {
         !ENABLE_GOOGLE_LOGIN ? null :
         <>
-            <div className="container-line-form" style={{margin: "20px 0"}}>
+            <div className="container-line-form">
                 <div className="line-form"></div>
-                <div style={{color: "#c2c2c2"}}>ou entre com</div>
+                <div className="enter-with">ou entre com</div>
                 <div className="line-form"></div>
             </div>
 
             <button
-                className="btn_form_dcx"
+                className="btn_form_google"
                 type="button"
                 onClick={handleAuthLoginGoogle}
             >
@@ -146,9 +143,9 @@ export default function SinginForm() {
       {
         !ENABLE_KEYCLOAK_LOGIN ? null :
         <>
-            <div className="container-line-form" style={{margin: "20px 0"}}>
+            <div className="container-line-form">
                 <div className="line-form"></div>
-                <div style={{color: "#c2c2c2"}}>ou entre com</div>
+                <div className="enter-with">ou entre com</div>
                 <div className="line-form"></div>
             </div>
 
@@ -163,16 +160,10 @@ export default function SinginForm() {
         </>
       }
 
-      { !SIGNUP_ENABLED ? null :
-        <div className="container-line-form" style={{marginTop: "20px"}}>
-            <Link to="/signup">Crie sua conta</Link>
-        </div>
+      { SIGNUP_ENABLED &&
+        <Link id="signup" to="/signup">Crie sua conta</Link>
       }
-        <div className="container-line-form" style={{marginTop: "20px"}}>
-            <Link to="/recovery">Esqueci minha senha</Link>
-        </div>
-    </div>
-  </>
-  
-  );
+
+        <Link id="recovery" to="/recovery">Esqueci minha senha</Link>
+    </div>;
 }
