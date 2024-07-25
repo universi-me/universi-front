@@ -1,4 +1,5 @@
 import { useContext, useEffect, useReducer, useState } from "react";
+import _ from "lodash";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
@@ -62,12 +63,11 @@ export function GroupThemeColorPage() {
     }
 
     try {
-      const themeMapping = themeColorMappings[selectedTheme.id];
       await UniversimeApi.Group.editTheme({
         groupId: organizationId,
-        ...themeMapping,
+        ...selectedTheme,
       });
-      applyThemeStyles(themeMapping);
+      applyThemeStyles(selectedTheme);
     } catch {
       showErrorModal(
         "Erro ao salvar alterações",
@@ -78,10 +78,11 @@ export function GroupThemeColorPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const organizationTheme =
-        ((auth.organization ?? ({} as any)).groupSettings ?? ({} as any))
-          .theme ?? ({} as any);
-      if (organizationTheme) {
+      const organizationTheme = auth.organization.groupSettings.theme;
+        // ((auth.organization ?? ({} as any)).groupSettings ?? ({} as any))
+        //   .theme ?? ({} as any);
+
+    if (organizationTheme) {
         themeDispatch({ type: "SELECT", theme: organizationTheme });
         setOrganizationId(auth.organization?.id!);
         applyThemeStyles(organizationTheme);
@@ -96,18 +97,18 @@ export function GroupThemeColorPage() {
       <SettingsDescription>Escolha o tema para o grupo.</SettingsDescription>
 
       <div className="theme-color-list">
-        {Object.values(themeColorMappings).map((theme) => (
-          theme.id !== "themeDefeaut" && (
-            <ThemeColorItem
-              key={theme.id}
+        {Object.keys(themeColorMappings).map((themeName) => {
+            const theme = themeColorMappings[themeName]
+
+            return <ThemeColorItem
+              key={themeName}
               theme={theme}
-              isSelected={selectedTheme?.id === theme.id}
+              isSelected={ _.isEqual(theme, selectedTheme) }
               onClick={(selected) =>
                 themeDispatch({ type: "SELECT", theme: selected })
               }
             />
-          )
-        ))}
+        })}
       </div>
 
       <div className="save-button">

@@ -78,7 +78,6 @@ export type FilterParticipants_RequestDTO = {
 }
 
 export type GroupThemeEdit_RequestDTO = GroupIdOrPath_RequestDTO & {
-    id:                     string;     
     primaryColor:           string;
     secondaryColor:         string;
     tertiaryColor:          string;
