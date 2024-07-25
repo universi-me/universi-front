@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 import { AuthContext } from "@/contexts/Auth/AuthContext";
-import { oauthSignIn } from "@/services/oauth2-google";
+import { oauthSignInUrl } from "@/services/oauth2-google";
 import { IMG_DCX_LOGO } from "@/utils/assets";
 import * as SweetAlertUtils from "@/utils/sweetalertUtils"
 
@@ -30,7 +30,7 @@ export default function SinginForm() {
         return;
     }
 
-    window.location.href = oauthSignIn({ client_id }).toString();
+    window.location.href = oauthSignInUrl({ client_id }).toString();
   };
 
   const handleAuthLoginKeycloak = async () => {

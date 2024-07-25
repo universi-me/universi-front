@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 
-import { oauthSignIn } from "@/services/oauth2-google";
+import { oauthSignInUrl } from "@/services/oauth2-google";
 import { SignUpModal } from "@/pages/SignUp";
 import { IMG_DCX_LOGO } from "@/utils/assets";
 
@@ -13,7 +13,7 @@ export default function SignUpPage() {
 
     const googleClientId = authContext.organization.groupSettings.environment?.google_client_id;
     const googleUrl = googleClientId
-        ? oauthSignIn({ client_id: googleClientId })
+        ? oauthSignInUrl({ client_id: googleClientId })
         : undefined;
 
     const ENABLE_GOOGLE_LOGIN = googleUrl !== undefined
