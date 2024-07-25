@@ -1,6 +1,5 @@
 import type { Profile } from "@/types/Profile";
 import type { FeatureTypes } from "@/types/Roles";
-import { Nullable } from "./utils";
 
 export type Group = {
     id:                string;
@@ -27,9 +26,7 @@ export type Group = {
 
     groupSettings: {
         theme: GroupTheme;
-        environment: Nullable<{
-            [k in keyof GroupEnvironment]?: GroupEnvironment[k];
-        }>;
+        environment?: GroupEnvironment;
     };
 
     permissions: {

@@ -5,7 +5,6 @@ import ReCAPTCHA from "react-google-recaptcha-enterprise";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import { oauthSignIn } from "@/services/oauth2-google";
 import { IMG_DCX_LOGO } from "@/utils/assets";
-import * as SweetAlertUtils from "@/utils/sweetalertUtils"
 
 import "./signinForm.css";
 
@@ -20,17 +19,7 @@ export default function SinginForm() {
 
 
   const handleAuthLoginGoogle = async () => {
-    const client_id = auth.organization.groupSettings.environment?.google_client_id;
-
-    if (client_id === undefined) {
-        SweetAlertUtils.fireModal({
-            title: "Não foi possível fazer login com Google",
-            text: "No momento o login com Google parece não ser possível"
-        });
-        return;
-    }
-
-    window.location.href = oauthSignIn({ client_id }).toString();
+    window.location.href = oauthSignIn().toString();
   };
 
   const handleAuthLoginKeycloak = async () => {
@@ -55,12 +44,12 @@ export default function SinginForm() {
     setShowPassword(!showPassword);
   };
 
-  const organizationEnv = auth.organization.groupSettings.environment;
-  const SIGNUP_ENABLED = organizationEnv?.signup_enabled ?? true;
-  const ENABLE_GOOGLE_LOGIN = auth.organization.groupSettings.environment?.login_google_enabled ?? false;
-  const ENABLE_RECAPTCHA = organizationEnv?.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
-  const RECAPTCHA_SITE_KEY = organizationEnv?.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-  const ENABLE_KEYCLOAK_LOGIN = organizationEnv?.keycloak_enabled ?? false;
+  const organizationEnv = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any);
+  const SIGNUP_ENABLED = organizationEnv.signup_enabled ?? true;
+  const ENABLE_GOOGLE_LOGIN = organizationEnv.login_google_enabled ?? (import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1");
+  const ENABLE_RECAPTCHA = organizationEnv.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
+  const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  const ENABLE_KEYCLOAK_LOGIN = organizationEnv.keycloak_enabled ?? false;
   
   return (
   <>

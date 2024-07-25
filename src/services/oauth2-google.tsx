@@ -6,6 +6,7 @@ import { AuthContext } from "@/contexts/Auth/AuthContext";
 
 const oauth2Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";
 const oauth2Params = {
+    client_id: "110833050076-ib680ela4hfqr2c0lhc9h19snrsvltnd.apps.googleusercontent.com",
     redirect_uri: location.origin + "/google-oauth-redirect",
     response_type: "token id_token",
     scope: "openid email",
@@ -13,12 +14,8 @@ const oauth2Params = {
     state: "pass-through value",
 };
 
-export type OauthSignInParams = {
-    client_id: string;
-}
-
-export function oauthSignIn(options: OauthSignInParams) {
-    const params = { ...oauth2Params, ...options, nonce: Date.now() }
+export function oauthSignIn() {
+    const params = { ...oauth2Params, nonce: Date.now() }
     const url = new URL(oauth2Endpoint);
 
     for (const [k, v] of Object.entries(params)) {
