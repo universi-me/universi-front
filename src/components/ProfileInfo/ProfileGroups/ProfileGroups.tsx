@@ -38,5 +38,6 @@ function GroupIcon(props: Readonly<GroupIconProps>) {
 
     return <Link to={`/group${group.path}`} className="group-item" title={group.name} key={group.id}>
         <img src={groupImageUrl(group)} alt="" />
+        <p className="group-item-name">{ group.name }</p>
     </Link>
 }
