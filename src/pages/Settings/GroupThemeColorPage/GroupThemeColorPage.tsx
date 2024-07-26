@@ -16,7 +16,12 @@ function themeReducer(
   state: GroupTheme | null,
   action: { type: "SELECT"; theme: GroupTheme }
 ) {
-  return action.type === "SELECT" ? action.theme : state;
+    if (action.type === "SELECT") {
+        applyThemeStyles(action.theme);
+        return action.theme;
+    }
+
+    return state;
 }
 
 const showErrorModal = (title: string, text: string) => {
@@ -71,6 +76,12 @@ export function GroupThemeColorPage() {
     };
     fetchData();
   }, [auth.organization]);
+
+  useEffect(() => {
+    return () => {
+        applyThemeStyles(auth.organization.groupSettings.theme);
+    };
+  }, []);
 
   return (
     <div id="theme-color-settings">
