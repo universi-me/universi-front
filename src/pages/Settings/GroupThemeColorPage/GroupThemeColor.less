@@ -1,3 +1,5 @@
+@import url(/src/layouts/transitions.less);
+
 #theme-color-settings {
     padding: 2rem;
 
@@ -10,12 +12,19 @@
     .theme-color-item {
         width: 3rem;
         height: 3rem;
+        border-width: 0.35rem;
         border-radius: 50%;
         cursor: pointer;
         margin: 0 1rem;
 
+        will-change: border-width, transition-timing-function;
+        transition-property: border-width;
+        transition-duration: 100ms;
+        transition-timing-function: ease-out;
+
         &.selected {
-            border: 0.2rem solid #000;
+            border-width: 0.65rem;
+            transition-timing-function: ease-in;
         }
     }
 
