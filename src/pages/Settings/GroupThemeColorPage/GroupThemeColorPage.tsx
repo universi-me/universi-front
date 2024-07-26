@@ -6,7 +6,7 @@ import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import UniversimeApi from "@/services/UniversimeApi";
 import type { GroupTheme } from "@/types/Group";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
-import { applyThemeStyles } from "@/utils/themeUtils";
+import ThemeContext from "@/contexts/Theme";
 import { themeColorMappings } from "./ThemeMappings";
 import ThemeColorItem from "./ThemeColorItem";
 import "./GroupThemeColor.less";
@@ -14,12 +14,13 @@ import "./GroupThemeColor.less";
 
 export function GroupThemeColorPage() {
     const auth = useContext(AuthContext);
+    const themeContext = useContext(ThemeContext);
     const [selectedTheme, setSelectedTheme] = useState<GroupTheme>(auth.organization.groupSettings.theme);
 
     useEffect(() => {
         // Applies organization theme on exit page
         return () => {
-            applyThemeStyles(auth.organization.groupSettings.theme);
+            themeContext.changeTheme(auth.organization.groupSettings.theme);
         };
     }, []);
 
@@ -50,7 +51,7 @@ export function GroupThemeColorPage() {
 
     function changeTheme(theme: GroupTheme) {
         setSelectedTheme(theme);
-        applyThemeStyles(theme);
+        themeContext.changeTheme(theme);
     }
 
     async function saveChanges() {
@@ -67,7 +68,7 @@ export function GroupThemeColorPage() {
         }
 
         else {
-            applyThemeStyles(selectedTheme);
+            themeContext.changeTheme(selectedTheme);
         }
     }
 }

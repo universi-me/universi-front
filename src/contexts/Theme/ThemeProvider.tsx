@@ -14,6 +14,7 @@ export function ThemeProvider(props: Readonly<ThemeProviderProps>) {
 
     const contextValue = useMemo<ThemeContextType>(() => ({
         theme,
+        changeTheme: setTheme,
     }), [theme])
 
     useEffect(() => {
