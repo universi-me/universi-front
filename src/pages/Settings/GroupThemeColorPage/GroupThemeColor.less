@@ -5,26 +5,77 @@
 
     #theme-color-list {
         display: flex;
-        justify-content: space-around;
-        margin-top: 2rem;
+        justify-content: space-evenly;
+        margin: 2rem 0;
+
+        .theme-color-item {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.35rem;
+            border-radius: 50%;
+            cursor: pointer;
+            margin: 0 1rem;
+
+            will-change: border-width, transition-timing-function;
+            transition-property: border-width;
+            transition-duration: 100ms;
+            transition-timing-function: ease-out;
+
+            &.selected {
+                border-width: 0.65rem;
+                transition-timing-function: ease-in;
+            }
+        }
     }
 
-    .theme-color-item {
-        width: 3rem;
-        height: 3rem;
-        border-width: 0.35rem;
-        border-radius: 50%;
-        cursor: pointer;
-        margin: 0 1rem;
+    #section-builder-wrapper {
+        overflow: hidden;
 
-        will-change: border-width, transition-timing-function;
-        transition-property: border-width;
-        transition-duration: 100ms;
-        transition-timing-function: ease-out;
+        #toggle-advanced {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
 
-        &.selected {
-            border-width: 0.65rem;
-            transition-timing-function: ease-in;
+            border: none;
+            background-color: transparent;
+
+            width: 100%;
+
+            font-size: 1.25rem;
+
+            cursor: pointer;
+
+            #toggle-icon {
+                font-size: 1.5em;
+
+                will-change: rotate;
+                transition-duration: 200ms;
+                transition-property: rotate;
+
+                &.extended {
+                    rotate: 180deg;
+                    transition-timing-function: ease-in;
+                }
+
+                &.collapsed {
+                    transition-timing-function: ease-out;
+                }
+            }
+        }
+
+        #theme-builder {
+            &.extended {
+                margin-top: 1rem;
+            }
+
+            &.collapsed {
+                height: 0;
+            }
+
+            .color-picker {
+                height: 150px;
+                width: 250px;
+            }
         }
     }
 

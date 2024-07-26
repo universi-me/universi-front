@@ -78,6 +78,32 @@ export type GroupTheme ={
     rankColor:              string;
 };
 
+export const GroupThemeToLabel: Record<keyof GroupTheme, string> = {
+    // TODO: Name all variables
+    primaryColor:           "primaryColor",
+    secondaryColor:         "secondaryColor",
+    tertiaryColor:          "tertiaryColor",
+    backgroundColor:        "backgroundColor",
+    cardBackgroundColor:    "cardBackgroundColor",
+    cardItemColor:          "cardItemColor",
+    fontColorV1:            "fontColorV1",
+    fontColorV2:            "fontColorV2",
+    fontColorV3:            "fontColorV3",
+    fontColorV4:            "fontColorV4",
+    fontColorV5:            "fontColorV5",
+    fontColorV6:            "fontColorV6",
+    fontDisabledColor:      "fontDisabledColor",
+    formsColor:             "formsColor",
+    skills1Color:           "skills1Color",
+    waveColor:              "waveColor",
+    buttonYellowHoverColor: "buttonYellowHoverColor",
+    buttonHoverColor:       "buttonHoverColor",
+    alertColor:             "alertColor",
+    successColor:           "successColor",
+    wrongInvalidColor:      "wrongInvalidColor",
+    rankColor:              "rankColor",
+};
+
 export type GroupEnvironment = {
     // Signup
     signup_enabled: boolean;

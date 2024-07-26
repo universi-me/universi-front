@@ -9,50 +9,64 @@ import { AuthContext } from "@/contexts/Auth/AuthContext";
 import ThemeContext from "@/contexts/Theme";
 import { themeColorMappings } from "./ThemeMappings";
 import ThemeColorItem from "./ThemeColorItem";
+import ThemeBuilder from "@/components/ThemeBuilder";
 import "./GroupThemeColor.less";
+import BootstrapIcon from "@/components/BootstrapIcon";
 
 
 export function GroupThemeColorPage() {
     const auth = useContext(AuthContext);
     const themeContext = useContext(ThemeContext);
     const [selectedTheme, setSelectedTheme] = useState<GroupTheme>(auth.organization.groupSettings.theme);
+    const [extendedBuilder, setExtendedBuilder] = useState(false);
+
+    useEffect(() => {
+        themeContext.changeTheme(selectedTheme);
+    }, [selectedTheme]);
 
     useEffect(() => {
         // Applies organization theme on exit page
         return () => {
             themeContext.changeTheme(auth.organization.groupSettings.theme);
         };
-    }, []);
+    }, [auth.organization.groupSettings.theme]);
 
-  return (
-    <div id="theme-color-settings">
-      <SettingsTitle>Configuração de Tema</SettingsTitle>
-      <SettingsDescription>Escolha o tema para o grupo.</SettingsDescription>
+    return <div id="theme-color-settings">
+        <SettingsTitle>Configuração de Tema</SettingsTitle>
+        <SettingsDescription>Escolha o tema para o grupo.</SettingsDescription>
 
-      <div id="theme-color-list">
-        {Object.keys(themeColorMappings).map((themeName) => {
-            const theme = themeColorMappings[themeName]
+        <div id="theme-color-list">
+            {Object.keys(themeColorMappings).map((themeName) => {
+                const theme = themeColorMappings[themeName]
 
-            return <ThemeColorItem
-              key={themeName}
-              theme={theme}
-              isSelected={ _.isEqual(theme, selectedTheme) }
-              onClick={ changeTheme }
+                return <ThemeColorItem
+                    key={themeName}
+                    theme={theme}
+                    isSelected={ _.isEqual(theme, selectedTheme) }
+                    onClick={ setSelectedTheme }
+                />
+            })}
+        </div>
+
+        <section id="section-builder-wrapper">
+            <button id="toggle-advanced" onClick={() => { setExtendedBuilder(eb => !eb) }}>
+                <p>Configurações avançadas</p>
+                <BootstrapIcon id="toggle-icon" icon="chevron-down" className={extendedBuilder ? "extended" : "collapsed"} />
+            </button>
+
+            <ThemeBuilder
+                id="theme-builder"
+                className={ extendedBuilder ? "extended" : "collapsed" }
+                changeValue={changeThemeVariable}
+                currentTheme={selectedTheme}
             />
-        })}
-      </div>
+        </section>
 
-      <div id="save-button">
-        <div id="spacer" />
-        <ActionButton name="Salvar" buttonProps={{ onClick: saveChanges, }}/>
-      </div>
-    </div>
-  );
-
-    function changeTheme(theme: GroupTheme) {
-        setSelectedTheme(theme);
-        themeContext.changeTheme(theme);
-    }
+        <div id="save-button">
+            <div id="spacer" />
+            <ActionButton name="Salvar" buttonProps={{ onClick: saveChanges, }} />
+        </div>
+    </div>;
 
     async function saveChanges() {
         const res = await UniversimeApi.Group.editTheme({
@@ -68,7 +82,15 @@ export function GroupThemeColorPage() {
         }
 
         else {
+            await auth.updateLoggedUser();
             themeContext.changeTheme(selectedTheme);
         }
+    }
+
+    function changeThemeVariable(variable: keyof GroupTheme, value: string) {
+        const newTheme = { ...selectedTheme };
+        newTheme[variable] = value.toLocaleUpperCase();
+
+        setSelectedTheme(newTheme);
     }
 }
