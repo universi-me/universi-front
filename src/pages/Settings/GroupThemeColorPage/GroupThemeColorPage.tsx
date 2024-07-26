@@ -28,7 +28,7 @@ export function GroupThemeColorPage() {
       <SettingsTitle>Configuração de Tema</SettingsTitle>
       <SettingsDescription>Escolha o tema para o grupo.</SettingsDescription>
 
-      <div className="theme-color-list">
+      <div id="theme-color-list">
         {Object.keys(themeColorMappings).map((themeName) => {
             const theme = themeColorMappings[themeName]
 
@@ -41,8 +41,8 @@ export function GroupThemeColorPage() {
         })}
       </div>
 
-      <div className="save-button">
-        <div className="spacer" />
+      <div id="save-button">
+        <div id="spacer" />
         <ActionButton name="Salvar" buttonProps={{ onClick: saveChanges, }}/>
       </div>
     </div>
