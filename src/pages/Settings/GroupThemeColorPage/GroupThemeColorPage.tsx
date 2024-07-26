@@ -9,27 +9,8 @@ import { AuthContext } from "@/contexts/Auth/AuthContext";
 import { useTheme } from "@/pages/Settings/GroupThemeColorPage/ThemeContext";
 import { applyThemeStyles } from "@/utils/themeUtils";
 import { themeColorMappings } from "./ThemeMappings";
+import ThemeColorItem from "./ThemeColorItem";
 import "./GroupThemeColor.less";
-
-interface ThemeColorItemProps {
-  theme: GroupTheme;
-  isSelected: boolean;
-  onClick: (theme: GroupTheme) => void;
-}
-
-function ThemeColorItem({ theme, isSelected, onClick }: ThemeColorItemProps) {
-  const handleClick = () => {
-    onClick(theme);
-  };
-
-  return (
-    <div
-      className={`theme-color-item ${isSelected ? "selected" : ""}`}
-      style={{ backgroundColor: theme.primaryColor }}
-      onClick={handleClick}
-    ></div>
-  );
-}
 
 function themeReducer(
   state: GroupTheme | null,
