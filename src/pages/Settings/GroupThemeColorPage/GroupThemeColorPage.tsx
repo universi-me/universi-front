@@ -1,4 +1,4 @@
-import { useContext, useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import _ from "lodash";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
@@ -6,82 +6,22 @@ import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import UniversimeApi from "@/services/UniversimeApi";
 import type { GroupTheme } from "@/types/Group";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
-import { useTheme } from "@/pages/Settings/GroupThemeColorPage/ThemeContext";
 import { applyThemeStyles } from "@/utils/themeUtils";
 import { themeColorMappings } from "./ThemeMappings";
 import ThemeColorItem from "./ThemeColorItem";
 import "./GroupThemeColor.less";
 
-function themeReducer(
-  state: GroupTheme | null,
-  action: { type: "SELECT"; theme: GroupTheme }
-) {
-    if (action.type === "SELECT") {
-        applyThemeStyles(action.theme);
-        return action.theme;
-    }
-
-    return state;
-}
-
-const showErrorModal = (title: string, text: string) => {
-  SwalUtils.fireModal({
-    title,
-    text,
-    showConfirmButton: true,
-    confirmButtonText: "OK",
-  });
-};
 
 export function GroupThemeColorPage() {
-  const [organizationId, setOrganizationId] = useState<string | null>(null);
-  const [selectedTheme, themeDispatch] = useReducer(themeReducer, null);
-  const auth = useContext(AuthContext);
-  const theme = useTheme();
+    const auth = useContext(AuthContext);
+    const [selectedTheme, setSelectedTheme] = useState<GroupTheme>(auth.organization.groupSettings.theme);
 
-  const saveChanges = async () => {
-    if (!selectedTheme || !organizationId) {
-      showErrorModal(
-        "Erro ao salvar alterações",
-        "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente.)"
-      );
-      return;
-    }
-
-    try {
-      await UniversimeApi.Group.editTheme({
-        groupId: organizationId,
-        ...selectedTheme,
-      });
-      applyThemeStyles(selectedTheme);
-    } catch {
-      showErrorModal(
-        "Erro ao salvar alterações",
-        "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente."
-      );
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const organizationTheme = auth.organization.groupSettings.theme;
-        // ((auth.organization ?? ({} as any)).groupSettings ?? ({} as any))
-        //   .theme ?? ({} as any);
-
-    if (organizationTheme) {
-        themeDispatch({ type: "SELECT", theme: organizationTheme });
-        setOrganizationId(auth.organization?.id!);
-        applyThemeStyles(organizationTheme);
-      }
-    };
-    fetchData();
-  }, [auth.organization]);
-
-  useEffect(() => {
-    return () => {
-        applyThemeStyles(auth.organization.groupSettings.theme);
-    };
-  }, []);
+    useEffect(() => {
+        // Applies organization theme on exit page
+        return () => {
+            applyThemeStyles(auth.organization.groupSettings.theme);
+        };
+    }, []);
 
   return (
     <div id="theme-color-settings">
@@ -96,17 +36,38 @@ export function GroupThemeColorPage() {
               key={themeName}
               theme={theme}
               isSelected={ _.isEqual(theme, selectedTheme) }
-              onClick={(selected) =>
-                themeDispatch({ type: "SELECT", theme: selected })
-              }
+              onClick={ changeTheme }
             />
         })}
       </div>
 
       <div className="save-button">
         <div className="spacer" />
-        <ActionButton name="Salvar" buttonProps={{ onClick: saveChanges }} />
+        <ActionButton name="Salvar" buttonProps={{ onClick: saveChanges, }}/>
       </div>
     </div>
   );
+
+    function changeTheme(theme: GroupTheme) {
+        setSelectedTheme(theme);
+        applyThemeStyles(theme);
+    }
+
+    async function saveChanges() {
+        const res = await UniversimeApi.Group.editTheme({
+            groupId: auth.organization.id,
+            ...selectedTheme,
+        }).catch(err => null);
+
+        if ( !res?.success ) {
+            SwalUtils.fireModal({
+                title: "Erro ao salvar alterações",
+                text: res?.message ?? "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente mais tarde. Se o problema persistir entre em contato com o suporte."
+            });
+        }
+
+        else {
+            applyThemeStyles(selectedTheme);
+        }
+    }
 }
