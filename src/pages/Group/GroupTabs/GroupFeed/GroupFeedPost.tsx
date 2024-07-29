@@ -76,8 +76,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
                 groupContext.setEditPost(data);
             },
             hidden(data) {
-                let canEdit = (data.author.user.ownerOfSession);
-                return  !canEdit;
+                return !data.author.user.ownerOfSession;
             },
         },
         {
@@ -87,7 +86,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
             onSelect: handleDeletePost,
             hidden(data) {
                 return !data.author.user.ownerOfSession
-                    || !canI("FEED", Permission.READ_WRITE_DELETE, groupContext.group);
+                    && !canI("FEED", Permission.READ_WRITE_DELETE, groupContext.group);
             },
         }
     ]
