@@ -1,7 +1,8 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import AuthContext from "@/contexts/Auth";
+import { groupHeaderUrl } from "@/utils/apiUtils";
 
 export function OrganizationLogo() {
     const authContext = useContext(AuthContext);
@@ -16,7 +17,7 @@ export function OrganizationLogo() {
 
         children: renderLogoImage
             ? <img
-                src={`${import.meta.env.VITE_UNIVERSIME_API}/group/current-organization/header`}
+                src={groupHeaderUrl(authContext.organization)}
                 onError={toggleRenderImage}
                 className="organization-logo"
                 title={authContext.organization.name}
