@@ -18,12 +18,12 @@ import { ICON_LIKE, ICON_CLAP, ICON_HEART, ICON_SUPPORT, ICON_GENIUS, ICON_HAPPY
 import TextboxFormatted from "@/components/TextboxFormatted/TextboxFormatted";
 
 export type GroupFeedPostProps = Readonly<{
-    post: GroupPost;
+    post: GroupPost & GroupPostComment;
     isComment?: boolean;
 }>;
 
 export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
-    const feedDescriptionId = `post-${post.postId}`;
+    const feedDescriptionId = `post-${isComment ? post.id : post.postId}`;
     const [feedDescriptionElement, setFeedDescriptionElement] = useState(document.getElementById(feedDescriptionId));
 
     const groupContext = useContext(GroupContext);
