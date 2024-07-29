@@ -18,7 +18,7 @@ export function OrganizationLogo() {
         children: renderLogoImage
             ? <img
                 src={groupHeaderUrl(authContext.organization)}
-                onError={toggleRenderImage}
+                onError={e => setRenderLogoImage(false)}
                 className="organization-logo"
                 title={authContext.organization.name}
             />
@@ -30,8 +30,4 @@ export function OrganizationLogo() {
     return authContext.profile
         ? <Link {...wrapperAttributes} to={`/group${authContext.organization.path}`} />
         : <div {...wrapperAttributes}/>
-
-    function toggleRenderImage() {
-        setRenderLogoImage(b => !b);
-    }
 }
