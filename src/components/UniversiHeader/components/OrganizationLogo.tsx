@@ -22,7 +22,7 @@ export function OrganizationLogo() {
                 className="organization-logo"
                 title={authContext.organization.name}
             />
-            : <div>
+            : <div className="organization-logo">
                 { authContext.organization.name }
             </div>
     };
