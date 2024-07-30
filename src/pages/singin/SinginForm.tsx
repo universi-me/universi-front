@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 import { AuthContext } from "@/contexts/Auth/AuthContext";
-import { oauthSignIn } from "@/services/oauth2-google";
+import { oauthSignInUrl } from "@/services/oauth2-google";
 import { IMG_DCX_LOGO } from "@/utils/assets";
+import * as SweetAlertUtils from "@/utils/sweetalertUtils"
 
-import "./signinForm.css";
+import "./SignInForm.less";
 
 export default function SinginForm() {
   const auth = useContext(AuthContext);
@@ -19,7 +20,17 @@ export default function SinginForm() {
 
 
   const handleAuthLoginGoogle = async () => {
-    window.location.href = oauthSignIn().toString();
+    const client_id = auth.organization.groupSettings.environment?.google_client_id;
+
+    if (client_id === undefined) {
+        SweetAlertUtils.fireModal({
+            title: "Não foi possível fazer login com Google",
+            text: "No momento o login com Google parece não ser possível"
+        });
+        return;
+    }
+
+    window.location.href = oauthSignInUrl({ client_id }).toString();
   };
 
   const handleAuthLoginKeycloak = async () => {
@@ -44,17 +55,14 @@ export default function SinginForm() {
     setShowPassword(!showPassword);
   };
 
-  const organizationEnv = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any);
-  const SIGNUP_ENABLED = organizationEnv.signup_enabled ?? true;
-  const ENABLE_GOOGLE_LOGIN = organizationEnv.login_google_enabled ?? (import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1");
-  const ENABLE_RECAPTCHA = organizationEnv.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
-  const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-  const ENABLE_KEYCLOAK_LOGIN = organizationEnv.keycloak_enabled ?? false;
+  const organizationEnv = auth.organization.groupSettings.environment;
+  const SIGNUP_ENABLED = organizationEnv?.signup_enabled ?? true;
+  const ENABLE_GOOGLE_LOGIN = auth.organization.groupSettings.environment?.login_google_enabled ?? false;
+  const ENABLE_RECAPTCHA = organizationEnv?.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
+  const RECAPTCHA_SITE_KEY = organizationEnv?.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  const ENABLE_KEYCLOAK_LOGIN = organizationEnv?.keycloak_enabled ?? false;
   
-  return (
-  <>
-  
-  <div className="container">
+  return <div className="container">
       <form action="/login" method="post" className="form-container">
         <div className="form-group">
           <div className="label-form">
@@ -115,14 +123,14 @@ export default function SinginForm() {
       {
         !ENABLE_GOOGLE_LOGIN ? null :
         <>
-            <div className="container-line-form" style={{margin: "20px 0"}}>
+            <div className="container-line-form">
                 <div className="line-form"></div>
-                <div style={{color: "#c2c2c2"}}>ou entre com</div>
+                <div className="enter-with">ou entre com</div>
                 <div className="line-form"></div>
             </div>
 
             <button
-                className="btn_form_dcx"
+                className="btn_form_google"
                 type="button"
                 onClick={handleAuthLoginGoogle}
             >
@@ -135,9 +143,9 @@ export default function SinginForm() {
       {
         !ENABLE_KEYCLOAK_LOGIN ? null :
         <>
-            <div className="container-line-form" style={{margin: "20px 0"}}>
+            <div className="container-line-form">
                 <div className="line-form"></div>
-                <div style={{color: "#c2c2c2"}}>ou entre com</div>
+                <div className="enter-with">ou entre com</div>
                 <div className="line-form"></div>
             </div>
 
@@ -152,16 +160,10 @@ export default function SinginForm() {
         </>
       }
 
-      { !SIGNUP_ENABLED ? null :
-        <div className="container-line-form" style={{marginTop: "20px"}}>
-            <Link to="/signup">Crie sua conta</Link>
-        </div>
+      { SIGNUP_ENABLED &&
+        <Link id="signup" to="/signup">Crie sua conta</Link>
       }
-        <div className="container-line-form" style={{marginTop: "20px"}}>
-            <Link to="/recovery">Esqueci minha senha</Link>
-        </div>
-    </div>
-  </>
-  
-  );
+
+        <Link id="recovery" to="/recovery">Esqueci minha senha</Link>
+    </div>;
 }
