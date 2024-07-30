@@ -118,7 +118,7 @@ export type GroupEmailFilterDelete_ResponseDTO =         ApiResponse;
 export type GroupEmailFilterList_ResponseDTO =           ApiResponse<{ emailFilters: GroupEmailFilter[] }>;
 export type GroupCompetencesList_ResponseDTO =           ApiResponse<competenceListResponse>
 export type competenceListResponse = {competences : {competenceName : string, competenceTypeId : string, levelInfo : {[key : number]: Profile[]}}[]};
-export type GroupThemeEdit_ResponseDTO =                 ApiResponse<{ theme: GroupTheme[] }>;
+export type GroupThemeEdit_ResponseDTO =                 ApiResponse;
 
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
