@@ -64,10 +64,10 @@ export function GroupFeed(){
                 groupContext.editPost !== undefined ?
 
                 <UniversiForm
-                    formTitle={groupContext.editPost == null ? "Criar publicação" : "Editar publicação"}
+                    formTitle={groupContext.editPost == null ? "Criar publicação" : isGroupPostComment(groupContext.editPost) ? "Editar comentário":"Editar publicação"}
                     cancelProps = {
                         {
-                            title : "Descartar publicação?",
+                            title : isGroupPostComment(groupContext.editPost) ?"Descartar comentário?":"Descartar publicação?",
                             message: "Tem certeza? Esta ação é irreversível", 
                             confirmButtonMessage: "Sim",
                             cancelButtonMessage: "Não"
@@ -80,7 +80,7 @@ export function GroupFeed(){
                         }, {
                             DTOName: "authorId", label: "", type: FormInputs.HIDDEN, value: groupContext.loggedData.profile.id
                         }, {
-                            DTOName: "content", label: "Publicação", type: FormInputs.FORMATED_TEXT,
+                            DTOName: "content", label: isGroupPostComment(groupContext.editPost) ? "Comentário" :"Publicação", type: FormInputs.FORMATED_TEXT,
                             charLimit: isGroupPostComment(groupContext.editPost) ? 2000 : 3000,
                             value: groupContext.editPost ? groupContext.editPost.content : ""
                             ,validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
