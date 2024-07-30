@@ -16,6 +16,7 @@ import { Permission } from "@/types/Roles";
 
 import { ICON_LIKE, ICON_CLAP, ICON_HEART, ICON_SUPPORT, ICON_GENIUS, ICON_HAPPY, ICON_COMMENT } from '@/utils/assets';
 import TextboxFormatted from "@/components/TextboxFormatted/TextboxFormatted";
+import UniversiForm, { FormInputs, RequiredValidation, TextValidation, ValidationComposite } from "@/components/UniversiForm";
 
 export type GroupFeedPostProps = Readonly<{
     post: GroupPost;
@@ -235,7 +236,34 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
 
             {isCommentExpanded && <div className="comment-area-input">
                 <div>
-                    <TextboxFormatted formats={["bold", "italic", "underline", "strike",]} toolbar={["bold", "italic", "underline", "strike",]} value={commentText} onChange={setCommentText}/>
+                    <UniversiForm
+                        formTitle={"Criar comentário"}
+                        cancelProps = {
+                            {
+                                title : "Descartar comentário?",
+                                message: "Tem certeza? Esta ação é irreversível", 
+                                confirmButtonMessage: "Sim",
+                                cancelButtonMessage: "Não"
+                            }
+                        }
+                        objects={[
+                            {
+                                DTOName: "content", label: "Publicação", type: FormInputs.FORMATED_TEXT,
+                                charLimit: 2000,
+                                value: commentText ?? "",
+                                validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
+                            }, {
+                                DTOName : "groupPostId", label : "", type : FormInputs.HIDDEN, value : post?.postId
+                            }
+                        ]}
+                        requisition={UniversimeApi.Feed.commentGroupPost}
+                        callback={async() => {
+                            groupContext!.refreshData();
+                            setCommentText("");
+                            setIsCommentExpanded(false);
+                            setIsShowComments(true);
+                        }}
+                    />
                 </div>
                 <div className="comment-button" onClick={() => commentToPost(post, commentText)}>Fazer comentário</div>
             </div>}

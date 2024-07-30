@@ -13,7 +13,11 @@ import { Permission } from "@/types/Roles";
 import { GroupPostComment } from "@/types/Feed";
 
 function isGroupPostComment(post: any): post is GroupPostComment {
-    return 'id' in post;
+    try {
+        return 'id' in post;
+    } catch {
+        return false;
+    }
 }
 
 export function GroupFeed(){
@@ -77,7 +81,7 @@ export function GroupFeed(){
                             DTOName: "authorId", label: "", type: FormInputs.HIDDEN, value: groupContext.loggedData.profile.id
                         }, {
                             DTOName: "content", label: "Publicação", type: FormInputs.FORMATED_TEXT,
-                            charLimit: 3000,
+                            charLimit: isGroupPostComment(groupContext.editPost) ? 2000 : 3000,
                             value: groupContext.editPost ? groupContext.editPost.content : ""
                             ,validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
                         }, {
