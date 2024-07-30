@@ -35,19 +35,21 @@
         padding-left: 1.5rem;
     }
 
-    .organization-logo{
-        height: inherit;
-        width: auto;
-    }
-
     #header-logo {
         text-decoration: none;
         color: @font-color-v1;
         font-weight: @font-weight-default;
         font-size: 1.5rem;
 
-        .tld {
-            color: @secondary-color;
+        height: 100%;
+        width: auto;
+
+        display: flex;
+        align-items: center;
+
+        img {
+            height: inherit;
+            width: inherit;
         }
     }
 
@@ -65,7 +67,7 @@
 
     .left-items{
         padding-left: 5rem;
-        height: 62%;
+        height: calc(100% - 10px);
         overflow: hidden;
         display: flex;
         flex-direction: row;
