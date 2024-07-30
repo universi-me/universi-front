@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { ThemeProvider } from "@/pages/Settings/GroupThemeColorPage/ThemeContext";
+import { ThemeProvider } from "@/contexts/Theme";
 import UniversiHeader from "@/components/UniversiHeader";
 import useUmami from "./hooks/useUmami";
 

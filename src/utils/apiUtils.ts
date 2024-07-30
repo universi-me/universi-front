@@ -17,9 +17,7 @@ export function groupBannerUrl(group: Group) {
 
 export function groupHeaderUrl(group: Group): Optional<string> {
     if(group.headerImage) {
-        return isAbsoluteUrl(group.headerImage)
-            ? group.headerImage
-            : import.meta.env.VITE_UNIVERSIME_API + group.headerImage;
+        return `${import.meta.env.VITE_UNIVERSIME_API}/group/header/${group.id}`;
     }
 
     if (group.organization)

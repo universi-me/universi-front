@@ -1,17 +1,23 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
-import { oauthSignIn } from "@/services/oauth2-google";
+import { oauthSignInUrl } from "@/services/oauth2-google";
 import { SignUpModal } from "@/pages/SignUp";
 import { IMG_DCX_LOGO } from "@/utils/assets";
 
 import "./SignUp.less"
+import AuthContext from "@/contexts/Auth";
 
 export default function SignUpPage() {
+    const authContext = useContext(AuthContext);
     const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false);
 
-    const googleUrl = oauthSignIn();
+    const googleClientId = authContext.organization.groupSettings.environment?.google_client_id;
+    const googleUrl = googleClientId
+        ? oauthSignInUrl({ client_id: googleClientId })
+        : undefined;
 
-    const ENABLE_GOOGLE_LOGIN = import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1";
+    const ENABLE_GOOGLE_LOGIN = googleUrl !== undefined
+        && (authContext.organization.groupSettings.environment?.login_google_enabled ?? false);
 
     return (
         <div id="sign-up-page">

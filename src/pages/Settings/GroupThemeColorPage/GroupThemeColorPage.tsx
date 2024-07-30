@@ -1,4 +1,4 @@
-import { useContext, useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import _ from "lodash";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
@@ -6,115 +6,91 @@ import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import UniversimeApi from "@/services/UniversimeApi";
 import type { GroupTheme } from "@/types/Group";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
-import { useTheme } from "@/pages/Settings/GroupThemeColorPage/ThemeContext";
-import { applyThemeStyles } from "@/utils/themeUtils";
+import ThemeContext from "@/contexts/Theme";
 import { themeColorMappings } from "./ThemeMappings";
+import ThemeColorItem from "./ThemeColorItem";
+import ThemeBuilder from "@/components/ThemeBuilder";
 import "./GroupThemeColor.less";
+import BootstrapIcon from "@/components/BootstrapIcon";
 
-interface ThemeColorItemProps {
-  theme: GroupTheme;
-  isSelected: boolean;
-  onClick: (theme: GroupTheme) => void;
-}
-
-function ThemeColorItem({ theme, isSelected, onClick }: ThemeColorItemProps) {
-  const handleClick = () => {
-    onClick(theme);
-  };
-
-  return (
-    <div
-      className={`theme-color-item ${isSelected ? "selected" : ""}`}
-      style={{ backgroundColor: theme.primaryColor }}
-      onClick={handleClick}
-    ></div>
-  );
-}
-
-function themeReducer(
-  state: GroupTheme | null,
-  action: { type: "SELECT"; theme: GroupTheme }
-) {
-  return action.type === "SELECT" ? action.theme : state;
-}
-
-const showErrorModal = (title: string, text: string) => {
-  SwalUtils.fireModal({
-    title,
-    text,
-    showConfirmButton: true,
-    confirmButtonText: "OK",
-  });
-};
 
 export function GroupThemeColorPage() {
-  const [organizationId, setOrganizationId] = useState<string | null>(null);
-  const [selectedTheme, themeDispatch] = useReducer(themeReducer, null);
-  const auth = useContext(AuthContext);
-  const theme = useTheme();
+    const auth = useContext(AuthContext);
+    const themeContext = useContext(ThemeContext);
+    const [selectedTheme, setSelectedTheme] = useState<GroupTheme>(auth.organization.groupSettings.theme);
+    const [extendedBuilder, setExtendedBuilder] = useState(false);
 
-  const saveChanges = async () => {
-    if (!selectedTheme || !organizationId) {
-      showErrorModal(
-        "Erro ao salvar alterações",
-        "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente.)"
-      );
-      return;
-    }
+    useEffect(() => {
+        themeContext.changeTheme(selectedTheme);
+    }, [selectedTheme]);
 
-    try {
-      await UniversimeApi.Group.editTheme({
-        groupId: organizationId,
-        ...selectedTheme,
-      });
-      applyThemeStyles(selectedTheme);
-    } catch {
-      showErrorModal(
-        "Erro ao salvar alterações",
-        "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente."
-      );
-    }
-  };
+    useEffect(() => {
+        // Applies organization theme on exit page
+        return () => {
+            themeContext.changeTheme(auth.organization.groupSettings.theme);
+        };
+    }, [auth.organization.groupSettings.theme]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const organizationTheme = auth.organization.groupSettings.theme;
-        // ((auth.organization ?? ({} as any)).groupSettings ?? ({} as any))
-        //   .theme ?? ({} as any);
+    return <div id="theme-color-settings">
+        <SettingsTitle>Configuração de Tema</SettingsTitle>
+        <SettingsDescription>Escolha o tema para o grupo.</SettingsDescription>
 
-    if (organizationTheme) {
-        themeDispatch({ type: "SELECT", theme: organizationTheme });
-        setOrganizationId(auth.organization?.id!);
-        applyThemeStyles(organizationTheme);
-      }
-    };
-    fetchData();
-  }, [auth.organization]);
+        <div id="theme-color-list">
+            {Object.keys(themeColorMappings).map((themeName) => {
+                const theme = themeColorMappings[themeName]
 
-  return (
-    <div id="theme-color-settings">
-      <SettingsTitle>Configuração de Tema</SettingsTitle>
-      <SettingsDescription>Escolha o tema para o grupo.</SettingsDescription>
+                return <ThemeColorItem
+                    key={themeName}
+                    theme={theme}
+                    isSelected={ _.isEqual(theme, selectedTheme) }
+                    onClick={ setSelectedTheme }
+                />
+            })}
+        </div>
 
-      <div className="theme-color-list">
-        {Object.keys(themeColorMappings).map((themeName) => {
-            const theme = themeColorMappings[themeName]
+        <section id="section-builder-wrapper">
+            <button id="toggle-advanced" onClick={() => { setExtendedBuilder(eb => !eb) }}>
+                <p>Configurações avançadas</p>
+                <BootstrapIcon id="toggle-icon" icon="chevron-down" className={extendedBuilder ? "extended" : "collapsed"} />
+            </button>
 
-            return <ThemeColorItem
-              key={themeName}
-              theme={theme}
-              isSelected={ _.isEqual(theme, selectedTheme) }
-              onClick={(selected) =>
-                themeDispatch({ type: "SELECT", theme: selected })
-              }
+            <ThemeBuilder
+                id="theme-builder"
+                className={ extendedBuilder ? "extended" : "collapsed" }
+                changeValue={changeThemeVariable}
+                currentTheme={selectedTheme}
             />
-        })}
-      </div>
+        </section>
 
-      <div className="save-button">
-        <div className="spacer" />
-        <ActionButton name="Salvar" buttonProps={{ onClick: saveChanges }} />
-      </div>
-    </div>
-  );
+        <div id="save-button">
+            <div id="spacer" />
+            <ActionButton name="Salvar" buttonProps={{ onClick: saveChanges, }} />
+        </div>
+    </div>;
+
+    async function saveChanges() {
+        const res = await UniversimeApi.Group.editTheme({
+            groupId: auth.organization.id,
+            ...selectedTheme,
+        }).catch(err => null);
+
+        if ( !res?.success ) {
+            SwalUtils.fireModal({
+                title: "Erro ao salvar alterações",
+                text: res?.message ?? "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente mais tarde. Se o problema persistir entre em contato com o suporte."
+            });
+        }
+
+        else {
+            await auth.updateLoggedUser();
+            themeContext.changeTheme(selectedTheme);
+        }
+    }
+
+    function changeThemeVariable(variable: keyof GroupTheme, value: string) {
+        const newTheme = { ...selectedTheme };
+        newTheme[variable] = value.toLocaleUpperCase();
+
+        setSelectedTheme(newTheme);
+    }
 }

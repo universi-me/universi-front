@@ -1,4 +1,4 @@
-import { createRef, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import AuthContext from "@/contexts/Auth";
@@ -6,28 +6,28 @@ import { groupHeaderUrl } from "@/utils/apiUtils";
 
 export function OrganizationLogo() {
     const authContext = useContext(AuthContext);
-    const imageLogoRef = createRef<HTMLImageElement>();
+    const [renderLogoImage, setRenderLogoImage] = useState(true);
 
-    function imgLogoLoadError() {
-        if (!imageLogoRef.current) return;
-
-        imageLogoRef.current.src = "";
-    }
+    useEffect(() => {
+        setRenderLogoImage(true);
+    }, [authContext.organization, authContext.profile]);
 
     const wrapperAttributes = {
         id: "header-logo",
 
-        children: <>
-            <img src={groupHeaderUrl(authContext.organization)}
-                className="organization-logo" onError={imgLogoLoadError}
-                ref={imageLogoRef} title={authContext.organization?.name}
+        children: renderLogoImage
+            ? <img
+                src={groupHeaderUrl(authContext.organization)}
+                onError={e => setRenderLogoImage(false)}
+                className="organization-logo"
+                title={authContext.organization.name}
             />
-
-            { imageLogoRef.current?.src === undefined && authContext.organization.name }
-        </>
+            : <div className="organization-logo">
+                { authContext.organization.name }
+            </div>
     };
 
     return authContext.profile
         ? <Link {...wrapperAttributes} to={`/group${authContext.organization.path}`} />
-        : <p {...wrapperAttributes}/>
+        : <div {...wrapperAttributes}/>
 }
