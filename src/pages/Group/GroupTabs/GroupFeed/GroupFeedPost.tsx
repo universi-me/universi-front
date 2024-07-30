@@ -248,7 +248,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
                         }
                         objects={[
                             {
-                                DTOName: "content", label: "Publicação", type: FormInputs.FORMATED_TEXT,
+                                DTOName: "content", label: "Comentário", type: FormInputs.FORMATED_TEXT,
                                 charLimit: 2000,
                                 value: commentText ?? "",
                                 validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
@@ -265,7 +265,6 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
                         }}
                     />
                 </div>
-                <div className="comment-button" onClick={() => commentToPost(post, commentText)}>Fazer comentário</div>
             </div>}
 
             {isShowComments && <div className="comment-area-comments">
@@ -355,18 +354,6 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
                 groupContext!.refreshData()
             });
         }
-    }
-
-    function commentToPost(post: GroupPost, commentText: string) {
-        UniversimeApi.Feed.commentGroupPost({
-            content: commentText,
-            groupPostId: post.postId,
-        }).then(() => {
-            groupContext!.refreshData();
-            setCommentText("");
-            setIsCommentExpanded(false);
-            setIsShowComments(true);
-        });
     }
 
     function countReaction(post: GroupPost, reaction: string): number {
