@@ -17,7 +17,7 @@ import BootstrapIcon from "@/components/BootstrapIcon";
 export function GroupThemeColorPage() {
     const auth = useContext(AuthContext);
     const themeContext = useContext(ThemeContext);
-    const [selectedTheme, setSelectedTheme] = useState<GroupTheme>(auth.organization.groupSettings.theme);
+    const [selectedTheme, setSelectedTheme] = useState<GroupTheme>(auth.organization.groupSettings.theme ?? themeColorMappings.defaultTheme);
     const [extendedBuilder, setExtendedBuilder] = useState(false);
 
     useEffect(() => {
