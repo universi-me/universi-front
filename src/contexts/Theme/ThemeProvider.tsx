@@ -3,7 +3,7 @@ import AuthContext from "@/contexts/Auth";
 import ThemeContext, { ThemeContextType } from "@/contexts/Theme";
 import { applyThemeStyles } from "@/utils/themeUtils";
 import { GroupTheme } from "@/types/Group";
-import ThemeMappings from "@/pages/Settings/GroupThemeColorPage/ThemeMappings";
+import ThemeMappings from "@/configs/ThemeMappings";
 
 export type ThemeProviderProps = PropsWithChildren<{}>;
 
