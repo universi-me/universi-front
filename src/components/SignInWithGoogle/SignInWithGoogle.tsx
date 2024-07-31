@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { oauthSignInUrl } from "@/services/oauth2-google";
 import styles from "./SignInWithGoogle.module.less";
 
@@ -11,7 +13,11 @@ export function SignInWithGoogle(props: Readonly<SignInWithGoogleProps>) {
 
     const renderedText = text ?? "EMAIL GOOGLE";
 
-    return <a className={styles.signInWithGoogle} href={ oauthSignInUrl({ client_id }).toString() }>
+    const href = useMemo(() => {
+        return oauthSignInUrl({ client_id }).toString();
+    }, [ client_id ]);
+
+    return <a className={styles.signInWithGoogle} href={ href }>
         <img
             src="https://lh3.googleusercontent.com/d_S5gxu_S1P6NR1gXeMthZeBzkrQMHdI5uvXrpn3nfJuXpCjlqhLQKH_hbOxTHxFhp5WugVOEcl4WDrv9rmKBDOMExhKU5KmmLFQVg"
             alt="Google"
