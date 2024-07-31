@@ -1,22 +1,18 @@
 import { useContext, useState } from "react";
 
-import { oauthSignInUrl } from "@/services/oauth2-google";
+import AuthContext from "@/contexts/Auth";
+import SignInWithGoogle from "@/components/SignInWithGoogle/SignInWithGoogle";
 import { SignUpModal } from "@/pages/SignUp";
-import { IMG_DCX_LOGO } from "@/utils/assets";
 
 import "./SignUp.less"
-import AuthContext from "@/contexts/Auth";
 
 export default function SignUpPage() {
     const authContext = useContext(AuthContext);
     const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false);
 
     const googleClientId = authContext.organization.groupSettings.environment?.google_client_id;
-    const googleUrl = googleClientId
-        ? oauthSignInUrl({ client_id: googleClientId })
-        : undefined;
 
-    const ENABLE_GOOGLE_LOGIN = googleUrl !== undefined
+    const ENABLE_GOOGLE_LOGIN = googleClientId !== undefined
         && (authContext.organization.groupSettings.environment?.login_google_enabled ?? false);
 
     return (
@@ -29,13 +25,8 @@ export default function SignUpPage() {
 
                 <div className="signup-container">
                     <div className="signup-box">
-                        {
-                            !ENABLE_GOOGLE_LOGIN ? null
-                            : <>
-                                <a href={googleUrl.href} className="google-login">
-                                    <img src={IMG_DCX_LOGO} alt="DCX" />
-                                    Entrar com DCX
-                                </a>
+                        { ENABLE_GOOGLE_LOGIN && <>
+                                <SignInWithGoogle client_id={ googleClientId } />
 
                                 <div className="signup-line-container">
                                     <div className="signup-line" />

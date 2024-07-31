@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 import { AuthContext } from "@/contexts/Auth/AuthContext";
-import { oauthSignInUrl } from "@/services/oauth2-google";
-import { IMG_DCX_LOGO } from "@/utils/assets";
-import * as SweetAlertUtils from "@/utils/sweetalertUtils"
+import SignInWithGoogle from "@/components/SignInWithGoogle/SignInWithGoogle";
 
 import "./SignInForm.less";
 
@@ -18,20 +16,6 @@ export default function SinginForm() {
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const [recaptchaRef, setRecaptchaRef] = useState<any>(null);
 
-
-  const handleAuthLoginGoogle = async () => {
-    const client_id = auth.organization.groupSettings.environment?.google_client_id;
-
-    if (client_id === undefined) {
-        SweetAlertUtils.fireModal({
-            title: "Não foi possível fazer login com Google",
-            text: "No momento o login com Google parece não ser possível"
-        });
-        return;
-    }
-
-    window.location.href = oauthSignInUrl({ client_id }).toString();
-  };
 
   const handleAuthLoginKeycloak = async () => {
     window.location.href = import.meta.env.VITE_UNIVERSIME_API + "/login/keycloak/auth";
@@ -120,23 +104,14 @@ export default function SinginForm() {
       </form>
 
 
-      {
-        !ENABLE_GOOGLE_LOGIN ? null :
-        <>
+      { ENABLE_GOOGLE_LOGIN && <>
             <div className="container-line-form">
                 <div className="line-form"></div>
                 <div className="enter-with">ou entre com</div>
                 <div className="line-form"></div>
             </div>
 
-            <button
-                className="btn_form_google"
-                type="button"
-                onClick={handleAuthLoginGoogle}
-            >
-                <img src={IMG_DCX_LOGO} />
-                EMAIL DCX
-            </button>
+            <SignInWithGoogle client_id={organizationEnv?.google_client_id!} />
         </>
       }
 
