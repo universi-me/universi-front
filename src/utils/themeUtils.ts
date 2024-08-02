@@ -2,7 +2,10 @@ import type { GroupTheme } from "@/types/Group";
 
 export const applyThemeStyles = (themeMapping: GroupTheme) => {
     for (const [property, variableName] of Object.entries(GroupThemeToCssVariable)) {
-        document.documentElement.style.setProperty(property, variableName);
+        const key = property as keyof GroupTheme;
+
+        document.documentElement.style.setProperty(variableName, themeMapping[key]);
+        console.log(`setting ${key} to ${variableName}`)
     }
 }
 
