@@ -13,15 +13,19 @@
             height: 3rem;
             border-width: 0.35rem;
             border-radius: 50%;
+            border-style: outset;
+            outline-width: 2px;
+            outline-style: solid;
             cursor: pointer;
             margin: 0 1rem;
 
-            will-change: border-width, transition-timing-function;
-            transition-property: border-width;
+            will-change: border-width, transition-timing-function, outline-width;
+            transition-property: border-width, outline-width;
             transition-duration: 100ms;
             transition-timing-function: ease-out;
 
             &.selected {
+                outline-width: 5px;
                 border-width: 0.65rem;
                 transition-timing-function: ease-in;
             }
