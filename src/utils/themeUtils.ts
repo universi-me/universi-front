@@ -26,20 +26,69 @@ export const GroupThemeToCssVariable: Record<keyof GroupTheme, string> = {
     wrongInvalidColor: "--wrong-invalid-color",
 };
 
-export const GroupThemeToLabel: Record<keyof GroupTheme, string> = {
-    // TODO: Name all variables
-    primaryColor:           "Cor primária",
-    secondaryColor:         "Cor secundária",
-    backgroundColor:        "Cor de fundo",
-    cardBackgroundColor:    "Cor de fundo de cartões",
-    cardItemColor:          "Cor de de itens de cartões",
-    fontColorV1:            "Cor de fonte 1",
-    fontColorV2:            "Cor de fonte 2",
-    fontColorV3:            "Cor de fonte 3",
-    fontColorLinks:         "Cor de fonte de links",
-    fontColorDisabled:      "Cor de fonte desabilitada",
-    buttonHoverColor:       "buttonHoverColor",
-    fontColorAlert:         "Cor de alerta",
-    fontColorSuccess:       "Cor de sucesso",
-    wrongInvalidColor:      "Cor de erro",
+export const GroupThemeToLabel: Record<keyof GroupTheme, { label: string, description?: string }> = {
+    // TODO: Label and describe all variables
+    primaryColor: {
+        label: "Cor primária",
+        description: "Cor principal usada na plataforma"
+    },
+
+    secondaryColor: {
+        label: "Cor secundária",
+        description: "Cor secundária usada em contraste com a cor principal"
+    },
+
+    backgroundColor: {
+        label: "Cor de fundo",
+    },
+
+    cardBackgroundColor: {
+        label: "Cor de fundo de cartões",
+    },
+
+    cardItemColor: {
+        label: "Cor de de itens de cartões",
+    },
+
+    fontColorV1: {
+        label: "Cor de fonte 1",
+        description: "Cor dos textos que o fundo é a cor principal"
+    },
+
+    fontColorV2: {
+        label: "Cor de fonte 2",
+        description: "Cor dos textos sobre a cor de fundo da página, cartões e itens de cartões"
+    },
+
+    fontColorV3: {
+        label: "Cor de fonte 3",
+    },
+
+    fontColorLinks: {
+        label: "Cor de fonte de links",
+        description: "Cor de hyperlinks nas páginas"
+    },
+
+    fontColorDisabled: {
+        label: "Cor de fonte desabilitada",
+        description: "Cor dos textos sem destaque e botões desativados"
+    },
+
+    buttonHoverColor: {
+        label: "buttonHoverColor",
+        description: "Cor de fundo dos botões ao passar o mouse"
+    },
+
+    fontColorAlert: {
+        label: "Cor de alerta",
+        description: "Cor de alertas"
+    },
+
+    fontColorSuccess: {
+        label: "Cor de sucesso",
+    },
+
+    wrongInvalidColor: {
+        label: "Cor de erro",
+    },
 };
