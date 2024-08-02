@@ -89,17 +89,12 @@ export type GroupThemeEdit_RequestDTO = GroupIdOrPath_RequestDTO & {
     fontColorV3:            string;
     fontColorV4:            string;
     fontColorV5:            string;
-    fontColorV6:            string;
     fontDisabledColor:      string;
-    formsColor:             string;
     skills1Color:           string;
-    waveColor:              string;
-    buttonYellowHoverColor: string;
     buttonHoverColor:       string;
     alertColor:             string;
     successColor:           string;
     wrongInvalidColor:      string;
-    rankColor:              string;
 };
 
 export type GroupGet_ResponseDTO =                       ApiResponse<{ group: Group }>;
@@ -253,17 +248,12 @@ export async function editTheme(body: GroupThemeEdit_RequestDTO) {
         font_color_v3:              body.fontColorV3,
         font_color_v4:              body.fontColorV4,
         font_color_v5:              body.fontColorV5,
-        font_color_v6:              body.fontColorV6,
         font_disabled_color:        body.fontDisabledColor,
-        forms_color:                body.formsColor,
         skills_1_color:             body.skills1Color,
-        wave_color:                 body.waveColor,
-        button_yellow_hover_color:  body.buttonYellowHoverColor,
         button_hover_color:         body.buttonHoverColor,
         alert_color:                body.alertColor,
         success_color:              body.successColor,
         wrong_invalid_color:        body.wrongInvalidColor,
-        rank_color:                 body.rankColor,
     })).data;
 }
 
