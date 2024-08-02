@@ -59,7 +59,6 @@ export const GroupEmailFilterTypeToLabel = {
 export type GroupTheme ={
     primaryColor:           string;
     secondaryColor:         string;
-    tertiaryColor:          string;
     backgroundColor:        string;
     cardBackgroundColor:    string;
     cardItemColor:          string;
@@ -78,7 +77,6 @@ export const GroupThemeToLabel: Record<keyof GroupTheme, string> = {
     // TODO: Name all variables
     primaryColor:           "Cor primária",
     secondaryColor:         "Cor secundária",
-    tertiaryColor:          "Cor terciária",
     backgroundColor:        "Cor de fundo",
     cardBackgroundColor:    "Cor de fundo de cartões",
     cardItemColor:          "Cor de de itens de cartões",

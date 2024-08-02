@@ -9,7 +9,6 @@ export const applyThemeStyles = (themeMapping: GroupTheme) => {
 export const GroupThemeToCssVariable: Record<keyof GroupTheme, string> = {
     primaryColor: "--primary-color",
     secondaryColor: "--secondary-color",
-    tertiaryColor: "--tertiary-color",
     backgroundColor: "--background-color",
     cardBackgroundColor: "--card-background-color",
     cardItemColor: "--card-item-color",

@@ -4,7 +4,6 @@ export const themeColorMappings: { [k: string]: GroupTheme } = {
     defaultTheme: {
         primaryColor: "#F6BC0D",
         secondaryColor: "#BE392C",
-        tertiaryColor: "#FFFFFF",
         backgroundColor: "#F5F4F4",
         cardBackgroundColor: "#D9D9D9",
         cardItemColor: "#F3F3F3",
@@ -21,7 +20,6 @@ export const themeColorMappings: { [k: string]: GroupTheme } = {
     themeId1: {
         primaryColor: "#0091B9",
         secondaryColor: "#934588",
-        tertiaryColor: "#FFFFFF",
         backgroundColor: "#F5F4F4",
         cardBackgroundColor: "#D9D9D9",
         cardItemColor: "#F3F3F3",
@@ -38,7 +36,6 @@ export const themeColorMappings: { [k: string]: GroupTheme } = {
     themeId2: {
         primaryColor: "#02366E",
         secondaryColor: "#FA7511",
-        tertiaryColor: "#FFFFFF",
         backgroundColor: "#F5F4F4",
         cardBackgroundColor: "#D9D9D9",
         cardItemColor: "#F3F3F3",
@@ -55,7 +52,6 @@ export const themeColorMappings: { [k: string]: GroupTheme } = {
     themeId3: {
         primaryColor: "#D2123B",
         secondaryColor: "#D2123B",
-        tertiaryColor: "#FFFFFF",
         backgroundColor: "#F5F4F4",
         cardBackgroundColor: "#D9D9D9",
         cardItemColor: "#F3F3F3",

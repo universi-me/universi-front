@@ -80,7 +80,6 @@ export type FilterParticipants_RequestDTO = {
 export type GroupThemeEdit_RequestDTO = GroupIdOrPath_RequestDTO & {
     primaryColor:           string;
     secondaryColor:         string;
-    tertiaryColor:          string;
     backgroundColor:        string;
     cardBackgroundColor:    string;
     cardItemColor:          string;
@@ -237,7 +236,6 @@ export async function editTheme(body: GroupThemeEdit_RequestDTO) {
 
         primary_color:              body.primaryColor,
         secondary_color:            body.secondaryColor,
-        tertiary_color:             body.tertiaryColor,
         background_color:           body.backgroundColor,
         card_background_color:      body.cardBackgroundColor,
         card_item_color:            body.cardItemColor,
