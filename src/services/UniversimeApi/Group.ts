@@ -87,12 +87,12 @@ export type GroupThemeEdit_RequestDTO = GroupIdOrPath_RequestDTO & {
     fontColorV1:            string;
     fontColorV2:            string;
     fontColorV3:            string;
-    fontColorV4:            string;
+    fontColorLinks:         string;
     fontColorDisabled:      string;
     skills1Color:           string;
     buttonHoverColor:       string;
-    fontColorAlert:             string;
-    fontColorSuccess:           string;
+    fontColorAlert:         string;
+    fontColorSuccess:       string;
     wrongInvalidColor:      string;
 };
 
@@ -245,7 +245,7 @@ export async function editTheme(body: GroupThemeEdit_RequestDTO) {
         font_color_v1:              body.fontColorV1,
         font_color_v2:              body.fontColorV2,
         font_color_v3:              body.fontColorV3,
-        font_color_v4:              body.fontColorV4,
+        font_color_links:           body.fontColorLinks,
         font_color_disabled:        body.fontColorDisabled,
         skills_1_color:             body.skills1Color,
         button_hover_color:         body.buttonHoverColor,
