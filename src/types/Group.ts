@@ -67,7 +67,6 @@ export type GroupTheme ={
     fontColorV2:            string;
     fontColorV3:            string;
     fontColorV4:            string;
-    fontColorV5:            string;
     fontColorDisabled:      string;
     skills1Color:           string;
     buttonHoverColor:       string;
@@ -88,7 +87,6 @@ export const GroupThemeToLabel: Record<keyof GroupTheme, string> = {
     fontColorV2:            "Cor de fonte 2",
     fontColorV3:            "Cor de fonte 3",
     fontColorV4:            "Cor de fonte 4",
-    fontColorV5:            "Cor de fonte 5",
     fontColorDisabled:      "Cor de fonte desabilitada",
     skills1Color:           "Cor de habilidades",
     buttonHoverColor:       "buttonHoverColor",
