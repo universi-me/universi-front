@@ -3,7 +3,6 @@ import { useContext, useState } from "react";
 import { ProfileContext } from "@/pages/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi"
 
-import './ExperienceSetting.less'
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
 import { Institution } from "@/types/Institution";
