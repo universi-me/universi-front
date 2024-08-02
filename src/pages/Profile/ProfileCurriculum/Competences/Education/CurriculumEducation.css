@@ -203,8 +203,7 @@
 }
 
 #item-competence .education .education-list .education-item .education-level-list .education-level.learned {
-    background: var(--skills-1-color);
-    
+    background: var(--secondary-color);
 }
 
 #item-competence .education .education-list .education-item .education-level-list .education-level:not(:last-of-type) {

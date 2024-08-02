@@ -97,8 +97,7 @@
 }
 
 #profile-page #right-side .competences .competence-list .competence-item .competence-level-list .competence-level.learned {
-    background: var(--skills-1-color);
-    
+    background: var(--secondary-color);
 }
 
 #profile-page #right-side .competences .competence-list .competence-item .competence-level-list .competence-level:not(:last-of-type) {
