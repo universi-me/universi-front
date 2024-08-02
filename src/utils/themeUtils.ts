@@ -18,10 +18,10 @@ export const GroupThemeToCssVariable: Record<keyof GroupTheme, string> = {
     fontColorV3: "--font-color-v3",
     fontColorV4: "--font-color-v4",
     fontColorV5: "--font-color-v5",
-    fontDisabledColor: "--font-disabled-color",
+    fontColorDisabled: "--font-color-disabled",
     skills1Color: "--skills-1-color",
     buttonHoverColor: "--button-hover-color",
-    alertColor: "--alert-color",
-    successColor: "--success-color",
+    fontColorAlert: "--font-color-alert",
+    fontColorSuccess: "--font-color-success",
     wrongInvalidColor: "--wrong-invalid-color",
 };

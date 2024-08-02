@@ -35,7 +35,7 @@ export function CurriculumAbility() {
         icon: "warning",
         showCancelButton: true,
         showConfirmButton: true,
-        confirmButtonColor: "var(--alert-color)",
+        confirmButtonColor: "var(--font-color-alert)",
 
         title : "Excluir competência?",
         text: "Tem certeza? Esta ação é irreversível", 

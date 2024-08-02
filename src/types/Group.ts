@@ -68,11 +68,11 @@ export type GroupTheme ={
     fontColorV3:            string;
     fontColorV4:            string;
     fontColorV5:            string;
-    fontDisabledColor:      string;
+    fontColorDisabled:      string;
     skills1Color:           string;
     buttonHoverColor:       string;
-    alertColor:             string;
-    successColor:           string;
+    fontColorAlert:         string;
+    fontColorSuccess:       string;
     wrongInvalidColor:      string;
 };
 
@@ -89,11 +89,11 @@ export const GroupThemeToLabel: Record<keyof GroupTheme, string> = {
     fontColorV3:            "Cor de fonte 3",
     fontColorV4:            "Cor de fonte 4",
     fontColorV5:            "Cor de fonte 5",
-    fontDisabledColor:      "Cor de fonte desabilitada",
+    fontColorDisabled:      "Cor de fonte desabilitada",
     skills1Color:           "Cor de habilidades",
     buttonHoverColor:       "buttonHoverColor",
-    alertColor:             "Cor de alerta",
-    successColor:           "Cor de sucesso",
+    fontColorAlert:         "Cor de alerta",
+    fontColorSuccess:       "Cor de sucesso",
     wrongInvalidColor:      "Cor de erro",
 };
 

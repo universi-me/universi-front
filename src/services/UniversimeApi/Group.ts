@@ -89,11 +89,11 @@ export type GroupThemeEdit_RequestDTO = GroupIdOrPath_RequestDTO & {
     fontColorV3:            string;
     fontColorV4:            string;
     fontColorV5:            string;
-    fontDisabledColor:      string;
+    fontColorDisabled:      string;
     skills1Color:           string;
     buttonHoverColor:       string;
-    alertColor:             string;
-    successColor:           string;
+    fontColorAlert:             string;
+    fontColorSuccess:           string;
     wrongInvalidColor:      string;
 };
 
@@ -248,11 +248,11 @@ export async function editTheme(body: GroupThemeEdit_RequestDTO) {
         font_color_v3:              body.fontColorV3,
         font_color_v4:              body.fontColorV4,
         font_color_v5:              body.fontColorV5,
-        font_disabled_color:        body.fontDisabledColor,
+        font_color_disabled:        body.fontColorDisabled,
         skills_1_color:             body.skills1Color,
         button_hover_color:         body.buttonHoverColor,
-        alert_color:                body.alertColor,
-        success_color:              body.successColor,
+        font_color_alert:           body.fontColorAlert,
+        font_color_success:         body.fontColorSuccess,
         wrong_invalid_color:        body.wrongInvalidColor,
     })).data;
 }

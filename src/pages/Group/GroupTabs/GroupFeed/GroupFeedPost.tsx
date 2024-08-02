@@ -248,7 +248,7 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
 
             cancelButtonText: "Cancelar",
             confirmButtonText: "Excluir",
-            confirmButtonColor: "var(--alert-color)",
+            confirmButtonColor: "var(--font-color-alert)",
 
             text: "Tem certeza que deseja excluir este post?",
             icon: "warning",

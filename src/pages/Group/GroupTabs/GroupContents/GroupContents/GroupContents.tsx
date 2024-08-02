@@ -380,7 +380,7 @@ export function GroupContents() {
 
             cancelButtonText: "Cancelar",
             confirmButtonText: "Excluir",
-            confirmButtonColor: "var(--alert-color)",
+            confirmButtonColor: "var(--font-color-alert)",
 
             text: "Tem certeza que deseja remover este conteúdo do grupo?",
 
