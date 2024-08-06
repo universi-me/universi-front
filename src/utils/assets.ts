@@ -1,5 +1,4 @@
 export const IMG_UNIVERSI_LOGO =   "/assets/imgs/universi-me2.png";
-export const IMG_DCX_LOGO =        "/assets/imgs/dcx-png 1.png";
 export const IMG_DEFAULT_PROFILE = "/assets/imgs/default_avatar.png";
 export const IMG_DEFAULT_GROUP =   "/assets/imgs/group.png";
 export const IMG_DEFAULT_BANNER =  "/assets/imgs/default_bg.jpg";
