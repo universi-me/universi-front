@@ -1,3 +1,5 @@
+@colorPickerWidth: 250px;
+
 .themeBuilder {
     width: 100%;
 
@@ -15,6 +17,19 @@
             padding-bottom: @gap;
             border-bottom: 1px solid gray;
             margin-bottom: @gap;
+        }
+
+        .colorInfo {
+            width: calc(100% - @colorPickerWidth - 2em);
+        
+            p {
+                margin-top: 1em;
+            }
+        }
+        
+        .colorPicker {
+            height: 150px;
+            width: @colorPickerWidth;
         }
     }
 }

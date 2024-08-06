@@ -19,7 +19,7 @@
 }
 
 .search-input-container input::placeholder {
-  color: var(--font-disabled-color);
+  color: var(--font-color-disabled);
 }
 
 .search-input-container button {

@@ -14,8 +14,8 @@ export function ThemeColorItem(props: Readonly<ThemeColorItemProps>) {
         className={makeClassName("theme-color-item", isSelected && "selected")}
         style={{
             backgroundColor: theme.primaryColor,
-            borderColor: `${theme.secondaryColor} ${theme.tertiaryColor} ${theme.tertiaryColor} ${theme.secondaryColor}`,
-            outline: 'solid 2px white'
+            borderColor: `${theme.secondaryColor}`,
+            outlineColor: `${theme.backgroundColor}`
         }}
         onClick={ e => onClick(theme) }
     />;

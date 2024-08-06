@@ -40,7 +40,7 @@ export function CurriculumEducation() {
         icon: "warning",
         showCancelButton: true,
         showConfirmButton: true,
-        confirmButtonColor: "var(--alert-color)",
+        confirmButtonColor: "var(--font-color-alert)",
 
         title : "Excluir formação?",
         text: "Tem certeza? Esta ação é irreversível", 

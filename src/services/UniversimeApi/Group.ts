@@ -80,26 +80,18 @@ export type FilterParticipants_RequestDTO = {
 export type GroupThemeEdit_RequestDTO = GroupIdOrPath_RequestDTO & {
     primaryColor:           string;
     secondaryColor:         string;
-    tertiaryColor:          string;
     backgroundColor:        string;
     cardBackgroundColor:    string;
     cardItemColor:          string;
     fontColorV1:            string;
     fontColorV2:            string;
     fontColorV3:            string;
-    fontColorV4:            string;
-    fontColorV5:            string;
-    fontColorV6:            string;
-    fontDisabledColor:      string;
-    formsColor:             string;
-    skills1Color:           string;
-    waveColor:              string;
-    buttonYellowHoverColor: string;
+    fontColorLinks:         string;
+    fontColorDisabled:      string;
     buttonHoverColor:       string;
-    alertColor:             string;
-    successColor:           string;
+    fontColorAlert:         string;
+    fontColorSuccess:       string;
     wrongInvalidColor:      string;
-    rankColor:              string;
 };
 
 export type GroupGet_ResponseDTO =                       ApiResponse<{ group: Group }>;
@@ -244,26 +236,18 @@ export async function editTheme(body: GroupThemeEdit_RequestDTO) {
 
         primary_color:              body.primaryColor,
         secondary_color:            body.secondaryColor,
-        tertiary_color:             body.tertiaryColor,
         background_color:           body.backgroundColor,
         card_background_color:      body.cardBackgroundColor,
         card_item_color:            body.cardItemColor,
         font_color_v1:              body.fontColorV1,
         font_color_v2:              body.fontColorV2,
         font_color_v3:              body.fontColorV3,
-        font_color_v4:              body.fontColorV4,
-        font_color_v5:              body.fontColorV5,
-        font_color_v6:              body.fontColorV6,
-        font_disabled_color:        body.fontDisabledColor,
-        forms_color:                body.formsColor,
-        skills_1_color:             body.skills1Color,
-        wave_color:                 body.waveColor,
-        button_yellow_hover_color:  body.buttonYellowHoverColor,
+        font_color_links:           body.fontColorLinks,
+        font_color_disabled:        body.fontColorDisabled,
         button_hover_color:         body.buttonHoverColor,
-        alert_color:                body.alertColor,
-        success_color:              body.successColor,
+        font_color_alert:           body.fontColorAlert,
+        font_color_success:         body.fontColorSuccess,
         wrong_invalid_color:        body.wrongInvalidColor,
-        rank_color:                 body.rankColor,
     })).data;
 }
 

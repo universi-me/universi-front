@@ -66,7 +66,7 @@ function RenderMaterial(props: Readonly<RenderMaterialProps>) {
                     showCancelButton: true,
                     cancelButtonText: "Cancelar",
                     confirmButtonText: "Remover",
-                    confirmButtonColor: "var(--alert-color)",
+                    confirmButtonColor: "var(--font-color-alert)",
                     text: "Tem certeza que deseja remover este conteúdo deste grupo?",
                     icon: "warning",
                 }).then(res => {

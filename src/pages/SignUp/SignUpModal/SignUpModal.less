@@ -86,7 +86,7 @@
                 border-radius: 0.625rem;
 
                 &:focus {
-                    outline: solid 2px @tertiary-color;
+                    outline: solid 2px @primary-color;
                 }
             }
 
@@ -186,7 +186,7 @@
             }
 
             &.failed-validation {
-                color: @alert-color;
+                color: @font-color-alert;
 
                 &.bi::before {
                     content: "\F659";
@@ -194,7 +194,7 @@
             }
 
             &.success-validation {
-                color: @success-color;
+                color: @font-color-success;
     
                 &.bi::before {
                     content: "\F633";
@@ -224,7 +224,7 @@
             will-change: background-color;
 
             &:disabled {
-                background-color: @font-disabled-color;
+                background-color: @font-color-disabled;
             }
 
             &:enabled {

@@ -40,7 +40,7 @@ export function CurriculumExperience() {
         icon: "warning",
         showCancelButton: true,
         showConfirmButton: true,
-        confirmButtonColor: "var(--alert-color)",
+        confirmButtonColor: "var(--font-color-alert)",
 
         title : "Excluir experiência?",
         text: "Tem certeza? Esta ação é irreversível", 
