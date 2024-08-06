@@ -5,8 +5,6 @@ import { CompetenceType, Level, LevelToDescription, LevelToLabel } from "@/types
 import { UniversimeApi } from "@/services/UniversimeApi";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
-import './CompetencesSettings.less'
-
 export function CompetencesSettings() {
     const profileContext = useContext(ProfileContext)
     const editCompetence = profileContext?.editCompetence ?? null;

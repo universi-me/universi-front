@@ -7,7 +7,7 @@ import UniversimeApi from "@/services/UniversimeApi";
 import type { GroupTheme } from "@/types/Group";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import ThemeContext from "@/contexts/Theme";
-import { themeColorMappings } from "./ThemeMappings";
+import ThemeMappings from "@/configs/ThemeMappings";
 import ThemeColorItem from "./ThemeColorItem";
 import ThemeBuilder from "@/components/ThemeBuilder";
 import "./GroupThemeColor.less";
@@ -17,7 +17,7 @@ import BootstrapIcon from "@/components/BootstrapIcon";
 export function GroupThemeColorPage() {
     const auth = useContext(AuthContext);
     const themeContext = useContext(ThemeContext);
-    const [selectedTheme, setSelectedTheme] = useState<GroupTheme>(auth.organization.groupSettings.theme);
+    const [selectedTheme, setSelectedTheme] = useState<GroupTheme>(auth.organization.groupSettings.theme ?? ThemeMappings.defaultTheme);
     const [extendedBuilder, setExtendedBuilder] = useState(false);
 
     useEffect(() => {
@@ -36,8 +36,8 @@ export function GroupThemeColorPage() {
         <SettingsDescription>Escolha o tema para o grupo.</SettingsDescription>
 
         <div id="theme-color-list">
-            {Object.keys(themeColorMappings).map((themeName) => {
-                const theme = themeColorMappings[themeName]
+            {Object.keys(ThemeMappings).map((themeName) => {
+                const theme = ThemeMappings[themeName]
 
                 return <ThemeColorItem
                     key={themeName}

@@ -184,6 +184,13 @@
                 padding: 1rem .5rem;
             }
 
+            input:required:valid, textarea:required:valid{
+                border: 2px solid var(--success-color) !important;
+            }
+
+            input:required:invalid, textarea:required:invalid{
+                border: 2px solid var(--wrong-invalid-color) !important;
+            }
 
             textarea {
                 min-height: 2em;
@@ -280,10 +287,4 @@
             }
         }
     }
-}
-input:required:valid, textarea:required:valid{
-    border: 2px solid var(--success-color) !important;
-}
-input:required:invalid, textarea:required:invalid{
-    border: 2px solid var(--wrong-invalid-color) !important;
 }

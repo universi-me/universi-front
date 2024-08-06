@@ -26,7 +26,7 @@ export type Group = {
     buildHash?: string;
 
     groupSettings: {
-        theme: GroupTheme;
+        theme: Nullable<GroupTheme>;
         environment: Nullable<{
             [k in keyof GroupEnvironment]?: GroupEnvironment[k];
         }>;
