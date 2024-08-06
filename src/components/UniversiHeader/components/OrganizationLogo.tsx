@@ -6,10 +6,10 @@ import { groupHeaderUrl } from "@/utils/apiUtils";
 
 export function OrganizationLogo() {
     const authContext = useContext(AuthContext);
-    const [renderLogoImage, setRenderLogoImage] = useState(true);
+    const [renderLogoImage, setRenderLogoImage] = useState( !!authContext.organization.headerImage );
 
     useEffect(() => {
-        setRenderLogoImage(true);
+        setRenderLogoImage( !!authContext.organization.headerImage );
     }, [authContext.organization, authContext.profile]);
 
     const wrapperAttributes = {
