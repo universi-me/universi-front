@@ -10,23 +10,30 @@ import { ProfileClass } from "@/types/Profile";
 import { hasAvailableOption, renderOption, type OptionInMenu } from "@/utils/dropdownMenuUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
-import { GroupPostReaction, type GroupPost } from "@/types/Feed";
+import { GroupPostComment, GroupPostReaction, type GroupPost } from "@/types/Feed";
 import useCanI from "@/hooks/useCanI";
 import { Permission } from "@/types/Roles";
 
-import { ICON_LIKE, ICON_CLAP, ICON_HEART, ICON_SUPPORT, ICON_GENIUS, ICON_HAPPY } from '@/utils/assets';
+import { ICON_LIKE, ICON_CLAP, ICON_HEART, ICON_SUPPORT, ICON_GENIUS, ICON_HAPPY, ICON_COMMENT } from '@/utils/assets';
+import TextboxFormatted from "@/components/TextboxFormatted/TextboxFormatted";
+import UniversiForm, { FormInputs, RequiredValidation, TextValidation, ValidationComposite } from "@/components/UniversiForm";
 
 export type GroupFeedPostProps = Readonly<{
     post: GroupPost;
+    isComment?: boolean;
 }>;
 
-export function GroupFeedPost({ post }: GroupFeedPostProps) {
-    const feedDescriptionId = `post-${post.postId}`;
+export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
+    const feedDescriptionId = `post-${isComment ? (post as GroupPostComment).id : post.postId}`;
     const [feedDescriptionElement, setFeedDescriptionElement] = useState(document.getElementById(feedDescriptionId));
 
     const groupContext = useContext(GroupContext);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [readMore, setReadMore] = useState<"NOT_SHOW" | "SHOW_MORE" | "SHOW_LESS">();
+
+    const [commentText, setCommentText] = useState("");
+    const [isCommentExpanded, setIsCommentExpanded] = useState<boolean>(false);
+    const [isShowComments, setIsShowComments] = useState<boolean>(false);
 
     const canI = useCanI();
 
@@ -64,7 +71,7 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
 
     const OPTIONS_DEFINITION: OptionInMenu<GroupPost>[] = [
         {
-            text: "Editar publicação",
+            text: isComment ? "Editar comentário" : "Editar publicação",
             biIcon: "pencil-fill",
             onSelect(data) {
                 groupContext.setEditPost(data);
@@ -74,7 +81,7 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             },
         },
         {
-            text: "Excluir publicação",
+            text: isComment ? "Excluir comentário" : "Excluir publicação",
             biIcon: "trash-fill",
             className: "delete",
             onSelect: handleDeletePost,
@@ -170,6 +177,15 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
                 </div>
             }
 
+            <div/>
+
+            {countComment(post) > 0 && <div className="post-info-comments">
+                    <div className="comments-count" onClick={toggleShowComments}>
+                        {getCommentCount(post)} comentário(s)
+                    </div>
+                </div>
+            }
+
             </div>
 
             <div className="post-separator" />
@@ -210,12 +226,63 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             )}
           </div>
         )}
+
       </div>
-      <div className="comment-button" hidden>💬 Comentar</div>
+      <div className="comment-button" onClick={toggleComment}>{ <img src={ICON_COMMENT} height={20} width={20} /> } Comentar</div>
+    </div>
+
+    <div className={(isCommentExpanded || (isShowComments && countComment(post) > 0)) ? "comment-area-expanded" : "comment-area"}>
+        {(isCommentExpanded || isShowComments) && <div className="comment-area-content">
+
+            {isCommentExpanded && <div className="comment-area-input">
+                <div>
+                    <UniversiForm
+                        formTitle={"Criar comentário"}
+                        cancelProps = {
+                            {
+                                title : "Descartar comentário?",
+                                message: "Tem certeza? Esta ação é irreversível", 
+                                confirmButtonMessage: "Sim",
+                                cancelButtonMessage: "Não"
+                            }
+                        }
+                        objects={[
+                            {
+                                DTOName: "content", label: "Comentário", type: FormInputs.FORMATED_TEXT,
+                                charLimit: 2000,
+                                value: commentText ?? "",
+                                validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
+                            }, {
+                                DTOName : "groupPostId", label : "", type : FormInputs.HIDDEN, value : post?.postId
+                            }
+                        ]}
+                        requisition={UniversimeApi.Feed.commentGroupPost}
+                        callback={async() => {
+                            groupContext!.refreshData();
+                            setCommentText("");
+                            setIsCommentExpanded(false);
+                            setIsShowComments(true);
+                        }}
+                    />
+                </div>
+            </div>}
+
+            {isShowComments && <div className="comment-area-comments">
+                {
+                    post.comments
+                    .slice()
+                    .reverse()
+                    .map(p => <GroupFeedPost post={p} key={p.postId} isComment={true}/>)
+                }
+                </div>
+            }
+
+            
+        </div>}
     </div>
 
             
-        </div>
+    </div>
 
         
 
@@ -242,6 +309,16 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
         setReadMore(willExpand ? "SHOW_LESS" : "SHOW_MORE");
     }
 
+    function toggleComment() {
+        setIsCommentExpanded(!isCommentExpanded);
+        setIsShowComments(false);
+    }
+
+    function toggleShowComments() {
+        setIsShowComments(!isShowComments);
+        setIsCommentExpanded(false);
+    }
+
     function handleDeletePost() {
         SwalUtils.fireModal({
             showCancelButton: true,
@@ -250,13 +327,19 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
             confirmButtonText: "Excluir",
             confirmButtonColor: "var(--font-color-alert)",
 
-            text: "Tem certeza que deseja excluir este post?",
+            text: isComment ? "Tem certeza que deseja excluir este comentário?" : "Tem certeza que deseja excluir este post?",
             icon: "warning",
         }).then(value => {
             if (value.isConfirmed) {
-                UniversimeApi.Feed
+                if(isComment) {
+                    UniversimeApi.Feed
+                    .deleteGroupPostComment({ commentId: (post as GroupPostComment).id })
+                    .then(() => groupContext!.refreshData());
+                } else {
+                    UniversimeApi.Feed
                     .deleteGroupPost({ postId: post.postId, groupId: post.groupId })
                     .then(() => groupContext!.refreshData());
+                }
             }
         })
     }
@@ -277,8 +360,16 @@ export function GroupFeedPost({ post }: GroupFeedPostProps) {
         return (post.reactions ?? ([] as GroupPostReaction[])).filter(r => r.reaction === reaction).length;
     }
 
+    function countComment(post: GroupPost): number {
+        return (post.comments ?? []).length;
+    }
+
     function getReactionCount(post: GroupPost, reaction: string): string {
         return countReaction(post, reaction).toString();
+    }
+
+    function getCommentCount(post: GroupPost): string {
+        return countComment(post).toString();
     }
 
     function countReactions(post: GroupPost): number {

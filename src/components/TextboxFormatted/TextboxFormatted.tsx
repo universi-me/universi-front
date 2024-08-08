@@ -16,9 +16,19 @@ Quill.register('modules/imageUploader', ImageUploader);
 Quill.register('modules/imageActions', ImageActions);
 Quill.register('modules/imageFormats', ImageFormats);
 
-const TextboxFormatted = ({ value, onChange }: {value: string, onChange: ((value: string) => void)}) => {
 
-  const formats = useMemo(() => ([
+interface TextboxFormattedProps {
+  value: string;
+  onChange: (value: string) => void;
+  theme?: string;
+  modules?: object;
+  formats?: string[];
+  toolbar?: any;
+}
+
+const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModules, formats: customFormats, toolbar: customtToolbar, ...props }: TextboxFormattedProps) => {
+
+  const defaultFormats = useMemo(() => ([
     "align",
     "background",
     "blockquote",
@@ -41,10 +51,12 @@ const TextboxFormatted = ({ value, onChange }: {value: string, onChange: ((value
     "width"
   ]), []);
 
-  const modules = useMemo(() => ({
+  const formats = customFormats || defaultFormats;
+
+  const defaultModules = useMemo(() => ({
     imageActions: {},
     imageFormats: {},
-    toolbar: [
+    toolbar: customtToolbar || [
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
         ["bold", "italic", "underline", "strike",],
         [{ color: [] }, { background: [] }],
@@ -73,10 +85,11 @@ const TextboxFormatted = ({ value, onChange }: {value: string, onChange: ((value
     },
   }), []);
 
+  const modules = customModules || defaultModules;
 
 
   return (
-    <ReactQuill formats={formats} modules={modules} theme="snow" value={value} onChange={onChange} />
+    <ReactQuill formats={formats} modules={modules} theme={theme} value={value} onChange={onChange} {...props} />
   );
 };
 
