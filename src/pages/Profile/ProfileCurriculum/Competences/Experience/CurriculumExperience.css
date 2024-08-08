@@ -156,7 +156,7 @@
 
     padding: .75em 1em;
 
-    background: var(--font-color-v5);
+    background: var(--card-item-color);
     border-radius: 20px;
 
     flex-wrap: wrap;
@@ -219,8 +219,7 @@
 }
 
 #item-competence .experience .experience-list .experience-item .experience-level-list .experience-level.learned {
-    background: var(--skills-1-color);
-    
+    background: var(--secondary-color);
 }
 
 #item-competence .experience .experience-list .experience-item .experience-level-list .experience-level:not(:last-of-type) {

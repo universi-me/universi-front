@@ -325,7 +325,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
 
             cancelButtonText: "Cancelar",
             confirmButtonText: "Excluir",
-            confirmButtonColor: "var(--alert-color)",
+            confirmButtonColor: "var(--font-color-alert)",
 
             text: isComment ? "Tem certeza que deseja excluir este comentário?" : "Tem certeza que deseja excluir este post?",
             icon: "warning",

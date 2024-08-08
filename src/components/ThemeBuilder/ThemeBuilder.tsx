@@ -2,7 +2,8 @@ import { HTMLAttributes } from "react";
 import { HexColorPicker } from "react-colorful";
 
 import { makeClassName } from "@/utils/tsxUtils";
-import { GroupTheme, GroupThemeToLabel } from "@/types/Group";
+import { GroupThemeToLabel } from "@/utils/themeUtils";
+import { GroupTheme } from "@/types/Group";
 
 import styles from "./ThemeBuilder.module.less";
 
@@ -17,15 +18,18 @@ export function ThemeBuilder(props: Readonly<ThemeBuilderProps>) {
     return <section {...sectionProps} className={makeClassName(styles.themeBuilder, className)}>
         { Object.keys(GroupThemeToLabel).map(k => {
             const key = k as keyof GroupTheme;
-            const name = GroupThemeToLabel[key];
+            const { label, description } = GroupThemeToLabel[key];
 
-            return <fieldset key={key} title={name}>
-                <label className="color-name">{ name }</label>
+            return <fieldset key={ key }>
+                <div className={ styles.colorInfo }>
+                    <h3>{ label }</h3>
+                    { description && <p>{ description }</p> }
+                </div>
 
                 <HexColorPicker
                     color={currentTheme[key]}
                     onChange={e => changeValue(key, e)}
-                    className="color-picker"
+                    className={ styles.colorPicker }
                 />
             </fieldset>
         }) }
