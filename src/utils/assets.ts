@@ -27,4 +27,5 @@ export const ICON_HEART = "/assets/icons/heart.svg";
 export const ICON_SUPPORT = "/assets/icons/support.svg";
 export const ICON_GENIUS = "/assets/icons/genius.svg";
 export const ICON_HAPPY = "/assets/icons/happy.svg";
+export const ICON_COMMENT = "/assets/icons/comment.svg";
 
