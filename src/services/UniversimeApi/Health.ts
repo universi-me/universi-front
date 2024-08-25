@@ -17,13 +17,13 @@ export async function checkHealth( service: ServiceId ) {
     return res.data;
 }
 
-export type ServiceId = "API" | "POSTGRESQL" | "MONGODB" | "MINIO";
+export type ServiceId = "API" | "DATABASE" | "MONGODB" | "MINIO";
 
 export const SERVICES_AVAILABLE: { [k in ServiceId]: Service } = {
-    API:        { name: "API",        endpoint: "api" },
-    POSTGRESQL: { name: "PostgreSQL", endpoint: "postgresql" },
-    MONGODB:    { name: "MongoDB",    endpoint: "mongodb" },
-    MINIO:      { name: "MinIO",      endpoint: "minio"   },
+    API:      { name: "API",            endpoint: "api" },
+    DATABASE: { name: "Banco de Dados", endpoint: "database" },
+    MONGODB:  { name: "MongoDB",        endpoint: "mongodb" },
+    MINIO:    { name: "MinIO",          endpoint: "minio"   },
 };
 
 type Service = {
