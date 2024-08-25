@@ -14,7 +14,11 @@ export async function checkHealth( service: ServiceId ) {
         timeout: HEALTH_CHECK_TIMEOUT_MS,
     }).catch(err => ({data: FAIL_TO_REACH_RESPONSE}));
 
-    return res.data;
+    if (!res)
+        return FAIL_TO_REACH_RESPONSE;
+
+    else
+        return res.data;
 }
 
 export type ServiceId = "API" | "DATABASE" | "MONGODB" | "MINIO";

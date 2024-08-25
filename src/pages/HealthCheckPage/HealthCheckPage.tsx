@@ -23,20 +23,30 @@ export function HealthCheckPage() {
 
     async function updateServiceHealth(service: ServiceId) {
         const health = await UniversimeApi.Health.checkHealth(service);
+        updateStatus( service, health );
+        return health;
+    }
+
+    async function unreachableServiceHealth(service: ServiceId) {
+        const health = { up: false, message: "Serviço inacessível" };
+        updateStatus( service, health );
+        return health;
+    }
+
+    function updateStatus(service: ServiceId, health: HealthStatus) {
         setServicesHealth(s => {
             const state = { ...s };
             state[service] = health;
             return state;
         });
-        return health;
     }
 
     async function checkHealth() {
         const apiHealth = await updateServiceHealth("API");
 
-        const procedure: (s: ServiceId) => Promise<HealthStatus> = apiHealth.up
+        const procedure = apiHealth.up
             ? updateServiceHealth
-            : s => Promise.resolve({ up: false, message: "Serviço inacessível" });
+            : unreachableServiceHealth
 
         Object.keys(SERVICES_AVAILABLE)
             .forEach(s => {
