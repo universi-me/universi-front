@@ -20,6 +20,7 @@ import ContentPage from "@/pages/Content";
 import { ContentPageLoader } from "@/pages/Content/ContentPageLoader";
 import PageNotFound from "@/pages/PageNotFound/PageNotFound";
 import JobPage, { JobPageLoader } from "@/pages/JobPage";
+import HealthCheckPage from "@/pages/HealthCheckPage";
 
 
 
@@ -106,6 +107,10 @@ export const router = createBrowserRouter([{
     }
   ]
 },
+{
+    path: "/health",
+    element: <HealthCheckPage />
+}
 ])
 
 export function goTo(pathname: string) {
