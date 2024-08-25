@@ -72,5 +72,5 @@ const initialState: Record<ServiceId, HealthStatus> = {
     API: undefined,
     MINIO: undefined,
     MONGODB: undefined,
-    POSTGRESQL: undefined,
+    DATABASE: undefined,
 };
