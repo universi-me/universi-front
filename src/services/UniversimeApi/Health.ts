@@ -2,7 +2,7 @@ import { api } from "./api";
 import { HealthResponseDTO, ServiceId, SERVICES_AVAILABLE } from "@/types/Health";
 import { ApiResponse } from "@/types/UniversimeApi";
 
-const HEALTH_CHECK_TIMEOUT_MS = 10_000;
+const HEALTH_CHECK_TIMEOUT_MS = 60_000;
 
 export type CheckHealth_ResponseDTO = ApiResponse<{ status: HealthResponseDTO }, { status: HealthResponseDTO }>;
 export type CheckHealthAll_ResponseDTO = ApiResponse<{ status: { [k in ServiceId]: HealthResponseDTO } }, { status: { [k in ServiceId]: HealthResponseDTO } }>;
@@ -35,8 +35,10 @@ function failToReach(service: ServiceId): CheckHealth_ResponseDTO {
         body: {
             status: {
                 up: false,
+                disabled: false,
                 name: service,
-                message: "Serviço off-line",
+                statusMessage: "Serviço off-line",
+                exceptionMessage: "Não foi possível acessar o serviço",
             }
         }
     }
