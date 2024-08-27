@@ -2,6 +2,7 @@ import { Optional } from "./utils";
 
 export type HealthResponseDTO = {
     up: boolean;
+    disabled: boolean;
     name: ServiceId;
     statusMessage: Optional<string>;
     exceptionMessage: Optional<string>;

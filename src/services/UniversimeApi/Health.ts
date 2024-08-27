@@ -35,6 +35,7 @@ function failToReach(service: ServiceId): CheckHealth_ResponseDTO {
         body: {
             status: {
                 up: false,
+                disabled: false,
                 name: service,
                 statusMessage: "Serviço off-line",
                 exceptionMessage: "Não foi possível acessar o serviço",

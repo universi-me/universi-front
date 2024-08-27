@@ -19,7 +19,7 @@ export function HealthCheckPage() {
                     <th>Serviço</th>
                     <th>Status</th>
                 </tr>
-                <HealthItem serviceName="Cliente Web" health={{ up: true, name: "WEB" as ServiceId, statusMessage: undefined, exceptionMessage: undefined }} />
+                <HealthItem serviceName="Cliente Web" health={{ up: true, disabled: false, name: "WEB" as ServiceId, statusMessage: undefined, exceptionMessage: undefined }} />
                 {Object.entries(servicesHealth)
                     .map(([s, h]) => <HealthItem key={s} health={h} serviceName={SERVICES_AVAILABLE[s as ServiceId].name} />)
                 }
@@ -35,7 +35,7 @@ export function HealthCheckPage() {
     }
 
     async function unreachableServiceHealth(service: ServiceId) {
-        const health: HealthResponseDTO = { up: false, name: service , statusMessage: "Serviço inacessível", exceptionMessage: undefined };
+        const health: HealthResponseDTO = { up: false, disabled: false, name: service , statusMessage: "Serviço inacessível", exceptionMessage: undefined };
         updateStatus( service, health );
         return health;
     }
@@ -46,10 +46,10 @@ export function HealthCheckPage() {
             state[service] = health;
 
             if(health && health!.exceptionMessage) {
-                logToBoxConsole(service + ": " + health.exceptionMessage);
+                logToBoxConsole(SERVICES_AVAILABLE[service as ServiceId].name + ": " + health.exceptionMessage);
             }
 
-            if(Object.values(state).every(h => h !== undefined && h.up)) {
+            if(Object.values(state).every(h => h !== undefined && (h.up || h.disabled))) {
                 logToBoxConsole("Todos os serviços estão operacionais.");
             }
 
@@ -96,7 +96,7 @@ function HealthItem(props: Readonly<HealthItemsProps>) {
         ? <BootstrapIcon icon="clock-history" style={{color:"black"}} />
         : health.up
             ? <BootstrapIcon icon="check-circle-fill" style={{color:"green"}} />
-            : <BootstrapIcon icon="bug-fill" style={{color:"red"}} />;
+            : health.disabled ? <BootstrapIcon icon="slash-circle" style={{color:"gray"}} /> : <BootstrapIcon icon="bug-fill" style={{color:"red"}} />;
 
     return <tr key={service}>
         <td>{service}</td>
