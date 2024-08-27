@@ -3,7 +3,8 @@ import { Optional } from "./utils";
 export type HealthResponseDTO = {
     up: boolean;
     name: ServiceId;
-    message: Optional<string>;
+    statusMessage: Optional<string>;
+    exceptionMessage: Optional<string>;
 };
 
 export type ServiceId = "API" | "DATABASE" | "MONGODB" | "MINIO";
