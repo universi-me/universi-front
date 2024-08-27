@@ -1,7 +1,6 @@
 import BootstrapIcon from "@/components/BootstrapIcon";
 import UniversimeApi from "@/services/UniversimeApi";
-import { ServiceId, SERVICES_AVAILABLE } from "@/services/UniversimeApi/Health";
-import { HealthResponseDTO } from "@/types/Health";
+import { ServiceId, SERVICES_AVAILABLE, HealthResponseDTO } from "@/types/Health";
 import { Optional } from "@/types/utils";
 import { useEffect, useState } from "react";
 
@@ -14,7 +13,7 @@ export function HealthCheckPage() {
         <h1>Saúde de serviços do Universi.me</h1>
 
         <section>
-            <HealthItem serviceName="Cliente Web" health={{ up: true, message: undefined }} />
+            <HealthItem serviceName="Cliente Web" health={{ up: true, name: "WEB" as ServiceId, message: undefined }} />
             {Object.entries(servicesHealth)
                 .map(([s, h]) => <HealthItem key={s} health={h} serviceName={SERVICES_AVAILABLE[s as ServiceId].name} />)
             }
@@ -23,12 +22,12 @@ export function HealthCheckPage() {
 
     async function updateServiceHealth(service: ServiceId) {
         const health = await UniversimeApi.Health.checkHealth(service);
-        updateStatus( service, health );
+        updateStatus( service, health.body.status );
         return health;
     }
 
     async function unreachableServiceHealth(service: ServiceId) {
-        const health = { up: false, message: "Serviço inacessível" };
+        const health: HealthResponseDTO = { up: false, name: service , message: "Serviço inacessível" };
         updateStatus( service, health );
         return health;
     }
@@ -44,7 +43,7 @@ export function HealthCheckPage() {
     async function checkHealth() {
         const apiHealth = await updateServiceHealth("API");
 
-        const procedure = apiHealth.up
+        const procedure = apiHealth.success
             ? updateServiceHealth
             : unreachableServiceHealth
 

@@ -1,36 +1,43 @@
-import { HealthResponseDTO } from "@/types/Health";
 import { api } from "./api";
+import { HealthResponseDTO, ServiceId, SERVICES_AVAILABLE } from "@/types/Health";
+import { ApiResponse } from "@/types/UniversimeApi";
 
 const HEALTH_CHECK_TIMEOUT_MS = 10_000;
-const FAIL_TO_REACH_RESPONSE: HealthResponseDTO = {
-    up: false,
-    message: "Serviço off-line"
-};
+
+export type CheckHealth_ResponseDTO = ApiResponse<{ status: HealthResponseDTO }, { status: HealthResponseDTO }>;
+export type CheckHealthAll_ResponseDTO = ApiResponse<{ status: { [k in ServiceId]: HealthResponseDTO } }, { status: { [k in ServiceId]: HealthResponseDTO } }>;
 
 export async function checkHealth( service: ServiceId ) {
     const { endpoint } = SERVICES_AVAILABLE[service];
 
-    const res = await api.get<HealthResponseDTO>("/health/" + endpoint, {
+    const res = await api.get<CheckHealth_ResponseDTO>("/health/" + endpoint, {
         timeout: HEALTH_CHECK_TIMEOUT_MS,
-    }).catch(err => ({data: FAIL_TO_REACH_RESPONSE}));
+    }).catch(err => ({data: failToReach(service)}));
 
-    if (!res)
-        return FAIL_TO_REACH_RESPONSE;
-
-    else
-        return res.data;
+    return !!res
+        ? res.data
+        : failToReach(service);
 }
 
-export type ServiceId = "API" | "DATABASE" | "MONGODB" | "MINIO";
+export async function checkHealthAll() {
+    const res = await api.get<CheckHealthAll_ResponseDTO>("/health/all", {
+        timeout: HEALTH_CHECK_TIMEOUT_MS,
+    }).catch( err => ({ data: failToReach("ALL" as ServiceId) }) );
 
-export const SERVICES_AVAILABLE: { [k in ServiceId]: Service } = {
-    API:      { name: "API",            endpoint: "api" },
-    DATABASE: { name: "Banco de Dados", endpoint: "database" },
-    MONGODB:  { name: "MongoDB",        endpoint: "mongodb" },
-    MINIO:    { name: "MinIO",          endpoint: "minio"   },
-};
+    return !!res
+        ? res.data
+        : failToReach("ALL" as ServiceId);
+}
 
-type Service = {
-    name: string;
-    endpoint: string;
-};
+function failToReach(service: ServiceId): CheckHealth_ResponseDTO {
+    return {
+        success: false,
+        body: {
+            status: {
+                up: false,
+                name: service,
+                message: "Serviço off-line",
+            }
+        }
+    }
+}
