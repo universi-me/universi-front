@@ -13,18 +13,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [profileGroups, setProfileGroups] = useState<Group[]>([]);
     const [organization, setOrganization] = useState<Group | null | undefined>();
     const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
+    const [isHealthy, setIsHealthy] = useState<boolean>();
     const user = profile?.user ?? null;
 
     useEffect(() => {
-        updateLoggedUser()
+        updateLoggedUser();
+        updateHealth();
     }, []);
 
     if (user?.needProfile) {
         goTo("/manage-profile");
     }
 
-    if (organization === undefined)
-        // Organization was not fetched from the API yet
+    if (organization === undefined || isHealthy === undefined)
+        // Organization or status not fetched from the API yet
         return null;
 
     else if (organization === null)
@@ -32,6 +34,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return <ErrorPage
             title="Estamos passando por problemas técnicos"
             description="No momento não é possível acessar o Universi.me, pedimos desculpas pelo imprevisto."
+            hideBackToHome
+        />
+
+    else if ( isHealthy === false )
+        // Some service is down
+        return <ErrorPage
+            title="Estamos passando por problemas técnicos"
+            description={<>
+                <p>Alguns dos serviços do Universi.me parecem estar fora do ar. Pedimos desculpas pelo imprevisto.</p>
+                <p>Mais informações em <a href="/health" >nossa página de saúde de serviços</a>.</p>
+            </>}
             hideBackToHome
         />
 
@@ -131,6 +144,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setProfileGroups(groups);
         return groups;
+    }
+
+    async function updateHealth() {
+        const health = await UniversimeApi.Health.checkHealthAll();
+        setIsHealthy( health.success );
     }
 };
 
