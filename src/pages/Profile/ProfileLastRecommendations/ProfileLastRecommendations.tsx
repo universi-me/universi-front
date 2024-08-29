@@ -28,7 +28,7 @@ export function ProfileLastRecommendations() {
                             return (
                                 <div className="recommendation" key={recommendation.id}>
                                     <Link to={originUrl} target='_blank'>
-                                    <ProfileImage className="image" imageUrl={recommendation.origin.imageUrl} noImageColor='#8A8A8A' />
+                                    <ProfileImage className="image" imageUrl={recommendation.origin.imageUrl} name={recommendation.origin.fullname} noImageColor='#8A8A8A' />
                                     </Link>
 
                                     <div className="box">

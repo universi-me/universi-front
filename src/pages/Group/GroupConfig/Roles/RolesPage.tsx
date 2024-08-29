@@ -183,7 +183,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                 return null;
 
             return <div className="profile-item" key={profile.id}>
-                <ProfileImage imageUrl={profile.imageUrl} className="profile-image" />
+                <ProfileImage imageUrl={profile.imageUrl} name={profile.fullname} className="profile-image" />
                 <div className="info">
                     <h2 className="profile-name">{profile.fullname}</h2>
                     <p className="profile-bio">{profile.bio}</p>
