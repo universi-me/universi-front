@@ -12,6 +12,7 @@ import { type Folder, type FolderProfile } from "@/types/Capacity";
 import { ProfileClass } from "@/types/Profile";
 
 import "./ProfileAssignedByMe.less";
+import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
 export function ProfileAssignedByMe() {
     const context = useContext(ProfileContext);
@@ -135,7 +136,7 @@ function WatchFolderProgress(props: Readonly<WatchFolderProgressProps>) {
                 const shownPercentage = isNaN(percentage) ? 0 : percentage;
 
                 return <Link to={`/content/${folder.reference}?watch=${w.profile.user.name}`} target="_blank" className="profile-watcher" key={w.id}>
-                    <img src={w.profile.imageUrl} className="profile-image" alt="" />
+                    <ProfileImage className="profile-image" imageUrl={w.profile.imageUrl!} name={w.profile?.fullname} />
 
                     <div className="progress-data">
                         <h3 className="profile-name">{w.profile.fullname}</h3>

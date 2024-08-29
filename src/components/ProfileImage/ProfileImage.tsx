@@ -6,7 +6,7 @@ import Avatar from 'react-avatar'
 
 export type ProfileImageProps = HTMLAttributes<HTMLElement> & {
     imageUrl: string | null | undefined;
-    name: string | null | undefined;
+    name?: string | null | undefined;
     noImageColor?: string;
 };
 
