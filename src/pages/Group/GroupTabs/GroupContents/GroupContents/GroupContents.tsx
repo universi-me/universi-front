@@ -344,9 +344,9 @@ export function GroupContents() {
                 {
                     imageUrl
                     ?
-                    <ProfileImage imageUrl={imageUrl} name={content.name} className="content-image" onClick={() => selectContent(content)} />
+                    <img src={imageUrl} title={content.name} className="content-image" onClick={() => selectContent(content)} />
                     :
-                    <ProfileImage imageUrl={"/assets/imgs/default-content.png"} className="content-image default-image" onClick={() => selectContent(content)} />
+                    <img src={"/assets/imgs/default-content.png"} title={content.name} className="content-image default-image" onClick={() => selectContent(content)} />
                 }
 
                 <div className="info">
