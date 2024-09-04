@@ -36,6 +36,13 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
     const [isShowComments, setIsShowComments] = useState<boolean>(false);
 
     const canI = useCanI();
+    DOMPurify.addHook(
+        'afterSanitizeAttributes',
+        ( node ) => {
+            if (node.tagName === 'A')
+                node.setAttribute( 'target', '_blank' );
+        }
+    );
 
     const loadReadMore = () => {
         const state = descriptionState();
