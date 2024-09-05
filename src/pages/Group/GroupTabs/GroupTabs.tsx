@@ -1,4 +1,4 @@
-import { useContext, type ReactElement } from "react";
+import { useContext, useEffect, useMemo, type ReactElement } from "react";
 import { GroupContents, GroupContext, GroupGroups, GroupPeople, GroupFeed, GroupContextType, GroupJobs } from "@/pages/Group";
 import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
@@ -7,6 +7,7 @@ import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 import { GroupCompetences } from "./GroupCompetences/GroupCompetences";
 import useCanI, { CanI_SyncFunction } from "@/hooks/useCanI";
 import { Permission } from "@/types/Roles";
+import { Optional } from "@/types/utils";
 
 export type AvailableTabs = "feed" | "contents" | "groups" | "people" | "competences" | "jobs";
 
@@ -18,14 +19,31 @@ export type GroupTabDefinition = {
 };
 
 export type GroupTabsProps = {
-    currentTab: AvailableTabs;
-    changeTab: (tab: AvailableTabs) => any;
 };
 
-export  function GroupTabs(props: GroupTabsProps){
+export function GroupTabs(props: Readonly<GroupTabsProps>) {
     const context = useContext(GroupContext);
     const auth = useContext(AuthContext);
     const canI = useCanI();
+
+    const renderedTabs = useMemo(() => {
+        if (!context) return [];
+
+        return TABS
+            .filter(t => t.condition?.(context, canI) ?? true);
+    }, [ context?.group, auth.profile ]);
+
+    useEffect(() => {
+        if (context?.currentTab === undefined || renderedTabs.length === 0)
+            return;
+
+        const tabDefinition = renderedTabs
+            .find(t => t.value === context.currentTab);
+
+        if (tabDefinition === undefined)
+            context.setCurrentTab( renderedTabs[0].value );
+
+    }, [ context?.currentTab ])
 
     async function join(){
         if(!context?.group.canEnter || context.group.id == null)
@@ -47,11 +65,10 @@ export  function GroupTabs(props: GroupTabsProps){
     return (
         <nav id="group-tabs"> 
         {
-            TABS.map(t => {
-                const isCurrentTab = t.value === props.currentTab;
-                const render = t.condition?.(context, canI) ?? true;
+            renderedTabs.map(t => {
+                const isCurrentTab = t.value === context.currentTab;
 
-                return render && <button className={`group-tab-button`} value={t.value} key={t.value} onClick={() => { window.location.hash = t.value; props.changeTab(t.value); }} data-current-tab={isCurrentTab ? "" : undefined}>
+                return <button className={`group-tab-button`} value={t.value} key={t.value} onClick={() => { window.location.hash = t.value; context.setCurrentTab(t.value); }} data-current-tab={isCurrentTab ? "" : undefined}>
                     {t.name}
                 </button>;
             })
@@ -67,16 +84,21 @@ export  function GroupTabs(props: GroupTabsProps){
     );
 }
 
-export function GroupTabRenderer({tab}: { tab: AvailableTabs }) {
-    const renderedTab = TABS.find(t => t.value === tab);
+export function GroupTabRenderer() {
+    const context = useContext(GroupContext);
+    if (!context) return null;
+
+    const renderedTab = TABS.find(t => t.value === context.currentTab);
 
     return renderedTab
         ? <renderedTab.renderer />
         : null;
 }
 
-export function isTabAvailable(tab: string): boolean {
-    return TABS.find(t => t.value === tab) !== undefined;
+export function asTabAvailable(tab: string): Optional<AvailableTabs> {
+    return TABS.find(t => t.value === tab) !== undefined
+        ? tab as AvailableTabs
+        : undefined;
 }
 
 export const EMPTY_LIST_CLASS = "empty-text";
