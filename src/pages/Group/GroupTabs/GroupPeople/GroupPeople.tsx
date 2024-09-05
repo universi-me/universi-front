@@ -46,7 +46,7 @@ export function GroupPeople() {
         else
             searchUsers();
 
-    }, [addedCompetences])
+    }, [ addedCompetences, matchEveryCompetence ])
 
 
     const competenceTypeOptions = useMemo(() => {
@@ -118,6 +118,17 @@ export function GroupPeople() {
                 }
 
                 </div>
+
+                <div className="levels-div checkbox">
+                    <label htmlFor="matchEveryCompetence">Exigir todas as competências</label>
+                    <input
+                        type="checkbox"
+                        name="matchEveryCompetence"
+                        checked={matchEveryCompetence}
+                        onChange={()=>{setMatchEveryCompetence(!matchEveryCompetence)}}
+                    />
+                </div>
+
                 <p className="clear-search" onClick={()=>{
                     let searchCriteriaText = document.getElementById("search-criteria")
                     if(searchCriteriaText) searchCriteriaText.classList.add("hidden")
@@ -173,16 +184,6 @@ export function GroupPeople() {
                         setCurrentCompetence(undefined)
                     }
                 }} />
-
-                <div className="levels-div checkbox">
-                    <label htmlFor="matchEveryCompetence">Exigir todas as competências</label>
-                    <input
-                        type="checkbox"
-                        name="matchEveryCompetence"
-                        checked={matchEveryCompetence}
-                        onChange={()=>{setMatchEveryCompetence(!matchEveryCompetence)}}
-                    />
-                </div>
 
                 <ActionButton name="Fechar" biIcon="x-lg" buttonProps={{
                     onClick() { setShowAdvancedSearch(false) },
