@@ -1,4 +1,4 @@
-import { useContext, useMemo, type ReactElement } from "react";
+import { useContext, useEffect, useMemo, type ReactElement } from "react";
 import { GroupContents, GroupContext, GroupGroups, GroupPeople, GroupFeed, GroupContextType, GroupJobs } from "@/pages/Group";
 import "./GroupTabs.less";
 import UniversimeApi from "@/services/UniversimeApi";
@@ -31,6 +31,18 @@ export function GroupTabs(props: Readonly<GroupTabsProps>) {
         return TABS
             .filter(t => t.condition?.(context, canI) ?? true);
     }, [ context?.group, auth.profile ]);
+
+    useEffect(() => {
+        if (context?.currentTab === undefined || renderedTabs.length === 0)
+            return;
+
+        const tabDefinition = renderedTabs
+            .find(t => t.value === context.currentTab);
+
+        if (tabDefinition === undefined)
+            context.setCurrentTab( renderedTabs[0].value );
+
+    }, [ context?.currentTab ])
 
     async function join(){
         if(!context?.group.canEnter || context.group.id == null)
