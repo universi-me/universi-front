@@ -159,20 +159,20 @@ export function GroupPeople() {
                 }
 
 
-                <div className="add-competence-button" onClick={()=>{
-                    if(!currentCompetence || currentCompetence.level == undefined || !currentCompetence.label || !currentCompetence.typeId) return
+                <ActionButton name="Adicionar competência à busca" biIcon="search" buttonProps={{
+                    onClick( ) {
+                        if(currentCompetence?.level == undefined || !currentCompetence.label || !currentCompetence.typeId)
+                            return;
 
-                    currentCompetence.label += ": " + LevelToLabel[currentCompetence.level]
-                    setAddedCompetences([...addedCompetences, currentCompetence]);
+                        currentCompetence.label += ": " + LevelToLabel[currentCompetence.level]
+                        setAddedCompetences([...addedCompetences, currentCompetence]);
 
-                    let radio = document.getElementById(`radio${currentCompetence.level}`) as HTMLInputElement
+                        let radio = document.getElementById(`radio${currentCompetence.level}`) as HTMLInputElement
 
-                    radio.checked = false
-                    setCurrentCompetence(undefined)
-                }
-                }>
-                    Adicionar competência à busca
-                </div>
+                        radio.checked = false
+                        setCurrentCompetence(undefined)
+                    }
+                }} />
 
                 <div className="levels-div checkbox">
                     <label htmlFor="matchEveryCompetence">Exigir todas as competências</label>
@@ -182,22 +182,6 @@ export function GroupPeople() {
                         checked={matchEveryCompetence}
                         onChange={()=>{setMatchEveryCompetence(!matchEveryCompetence)}}
                     />
-                </div>
-
-                <div className="added-competences-container">
-                    { addedCompetences.length != 0? 
-                        addedCompetences.map((competence)=>(
-                            <div className="added-competence" key={competence.typeId??"" + competence.level}>
-                                {competence.label}
-                                <i className="bi bi-x" onClick={()=>{
-                                    if(competence.typeId == undefined || competence.level == undefined)
-                                        return
-                                    removeAddedCompetence(competence.typeId, competence.level);
-                                }}></i>
-                            </div>
-                        ))
-                        : <></>
-                    }
                 </div>
 
                 <ActionButton name="Fechar" biIcon="x-lg" buttonProps={{
