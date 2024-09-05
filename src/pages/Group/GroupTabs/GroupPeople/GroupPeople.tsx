@@ -129,11 +129,15 @@ export function GroupPeople() {
                     />
                 </div>
 
-                <p className="clear-search" onClick={()=>{
-                    let searchCriteriaText = document.getElementById("search-criteria")
-                    if(searchCriteriaText) searchCriteriaText.classList.add("hidden")
-                    clearFilteredPeople();
-                }}>Limpar busca</p>
+                <ActionButton name="Limpar busca" biIcon="x-lg" buttonProps={{
+                    className: "clear-search",
+                    onClick( ) {
+                        const searchCriteriaText = document.getElementById("search-criteria")
+                        if(searchCriteriaText) searchCriteriaText.classList.add("hidden")
+                        clearFilteredPeople();
+                        setAddedCompetences([]);
+                    }
+                }} />
             </div>
 
             <div className="people-list tab-list"> { 
