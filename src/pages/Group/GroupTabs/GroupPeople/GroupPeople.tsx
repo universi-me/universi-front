@@ -1,7 +1,7 @@
 import { useContext, useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { EMPTY_LIST_CLASS, GroupContext, GroupContextType } from "@/pages/Group";
+import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { ProfileClass } from "@/types/Profile";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
@@ -10,6 +10,7 @@ import { Filter } from "@/components/Filter/Filter";
 import Select from 'react-select'
 import { CompetenceType, LevelToLabel, Level, intToLevel } from "@/types/Competence";
 import UniversimeApi from "@/services/UniversimeApi";
+import ActionButton from "@/components/ActionButton";
 
 type competenceSearch = {
     typeId?: string,
@@ -69,6 +70,7 @@ export function GroupPeople() {
         let searchCriteria = document.getElementById("search-criteria");
         if(searchCriteria)
             searchCriteria?.classList.remove("hidden")
+        setShowAdvancedSearch(false);
     }
 
     if (!groupContext)
@@ -198,12 +200,12 @@ export function GroupPeople() {
                     }
                 </div>
 
-                <div className="search-button" onClick={searchUsers}>
-                    Pesquisar
-                </div>
+                <ActionButton name="Fechar" biIcon="x-lg" buttonProps={{
+                    onClick() { setShowAdvancedSearch(false) },
+                    className: 'search-button'
+                }} />
 
             </div>
-    
         )
     }
 
