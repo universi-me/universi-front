@@ -7,6 +7,7 @@ import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 import { GroupCompetences } from "./GroupCompetences/GroupCompetences";
 import useCanI, { CanI_SyncFunction } from "@/hooks/useCanI";
 import { Permission } from "@/types/Roles";
+import { Optional } from "@/types/utils";
 
 export type AvailableTabs = "feed" | "contents" | "groups" | "people" | "competences" | "jobs";
 
@@ -94,8 +95,10 @@ export function GroupTabRenderer() {
         : null;
 }
 
-export function isTabAvailable(tab: string): boolean {
-    return TABS.find(t => t.value === tab) !== undefined;
+export function asTabAvailable(tab: string): Optional<AvailableTabs> {
+    return TABS.find(t => t.value === tab) !== undefined
+        ? tab as AvailableTabs
+        : undefined;
 }
 
 export const EMPTY_LIST_CLASS = "empty-text";
