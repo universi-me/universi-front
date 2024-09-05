@@ -20,20 +20,25 @@ export function GroupPage() {
 
         let tabNameSplit : string[] = window.location.hash.substring(1).split('/') ?? [];
         let tabName = tabNameSplit.length > 0 ? tabNameSplit[0] : null;
+        let useDefaultTab = true;
 
         if(tabName) {
             const tab = asTabAvailable(tabName);
 
             if (tab) {
+                useDefaultTab = false;
                 newContext.setCurrentTab(tabName as AvailableTabs);
             }
 
             if(tab === "contents" && tabNameSplit.length > 1) {
+                useDefaultTab = false;
                 newContext
                     .refreshData({ currentContentId: tabNameSplit[1] })
                     .then( c => c.setCurrentTab(tab));
             }
-        } else {
+        }
+
+        if (useDefaultTab) {
             newContext.setCurrentTab("feed");
         }
 
