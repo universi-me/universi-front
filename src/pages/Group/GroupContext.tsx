@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { AvailableTabs } from "./GroupTabs";
 import { Group } from "@/types/Group";
 import { type ProfileClass } from "@/types/Profile";
 import type { Content, Folder } from "@/types/Capacity";
@@ -83,6 +84,9 @@ export type GroupContextType = null | {
         links:         Link[];
         groups:        Group[];
     };
+
+    currentTab: AvailableTabs | undefined;
+    setCurrentTab(tab: AvailableTabs): any;
 
     refreshData: (options?: RefreshGroupOptions) => Promise<NonNullable<GroupContextType>>;
 };

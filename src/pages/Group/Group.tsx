@@ -12,26 +12,26 @@ import GroupConfigModal from './GroupConfig/GroupConfigModal';
 export function GroupPage() {
     const page = useLoaderData() as GroupPageLoaderResponse;
     const authContext = useContext(AuthContext);
-    const [currentTab, setCurrentTab] = useState<AvailableTabs>("feed");
-
     const [context, setContext] = useState(makeContext(page));
+
     useEffect(() => {
-        setContext(makeContext(page));
+        const newContext = makeContext(page);
+        setContext(newContext);
 
         let tabNameSplit : string[] = window.location.hash.substring(1).split('/') ?? [];
         let tabName = tabNameSplit.length > 0 ? tabNameSplit[0] : null;
         let contentId = null;
 
         if(tabName) {
-            if (isTabAvailable(tabName as string)) {
-                setCurrentTab(tabName as AvailableTabs);
+            if (isTabAvailable(tabName)) {
+                newContext.setCurrentTab(tabName as AvailableTabs);
             }
             if(tabNameSplit.length > 1) {
                 contentId = tabNameSplit[1];
                 refreshGroupData({currentContentId: contentId});
             }
         } else {
-            setCurrentTab("feed");
+            newContext.setCurrentTab("feed");
         }
 
     }, [page]);
@@ -56,8 +56,8 @@ export function GroupPage() {
                 <div id="intro-tabs-wrapper">
                     <GroupIntro />
                     <div className="in-front-container">
-                        <GroupTabs changeTab={changeTab} currentTab={currentTab} />
-                        <GroupTabRenderer tab={currentTab} />
+                        <GroupTabs />
+                        <GroupTabRenderer />
                     </div>
                 </div>
             </ProfileInfo>
@@ -72,15 +72,6 @@ export function GroupPage() {
         }
         </GroupContext.Provider>
     );
-
-    function changeTab(tab: AvailableTabs) {
-        if (tab === "contents") {
-            context.setCurrentContent(undefined);
-        }
-
-
-        setCurrentTab(tab);
-    }
 
     async function refreshGroupData(options?: RefreshGroupOptions) {
         const data = await fetchGroupPageData({ groupPath: page.group?.path });
@@ -158,6 +149,11 @@ export function GroupPage() {
             editJob: undefined,
             setEditJob(j) {
                 setContext({...this, editJob: j})
+            },
+
+            currentTab: undefined,
+            setCurrentTab(t) {
+                setContext({ ...this, currentTab: t })
             },
 
             refreshData: refreshGroupData,
