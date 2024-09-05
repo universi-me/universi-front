@@ -4,17 +4,17 @@ import { ServiceId, SERVICES_AVAILABLE, HealthResponseDTO } from "@/types/Health
 import { Optional } from "@/types/utils";
 import { useEffect, useState } from "react";
 
-import "./HealthCheckPage.css";
+import "./HealthCheckPage.less";
 
 export function HealthCheckPage() {
     const [servicesHealth, setServicesHealth] = useState(initialState);
 
     useEffect(() => { checkHealth() }, []);
 
-    return <main>
+    return <main id="health-check-page">
         <center>
             <h1>Saúde de serviços do Universi.me</h1>
-            <table>
+            <table id="status-table">
                 <tr>
                     <th>Serviço</th>
                     <th>Status</th>
