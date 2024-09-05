@@ -24,7 +24,7 @@ export function WelcomeUser() {
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger asChild>
                     <div>
-                        <ProfileImage className="logged-user-image" imageUrl={auth.profile?.imageUrl ?? IMG_DEFAULT_PROFILE} onClick={() => {setProfileClicked(!profileClicked)}}/>
+                        <ProfileImage className="logged-user-image" imageUrl={auth.profile?.imageUrl} name={auth.profile?.fullname} onClick={() => {setProfileClicked(!profileClicked)}}/>
                     </div>
                 </DropdownMenu.Trigger>
 

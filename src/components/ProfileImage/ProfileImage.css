@@ -3,4 +3,5 @@
     background-repeat: no-repeat;
     background-size: contain;
     aspect-ratio: 1;
+    user-select: none;
 }

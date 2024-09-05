@@ -17,6 +17,7 @@ import { Permission } from "@/types/Roles";
 import { ICON_LIKE, ICON_CLAP, ICON_HEART, ICON_SUPPORT, ICON_GENIUS, ICON_HAPPY, ICON_COMMENT } from '@/utils/assets';
 import TextboxFormatted from "@/components/TextboxFormatted/TextboxFormatted";
 import UniversiForm, { FormInputs, RequiredValidation, TextValidation, ValidationComposite } from "@/components/UniversiForm";
+import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
 export type GroupFeedPostProps = Readonly<{
     post: GroupPost;
@@ -122,7 +123,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
     
     return <div className="feed-item tab-item">
         <Link to={`/profile/${author.user.name}`} className="feed-user-info">
-            <img src={author.imageUrl} alt="" className="feed-image" />
+            <ProfileImage className="feed-image" imageUrl={author.imageUrl} name={author.fullname} />
             <p>{author.fullname}</p>
         </Link>
 

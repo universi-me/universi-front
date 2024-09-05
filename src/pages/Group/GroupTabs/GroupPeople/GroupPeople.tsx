@@ -316,8 +316,8 @@ function renderPerson(person: ProfileClass) {
 
     return (
         <div className="person-item tab-item" key={person.id} id={person.id}>
-            <Link to={linkToProfile}>
-                <ProfileImage imageUrl={imageUrl} className="person-image" />
+            <Link to={linkToProfile} className="person-image-info">
+                <ProfileImage imageUrl={imageUrl} name={person.fullname} className="person-image" />
             </Link>
 
             <div className="info">
