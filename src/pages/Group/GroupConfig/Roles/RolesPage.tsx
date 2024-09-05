@@ -177,6 +177,15 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
             <section id="participants-list">
         { participants?.filter(p => stringUtils.includesIgnoreCase(p.fullname ?? "", filterParticipant)).map(profile => {
             const isOwnProfile = auth.profile!.id === profile.id;
+            const isOwnerGroup = group?.admin.id === profile.id;
+
+            const disable = isOwnProfile || isOwnerGroup;
+            const title = isOwnProfile 
+                ? "Você não pode alterar seu próprio papel"
+                : isOwnerGroup
+                    ? "O papel do dono do grupo não pode ser alterado"
+                    : undefined;
+
             const options = removeFalsy(CHANGE_PAPER_OPTIONS.map(def => renderOption(profile, def)));
 
             if (options.length === 0)
@@ -189,7 +198,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                     <p className="profile-bio">{profile.bio}</p>
                 </div>
                 <DropdownMenu.Root>
-                    <DropdownMenu.Trigger asChild disabled={isOwnProfile} title={isOwnProfile ? "Você não pode alterar seu próprio nível de acesso" : undefined}>
+                    <DropdownMenu.Trigger asChild disabled={disable} title={title}>
                         <button type="button" className="set-role-trigger">
                             { profile.roles?.name }
                             <span className="bi"/>
