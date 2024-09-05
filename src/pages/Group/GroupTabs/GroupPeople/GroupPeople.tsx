@@ -1,7 +1,7 @@
 import { useContext, useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { EMPTY_LIST_CLASS, GroupContext, GroupContextType } from "@/pages/Group";
+import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { ProfileClass } from "@/types/Profile";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
@@ -10,6 +10,7 @@ import { Filter } from "@/components/Filter/Filter";
 import Select from 'react-select'
 import { CompetenceType, LevelToLabel, Level, intToLevel } from "@/types/Competence";
 import UniversimeApi from "@/services/UniversimeApi";
+import ActionButton from "@/components/ActionButton";
 
 type competenceSearch = {
     typeId?: string,
@@ -45,7 +46,7 @@ export function GroupPeople() {
         else
             searchUsers();
 
-    }, [addedCompetences])
+    }, [ addedCompetences, matchEveryCompetence ])
 
 
     const competenceTypeOptions = useMemo(() => {
@@ -69,6 +70,7 @@ export function GroupPeople() {
         let searchCriteria = document.getElementById("search-criteria");
         if(searchCriteria)
             searchCriteria?.classList.remove("hidden")
+        setShowAdvancedSearch(false);
     }
 
     if (!groupContext)
@@ -116,11 +118,26 @@ export function GroupPeople() {
                 }
 
                 </div>
-                <p className="clear-search" onClick={()=>{
-                    let searchCriteriaText = document.getElementById("search-criteria")
-                    if(searchCriteriaText) searchCriteriaText.classList.add("hidden")
-                    clearFilteredPeople();
-                }}>Limpar busca</p>
+
+                <div className="levels-div checkbox">
+                    <label htmlFor="matchEveryCompetence">Exigir todas as competências</label>
+                    <input
+                        type="checkbox"
+                        name="matchEveryCompetence"
+                        checked={matchEveryCompetence}
+                        onChange={()=>{setMatchEveryCompetence(!matchEveryCompetence)}}
+                    />
+                </div>
+
+                <ActionButton name="Limpar busca" biIcon="x-lg" buttonProps={{
+                    className: "clear-search",
+                    onClick( ) {
+                        const searchCriteriaText = document.getElementById("search-criteria")
+                        if(searchCriteriaText) searchCriteriaText.classList.add("hidden")
+                        clearFilteredPeople();
+                        setAddedCompetences([]);
+                    }
+                }} />
             </div>
 
             <div className="people-list tab-list"> { 
@@ -157,53 +174,27 @@ export function GroupPeople() {
                 }
 
 
-                <div className="add-competence-button" onClick={()=>{
-                    if(!currentCompetence || currentCompetence.level == undefined || !currentCompetence.label || !currentCompetence.typeId) return
+                <ActionButton name="Adicionar competência à busca" biIcon="search" buttonProps={{
+                    onClick( ) {
+                        if(currentCompetence?.level == undefined || !currentCompetence.label || !currentCompetence.typeId)
+                            return;
 
-                    currentCompetence.label += ": " + LevelToLabel[currentCompetence.level]
-                    setAddedCompetences([...addedCompetences, currentCompetence]);
+                        currentCompetence.label += ": " + LevelToLabel[currentCompetence.level]
+                        setAddedCompetences([...addedCompetences, currentCompetence]);
 
-                    let radio = document.getElementById(`radio${currentCompetence.level}`) as HTMLInputElement
+                        let radio = document.getElementById(`radio${currentCompetence.level}`) as HTMLInputElement
 
-                    radio.checked = false
-                    setCurrentCompetence(undefined)
-                }
-                }>
-                    Adicionar competência à busca
-                </div>
-
-                <div className="levels-div checkbox">
-                    <label htmlFor="matchEveryCompetence">Exigir todas as competências</label>
-                    <input
-                        type="checkbox"
-                        name="matchEveryCompetence"
-                        checked={matchEveryCompetence}
-                        onChange={()=>{setMatchEveryCompetence(!matchEveryCompetence)}}
-                    />
-                </div>
-
-                <div className="added-competences-container">
-                    { addedCompetences.length != 0? 
-                        addedCompetences.map((competence)=>(
-                            <div className="added-competence" key={competence.typeId??"" + competence.level}>
-                                {competence.label}
-                                <i className="bi bi-x" onClick={()=>{
-                                    if(competence.typeId == undefined || competence.level == undefined)
-                                        return
-                                    removeAddedCompetence(competence.typeId, competence.level);
-                                }}></i>
-                            </div>
-                        ))
-                        : <></>
+                        radio.checked = false
+                        setCurrentCompetence(undefined)
                     }
-                </div>
+                }} />
 
-                <div className="search-button" onClick={searchUsers}>
-                    Pesquisar
-                </div>
+                <ActionButton name="Fechar" biIcon="x-lg" buttonProps={{
+                    onClick() { setShowAdvancedSearch(false) },
+                    className: 'search-button'
+                }} />
 
             </div>
-    
         )
     }
 
