@@ -11,7 +11,7 @@ export function GroupSubmenu(){
     const context = useContext(GroupContext);
     const authContext = useContext(AuthContext);
 
-    const options = useMemo(makeGroupOptions, [context?.group.id]);
+    const options = useMemo(makeGroupOptions, [ context?.group.id, authContext.user ]);
 
     if (!context || !hasAvailableOption(options, context.group))
         return null;
