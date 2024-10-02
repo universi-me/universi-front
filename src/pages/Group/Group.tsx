@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Navigate, useLoaderData } from "react-router-dom";
 
 import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, asTabAvailable, type GroupContextType, type GroupPageLoaderResponse, RefreshGroupOptions } from "@/pages/Group";
@@ -12,6 +12,8 @@ import GroupConfigModal from './GroupConfig/GroupConfigModal';
 export function GroupPage() {
     const page = useLoaderData() as GroupPageLoaderResponse;
     const authContext = useContext(AuthContext);
+
+    const tabSave = useRef<AvailableTabs>();
     const [context, setContext] = useState(makeContext(page));
 
     useEffect(() => {
@@ -159,9 +161,10 @@ export function GroupPage() {
                 setContext({...this, editJob: j})
             },
 
-            currentTab: undefined,
+            currentTab: tabSave.current,
             setCurrentTab(t) {
-                setContext({ ...this, currentTab: t })
+                setContext({ ...this, currentTab: t });
+                tabSave.current = t;
             },
 
             refreshData: refreshGroupData,
