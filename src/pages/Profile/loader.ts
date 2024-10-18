@@ -58,7 +58,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
         UniversimeApi.Profile.competences({username}),
         UniversimeApi.Profile.links({username}),
         UniversimeApi.Profile.recommendations({username}),
-        UniversimeApi.Profile.folders({username, assignedOnly: true}),
+        UniversimeApi.Profile.folders({username}),
         UniversimeApi.Profile.educations({username}),
         UniversimeApi.Profile.experiences({username}),
         isOwnProfile ? UniversimeApi.Capacity.foldersAssignedBy({username}) : Promise.resolve(undefined),
