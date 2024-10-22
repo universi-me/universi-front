@@ -5,13 +5,14 @@ import { UniversimeApi } from "@/services/UniversimeApi";
 import { goTo } from "@/services/routes";
 import type { Group } from "@/types/Group";
 import type { Link } from "@/types/Link";
+import { Nullable, Possibly } from "@/types/utils";
 import ErrorPage from "@/components/ErrorPage";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [profile, setProfile] = useState<ProfileClass | null>(null);
+    const [profile, setProfile] = useState<Possibly<ProfileClass>>();
     const [profileLinks, setProfileLinks] = useState<Link[]>([]);
     const [profileGroups, setProfileGroups] = useState<Group[]>([]);
-    const [organization, setOrganization] = useState<Group | null | undefined>();
+    const [organization, setOrganization] = useState<Possibly<Group>>();
     const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
     const [isHealthy, setIsHealthy] = useState<boolean>();
     const user = profile?.user ?? null;
@@ -25,8 +26,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         goTo("/manage-profile");
     }
 
-    if (organization === undefined || isHealthy === undefined)
-        // Organization or status not fetched from the API yet
+    if ( organization === undefined || isHealthy === undefined || profile === undefined )
+        // Organization, status or user not fetched from the API yet
         return null;
 
     else if (organization === null)
@@ -94,16 +95,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     async function updateLoggedUser() {
         setFinishedLogin(false);
+        let profile: Nullable<ProfileClass> = null;
         const organization = await updateOrganization();
 
         if (organization) {
-            const profile = await getLoggedProfile();
-            setProfile(profile);
+            profile = await getLoggedProfile();
 
             await Promise.all([
-                updateLinks(),
-                updateGroups(),
+                updateLinks(profile),
+                updateGroups(profile),
             ]);
+
+            setProfile(profile);
         }
 
         setFinishedLogin(true);
@@ -120,7 +123,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return usedOrganization;
     }
 
-    async function updateLinks() {
+    async function updateLinks( profile: Possibly<ProfileClass> ) {
         if (!profile) {
             setProfileLinks([]);
             return [];
@@ -133,7 +136,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return links;
     }
 
-    async function updateGroups() {
+    async function updateGroups( profile: Possibly<ProfileClass> ) {
         if (!profile) {
             setProfileGroups([]);
             return [];

@@ -21,12 +21,6 @@ export function ProfilePage() {
     const [profileContext, setProfileContext] = useState<ProfileContextType>(makeContext(loaderData));
     useEffect(() => setProfileContext(makeContext(loaderData)), [ loaderData.profile?.id ]);
 
-    useEffect(() => {
-        if (auth.user === null) {
-            navigate('/login');
-        }
-    }, [auth.user]);
-
     if (!profileContext)
         return null;
 
