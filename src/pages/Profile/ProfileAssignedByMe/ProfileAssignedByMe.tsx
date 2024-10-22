@@ -24,7 +24,7 @@ export function ProfileAssignedByMe() {
 
         return groupArray(
             [...context.profileListData.assignedByMe]
-                .map(fp => ({...fp, profile: new ProfileClass(fp.profile)}))
+                .map(fp => ({...fp, profile: new ProfileClass(fp.assignedTo)}))
                 .sort((a, b) => {
                     if (a.folder.reference === b.folder.reference)
                         return (a.profile.fullname ?? "").localeCompare(b.profile.fullname ?? "")

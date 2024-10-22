@@ -53,7 +53,7 @@ export type Folder = {
     author:              Profile;
     publicFolder:        boolean;
     grantedAccessGroups: Group[];
-    assignedBy?:         Profile;
+    assignedBy?:         Profile[];
     favorite?:           true;
     canEdit:             boolean;
 
@@ -61,12 +61,11 @@ export type Folder = {
 };
 
 export type FolderProfile = {
-    author:  Profile;
-    profile: Profile;
+    assignedBy:  Profile;
+    assignedTo: Profile;
     folder:  Folder;
 
     id:       string;
-    assigned: boolean;
     created:  string;
 
     doneUntilNow: number;

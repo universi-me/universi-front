@@ -25,7 +25,6 @@ export type ProfileIdAndUsername_RequestDTO = {
 };
 
 export type ProfileFolders_RequestDTO = ProfileIdAndUsername_RequestDTO & {
-    assignedOnly?: boolean;
 };
 
 export type ProfileGet_ResponseDTO =             ApiResponse<{ profile: Profile }>;
@@ -102,6 +101,5 @@ export async function folders(body: ProfileFolders_RequestDTO) {
     return (await api.post<ProfileFolders_ResponseDTO>("/profile/folders", {
         profileId: body.profileId,
         username:  body.username,
-        assignedOnly: body.assignedOnly,
     })).data;
 }

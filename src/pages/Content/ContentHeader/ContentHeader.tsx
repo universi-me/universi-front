@@ -17,7 +17,7 @@ export function ContentHeader() {
 
     const author = new ProfileClass(context.content.author);
     const assignedBy = context.content.assignedBy && !context.watchingProfile
-        ? new ProfileClass(context.content.assignedBy)
+        ? context.content.assignedBy.map(ProfileClass.new)
         : undefined;
 
     const materialCount = context.materials.length;
@@ -51,7 +51,14 @@ export function ContentHeader() {
                     <div id="assigned-info">
                         <i id="assigned-by-icon" className="bi bi-pin-angle-fill" />
                         Atribuído a você por
-                        <Link id="assigned-by-link" to={`/profile/${assignedBy.user.name}`}>{ assignedBy.fullname }</Link>
+                        {
+                            assignedBy.map( ( p, i, arr ) => {
+                                return <>
+                                    <Link className="assigned-by-link" to={`/profile/${p.user.name}`} key={p.id}>{ p.fullname }</Link>
+                                    { arr.length - 1 !== i && ', ' }
+                                </>
+                            } )
+                        }
                     </div>
                 }
 
