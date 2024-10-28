@@ -27,11 +27,11 @@ export function SettingsPage() {
             {/* <SettingsMoveTo title="Analytics" description="Ver detalhes do monitoramento com Google Analytics" to="#"/> */}
         </> }
 
-        <br/><br/>
-        <i>Build Version</i>
-        <i>front: { import.meta.env.VITE_BUILD_HASH ?? '---' }</i>
-        <i>back: { (auth.organization??{} as any).buildHash ?? '---' }</i>
+            <div id="build-version">
+                <i>Versão do Universi.me</i><br/>
+                <i>Web: { import.meta.env.VITE_BUILD_HASH ?? '---' }</i><br/>
+                <i>API: { auth.organization.buildHash ?? '---' }</i>
+            </div>
         </div>
-        
     </div>
 }

@@ -83,7 +83,7 @@
 
     padding: .75em 1em;
 
-    background: var(--font-color-v5);
+    background: var(--card-item-color);
     border-radius: 20px;
 
     gap: 2rem;
@@ -203,8 +203,7 @@
 }
 
 #item-competence .education .education-list .education-item .education-level-list .education-level.learned {
-    background: var(--skills-1-color);
-    
+    background: var(--secondary-color);
 }
 
 #item-competence .education .education-list .education-item .education-level-list .education-level:not(:last-of-type) {

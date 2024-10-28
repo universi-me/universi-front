@@ -203,7 +203,7 @@ export function RolesPage() {
                 </div>
 
                 <div style={{width: '15%'}}>
-                    <ProfileImage imageUrl={profile.imageUrl} className="profile-image" />
+                    <ProfileImage imageUrl={profile.imageUrl} name={profile.fullname} className="profile-image" />
                 </div>
 
                 <div className="info" style={{width: '40%'}}>

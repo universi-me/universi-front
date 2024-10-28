@@ -5,22 +5,49 @@ import { UniversimeApi } from "@/services/UniversimeApi";
 import { goTo } from "@/services/routes";
 import type { Group } from "@/types/Group";
 import type { Link } from "@/types/Link";
+import { Nullable, Possibly } from "@/types/utils";
+import ErrorPage from "@/components/ErrorPage";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [profile, setProfile] = useState<ProfileClass | null>(null);
+    const [profile, setProfile] = useState<Possibly<ProfileClass>>();
     const [profileLinks, setProfileLinks] = useState<Link[]>([]);
     const [profileGroups, setProfileGroups] = useState<Group[]>([]);
-    const [organization, setOrganization] = useState<Group | null>(null);
+    const [organization, setOrganization] = useState<Possibly<Group>>();
     const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
+    const [isHealthy, setIsHealthy] = useState<boolean>();
     const user = profile?.user ?? null;
 
     useEffect(() => {
-        updateLoggedUser()
-    }, [profile?.id]);
+        updateLoggedUser();
+        updateHealth();
+    }, []);
 
     if (user?.needProfile) {
         goTo("/manage-profile");
     }
+
+    if ( organization === undefined || isHealthy === undefined || profile === undefined )
+        // Organization, status or user not fetched from the API yet
+        return null;
+
+    else if (organization === null)
+        // Organization could not be fetched
+        return <ErrorPage
+            title="Estamos passando por problemas técnicos"
+            description="No momento não é possível acessar o Universi.me, pedimos desculpas pelo imprevisto."
+            hideBackToHome
+        />
+
+    else if ( isHealthy === false )
+        // Some service is down
+        return <ErrorPage
+            title="Estamos passando por problemas técnicos"
+            description={<>
+                <p>Alguns dos serviços do Universi.me parecem estar fora do ar. Pedimos desculpas pelo imprevisto.</p>
+                <p>Mais informações em <a href="/health" >nossa página de saúde de serviços</a>.</p>
+            </>}
+            hideBackToHome
+        />
 
     return (
         <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser, organization, profileGroups, profileLinks  }}>
@@ -68,28 +95,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     async function updateLoggedUser() {
         setFinishedLogin(false);
-        const profile = await getLoggedProfile();
-        setProfile(profile);
+        let profile: Nullable<ProfileClass> = null;
+        const organization = await updateOrganization();
 
-        await Promise.all([
-            updateOrganization(),
-            updateLinks(),
-            updateGroups(),
-        ]);
+        if (organization) {
+            profile = await getLoggedProfile();
+
+            await Promise.all([
+                updateLinks(profile),
+                updateGroups(profile),
+            ]);
+
+            setProfile(profile);
+        }
 
         setFinishedLogin(true);
         return profile;
     }
 
     async function updateOrganization() {
-        const currentOrganization = await UniversimeApi.User.organization();
-        const usedOrganization = currentOrganization.body?.organization ?? null;
+        const currentOrganization = await UniversimeApi.User.organization()
+            .catch(err => null);
+
+        const usedOrganization = currentOrganization?.body?.organization ?? null;
 
         setOrganization(usedOrganization);
         return usedOrganization;
     }
 
-    async function updateLinks() {
+    async function updateLinks( profile: Possibly<ProfileClass> ) {
         if (!profile) {
             setProfileLinks([]);
             return [];
@@ -102,7 +136,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return links;
     }
 
-    async function updateGroups() {
+    async function updateGroups( profile: Possibly<ProfileClass> ) {
         if (!profile) {
             setProfileGroups([]);
             return [];
@@ -113,6 +147,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setProfileGroups(groups);
         return groups;
+    }
+
+    async function updateHealth() {
+        const health = await UniversimeApi.Health.checkHealthAll();
+        setIsHealthy( health.success );
     }
 };
 

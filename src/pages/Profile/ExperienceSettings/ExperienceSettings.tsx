@@ -3,7 +3,6 @@ import { useContext, useState } from "react";
 import { ProfileContext } from "@/pages/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi"
 
-import './ExperienceSetting.less'
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
 import { Institution } from "@/types/Institution";
@@ -40,7 +39,7 @@ export function ExperienceSettings() {
                     required: true
                 },
                 {
-                    DTOName: "localId", label: "Local", type: FormInputs.SELECT_SINGLE,
+                    DTOName: "institutionId", label: "Instituição", type: FormInputs.SELECT_SINGLE,
                     value: profileContext?.editExperience?.institution ? makeInstitutionOption(profileContext?.editExperience?.institution) : undefined,
                     options: profileContext.allInstitution.map(makeInstitutionOption),
                     required: true, canCreate: true, onCreate: handleCreateInstitution

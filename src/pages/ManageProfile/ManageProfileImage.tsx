@@ -7,6 +7,7 @@ import CropperComponent from "@/components/ImageCropper/ImageCropper";
 export type ManageProfileImageProps = {
     currentImage: string | null;
     setImage(image: File | undefined): any;
+    name: string | null;
 };
 
 export function ManageProfileImage(props: ManageProfileImageProps) {
@@ -20,7 +21,7 @@ export function ManageProfileImage(props: ManageProfileImageProps) {
         <fieldset id="fieldset-image">
             <legend className="required-input">Alterar imagem do perfil</legend>
             <input id="image" name="image" accept="image/*" type="file" onChange={changeImage} />
-            <label htmlFor="image"><ProfileImage imageUrl={image} id="profile-image-view" /></label>
+            <label htmlFor="image"><ProfileImage imageUrl={image} name={props.name} id="profile-image-view" /></label>
             <CropperComponent show={showCrop} src={image as string} selectImage={updateImage} willClose={() => setShowCrop(false)} options={{aspectRatio: 1,}} />
         </fieldset>
     );

@@ -1,5 +1,6 @@
 import type { Profile } from "@/types/Profile";
 import type { FeatureTypes } from "@/types/Roles";
+import { Nullable } from "./utils";
 
 export type Group = {
     id:                string;
@@ -22,6 +23,14 @@ export type Group = {
     organization:      Group | null;
     canEdit:           boolean;
     everyoneCanPost:   boolean;
+    buildHash?: string;
+
+    groupSettings: {
+        theme: Nullable<GroupTheme>;
+        environment: Nullable<{
+            [k in keyof GroupEnvironment]?: GroupEnvironment[k];
+        }>;
+    };
 
     permissions: {
         [k in FeatureTypes]: number;
@@ -48,29 +57,58 @@ export const GroupEmailFilterTypeToLabel = {
 };
 
 export type GroupTheme ={
-    id:                     string;
     primaryColor:           string;
     secondaryColor:         string;
-    tertiaryColor:          string;
     backgroundColor:        string;
     cardBackgroundColor:    string;
     cardItemColor:          string;
     fontColorV1:            string;
     fontColorV2:            string;
     fontColorV3:            string;
-    fontColorV4:            string;
-    fontColorV5:            string;
-    fontColorV6:            string;
-    fontDisabledColor:      string;
-    formsColor:             string;
-    skills1Color:           string;
-    waveColor:              string;
-    buttonYellowHoverColor: string;
+    fontColorLinks:         string;
+    fontColorDisabled:      string;
     buttonHoverColor:       string;
-    alertColor:             string;
-    successColor:           string;
+    fontColorAlert:         string;
+    fontColorSuccess:       string;
     wrongInvalidColor:      string;
-    rankColor:              string;
+};
+
+export type GroupEnvironment = {
+    // Signup
+    signup_enabled: boolean;
+    signup_confirm_account_enabled: boolean;
+
+    // Google OAuth Login
+    login_google_enabled: boolean;
+    google_client_id: string;
+
+    // Google Recaptcha
+    recaptcha_enabled: boolean;
+    recaptcha_api_key: string;
+    recaptcha_api_project_id: string;
+    recaptcha_site_key: string;
+
+    // KeyCloak
+    keycloak_enabled: boolean;
+    keycloak_client_id: string;
+    keycloak_client_secret: string;
+    keycloak_realm: string;
+    keycloak_url: string;
+    keycloak_redirect_url: string;
+
+    // Email
+    email_enabled: boolean;
+    email_protocol: string;
+    email_host: string;
+    email_port: string;
+    email_username: string;
+    email_password?: string;
+
+    // Email Notifications
+    message_new_content_enabled: boolean;
+    message_template_new_content: string;
+    message_assigned_content_enabled: string;
+    message_template_assigned_content: string;
 };
 
 export type GroupType = "INSTITUTION" | "CAMPUS" | "COURSE" | "PROJECT" | "CLASSROOM" | "MONITORIA" | "LABORATORY"

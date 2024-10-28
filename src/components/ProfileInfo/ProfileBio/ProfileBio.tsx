@@ -43,7 +43,7 @@ export function ProfileBio(props: ProfileBioProps) {
             </div>
 
             <div className="intro intro-section">
-                <ProfileImage className="image" imageUrl={profile.imageUrl} noImageColor="#505050" />
+                <ProfileImage className="image" imageUrl={profile.imageUrl} name={profile.fullname} noImageColor="#505050" />
                 {
                     isOnOwnProfile
                         ? <h2 className="card-heading name">{ profile.fullname }</h2>

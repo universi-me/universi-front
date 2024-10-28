@@ -1,6 +1,7 @@
 export const IMG_UNIVERSI_LOGO =   "/assets/imgs/universi-me2.png";
-export const IMG_DCX_LOGO =        "/assets/imgs/dcx-png 1.png";
 export const IMG_DEFAULT_PROFILE = "/assets/imgs/default_avatar.png";
+export const IMG_DEFAULT_GROUP =   "/assets/imgs/group.png";
+export const IMG_DEFAULT_BANNER =  "/assets/imgs/default_bg.jpg";
 export const IMG_DEFAULT_CONTENT = "/assets/imgs/default-content.png";
 
 export const ICON_CHEVRON_DOWN =     "/assets/icons/chevron-down-1.svg";
@@ -19,3 +20,12 @@ export const ICON_DELETE_BLACK = "/assets/icons/delete-black.svg"
 export const MATERIAL_THUMB_VIDEO = "/assets/imgs/video.png";
 export const MATERIAL_THUMB_LINK =  "/assets/imgs/link.png";
 export const MATERIAL_THUMB_FILE =  "/assets/imgs/file.png";
+
+export const ICON_LIKE = "/assets/icons/like.svg";
+export const ICON_CLAP = "/assets/icons/clap.svg";
+export const ICON_HEART = "/assets/icons/heart.svg";
+export const ICON_SUPPORT = "/assets/icons/support.svg";
+export const ICON_GENIUS = "/assets/icons/genius.svg";
+export const ICON_HAPPY = "/assets/icons/happy.svg";
+export const ICON_COMMENT = "/assets/icons/comment.svg";
+

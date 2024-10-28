@@ -42,7 +42,7 @@ export function ManageProfilePage() {
             <div id="left-side">
                 <form id="profile-edit" className="card">
                     <div className="image-name-container">
-                        <ManageProfileImage currentImage={profile.imageUrl} setImage={setImage} />
+                        <ManageProfileImage currentImage={profile.imageUrl} setImage={setImage} name={profile.fullname} />
 
                         <fieldset id="fieldset-name">
                             <legend>Altere seu nome</legend>

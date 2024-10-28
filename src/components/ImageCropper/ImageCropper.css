@@ -60,7 +60,7 @@
 }
 
 .cancel {
-    background-color: var(--font-disabled-color);
+    background-color: var(--font-color-disabled);
 
 }
 

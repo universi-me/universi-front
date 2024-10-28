@@ -1,10 +1,12 @@
 import { createContext } from "react";
+import { AvailableTabs } from "./GroupTabs";
 import { Group } from "@/types/Group";
 import { type ProfileClass } from "@/types/Profile";
 import type { Content, Folder } from "@/types/Capacity";
 import { Link } from "@/types/Link";
 import { GroupPost } from "@/types/Feed";
 import { Job } from "@/types/Job";
+import { CompetenceType } from "@/types/Competence";
 
 export type GroupContextType = null | {
     group:         Group;
@@ -13,6 +15,8 @@ export type GroupContextType = null | {
     folders:       Folder[];
     posts:         GroupPost[];
     jobs:          Job[] | undefined;
+
+    competenceTypes: CompetenceType[];
 
     currentContent: Folder | undefined;
     setCurrentContent(content: Folder | undefined): any;
@@ -80,6 +84,9 @@ export type GroupContextType = null | {
         links:         Link[];
         groups:        Group[];
     };
+
+    currentTab: AvailableTabs | undefined;
+    setCurrentTab(tab: AvailableTabs): any;
 
     refreshData: (options?: RefreshGroupOptions) => Promise<NonNullable<GroupContextType>>;
 };

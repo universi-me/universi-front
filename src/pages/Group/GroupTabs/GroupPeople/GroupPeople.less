@@ -15,21 +15,29 @@
     gap: @gap;
     justify-content: center;
 
+    .person-image-info {
+        width: 32%;
+        min-width: 32%;
+        max-width: 32%;
+        aspect-ratio: 1;
+    }
+
     .person-item {
         display: flex;
         flex-direction: row;
 
         width: calc(50% - @gap / 2);
+        min-width: 200px;
 
         text-align: center;
 
         align-items: center;
-        padding: 0;
+        padding: 0.3rem 0.3rem;
         overflow: hidden;
         border: none;
 
         .person-image {
-            @side: 8rem !important;
+            @side: 100% !important;
             width: @side;
             height: @side;
             aspect-ratio: 1;
@@ -37,12 +45,13 @@
             background-color: inherit;
             object-fit: cover;
             border-radius: 50%;
-            padding: 1rem;
+            padding: 0.6rem 0.6rem;
         }
 
         .info { 
 
             text-align: start;
+            word-break: break-word;
 
             color: @font-color-v2;
             .person-name {
@@ -175,7 +184,7 @@
     }
 
     .clear-search{
-        background-color: var(--alert-color);
+        background-color: var(--font-color-alert);
 
         box-shadow: 2px 2px 3px rgba(0,0,0,0.25);
         padding: 0.25rem 0.5rem;

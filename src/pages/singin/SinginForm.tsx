@@ -1,12 +1,11 @@
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 import { AuthContext } from "@/contexts/Auth/AuthContext";
-import { oauthSignIn } from "@/services/oauth2-google";
-import { IMG_DCX_LOGO } from "@/utils/assets";
+import SignInWithGoogle from "@/components/SignInWithGoogle/SignInWithGoogle";
 
-import "./signinForm.css";
+import "./SignInForm.less";
 
 export default function SinginForm() {
   const auth = useContext(AuthContext);
@@ -15,46 +14,18 @@ export default function SinginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const [recaptchaRef, setRecaptchaRef] = useState<any>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>( null );
 
+  const organizationEnv = auth.organization.groupSettings.environment;
+  const SIGNUP_ENABLED = organizationEnv?.signup_enabled ?? true;
+  const ENABLE_GOOGLE_LOGIN = auth.organization.groupSettings.environment?.login_google_enabled ?? false;
+  const ENABLE_RECAPTCHA = organizationEnv?.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
+  const RECAPTCHA_SITE_KEY = organizationEnv?.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  const ENABLE_KEYCLOAK_LOGIN = organizationEnv?.keycloak_enabled ?? false;
 
-  const handleAuthLoginGoogle = async () => {
-    window.location.href = oauthSignIn().toString();
-  };
+  const disableSignInButton = !email.length || !password.length || ( ENABLE_RECAPTCHA && !recaptchaToken );
 
-  const handleAuthLoginKeycloak = async () => {
-    window.location.href = import.meta.env.VITE_UNIVERSIME_API + "/login/keycloak/auth";
-  };
-
-  const handleRecaptchaChange = (token: string | null) => {
-    setRecaptchaToken(token);
-  };
-
-  const handleLogin = async (e: FormEvent) => {
-    e.preventDefault();
-    const logged = await auth.signin(email, password, recaptchaToken);
-    if(recaptchaRef) {
-      recaptchaRef.reset();
-    }
-  };
-
-  const isButtonDisable = email.length && password.length > 0 ? false : true;
-
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const organizationEnv = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any);
-  const SIGNUP_ENABLED = organizationEnv.signup_enabled ?? true;
-  const ENABLE_GOOGLE_LOGIN = organizationEnv.login_google_enabled ?? (import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1");
-  const ENABLE_RECAPTCHA = organizationEnv.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
-  const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-  const ENABLE_KEYCLOAK_LOGIN = organizationEnv.keycloak_enabled ?? false;
-  
-  return (
-  <>
-  
-  <div className="container">
+  return <div className="container">
       <form action="/login" method="post" className="form-container">
         <div className="form-group">
           <div className="label-form">
@@ -84,7 +55,7 @@ export default function SinginForm() {
             required
           />
 
-          <span className="toggle" onClick={toggleShowPassword}>
+          <span className="toggle" onClick={ () => setShowPassword( s => !s ) }>
             <span className="material-symbols-outlined">
               {showPassword == false ? "visibility" : "visibility_off"}
             </span>
@@ -95,7 +66,7 @@ export default function SinginForm() {
           !ENABLE_RECAPTCHA ? null :
             <center>
               <br/>
-              <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
+              <ReCAPTCHA ref={ recaptchaRef } sitekey={ RECAPTCHA_SITE_KEY } onChange={ setRecaptchaToken } />
               <br/>
             </center>
         }
@@ -104,7 +75,7 @@ export default function SinginForm() {
             type="submit"
             value="Entrar"
             className="btn_form"
-            disabled={isButtonDisable}
+            disabled={ disableSignInButton }
             onClick={handleLogin}
         >
             ENTRAR
@@ -112,32 +83,23 @@ export default function SinginForm() {
       </form>
 
 
-      {
-        !ENABLE_GOOGLE_LOGIN ? null :
-        <>
-            <div className="container-line-form" style={{margin: "20px 0"}}>
+      { ENABLE_GOOGLE_LOGIN && <>
+            <div className="container-line-form">
                 <div className="line-form"></div>
-                <div style={{color: "#c2c2c2"}}>ou entre com</div>
+                <div className="enter-with">ou entre com</div>
                 <div className="line-form"></div>
             </div>
 
-            <button
-                className="btn_form_dcx"
-                type="button"
-                onClick={handleAuthLoginGoogle}
-            >
-                <img src={IMG_DCX_LOGO} />
-                EMAIL DCX
-            </button>
+            <SignInWithGoogle client_id={organizationEnv?.google_client_id!} />
         </>
       }
 
       {
         !ENABLE_KEYCLOAK_LOGIN ? null :
         <>
-            <div className="container-line-form" style={{margin: "20px 0"}}>
+            <div className="container-line-form">
                 <div className="line-form"></div>
-                <div style={{color: "#c2c2c2"}}>ou entre com</div>
+                <div className="enter-with">ou entre com</div>
                 <div className="line-form"></div>
             </div>
 
@@ -152,16 +114,21 @@ export default function SinginForm() {
         </>
       }
 
-      { !SIGNUP_ENABLED ? null :
-        <div className="container-line-form" style={{marginTop: "20px"}}>
-            <Link to="/signup">Crie sua conta</Link>
-        </div>
+      { SIGNUP_ENABLED &&
+        <Link id="signup" to="/signup">Crie sua conta</Link>
       }
-        <div className="container-line-form" style={{marginTop: "20px"}}>
-            <Link to="/recovery">Esqueci minha senha</Link>
-        </div>
-    </div>
-  </>
-  
-  );
+
+        <Link id="recovery" to="/recovery">Esqueci minha senha</Link>
+    </div>;
+
+    async function handleLogin( e: FormEvent ) {
+        e.preventDefault();
+
+        await auth.signin(email, password, recaptchaToken);
+        recaptchaRef.current?.reset();
+    }
+
+    async function handleAuthLoginKeycloak( ) {
+        window.location.href = import.meta.env.VITE_UNIVERSIME_API + "/login/keycloak/auth";
+    }
 }

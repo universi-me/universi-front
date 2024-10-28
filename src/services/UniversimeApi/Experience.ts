@@ -4,7 +4,7 @@ import { api } from "./api";
 
 export type ExperienceCreate_RequestDTO = {
     typeExperienceId:   string;
-    localId:            string;
+    institutionId:            string;
     description:        string;
     startDate:          string;
     endDate:            string;
@@ -14,7 +14,7 @@ export type ExperienceCreate_RequestDTO = {
 export type ExperienceUpdate_RequestDTO = {
     profileExperienceId:       string;
     typeExperienceId:   string;
-    localId:            string;
+    institutionId:            string;
     description:        string;
     startDate:          string;
     endDate:            string;
@@ -39,26 +39,11 @@ export async function get(body:ExperienceId_RequestDTO) {
 }
 
 export async function create(body:ExperienceCreate_RequestDTO) {
-    return (await api.post<ExperienceCreate_ResponseDTO>("/curriculum/experience/criar", {
-        typeExperienceId:               body.typeExperienceId,
-        localId:                        body.localId,
-        description:                    body.description,
-        presentDate:                    body.presentDate,
-        startDate:                      body.startDate,
-        endDate:                        body.endDate,
-    })).data;
+    return (await api.post<ExperienceCreate_ResponseDTO>("/curriculum/experience/criar", body)).data;
 }
 
 export async function update(body: ExperienceUpdate_RequestDTO) {
-    return (await api.post<ExperienceCreate_ResponseDTO>("/curriculum/experience/atualizar", {
-        profileExperienceId:            body.profileExperienceId,
-        typeExperienceId:               body.typeExperienceId,
-        localId:                        body.localId,
-        description:                    body.description,
-        startDate:                      body.startDate,
-        endDate:                        body.endDate,
-        presentDate:                    body.presentDate,
-    })).data;
+    return (await api.post<ExperienceCreate_ResponseDTO>("/curriculum/experience/atualizar", body)).data;
 }
 
 export async function remove(body:  ExperienceId_RequestDTO) {

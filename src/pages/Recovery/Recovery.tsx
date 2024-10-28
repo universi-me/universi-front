@@ -1,8 +1,5 @@
-import { Header } from "@/components/UniversiHeader"
 import "./Recovery.css"
-import { transform } from "@babel/core"
-import { Translate } from "phosphor-react"
-import "../singin/signinForm.css"
+import "../singin/SignInForm.less"
 import {useState, useContext} from "react"
 import UniversimeApi from "@/services/UniversimeApi"
 import { AuthContext } from "@/contexts/Auth/AuthContext";
@@ -39,9 +36,9 @@ export default function Recovery(){
 
     return(
         <div>
-            <div className="center-container">
+            <div className="center-container container">
                 <h3 className="center-text">Recuperação de senha</h3>
-                <div className="container form-container">
+                <div className="form-container">
                     <div className="form-group">
                         <div className="label-form">
                             <span className="material-symbols-outlined">mail</span>

@@ -2,8 +2,31 @@
 @import url(/src/layouts/colors.less);
 
 #group-page #jobs.group-tab {
-    .heading [name="only-open"] {
-        margin-right: .25em;
+    .heading {
+        #filter-jobs-button {
+            background-color: transparent;
+            border: none;
+            color: @primary-color;
+            font-size: 1.75rem;
+
+            cursor: pointer;
+        }
+    }
+
+    #filters-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: .25em;
+
+        margin-top: .25em;
+
+        .filter-item {
+            padding: .2em;
+            background-color: @primary-color;
+            color: @font-color-v1;
+            border-radius: 5px;
+        }
     }
 
     #jobs-list.tab-list {
@@ -105,13 +128,13 @@
                                 outline: none;
 
                                 &.delete {
-                                    background-color: @alert-color;
+                                    background-color: @font-color-alert;
                                     color: @font-color-v1;
                                 }
                             }
 
                             &[data-disabled] {
-                                color: @font-disabled-color;
+                                color: @font-color-disabled;
 
                                 &:hover {
                                     background-color: transparent;

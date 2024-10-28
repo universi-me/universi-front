@@ -61,7 +61,7 @@ export class ProfileClass implements Profile {
      */
     get imageUrl() {
         if (this.image === null)
-            return IMG_DEFAULT_PROFILE;
+            return null;
 
         if (this.image.startsWith("/")) {
             return import.meta.env.VITE_UNIVERSIME_API + this.image;

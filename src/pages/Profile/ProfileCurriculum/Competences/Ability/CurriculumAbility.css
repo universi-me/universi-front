@@ -74,7 +74,7 @@
 
     padding: .75em 1em;
 
-    background: var(--font-color-v5);
+    background: var(--card-item-color);
     border-radius: 20px;
 }
 
@@ -144,8 +144,7 @@
 }
 
 #item-competence .competence .competence-list .competence-item .competence-level-list .competence-level.learned {
-    background: var(--skills-1-color);
-    
+    background: var(--secondary-color);
 }
 
 #item-competence .competence .competence-list .competence-item .competence-level-list .competence-level:not(:last-of-type) {

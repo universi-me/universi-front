@@ -1,17 +1,19 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
-import { oauthSignIn } from "@/services/oauth2-google";
+import AuthContext from "@/contexts/Auth";
+import SignInWithGoogle from "@/components/SignInWithGoogle/SignInWithGoogle";
 import { SignUpModal } from "@/pages/SignUp";
-import { IMG_DCX_LOGO } from "@/utils/assets";
 
 import "./SignUp.less"
 
 export default function SignUpPage() {
+    const authContext = useContext(AuthContext);
     const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false);
 
-    const googleUrl = oauthSignIn();
+    const googleClientId = authContext.organization.groupSettings.environment?.google_client_id;
 
-    const ENABLE_GOOGLE_LOGIN = import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true" || import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "1";
+    const ENABLE_GOOGLE_LOGIN = googleClientId !== undefined
+        && (authContext.organization.groupSettings.environment?.login_google_enabled ?? false);
 
     return (
         <div id="sign-up-page">
@@ -23,13 +25,8 @@ export default function SignUpPage() {
 
                 <div className="signup-container">
                     <div className="signup-box">
-                        {
-                            !ENABLE_GOOGLE_LOGIN ? null
-                            : <>
-                                <a href={googleUrl.href} className="google-login">
-                                    <img src={IMG_DCX_LOGO} alt="DCX" />
-                                    Entrar com DCX
-                                </a>
+                        { ENABLE_GOOGLE_LOGIN && <>
+                                <SignInWithGoogle client_id={ googleClientId } />
 
                                 <div className="signup-line-container">
                                     <div className="signup-line" />
@@ -43,7 +40,6 @@ export default function SignUpPage() {
                             Criar conta
                         </button>
                     </div>
-                    <div className="tos">Ao se inscrever, você concorda com os <a>Termos de Serviço</a> e a <a>Política de Privacidade</a>.</div>
                 </div>
 
                 {

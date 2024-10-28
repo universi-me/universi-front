@@ -120,7 +120,7 @@ function SelectPeople(){
                                 const isSelected = !!selectedProfiles.find(i => i.id === p.id);
 
                                 return <div className="participant-item" key={p.id}>
-                                    <img src={p.imageUrl} alt="" className="profile-picture" />
+                                    <ProfileImage className="profile-picture" imageUrl={p.imageUrl!} name={p?.fullname} />
                                     <div className="profile-data">
                                         <h2 className="profile-name">{ p.fullname }</h2>
                                     </div>
@@ -344,9 +344,9 @@ export function GroupContents() {
                 {
                     imageUrl
                     ?
-                    <ProfileImage imageUrl={imageUrl} className="content-image" onClick={() => selectContent(content)} />
+                    <img src={imageUrl} title={content.name} className="content-image" onClick={() => selectContent(content)} />
                     :
-                    <ProfileImage imageUrl={"/assets/imgs/default-content.png"} className="content-image default-image" onClick={() => selectContent(content)} />
+                    <img src={"/assets/imgs/default-content.png"} title={content.name} className="content-image default-image" onClick={() => selectContent(content)} />
                 }
 
                 <div className="info">
@@ -380,7 +380,7 @@ export function GroupContents() {
 
             cancelButtonText: "Cancelar",
             confirmButtonText: "Excluir",
-            confirmButtonColor: "var(--alert-color)",
+            confirmButtonColor: "var(--font-color-alert)",
 
             text: "Tem certeza que deseja remover este conteúdo do grupo?",
 
