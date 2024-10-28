@@ -40,7 +40,6 @@ export default function SignUpPage() {
                             Criar conta
                         </button>
                     </div>
-                    <div className="tos">Ao se inscrever, você concorda com os <a>Termos de Serviço</a> e a <a>Política de Privacidade</a>.</div>
                 </div>
 
                 {
