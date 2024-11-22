@@ -1,7 +1,7 @@
 import type { ApiResponse } from "@/types/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import axios from "axios";
-import { goTo } from "@/services/routes";
+import { goTo } from "@/configs/routes";
 import { LOGIN_REDIRECT_PARAM } from "@/pages/singin/Singin";
 
 export const api = axios.create({
