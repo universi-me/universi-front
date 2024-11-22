@@ -4,11 +4,11 @@
 
 
 #sign-up-modal {
-    width: 75vw;
-    height: fit-content;
-    
+    max-width: min(75vw, 1000px);
+    max-height: min(fit-content, 80vh);
+
     border-radius: 1.25rem;
-    overflow: hidden;
+    overflow: auto;
 
     background: @card-background-color;
 
@@ -16,8 +16,6 @@
         background:  @primary-color;
 
         display: flex;
-        // grid-template-columns: 1fr auto 1fr;
-        // align-items: center;
         flex-direction: row;
         justify-content: space-between;
         align-content: center;
