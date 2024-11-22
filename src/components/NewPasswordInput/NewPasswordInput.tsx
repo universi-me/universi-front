@@ -13,9 +13,6 @@ interface NewPasswordInputProps {
 
 const NewPasswordInput: React.FC<NewPasswordInputProps> = ({ password, setPassword, valid, setValid }) => {
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [showPasswordRepeat, setShowPasswordRepeat] = useState(false);
-
     const [passwordRepeat, setPasswordRepeat] = useState<string>("")
 
     const [validPasswordEquality, setValidPasswordEquality] = useState<NullableBoolean>(false);
@@ -39,55 +36,22 @@ const NewPasswordInput: React.FC<NewPasswordInputProps> = ({ password, setPasswo
 
     }, [password, passwordRepeat]);
 
-    function toggleShowPassword(){
-        setShowPassword(!showPassword)
-    }
-
-    function toggleShowPasswordRepeat(){
-        setShowPasswordRepeat(!showPasswordRepeat)
-    }
 
     return (
         <div className="password-input">
-          <div className="form-group">
-            <div className="label-form">
-              <span className="material-symbols-outlined">lock</span>
-            </div>
-            <input
-              type={showPassword ? "text" : "password"}
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Insira sua nova senha"
-              required
-            />
-            <span className="toggle" onClick={toggleShowPassword}>
-              <span className="material-symbols-outlined">
-                {showPassword ? "visibility" : "visibility_off"}
-              </span>
-            </span>
-          </div>
-          <br/>
-            <div className="form-group">
-                <div className="label-form">
-                <span className="material-symbols-outlined">lock</span>
-                </div>
-                <input
-                type={showPasswordRepeat ? "text" : "password"}
-                id="newPassword"
-                name="newPassword"
-                value={passwordRepeat}
-                onChange={(e) => setPasswordRepeat(e.target.value)}
-                placeholder="Confirme sua nova senha"
-                required
-                />
-                <span className="toggle" onClick={toggleShowPasswordRepeat}>
-                <span className="material-symbols-outlined">
-                    {showPasswordRepeat ? "visibility" : "visibility_off"}
-                </span>
-                </span>
-            </div>
+          <PasswordInputGroup
+            password={ password }
+            onChange={ setPassword }
+            placeholder="Insira sua senha" 
+            inputName="password"
+        />
+        <br/>
+        <PasswordInputGroup
+            password={ passwordRepeat }
+            onChange={ setPasswordRepeat }
+            placeholder="Confirme sua nova senha"
+            inputName="newPassword"
+        />
 
         <br/>
           <div className="password-requirements">
@@ -108,8 +72,36 @@ const NewPasswordInput: React.FC<NewPasswordInputProps> = ({ password, setPasswo
           <br/>
         </div>
       );
+}
 
+function PasswordInputGroup( props: Readonly<PasswordInputGroupProps> ) {
+    const { password, placeholder, inputName, onChange } = props;
+    const [ showPassword, setShowPassword ] = useState( false );
 
+    return <div className="form-group">
+        <span className="label-form material-symbols-outlined">lock</span>
+        <input
+            type={showPassword ? "text" : "password"}
+            id={ inputName }
+            name={ inputName }
+            value={ password }
+            onChange={ e => onChange( e.target.value ) }
+            placeholder={ placeholder }
+            required
+        />
+        <span className="toggle" onClick={ e => setShowPassword( s => !s ) }>
+        <span className="material-symbols-outlined">
+            { showPassword ? "visibility" : "visibility_off" }
+        </span>
+        </span>
+    </div>
+}
+
+type PasswordInputGroupProps = {
+    password: string;
+    placeholder: string;
+    inputName?: string;
+    onChange( password: string ): unknown;
 }
 
 export default NewPasswordInput;
