@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { ProfileClass } from "@/types/Profile";
 import { UniversimeApi } from "@/services/UniversimeApi";
-import { goTo } from "@/services/routes";
+import { goTo } from "@/configs/routes";
 import type { Group } from "@/types/Group";
 import type { Link } from "@/types/Link";
 import { Nullable, Possibly } from "@/types/utils";
