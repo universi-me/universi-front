@@ -1,7 +1,9 @@
 import type { ApiResponse } from "@/types/UniversimeApi";
 import type { User } from "@/types/User";
-import { api } from "./api";
+import { createApiInstance } from "./api";
 import { Roles } from "@/types/Roles";
+
+const api = createApiInstance("/")
 
 export type SignIn_RequestDTO = {
     username: string;

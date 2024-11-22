@@ -1,6 +1,8 @@
 import type { Link } from "@/types/Link";
 import type { ApiResponse } from "@/types/UniversimeApi";
-import { api } from "./api";
+import { createApiInstance } from "./api";
+
+const api = createApiInstance( "/link" )
 
 export type LinkCreate_RequestDTO = {
     url:      string;
@@ -25,13 +27,13 @@ export type LinkUpdate_ResponseDTO = ApiResponse;
 export type LinkRemove_ResponseDTO = ApiResponse;
 
 export async function get(body: LinkId_RequestDTO | Link) {
-    return (await api.post<LinkGet_ResponseDTO>("/link/obter", {
+    return (await api.post<LinkGet_ResponseDTO>("/obter", {
         linkId: 'linkId' in body ? body.linkId : body.id,
     })).data;
 }
 
 export async function create(body: LinkCreate_RequestDTO | Link): Promise<LinkCreate_ResponseDTO> {
-    return (await api.post<LinkCreate_ResponseDTO>("/link/criar", {
+    return (await api.post<LinkCreate_ResponseDTO>("/criar", {
         url:  body.url,
         tipo: 'typeLink' in body ? body.typeLink : body.linkType,
         nome: body.name,
@@ -39,7 +41,7 @@ export async function create(body: LinkCreate_RequestDTO | Link): Promise<LinkCr
 }
 
 export async function update(body: LinkUpdate_RequestDTO | Link): Promise<LinkUpdate_ResponseDTO> {
-    return (await api.post<LinkUpdate_ResponseDTO>("/link/atualizar", {
+    return (await api.post<LinkUpdate_ResponseDTO>("/atualizar", {
         linkId: 'linkId' in body ? body.linkId : body.id,
         url:    body.url,
         tipo:   'linkType' in body ? body.linkType : body.typeLink,
@@ -48,7 +50,7 @@ export async function update(body: LinkUpdate_RequestDTO | Link): Promise<LinkUp
 }
 
 export async function remove(body: LinkId_RequestDTO | Link): Promise<LinkRemove_ResponseDTO> {
-    return (await api.post<LinkRemove_ResponseDTO>("/link/remover", {
+    return (await api.post<LinkRemove_ResponseDTO>("/remover", {
         linkId: 'linkId' in body ? body.linkId : body.id,
     })).data;
 }

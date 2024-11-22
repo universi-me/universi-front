@@ -1,6 +1,8 @@
 import type { Content, ContentStatus } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
-import { api } from "../api";
+import { createApiInstance } from "../api";
+
+const api = createApiInstance( "/capacity/content" )
 
 export type ContentId_RequestDTO = {
     id: string;
@@ -40,40 +42,21 @@ export type ContentStatusEdit_RequestDTO={
     contentStatusType    : string;
 }
 
-export type AssignContent_RequestDTO = {
-    folderId?: string;
-    reference?: string;
-    profilesIds : string | string[];
-}
-
-export type UnassignContent_RequestDTO = {
-    folderId?:   string;
-    reference?:  string;
-    profilesIds: string | string[];
-}
-
-export type DuplicateContent_RequestDTO = {
-    contentId :         string,
-    targetGroupId? :   string,
-    targetGroupPath? : string
-}
-
 export type ContentGet_ResponseDTO =        ApiResponse<{content: Content}>;
 export type ContentCreate_ResponseDTO =     ApiResponse;
 export type ContentEdit_ResponseDTO =       ApiResponse;
 export type ContentRemove_ResponseDTO =     ApiResponse;
-export type AssignContent_ResponseDTO =     ApiResponse;
-export type UnassignContent_ResponseDTO =   ApiResponse;
 export type ContentStatusEdit_ResponseDTO = ApiResponse<{ contentStatus: ContentStatus }>;
+export type ContentList_ResponseDTO =  ApiResponse<{ contents: Content[] }>;
 
 export async function getContent(body: ContentId_RequestDTO) {
-    return (await api.post<ContentGet_ResponseDTO>("/capacity/content/get", {
+    return (await api.post<ContentGet_ResponseDTO>("/get", {
         id: body.id,
     })).data;
 }
 
 export async function createContent(body: ContentCreate_RequestDTO) {
-    return (await api.post<ContentCreate_ResponseDTO>("/capacity/content/create", {
+    return (await api.post<ContentCreate_ResponseDTO>("/create", {
         url:                body.url,
         title:              body.title,
         image:              body.image,
@@ -86,7 +69,7 @@ export async function createContent(body: ContentCreate_RequestDTO) {
 }
 
 export async function editContent(body: ContentEdit_RequestDTO) {
-    return (await api.post<ContentEdit_ResponseDTO>("/capacity/content/edit", {
+    return (await api.post<ContentEdit_ResponseDTO>("/edit", {
         id:                    body.id,
         url:                   body.url,
         title:                 body.title,
@@ -102,14 +85,14 @@ export async function editContent(body: ContentEdit_RequestDTO) {
 }
 
 export async function removeContent(body: ContentId_RequestDTO) {
-    return (await api.post<ContentRemove_ResponseDTO>("/capacity/content/delete", {
+    return (await api.post<ContentRemove_ResponseDTO>("/delete", {
         id: body.id,
     })).data;
 }
 
 export async function createContentStatus(body : ContentStatus_RequestDTO){
     return(
-        await api.post<ContentStatus_RequestDTO>("/capacity/content/status" ,{
+        await api.post<ContentStatus_RequestDTO>("/status" ,{
             contentId : body.contentId,
         })
     ).data;
@@ -117,27 +100,13 @@ export async function createContentStatus(body : ContentStatus_RequestDTO){
 
 export async function editContentStatus(body : ContentStatusEdit_RequestDTO){
     return(
-        await api.post<ContentStatusEdit_ResponseDTO>("/capacity/content/status/edit", {
+        await api.post<ContentStatusEdit_ResponseDTO>("/status/edit", {
             contentId : body.contentId,
             contentStatusType : body.contentStatusType,
         })
     ).data;
 }
 
-export async function assignContent(body : AssignContent_RequestDTO){
-    return(
-        await api.post<AssignContent_ResponseDTO>("/capacity/folder/assign", body)
-    ).data;
-}
-
-export async function unassignContent(body: UnassignContent_RequestDTO) {
-    return (await api.post<UnassignContent_ResponseDTO>("/capacity/folder/unassign", {
-        folderId:    body.folderId,
-        reference:   body.reference,
-        profilesIds: body.profilesIds,
-    })).data;
-}
-
-export async function duplicateContent(body : DuplicateContent_RequestDTO){
-    return (await api.post("/capacity/folder/duplicate", body)).data;
+export async function contentList() {
+    return (await api.get<ContentList_ResponseDTO>("/all")).data;
 }

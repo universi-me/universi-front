@@ -1,6 +1,8 @@
 import { ApiResponse } from "@/types/UniversimeApi";
-import { api } from "./api";
+import { createApiInstance } from "./api";
 import { Group } from "@/types/Group";
+
+const api = createApiInstance( "/" )
 
 export type UserSignUp_RequestDTO = {
     firstname: string;

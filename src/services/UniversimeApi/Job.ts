@@ -1,8 +1,8 @@
 import { Job } from "@/types/Job";
 import { ApiResponse } from "@/types/UniversimeApi";
-import { api } from "./api";
+import { createApiInstance } from "./api";
 
-const BASE_PATH = "/job/";
+const api = createApiInstance( "/job" );
 
 export type JobGet_RequestDTO = {
     jobId: string;
@@ -42,26 +42,26 @@ export type JobUpdate_ResponseDTO = ApiResponse<{ job: Job }>;
 export type JobClose_ResponseDTO =  ApiResponse<{ job: Job }>;
 
 export async function get(body: JobGet_RequestDTO) {
-    const res = await api.post<JobGet_ResponseDTO>(BASE_PATH + "get", body);
+    const res = await api.post<JobGet_ResponseDTO>("/get", body);
     return res.data;
 }
 
 export async function list(body: JobList_RequestDTO) {
-    const res = await api.post<JobList_ResponseDTO>(BASE_PATH + "list", body);
+    const res = await api.post<JobList_ResponseDTO>("/list", body);
     return res.data;
 }
 
 export async function create(body: JobCreate_RequestDTO) {
-    const res = await api.post<JobCreate_ResponseDTO>(BASE_PATH + "create", body);
+    const res = await api.post<JobCreate_ResponseDTO>("/create", body);
     return res.data;
 }
 
 export async function update(body: JobUpdate_RequestDTO) {
-    const res = await api.post<JobUpdate_ResponseDTO>(BASE_PATH + "update", body);
+    const res = await api.post<JobUpdate_ResponseDTO>("/update", body);
     return res.data;
 }
 
 export async function close(body: JobClose_RequestDTO) {
-    const res = await api.post<JobClose_ResponseDTO>(BASE_PATH + "close", body);
+    const res = await api.post<JobClose_ResponseDTO>("/close", body);
     return res.data;
 }

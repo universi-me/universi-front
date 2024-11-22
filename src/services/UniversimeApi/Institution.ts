@@ -1,8 +1,8 @@
 import { Institution } from "@/types/Institution";
 import { ApiResponse } from "@/types/UniversimeApi";
-import { api } from "./api";
+import { createApiInstance } from "./api";
 
-const BASE_PATH = "/institution/";
+const api = createApiInstance( "/institution" )
 
 export type InstitutionCreate_RequestDTO = {
     name: string;
@@ -24,21 +24,21 @@ export type InstitutionDelete_ResponseDTO =  ApiResponse;
 
 
 export async function listAll() {
-    const res = await api.post<InstitutionListAll_ResponseDTO>(BASE_PATH + "list", {});
+    const res = await api.post<InstitutionListAll_ResponseDTO>("/list", {});
     return res.data;
 }
 
 export async function create(body: InstitutionCreate_RequestDTO) {
-    const res = await api.post<InstitutionCreate_ResponseDTO>(BASE_PATH + "create", body);
+    const res = await api.post<InstitutionCreate_ResponseDTO>("/create", body);
     return res.data;
 }
 
 export async function edit(body: InstitutionEdit_RequestDTO) {
-    const res = await api.post<InstitutionEdit_ResponseDTO>(BASE_PATH + "edit", body);
+    const res = await api.post<InstitutionEdit_ResponseDTO>("/edit", body);
     return res.data;
 }
 
 export async function remove(body: InstitutionDelete_RequestDTO) {
-    const res = await api.post<InstitutionDelete_ResponseDTO>(BASE_PATH + "delete", body);
+    const res = await api.post<InstitutionDelete_ResponseDTO>("/delete", body);
     return res.data;
 }

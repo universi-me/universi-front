@@ -5,9 +5,11 @@ import type { Profile } from "@/types/Profile";
 import type { Recommendation } from "@/types/Recommendation";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import type { Folder } from "@/types/Capacity";
-import { api } from "./api";
+import { createApiInstance } from "./api";
 import { Education } from "@/types/Education";
 import { Experience } from "@/types/Experience";
+
+const api = createApiInstance( "/profile" )
 
 export type ProfileEdit_RequestDTO = {
     profileId: string;
@@ -41,64 +43,64 @@ export type ProfileRecommendations_ResponseDTO = ApiResponse<{
 export type ProfileFolders_ResponseDTO         = ApiResponse<{ folders: Folder[], favorites: Folder[] }>;
 
 export async function profile() {
-    return (await api.get<ProfileGet_ResponseDTO>('/profile', {})).data
+    return (await api.get<ProfileGet_ResponseDTO>('', {})).data
 }
 
 export async function get(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileGet_ResponseDTO>('/profile/get', {
+    return (await api.post<ProfileGet_ResponseDTO>('/get', {
         profileId: body.profileId,
         username:  body.username,
     })).data
 }
 
 export async function edit(body: ProfileEdit_RequestDTO) {
-    return (await api.post<ProfileEdit_ResponseDTO>('/profile/edit', body)).data
+    return (await api.post<ProfileEdit_ResponseDTO>('/edit', body)).data
 }
 
 export async function groups(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileGroups_ResponseDTO>('/profile/groups', {
+    return (await api.post<ProfileGroups_ResponseDTO>('/groups', {
         profileId: body.profileId,
         username:  body.username,
     })).data
 }
 
 export async function competences(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileCompetences_ResponseDTO>('/profile/competences', {
+    return (await api.post<ProfileCompetences_ResponseDTO>('/competences', {
         profileId: body.profileId,
         username:  body.username,
     })).data
 }
 
 export async function educations(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileEducation_ResponseDTO>('/profile/educations', {
+    return (await api.post<ProfileEducation_ResponseDTO>('/educations', {
         profileId: body.profileId,
         username:  body.username,
     })).data
 }
 
 export async function experiences(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileExperience_ResponseDTO>('/profile/experiences', {
+    return (await api.post<ProfileExperience_ResponseDTO>('/experiences', {
         profileId: body.profileId,
         username:  body.username,
     })).data
 }
 
 export async function links(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileLinks_ResponseDTO>('/profile/links', {
+    return (await api.post<ProfileLinks_ResponseDTO>('/links', {
         profileId: body.profileId,
         username:  body.username,
     })).data
 }
 
 export async function recommendations(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileRecommendations_ResponseDTO>('/profile/recomendations', {
+    return (await api.post<ProfileRecommendations_ResponseDTO>('/recomendations', {
         profileId: body.profileId,
         username:  body.username,
     })).data
 }
 
 export async function folders(body: ProfileFolders_RequestDTO) {
-    return (await api.post<ProfileFolders_ResponseDTO>("/profile/folders", {
+    return (await api.post<ProfileFolders_ResponseDTO>("/folders", {
         profileId: body.profileId,
         username:  body.username,
     })).data;

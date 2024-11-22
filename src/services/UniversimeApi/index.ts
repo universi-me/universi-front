@@ -1,4 +1,3 @@
-import * as api from "./api";
 import * as Auth from "./Auth";
 import * as Competence from "./Competence";
 import * as Education from "./Education";
