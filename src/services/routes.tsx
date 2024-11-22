@@ -1,8 +1,6 @@
-import { QuizPage } from "@/pages/Quiz";
 import { App } from "@/src/App";
 import GroupPage, { GroupPageLoader } from "@/pages/Group";
 import { ProfilePage, ProfilePageLoader } from "@/pages/Profile";
-import { About } from "@/pages/About";
 
 import { createBrowserRouter } from 'react-router-dom';
 import Singin from "@/pages/singin/Singin";
@@ -32,14 +30,6 @@ export const router = createBrowserRouter([{
     {
       path: "/",
       element: <Homepage />
-    },
-    {
-      path: "/quiz/:id",
-      element: <QuizPage />
-    },
-    {
-      path: "/sobre",
-      element: <About />
     },
     { path: "/profile/:id", element: <ProfilePage />, loader: ProfilePageLoader },
     { path: "/manage-profile", element: <ManageProfilePage />, loader: ManageProfileLoader },
