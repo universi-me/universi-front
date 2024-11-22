@@ -1,8 +1,10 @@
 import { Roles } from "@/types/Roles";
 import { ApiResponse } from "@/types/UniversimeApi";
-import { api } from "./api";
+import { createApiInstance } from "./api";
 import UniversimeApi from "@/services/UniversimeApi";
 import { Profile } from "@/types/Profile";
+
+const api = createApiInstance( "/roles" )
 
 export type RolesCreate_RequestDTO = {
     groupId:        string;
@@ -49,13 +51,13 @@ export type RolesAssign_ResponseDTO = ApiResponse;
 export type RolesAssigned_ResponseDTO = ApiResponse<{ roles: Roles }>;
 
 export async function get(body:RolesGet_RequestDTO) {
-    return (await api.post<RolesGet_ResponseDTO>("/roles/get", {
+    return (await api.post<RolesGet_ResponseDTO>("/get", {
         id:                 body.id,
     })).data;
 }
 
 export async function create(body:RolesCreate_RequestDTO) {
-    return (await api.post<RolesCreate_ResponseDTO>("/roles/create", {
+    return (await api.post<RolesCreate_ResponseDTO>("/create", {
         groupId:            body.groupId,
         name:               body.name,
         description:        body.description,
@@ -63,7 +65,7 @@ export async function create(body:RolesCreate_RequestDTO) {
 }
 
 export async function edit(body: RolesEdit_RequestDTO) {
-    return (await api.post<RolesEdit_ResponseDTO>("/roles/edit", {
+    return (await api.post<RolesEdit_ResponseDTO>("/edit", {
         rolesId:            body.rolesId,
         name:               body.name,
         description:        body.description,
@@ -71,19 +73,19 @@ export async function edit(body: RolesEdit_RequestDTO) {
 }
 
 export async function remove(body:  RolesRemove_RequestDTO) {
-    return (await api.post<RolesRemove_ResponseDTO>("/roles/remove", {
+    return (await api.post<RolesRemove_ResponseDTO>("/remove", {
         rolesId:            body.rolesId,
     })).data;
 }
 
 export async function list(body: RolesList_RequestDTO) {
-    return (await api.post<RolesList_ResponseDTO>("/roles/list", {
+    return (await api.post<RolesList_ResponseDTO>("/list", {
         groupId:             body.groupId
     })).data
 }
 
 export async function listParticipants(body: RolesList_RequestDTO) {
-    return (await api.post<RolesParticipantsList_ResponseDTO>("/roles/participants/list", {
+    return (await api.post<RolesParticipantsList_ResponseDTO>("/participants/list", {
         groupId:             body.groupId
     })).data
 }
@@ -91,7 +93,7 @@ export async function listParticipants(body: RolesList_RequestDTO) {
 
 
 export async function assign(body:  RolesAssign_RequestDTO) {
-    return (await api.post<RolesAssign_ResponseDTO>("/roles/assign", {
+    return (await api.post<RolesAssign_ResponseDTO>("/assign", {
         rolesId:                 body.rolesId,
         groupId:                 body.groupId,
         profileId:               body.profileId
@@ -99,7 +101,7 @@ export async function assign(body:  RolesAssign_RequestDTO) {
 }
 
 export async function assigned(body:  RolesAssigned_RequestDTO) {
-    return (await api.post<RolesAssigned_ResponseDTO>("/roles/assigned", {
+    return (await api.post<RolesAssigned_ResponseDTO>("/assigned", {
         groupId:                 body.groupId,
         profileId:               body.profileId
     })).data;

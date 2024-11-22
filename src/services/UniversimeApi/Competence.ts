@@ -1,6 +1,8 @@
 import type { Competence, CompetenceType } from "@/types/Competence";
 import type { ApiResponse } from "@/types/UniversimeApi";
-import { api } from "./api";
+import { createApiInstance } from "./api";
+
+const api = createApiInstance( "/competencia" )
 
 export type CompetenceCreate_RequestDTO = {
     competenceTypeId: string;
@@ -26,13 +28,13 @@ export type CompetenceRemove_ResponseDTO = ApiResponse;
 export type CompetenceList_ResponseDTO =   ApiResponse<{ lista: Competence[] }>;
 
 export async function get(body: CompetenceId_RequestDTO) {
-    return (await api.post<CompetenceGet_ResponseDTO>("/competencia/obter", {
+    return (await api.post<CompetenceGet_ResponseDTO>("/obter", {
         competenciaId: body.competenceId,
     })).data;
 }
 
 export async function create(body: CompetenceCreate_RequestDTO) {
-    return (await api.post<CompetenceCreate_ResponseDTO>("/competencia/criar", {
+    return (await api.post<CompetenceCreate_ResponseDTO>("/criar", {
         competenciatipoId: body.competenceTypeId,
         descricao:         body.description,
         nivel:             body.level,
@@ -40,7 +42,7 @@ export async function create(body: CompetenceCreate_RequestDTO) {
 }
 
 export async function update(body: CompetenceUpdate_RequestDTO) {
-    return (await api.post<CompetenceUpdate_ResponseDTO>("/competencia/atualizar", {
+    return (await api.post<CompetenceUpdate_ResponseDTO>("/atualizar", {
         competenciaId:     body.competenceId,
         competenciaTipoId: body.competenceTypeId,
         descricao:         body.description,
@@ -49,11 +51,11 @@ export async function update(body: CompetenceUpdate_RequestDTO) {
 }
 
 export async function remove(body: CompetenceId_RequestDTO) {
-    return (await api.post<CompetenceRemove_ResponseDTO>("/competencia/remover", {
+    return (await api.post<CompetenceRemove_ResponseDTO>("/remover", {
         competenciaId: body.competenceId,
     })).data;
 }
 
 export async function list() {
-    return (await api.post<CompetenceList_ResponseDTO>('/competencia/listar', {})).data
+    return (await api.post<CompetenceList_ResponseDTO>('/listar', {})).data
 }

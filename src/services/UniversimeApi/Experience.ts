@@ -1,6 +1,8 @@
 import { Experience } from "@/types/Experience";
 import { ApiResponse } from "@/types/UniversimeApi";
-import { api } from "./api";
+import { createApiInstance } from "./api";
+
+const api = createApiInstance( "/curriculum/experience" )
 
 export type ExperienceCreate_RequestDTO = {
     typeExperienceId:   string;
@@ -33,25 +35,25 @@ export type ExperienceList_ResponseDTO = ApiResponse<{ lista: Experience[] }>;
 
 
 export async function get(body:ExperienceId_RequestDTO) {
-    return (await api.post<ExperienceCreate_ResponseDTO>("/curriculum/experience/obter", {
+    return (await api.post<ExperienceCreate_ResponseDTO>("/obter", {
         profileExperienceId: body.profileExperienceId,
     })).data;
 }
 
 export async function create(body:ExperienceCreate_RequestDTO) {
-    return (await api.post<ExperienceCreate_ResponseDTO>("/curriculum/experience/criar", body)).data;
+    return (await api.post<ExperienceCreate_ResponseDTO>("/criar", body)).data;
 }
 
 export async function update(body: ExperienceUpdate_RequestDTO) {
-    return (await api.post<ExperienceCreate_ResponseDTO>("/curriculum/experience/atualizar", body)).data;
+    return (await api.post<ExperienceCreate_ResponseDTO>("/atualizar", body)).data;
 }
 
 export async function remove(body:  ExperienceId_RequestDTO) {
-    return (await api.post<ExperienceRemove_ResponseDTO>("/curriculum/experience/remover", {
+    return (await api.post<ExperienceRemove_ResponseDTO>("/remover", {
         profileExperienceId:            body.profileExperienceId,
     })).data;
 }
 
 export async function list() {
-    return (await api.post<ExperienceList_ResponseDTO>('/curriculum/experience/listar', {})).data
+    return (await api.post<ExperienceList_ResponseDTO>('/listar', {})).data
 }

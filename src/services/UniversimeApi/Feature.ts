@@ -1,6 +1,8 @@
 
 import { ApiResponse } from "@/types/UniversimeApi";
-import { api } from "./api";
+import { createApiInstance } from "./api";
+
+const api = createApiInstance( "/roles/feature" )
 
 export type FeatureToggle_RequestDTO = {
     rolesId?:        string | undefined;
@@ -11,7 +13,7 @@ export type FeatureToggle_RequestDTO = {
 export type FeatureToggle_ResponseDTO = ApiResponse;
 
 export async function toggle(body:  FeatureToggle_RequestDTO) {
-    return (await api.post<FeatureToggle_ResponseDTO>("/roles/feature/toggle", {
+    return (await api.post<FeatureToggle_ResponseDTO>("/toggle", {
         rolesId:            body.rolesId,
         feature:            body.feature,
         value:              body.value,

@@ -126,7 +126,7 @@ export function CompetenceTypeEditor(props: Readonly<CompetenceTypeEditorProps>)
         if (!response.isConfirmed)
             return;
 
-        await UniversimeApi.CompetenceType.remove({ id: ct.id });
+        await UniversimeApi.Admin.removeCompetenceType({ id: ct.id });
         await refreshCompetenceTypes();
     }
 }

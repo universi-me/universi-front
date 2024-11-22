@@ -126,7 +126,7 @@ export function CompetencesSettingsPage() {
 
         const { remainingCompetenceTypeId } = props;
 
-        await UniversimeApi.CompetenceType.merge({
+        await UniversimeApi.Admin.mergeCompetenceType({
             remainingCompetenceTypeId,
             removedCompetenceTypeId: mergeCompetence.id
         });

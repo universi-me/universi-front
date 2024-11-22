@@ -1,6 +1,8 @@
 import type { Category, Content, Folder } from "@/types/Capacity";
 import type { ApiResponse } from "@/types/UniversimeApi";
-import { api } from "../api";
+import { createApiInstance } from "../api";
+
+const api = createApiInstance( "/capacity/category" )
 
 export type CategoryId_RequestDTO = {
     id: string;
@@ -23,22 +25,23 @@ export type CategoryEdit_ResponseDTO =           ApiResponse;
 export type CategoryRemove_ResponseDTO =         ApiResponse;
 export type ListContentsInCategory_ResponseDTO = ApiResponse<{ contents: Content[] }>;
 export type ListFoldersInCategory_ResponseDTO  = ApiResponse<{ folders: Folder[] }>;
+export type CategoryList_ResponseDTO = ApiResponse<{ categories: Category[] }>;
 
 export async function getCategory(body: CategoryId_RequestDTO) {
-    return (await api.post<CategoryGet_ResponseDTO>("/capacity/category/get", {
+    return (await api.post<CategoryGet_ResponseDTO>("/get", {
         id: body.id,
     })).data;
 }
 
 export async function createCategory(body: CategoryCreate_RequestDTO) {
-    return (await api.post<CategoryCreate_ResponseDTO>("/capacity/category/create", {
+    return (await api.post<CategoryCreate_ResponseDTO>("/create", {
         name:  body.name,
         image: body.image,
     })).data;
 }
 
 export async function editCategory(body: CategoryEdit_RequestDTO) {
-    return (await api.post<CategoryEdit_ResponseDTO>("/capacity/category/edit", {
+    return (await api.post<CategoryEdit_ResponseDTO>("/edit", {
         id:    body.id,
         name:  body.name,
         image: body.image,
@@ -46,19 +49,23 @@ export async function editCategory(body: CategoryEdit_RequestDTO) {
 }
 
 export async function removeCategory(body: CategoryId_RequestDTO) {
-    return (await api.post<CategoryRemove_ResponseDTO>("/capacity/category/delete", {
+    return (await api.post<CategoryRemove_ResponseDTO>("/delete", {
         id: body.id,
     })).data;
 }
 
 export async function contentsInCategory(body: CategoryId_RequestDTO) {
-    return (await api.post<ListContentsInCategory_ResponseDTO>("/capacity/category/contents", {
+    return (await api.post<ListContentsInCategory_ResponseDTO>("/contents", {
         id: body.id,
     })).data;
 }
 
 export async function foldersInCategory(body: CategoryId_RequestDTO) {
-    return (await api.post<ListFoldersInCategory_ResponseDTO>("/capacity/category/folders", {
+    return (await api.post<ListFoldersInCategory_ResponseDTO>("/folders", {
         id: body.id,
     })).data;
+}
+
+export async function categoryList() {
+    return (await api.get<CategoryList_ResponseDTO>("/all")).data;
 }

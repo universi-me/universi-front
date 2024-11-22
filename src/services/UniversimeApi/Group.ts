@@ -1,9 +1,10 @@
-import type { Group, GroupType, GroupEmailFilter, GroupEmailFilterType, GroupTheme } from "@/types/Group";
+import type { Group, GroupType, GroupEmailFilter, GroupEmailFilterType } from "@/types/Group";
 import type { Profile } from "@/types/Profile";
 import type { ApiResponse } from "@/types/UniversimeApi";
-import { api } from "./api";
+import { createApiInstance } from "./api";
 import { Folder } from "@/types/Capacity";
-import { profile } from "./Profile";
+
+const api = createApiInstance( "/group" )
 
 export type GroupId_RequestDTO = {
     groupId: string;
@@ -114,14 +115,14 @@ export type GroupThemeEdit_ResponseDTO =                 ApiResponse;
 
 
 export async function get(body: GroupIdOrPath_RequestDTO) {
-    return (await api.post<GroupGet_ResponseDTO>('/group/get', {
+    return (await api.post<GroupGet_ResponseDTO>('/get', {
         groupId:   body.groupId,
         groupPath: body.groupPath,
     })).data;
 }
 
 export async function create(body: GroupCreate_RequestDTO) {
-    return (await api.post<GroupCreate_ResponseDTO>("/group/create", {
+    return (await api.post<GroupCreate_ResponseDTO>("/create", {
         groupRoot:      body.isRootGroup,
         groupId:        body.parentGroupId,
         nickname:       body.nickname,
@@ -138,7 +139,7 @@ export async function create(body: GroupCreate_RequestDTO) {
 }
 
 export async function update(body: GroupUpdate_RequestDTO) {
-    return (await api.post<GroupUpdate_ResponseDTO>("/group/update", {
+    return (await api.post<GroupUpdate_ResponseDTO>("/update", {
         groupId:         body.groupId,
         groupPath:       body.groupPath,
         name:            body.name,
@@ -155,46 +156,46 @@ export async function update(body: GroupUpdate_RequestDTO) {
 }
 
 export async function remove(body: GroupRemove_RequestDTO) {
-    return (await api.post("/group/remove", body))
+    return (await api.post("/remove", body))
 }
 
 export async function availableParents() {
-    return (await api.post<GroupAvailableParents_ResponseDTO>("/group/parents", {})).data;
+    return (await api.post<GroupAvailableParents_ResponseDTO>("/parents", {})).data;
 }
 
 export async function subgroups(body: GroupId_RequestDTO) {
-    return (await api.post<GroupSubgroups_ResponseDTO>('/group/list', {
+    return (await api.post<GroupSubgroups_ResponseDTO>('/list', {
         groupId: body.groupId,
     })).data;
 }
 
 export async function participants(body: GroupId_RequestDTO) {
-    return (await api.post<GroupParticipants_ResponseDTO>('/group/participant/list', {
+    return (await api.post<GroupParticipants_ResponseDTO>('/participant/list', {
         groupId: body.groupId,
     })).data;
 }
 
 export async function join(body: GroupId_RequestDTO) {
-    return (await api.post<GroupJoin_ResponseDTO>('/group/participant/enter', {
+    return (await api.post<GroupJoin_ResponseDTO>('/participant/enter', {
         groupId: body.groupId,
     })).data;
 }
 
 export async function exit(body: GroupId_RequestDTO) {
-    return (await api.post<GroupExit_ResponseDTO>('/group/participant/exit', {
+    return (await api.post<GroupExit_ResponseDTO>('/participant/exit', {
         groupId: body.groupId,
     })).data;
 }
 
 export async function folders(body: GroupIdOrPath_RequestDTO) {
-    return (await api.post<GroupFolders_ResponseDTO>("/group/folders", {
+    return (await api.post<GroupFolders_ResponseDTO>("/folders", {
         groupId: body.groupId,
         groupPath: body.groupPath,
     })).data;
 }
 
 export async function addEmailFilter(body: GroupEmailFilterAdd_RequestDTO) {
-    return (await api.post<GroupEmailFilterAdd_ResponseDTO>("/group/settings/email-filter/add", {
+    return (await api.post<GroupEmailFilterAdd_ResponseDTO>("/settings/email-filter/add", {
         groupId: body.groupId,
         groupPath: body.groupPath,
         email: body.email,
@@ -204,7 +205,7 @@ export async function addEmailFilter(body: GroupEmailFilterAdd_RequestDTO) {
 }
 
 export async function editEmailFilter(body: GroupEmailFilterEdit_RequestDTO) {
-    return (await api.post<GroupEmailFilterEdit_ResponseDTO>("/group/settings/email-filter/edit", {
+    return (await api.post<GroupEmailFilterEdit_ResponseDTO>("/settings/email-filter/edit", {
         groupId: body.groupId,
         groupPath: body.groupPath,
         groupEmailFilterId: body.emailFilterId,
@@ -215,7 +216,7 @@ export async function editEmailFilter(body: GroupEmailFilterEdit_RequestDTO) {
 }
 
 export async function deleteEmailFilter(body: GroupEmailFilterDelete_RequestDTO) {
-    return (await api.post<GroupEmailFilterDelete_ResponseDTO>("/group/settings/email-filter/delete", {
+    return (await api.post<GroupEmailFilterDelete_ResponseDTO>("/settings/email-filter/delete", {
         groupId: body.groupId,
         groupPath: body.groupPath,
         groupEmailFilterId: body.emailFilterId,
@@ -223,14 +224,14 @@ export async function deleteEmailFilter(body: GroupEmailFilterDelete_RequestDTO)
 }
 
 export async function listEmailFilter(body: GroupIdOrPath_RequestDTO) {
-    return (await api.post<GroupEmailFilterList_ResponseDTO>("/group/settings/email-filter/list", {
+    return (await api.post<GroupEmailFilterList_ResponseDTO>("/settings/email-filter/list", {
         groupId: body.groupId,
         groupPath: body.groupPath,
     })).data;
 }
 
 export async function editTheme(body: GroupThemeEdit_RequestDTO) {
-    return (await api.post<GroupThemeEdit_ResponseDTO>('/group/settings/theme/edit', {
+    return (await api.post<GroupThemeEdit_ResponseDTO>('/settings/theme/edit', {
         groupId:                    body.groupId,
         groupPath:                  body.groupPath,
 
@@ -252,17 +253,17 @@ export async function editTheme(body: GroupThemeEdit_RequestDTO) {
 }
 
 export async function editEnvironments(body: {}) {
-    return (await api.post<ApiResponse>("/group/settings/environments/edit", body)).data;
+    return (await api.post<ApiResponse>("/settings/environments/edit", body)).data;
 }
 
 export async function listEnvironments(body: {}) {
-    return (await api.post<ApiResponse>("/group/settings/environments/list", body)).data;
+    return (await api.post<ApiResponse>("/settings/environments/list", body)).data;
 }
 
 export async function filterParticipants(body : FilterParticipants_RequestDTO) {
-    return (await api.post<GroupFilteredParticipants_ResponseDTO>("/group/participant/filter", body)) 
+    return (await api.post<GroupFilteredParticipants_ResponseDTO>("/participant/filter", body)) 
 }
 
 export async function listCompetences(body: GroupIdOrPath_RequestDTO){
-    return (await api.post<GroupCompetencesList_ResponseDTO>("/group/participant/competences", body)).data
+    return (await api.post<GroupCompetencesList_ResponseDTO>("/participant/competences", body)).data
 }

@@ -4,24 +4,31 @@ import axios from "axios";
 import { goTo } from "@/configs/routes";
 import { LOGIN_REDIRECT_PARAM } from "@/pages/singin/Singin";
 
-export const api = axios.create({
-    baseURL: import.meta.env.VITE_UNIVERSIME_API,
-    withCredentials: true,
-});
+const baseApiUrl = import.meta.env.VITE_UNIVERSIME_API;
 
-api.interceptors.response.use(function (response) {
-    if(response.data) {
-        handleForResponseData(response.data, false, false)
-    }
-    return response;
-}, function (error) {
-    if(error.response && error.response.data) {
-        handleForResponseData(error.response.data, true, true)
-    }
-    return error.response;
-});
+export function createApiInstance( path: string ) {
+    const api = axios.create({
+        baseURL: `${baseApiUrl}${path}`,
+        withCredentials: true,
+    });
 
-export const handleForResponseData = (response: ApiResponse<any>, isModalAsDefault: boolean, isError: boolean) => {
+    api.interceptors.response.use( response => {
+        if ( response.data )
+            handleForResponseData( response.data, false, false );
+
+        return response;
+    }, error => {
+        if ( error?.response?.data )
+            handleForResponseData( error.response.data, true, true );
+
+        return error?.response;
+    } );
+
+    return api;
+}
+
+
+function handleForResponseData( response: ApiResponse<any>, isModalAsDefault: boolean, isError: boolean ) {
     // handle redirect
     if(response.redirectTo) {
         let redirectUrl = response.redirectTo;
@@ -49,7 +56,7 @@ export const handleForResponseData = (response: ApiResponse<any>, isModalAsDefau
             alertOptions.timer = 3000;
             alertOptions.timerProgressBar = true;
         }
-        
+
         // control of alerts from API
         const alertOptionsToOverride = response.alertOptions ?? {};
         Object.keys(alertOptionsToOverride).map((key : any) => (

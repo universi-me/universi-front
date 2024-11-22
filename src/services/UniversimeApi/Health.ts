@@ -1,6 +1,8 @@
-import { api } from "./api";
+import { createApiInstance } from "./api";
 import { HealthResponseDTO, ServiceId, SERVICES_AVAILABLE } from "@/types/Health";
 import { ApiResponse } from "@/types/UniversimeApi";
+
+const api = createApiInstance( "/health" )
 
 const HEALTH_CHECK_TIMEOUT_MS = 60_000;
 
@@ -10,7 +12,7 @@ export type CheckHealthAll_ResponseDTO = ApiResponse<{ status: { [k in ServiceId
 export async function checkHealth( service: ServiceId ) {
     const { endpoint } = SERVICES_AVAILABLE[service];
 
-    const res = await api.get<CheckHealth_ResponseDTO>("/health/" + endpoint, {
+    const res = await api.get<CheckHealth_ResponseDTO>("/" + endpoint, {
         timeout: HEALTH_CHECK_TIMEOUT_MS,
     }).catch(err => ({data: failToReach(service)}));
 
@@ -20,7 +22,7 @@ export async function checkHealth( service: ServiceId ) {
 }
 
 export async function checkHealthAll() {
-    const res = await api.get<CheckHealthAll_ResponseDTO>("/health/all", {
+    const res = await api.get<CheckHealthAll_ResponseDTO>("/all", {
         timeout: HEALTH_CHECK_TIMEOUT_MS,
     }).catch( err => ({ data: failToReach("ALL" as ServiceId) }) );
 

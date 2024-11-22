@@ -1,4 +1,4 @@
 export * from "./Content";
 export * from "./Category";
-export * from "./Lists";
+export * from "./ContentTypes";
 export * from "./Folder";

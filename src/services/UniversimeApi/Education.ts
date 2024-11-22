@@ -1,6 +1,8 @@
 import type { Education } from "@/types/Education";
 import type { ApiResponse } from "@/types/UniversimeApi";
-import { api } from "./api";
+import { createApiInstance } from "./api";
+
+const api = createApiInstance( "/curriculum/education" )
 
 export type EducationCreate_RequestDTO = {
     typeEducationId:    string;
@@ -30,13 +32,13 @@ export type EducationRemove_ResponseDTO = ApiResponse;
 export type EducationList_ResponseDTO = ApiResponse<{ lista: Education[] }>;
 
 export async function get(body:EducationId_RequestDTO) {
-    return (await api.post<EducationCreate_ResponseDTO>("/curriculum/education/obter", {
+    return (await api.post<EducationCreate_ResponseDTO>("/obter", {
         educationId: body.educationId,
     })).data;
 }
 
 export async function create(body:EducationCreate_RequestDTO) {
-    return (await api.post<EducationCreate_ResponseDTO>("/curriculum/education/criar", {
+    return (await api.post<EducationCreate_ResponseDTO>("/criar", {
         typeEducationId: body.typeEducationId,
         institutionId:   body.institutionId,
         startDate:       body.startDate,
@@ -46,7 +48,7 @@ export async function create(body:EducationCreate_RequestDTO) {
 }
 
 export async function update(body: EducationUpdate_RequestDTO) {
-    return (await api.post<EducationUpdate_ResponseDTO>(`/curriculum/education/atualizar`, {
+    return (await api.post<EducationUpdate_ResponseDTO>(`/atualizar`, {
         educationId:     body.educationId,
         typeEducationId: body.typeEducationId,
         institutionId:   body.institutionId,
@@ -57,11 +59,11 @@ export async function update(body: EducationUpdate_RequestDTO) {
 }
 
 export async function remove(body:  EducationId_RequestDTO) {
-    return (await api.post<EducationRemove_ResponseDTO>("/curriculum/education/remover", {
+    return (await api.post<EducationRemove_ResponseDTO>("/remover", {
         educationId: body.educationId,
     })).data;
 }
 
 export async function list() {
-    return (await api.post<EducationList_ResponseDTO>('/curriculum/education/listar', {})).data
+    return (await api.post<EducationList_ResponseDTO>('/listar', {})).data
 }
