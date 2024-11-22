@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [profileLinks, setProfileLinks] = useState<Link[]>([]);
     const [profileGroups, setProfileGroups] = useState<Group[]>([]);
     const [organization, setOrganization] = useState<Possibly<Group>>();
-    const [finishedLogin, setFinishedLogin] = useState<boolean>(false);
     const [isHealthy, setIsHealthy] = useState<boolean>();
     const user = profile?.user ?? null;
 
@@ -60,41 +59,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         if (!response.success || response.body === undefined) {
             goTo("login");
-            setFinishedLogin(true);
             return null;
         }
 
-        setFinishedLogin(false);
-        const logged = await updateLoggedUser();
-        setFinishedLogin(true);
-        return logged;
+        return await updateLoggedUser();
     }
 
     async function signinGoogle() {
-        setFinishedLogin(false);
         const profile = await updateLoggedUser();
 
         if (profile === null) {
             goTo("login");
         }
 
-        setFinishedLogin(true);
         return profile;
     };
 
     async function signout() {
-        setFinishedLogin(false);
-
         await UniversimeApi.Auth.logout();
         await updateLoggedUser();
 
         goTo("");
-
-        setFinishedLogin(true);
     };
 
     async function updateLoggedUser() {
-        setFinishedLogin(false);
         let profile: Nullable<ProfileClass> = null;
         const organization = await updateOrganization();
 
@@ -109,7 +97,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setProfile(profile);
         }
 
-        setFinishedLogin(true);
         return profile;
     }
 
