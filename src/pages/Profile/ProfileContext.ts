@@ -4,7 +4,6 @@ import type { Group } from "@/types/Group";
 import type { Competence, CompetenceProfileDTO, CompetenceType } from "@/types/Competence";
 import type { Recommendation } from "@/types/Recommendation";
 import type { Link } from "@/types/Link";
-import type { Achievements } from "@/types/Achievements";
 import type { Folder, FolderProfile } from "@/types/Capacity";
 import { Education } from "@/types/Education";
 import { Experience, TypeExperience } from "@/types/Experience";
@@ -37,7 +36,6 @@ export type ProfileContextType = null | {
         links:                   Link[];
         recommendationsSend:     Recommendation[];
         recommendationsReceived: Recommendation[];
-        achievements:            Achievements[];
         folders:                 Folder[];
         favorites:               Folder[];
         assignedByMe:            FolderProfile[];

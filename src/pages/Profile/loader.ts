@@ -1,5 +1,4 @@
 import UniversimeApi from "@/services/UniversimeApi";
-import type { Achievements } from "@/types/Achievements";
 import type { Folder, FolderProfile } from "@/types/Capacity";
 import type { CompetenceProfileDTO, CompetenceType } from "@/types/Competence";
 import { Education } from "@/types/Education";
@@ -29,7 +28,6 @@ export type ProfilePageLoaderResponse = {
         links:                   Link[];
         recommendationsSend:     Recommendation[];
         recommendationsReceived: Recommendation[];
-        achievements:            Achievements[];
         folders:                 Folder[];
         favorites:               Folder[];
         assignedByMe:            FolderProfile[];
@@ -73,7 +71,6 @@ export async function fetchProfilePageData(username: string | undefined): Promis
         allInstitution: fetchInstitutions.body?.list ?? [],
 
         profileListData: {
-            achievements: [], // todo: fetch achievements,
             competences: fetchCompetences.body?.competences ?? [],
             education: fetchEducations.body?.educations ?? [],
             experience: fetchExperiences.body?.experiences ?? [],
@@ -109,7 +106,6 @@ const FAILED_TO_LOAD: ProfilePageLoaderResponse = {
     allTypeExperience: [],
     allInstitution: [],
     profileListData: {
-        achievements: [],
         competences: [],
         education: [],
         experience: [],
