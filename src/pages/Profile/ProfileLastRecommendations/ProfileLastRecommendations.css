@@ -1,0 +1,108 @@
+#profile-page #right-side .last-recommendations {
+    margin-top: 1.5em;
+}
+
+#profile-page #right-side .heading {
+    margin-right: auto;
+    margin-bottom: .5em;
+
+    color: var(--secondary-color);
+    font-size: 1.25em;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+}
+
+#profile-page #right-side .list .recommendation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding: 2.8em;
+    padding-left: 2em;
+    padding-right: 3.8em;
+
+    border-radius: 20px;
+    background-color: var(--card-background-color);
+}
+
+#profile-page #right-side .list .recommendation:not(:last-of-type) {
+    margin-bottom: 1em;
+}
+
+#profile-page #right-side .list .recommendation .image {
+    margin-right: 1em;
+    width: 4.5em;
+}
+
+#profile-page #right-side .list .recommendation .user-name {
+    color: var(--font-color-v2);
+    font-size: 1.25em;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+#profile-page #right-side .list .recommendation .recommended-by {
+    font-size: 1.125em;
+    color: var(--font-color-v2);
+    font-weight: var(--font-weight-default);
+    width: max-content;
+}
+
+#profile-page #right-side .list .recommendation .competence-name {
+    color: var(--font-color-v2);
+    font-size: 1.125em;
+    font-weight: var(--font-weight-semibold);
+}
+
+#profile-page #right-side .list .recommendation .quote-box {
+    margin-left: auto;
+    max-width: 40%;
+    min-width: min-content;
+}
+
+#profile-page #right-side .list .recommendation .quote {
+    color: var(--font-color-v2);
+    font-size: .875em;
+    font-weight: var(--font-weight-default);
+}
+
+#profile-page #right-side .list .recommendation .icon {
+    display: flex;
+    margin-left: auto;
+
+    height: 1.8em;
+    translate: 0 -1em;
+}
+
+#profile-page #right-side .empty-recommendations {
+    font-style: italic;
+    width: 100%;
+    text-align: center;
+}
+
+#profile-page #right-side .show-more {
+    display: flex;
+
+    margin-left: auto;
+    margin-top: 1.75em;
+
+    background: none;
+    padding: .5em 11.5em;
+    border-radius: 10px;
+    border: 2px solid var(--primary-color);
+
+    color: var(--primary-color);
+    font-size: 0.875em;
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition: var(--hover-transition-duration) background-color, color;
+}
+
+#profile-page #right-side .show-more:hover {
+    background: var(--primary-color);
+    color: var(--font-color-v1);
+}
