@@ -2,7 +2,6 @@ import type { CompetenceProfileDTO } from "@/types/Competence";
 import type { Group } from "@/types/Group";
 import type { Link } from "@/types/Link";
 import type { Profile } from "@/types/Profile";
-import type { Recommendation } from "@/types/Recommendation";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import type { Folder } from "@/types/Capacity";
 import { createApiInstance } from "./api";
@@ -36,10 +35,6 @@ export type ProfileCompetences_ResponseDTO =     ApiResponse<{ competences: Comp
 export type ProfileEducation_ResponseDTO =     ApiResponse<{ educations: Education[] }>;
 export type ProfileExperience_ResponseDTO =     ApiResponse<{ experiences: Experience[] }>;
 export type ProfileLinks_ResponseDTO =           ApiResponse<{ links: Link[] }>;
-export type ProfileRecommendations_ResponseDTO = ApiResponse<{
-    recomendationsSend: Recommendation[];
-    recomendationsReceived: Recommendation[]
-}>;
 export type ProfileFolders_ResponseDTO         = ApiResponse<{ folders: Folder[], favorites: Folder[] }>;
 
 export async function profile() {
@@ -87,13 +82,6 @@ export async function experiences(body: ProfileIdAndUsername_RequestDTO) {
 
 export async function links(body: ProfileIdAndUsername_RequestDTO) {
     return (await api.post<ProfileLinks_ResponseDTO>('/links', {
-        profileId: body.profileId,
-        username:  body.username,
-    })).data
-}
-
-export async function recommendations(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileRecommendations_ResponseDTO>('/recomendations', {
         profileId: body.profileId,
         username:  body.username,
     })).data

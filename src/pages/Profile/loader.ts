@@ -7,7 +7,6 @@ import type { Group } from "@/types/Group";
 import { Institution } from "@/types/Institution";
 import type { Link } from "@/types/Link";
 import type { Profile } from "@/types/Profile";
-import type { Recommendation } from "@/types/Recommendation";
 import { TypeEducation } from "@/types/TypeEducation";
 import { removeFalsy } from "@/utils/arrayUtils";
 import type { LoaderFunctionArgs } from "react-router-dom";
@@ -26,8 +25,6 @@ export type ProfilePageLoaderResponse = {
         education:               Education[];
         experience:              Experience[];
         links:                   Link[];
-        recommendationsSend:     Recommendation[];
-        recommendationsReceived: Recommendation[];
         folders:                 Folder[];
         favorites:               Folder[];
         assignedByMe:            FolderProfile[];
@@ -51,11 +48,10 @@ export async function fetchProfilePageData(username: string | undefined): Promis
 
     const isOwnProfile = fetchProfile.body.profile.user.ownerOfSession;
 
-    const [fetchGroups, fetchCompetences, fetchLinks, fetchRecommendations, fetchFolders, fetchEducations, fetchExperiences, fetchAssignedByMe] = await Promise.all([
+    const [fetchGroups, fetchCompetences, fetchLinks, fetchFolders, fetchEducations, fetchExperiences, fetchAssignedByMe] = await Promise.all([
         UniversimeApi.Profile.groups({username}),
         UniversimeApi.Profile.competences({username}),
         UniversimeApi.Profile.links({username}),
-        UniversimeApi.Profile.recommendations({username}),
         UniversimeApi.Profile.folders({username}),
         UniversimeApi.Profile.educations({username}),
         UniversimeApi.Profile.experiences({username}),
@@ -86,8 +82,6 @@ export async function fetchProfilePageData(username: string | undefined): Promis
                 }
             }) ?? [],
             links: fetchLinks.body?.links ?? [],
-            recommendationsReceived: fetchRecommendations.body?.recomendationsReceived ?? [],
-            recommendationsSend: fetchRecommendations.body?.recomendationsSend ?? [],
             assignedByMe: fetchAssignedByMe?.body?.folders ?? [],
         },
     };
@@ -113,8 +107,6 @@ const FAILED_TO_LOAD: ProfilePageLoaderResponse = {
         favorites: [],
         groups: [],
         links: [],
-        recommendationsReceived: [],
-        recommendationsSend: [],
         assignedByMe: [],
     },
 };
