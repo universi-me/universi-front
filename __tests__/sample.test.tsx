@@ -7,7 +7,6 @@ describe("sample tests used as examples", () => {
 
     test("import type from src", () => {
       const q: Question = {
-        feedback_id: 0,
         id: 1,
         title: "example",
         user_create_id: 0
