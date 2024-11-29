@@ -2,7 +2,7 @@ import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 
 import {
-    ProfileRecommendSettingsButton, ProfileContext,
+    ProfileContext,
     type ProfileContextType, type ProfilePageLoaderResponse, fetchProfilePageData
 } from '@/pages/Profile';
 import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
@@ -44,7 +44,6 @@ export function ProfilePage() {
                 links={profileContext.profileListData.links} organization={auth.organization}
             >
                 <SelectionBar/>
-                <ProfileRecommendSettingsButton />
             </ProfileInfo>
         </div>
         </ProfileContext.Provider>
