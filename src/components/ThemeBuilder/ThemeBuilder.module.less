@@ -1,0 +1,35 @@
+@colorPickerWidth: 250px;
+
+.themeBuilder {
+    width: 100%;
+
+    fieldset {
+        width: 100%;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        border: none;
+
+        &:not(:last-of-type) {
+            @gap: 1rem;
+            padding-bottom: @gap;
+            border-bottom: 1px solid gray;
+            margin-bottom: @gap;
+        }
+
+        .colorInfo {
+            width: calc(100% - @colorPickerWidth - 2em);
+        
+            p {
+                margin-top: 1em;
+            }
+        }
+        
+        .colorPicker {
+            height: 150px;
+            width: @colorPickerWidth;
+        }
+    }
+}

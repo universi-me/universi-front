@@ -1,0 +1,166 @@
+@import url(/src/layouts/border-radius.less);
+@import url(/src/layouts/colors.less);
+
+#group-page #jobs.group-tab {
+    .heading {
+        #filter-jobs-button {
+            background-color: transparent;
+            border: none;
+            color: @primary-color;
+            font-size: 1.75rem;
+
+            cursor: pointer;
+        }
+    }
+
+    #filters-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: .25em;
+
+        margin-top: .25em;
+
+        .filter-item {
+            padding: .2em;
+            background-color: @primary-color;
+            color: @font-color-v1;
+            border-radius: 5px;
+        }
+    }
+
+    #jobs-list.tab-list {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+
+        .job-item {
+            width: 100%;
+            border-radius: @border-radius;
+            background-color: @card-item-color;
+
+            padding: 1rem 0.5rem;
+
+            .job-header {
+                display: flex;
+                flex-direction: row;
+                align-items: start;
+
+                &.job-closed {
+                    color: @font-color-v3;
+                }
+
+                .competences {
+                    margin-top: .25em;
+
+                    .requirement {
+                        margin-right: .5em;
+                        background-color: @primary-color;
+                        color: @font-color-v1;
+
+                        padding: .1em .25em;
+                        border-radius: .4em;
+
+                        .unreviewed-competence-warning {
+                            margin-left: .25em;
+                        }
+                    }
+                }
+
+                .go-right {
+                    margin-left: auto;
+                    display: flex;
+                    gap: 1rem;
+
+                    .job-expand {
+                        background-color: transparent;
+                        border: none;
+
+                        font-size: 1.5rem;
+                        will-change: rotate;
+
+                        transition-duration: 150ms;
+                        transition-property: rotate;
+                        transition-timing-function: ease-in;
+
+                        cursor: pointer;
+
+                        &.expanded {
+                            transition-timing-function: ease-out;
+                            rotate: 180deg;
+                        }
+                    }
+
+                    .options-button {
+                        background: none;
+                        border: none;
+                        font-size: 1.25rem;
+
+                        cursor: pointer;
+                    }
+
+                    .job-options {
+                        background-color: @card-background-color;
+                        border-radius: .625rem;
+                        padding: .25rem .5rem;
+
+                        min-width: 7rem;
+
+                        .options-arrow {
+                            fill: @card-background-color;
+                        }
+
+                        .dropdown-options-item {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            width: 100%;
+
+                            padding: .25rem .5rem;
+                            border-radius: .625rem;
+
+                            font-size: .9rem;
+
+                            cursor: pointer;
+
+                            &:hover {
+                                background-color: @button-hover-color;
+                                outline: none;
+
+                                &.delete {
+                                    background-color: @font-color-alert;
+                                    color: @font-color-v1;
+                                }
+                            }
+
+                            &[data-disabled] {
+                                color: @font-color-disabled;
+
+                                &:hover {
+                                    background-color: transparent;
+                                }
+                            }
+
+                            &:not(:last-child) {
+                                margin-bottom: .25rem;
+                            }
+
+                            .right-slot {
+                                width: fit-content;
+                                margin-left: auto;
+
+                                &.bi {
+                                    font-size: 1.2em;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .job-long_description {
+                margin-top: .75rem;
+            }
+        }
+    }
+}

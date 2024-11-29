@@ -1,0 +1,29 @@
+@import url(/src/layouts/spacing.less);
+
+.universi-modal {
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .universi-modal-overlay {
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .universi-modal-content {
+        position: fixed;
+        margin: auto;
+
+        max-height: @modal-max-height;
+        max-width: @modal-max-width;
+        overflow: auto;
+    }
+}

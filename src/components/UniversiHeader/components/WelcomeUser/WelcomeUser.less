@@ -1,0 +1,50 @@
+@import url("src/layouts/colors.less");
+@import url("src/layouts/fonts.less");
+
+#header {
+    .image-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .logged-user-image {
+            height: 3rem;
+            width: auto !important;
+        
+            border: 3px solid @background-color;
+            background-color: @background-color;
+        
+            cursor: pointer;
+        }
+
+        .profile-options-arrow {
+            fill: @card-background-color;
+        }
+
+        .submenu-profile{
+            background-color: var(--card-background-color);
+            border-radius: 0.675rem;
+            border: solid 1px var(--card-background-color);
+            overflow: hidden;
+            margin-right: 1rem;
+            padding: 5px 0;
+
+            .submenu-item {
+                padding: 0.25rem 1rem;
+                width: 100%;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: var(--card-item-color);
+                    border: none;
+                    outline: none;
+                }
+
+                a {
+                    text-decoration: none;
+                    color: inherit;
+                }
+            }
+        }
+    }
+}

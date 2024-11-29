@@ -1,0 +1,22 @@
+@import url(./colors.less);
+@import url(./fonts.less);
+@import url(./body.less);
+@import url(./transitions.less);
+@import url(./spacing.less);
+@import url(./border-radius.less);
+
+/* Default settings */
+* {
+    /* Remove default margin and padding from elements that have it */
+    margin: 0;
+    padding: 0;
+
+    /*
+     Changes default box-sizing to include border so elements don't easily
+     overflow
+
+     For exemple: by default, an element with horizontal margin and width 100%
+     overflows
+    */
+    box-sizing: border-box;
+}

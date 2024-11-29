@@ -1,0 +1,102 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+@import url(/src/layouts/border-radius.less);
+@import url(/src/layouts/spacing.less);
+
+#universi-settings {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    #settings-content {
+        min-width: 500px;
+        max-width: min(75%, 1024px);
+
+        margin: @top-page-margin @left-page-padding;
+        padding: 1rem 1rem;
+
+        border-radius: @border-radius;
+        background-color: @card-background-color;
+        border: solid 1px @card-background-color;
+
+        color: @font-color-v2;
+
+        overflow: hidden;
+
+        @option-padding-x: 2rem;
+
+        .settings-page-title {
+            font-size: 1.5rem;
+            font-weight: @font-weight-bold;
+            margin-bottom: .25rem;
+
+            a {
+                color: inherit;
+                margin-right: .5em;
+            }
+        }
+
+        .settings-description {
+            margin-bottom: .5rem;
+        }
+
+        > .settings-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            background-color: transparent;
+
+            color: inherit;
+            text-decoration: none;
+
+            cursor: pointer;
+
+            will-change: background-color;
+
+            &:hover {
+                background-color: @card-item-color;
+            }
+
+            &:not(:last-child)::after {
+                content: "";
+                background-color: @card-item-color;
+                width: 100%;
+                height: 1px;
+            }
+
+            .settings-option-content {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+
+                padding: 1rem @option-padding-x;
+                width: 100%;
+
+                .settings-option-info {
+                    .settings-option-title {
+                        font-weight: @font-weight-bold;
+                        font-size: 1.25rem;
+                    }
+
+                    .settings-option-description {
+                        font-weight: @font-weight-default;
+                    }
+                }
+
+                .bi {
+                    margin-left: 2rem;
+                    font-size: 1.5em;
+                }
+            }
+        }
+    }
+
+    #build-version {
+        margin-top: 2rem;
+        text-align: center;
+    }
+}

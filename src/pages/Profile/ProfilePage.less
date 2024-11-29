@@ -1,0 +1,23 @@
+@import url(/src/layouts/spacing.less);
+@import url(/src/layouts/utils.less);
+
+#profile-page {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+
+    @user-header-bar-height: 12rem;
+
+    #user-header-bar {
+        width: 100%;
+        height: @user-header-bar-height;
+        translate: 0 0;
+    }
+
+    .content {
+        margin-top: @top-page-margin;
+
+        display: grid;
+        grid-template-columns: 15rem auto;
+    }
+}

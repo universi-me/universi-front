@@ -1,0 +1,222 @@
+#item-competence .competence {
+    width: 100%;
+    height: fit-content;
+
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+
+    translate: 0 0;
+    border: solid 1px;
+    border-color: #e2e2e2;
+}
+
+#item-competence .competence .heading {
+    display: flex;
+    align-items: initial;
+    justify-content: space-between;
+    margin: 20px 10px 0px 18px;
+    border-radius: 20px 20px 0px 0px;
+
+    font-size: 1.2em;
+    font-weight: 600;
+    padding: 2px 0px 2px 0px;
+    flex-wrap: wrap;
+
+    gap: 0.5rem;
+}
+
+.competence .heading .competence-left-buttons{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+#item-competence .competence .add-button {
+    display: flex;
+    align-items: center;
+
+    color: var(--primary-color);
+    font-size: 1rem;
+    border: solid 2px;
+    border-radius: 20px;
+    padding: 5px 10px 5px 10px;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#item-competence .competence .add-button .icon-button {
+    margin-left: 5px;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+#item-competence .competence .add-button:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+#item-competence .competence .add-button:hover .icon-button {
+    color: #fff;
+}
+
+#item-competence .competence .competence-list {
+    padding: 1em 2em 1.5em;
+}
+
+#item-competence .competence .competence-list .competence-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding: .75em 1em;
+
+    background: var(--card-item-color);
+    border-radius: 20px;
+}
+
+#item-competence .competence .competence-list .competence-item:not(:last-of-type) {
+    margin-bottom: 0.95em;
+}
+
+#item-competence .competence .competence-list .competence-item .competence-initial {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#item-competence .competence .competence-list .competence-item .competence-type {
+    font-size: 0.95rem;
+    margin-right: .5em;
+    text-transform: uppercase;
+    font-weight: var(--font-weight-bold);
+}
+
+#item-competence .competence .competence-list .competence-item .competence-badge {
+    width: 1.5em;
+    height: 1.5em;
+
+    margin-right: .25em;
+}
+
+#item-competence .competence .competence-list .competence-item .unreviewed-competence-warning {
+    color: var(--warning-color);
+    font-size: 1.25em;
+}
+
+#item-competence .competence .competence-list .competence-item .icon {
+    margin-right: 1.75em;
+
+    width: 1.875em;
+    aspect-ratio: 1;
+}
+
+#item-competence .competence .competence-list .competence-item .learning {
+    color: #000;
+    font-size: 0.875em;
+    font-weight: var(--font-weight-default);
+}
+
+#item-competence .competence .competence-list .competence-item .level-container {
+    margin-left: auto;
+    margin-right: 2.5em;
+}
+
+#item-competence .competence .competence-list .competence-item .level-container .level-label {
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+}
+
+#item-competence .competence .competence-list .competence-item .competence-level-list {
+    display: flex;
+    flex-direction: row;
+}
+
+#item-competence .competence .competence-list .competence-item .competence-level-list .competence-level {
+    width: 3.5em;
+    height: 0.5em;
+    border-radius: 10px;
+    background: #C1C1C1;
+}
+
+#item-competence .competence .competence-list .competence-item .competence-level-list .competence-level.learned {
+    background: var(--secondary-color);
+}
+
+#item-competence .competence .competence-list .competence-item .competence-level-list .competence-level:not(:last-of-type) {
+    margin-right: .5em;
+}
+
+#item-competence .competence .competence-list .empty-competence {
+    font-style: italic;
+    width: 100%;
+    text-align: center;
+}
+
+.empty-competences {
+    text-align: center;
+}
+
+
+.config-button-ability {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.config-button-icon {
+    border: none;
+    cursor: pointer;
+}
+
+.config-button-icon + .config-button-icon {
+    margin-left: 20px;
+}
+
+#item-competence .competence .edit-button {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    margin-top: -5px;
+
+    background-color: transparent;
+    border: solid 2px;
+    border-color: var(--primary-color);
+    border-radius: 10px;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+}
+
+
+#item-competence .competence .edit-button .icon-edit  {
+    color:  var(--primary-color);
+}
+
+#item-competence .competence .edit-button.active {
+    background-color: var(--primary-color);
+}
+
+#item-competence .competence .edit-button .icon-edit.active  {
+    color: #fff;
+}
+
+.level-bar {
+    width: 200px;
+    display: flex;
+    align-items: center;
+    background-color: #e4e4e4;
+    border-radius: 20px;
+    margin-top: 2px;
+}
+
+.bar {
+    height: 10px;
+    width: 200px;
+    background-color: var(--primary-color);
+    transition: width 0.3s;
+    border-radius: 20px;
+}

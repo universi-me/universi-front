@@ -1,0 +1,12 @@
+version: '3.5'
+
+services:
+    universi-front:
+        container_name: universi-front
+        build:
+            context: .
+        restart: unless-stopped
+        ports:
+            - "8088:8088"
+        env_file:
+            - .env

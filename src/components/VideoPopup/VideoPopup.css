@@ -1,0 +1,144 @@
+.popup-container{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.583);
+    left: 0%;
+    top: 0%;
+}
+
+.iframe-container{ 
+    position: absolute;
+    height: 90%;  
+    background-color: var(--primary-color);
+    left: 50%;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translate(-50%, 5%);
+    max-width: 90%;
+}
+
+.close{
+    position: relative;
+    font-weight: 700;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--background-color);
+    text-align: end;
+    margin-bottom: 1rem;
+    align-self: end;
+}
+
+.mini-player{
+    width: 100%;
+    border-radius: var(--border-radius);
+    border: solid 1px var(--primary-color);
+}
+
+.mini-iframe{
+    height: auto;
+    width: 100%;
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .close{
+        position: static;
+        text-align: end;
+        left: 0%;
+
+        background-color: var(--primary-color);
+        padding-right: 1rem;
+        padding-top: 0.2rem;
+        color: white;
+        overflow: hidden;
+        margin: 0px;
+        align-self: end;
+    }
+
+
+    .popup-container{
+        height: auto;
+        width: auto;
+    }
+}
+
+iframe{
+    border-radius: var(--border-radius);
+}
+
+
+.watched-button{
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: var(--border-radius);
+    margin: 0.5rem 0rem;
+    cursor: pointer;
+    transition: 0.2s linear;
+    display: flex;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    i{
+        width: auto;
+    }
+}
+
+.watched-button:hover{
+    padding: 7px 12px;
+    font-size: 1rem;
+    background: var(--card-background-color);
+}
+
+.watched{
+    background-color: rgba(0,0,0, 0.2);
+    color: var(--background-color);
+}
+
+.watched:hover{
+    color: var(--primary-color);
+    background-color: var(--background-color);
+}
+
+.status-icon{
+    margin-right: 0.5rem;
+}
+
+.window-button-container{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    gap: 1rem;
+    width: 100%;
+}
+
+.video-container{
+    position: fixed;
+    top: 60vh;
+    left: calc(var(--left-page-padding) - 0.75%);
+    width: 15%;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+
+}
+
+
+@media screen and (min-aspect-ratio: 21/9) {
+    .video-container {
+      left: calc(15% - 3.5vw);
+    }
+  }
+.fullscreen{
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.505);
+    height: 100%;
+    width: 100%;
+}

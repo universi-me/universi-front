@@ -1,0 +1,44 @@
+@import url(/src/layouts/spacing.less);
+@import url(/src/layouts/utils.less);
+
+.profile-info-component {
+    @bioWrapperWidth: 15rem;
+    @gapWidth: 1rem;
+    @contentWidth: calc(@maxScreenWidth - @bioWrapperWidth - @gapWidth);
+
+    display: grid;
+    grid-template-columns: max-content auto;
+    column-gap: @gapWidth;
+
+    margin-top: @top-page-margin;
+    margin-bottom: @top-page-margin;
+
+    width: 100%;
+
+    .profile-bio-groups-container{
+        width: @bioWrapperWidth;
+    }
+
+    .profile-info-content {
+        width: @contentWidth;
+    }
+
+    @media @onMobile {
+        display: flex !important;
+        flex-direction: column;
+
+        .profile-bio-groups-container{
+            width: 100%;
+            margin-bottom: 2rem;
+
+            .profile-bio-component{
+                display: none;
+            }
+
+        }
+
+        .profile-info-content {
+            width: 100%;
+        }
+    }
+}

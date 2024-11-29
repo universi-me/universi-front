@@ -1,0 +1,143 @@
+@import url(/src/layouts/border-radius.less);
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+.container {
+    background-color: #FFFFFF;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-top: 3.5rem;
+    padding: 2rem;
+
+    border-radius: @border-radius;
+    border: 1px solid @primary-color;
+
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        width: fit-content;
+        height: fit-content;
+
+        gap: 10px;
+
+        input[type="text"],
+        input[type="password"] {
+            width: 20rem;
+            height: 1.65rem;
+
+            border: 1px solid @primary-color;
+            border-radius: 5px;
+
+            padding: 0 2rem;
+            outline: none;
+
+            font-size: 0.75rem;
+
+            &::placeholder {
+                font-weight: @font-weight-light;
+            }
+
+            &:focus {
+                outline: auto;
+                outline-style: solid;
+                outline-color: @secondary-color;
+            }
+        }
+
+        .form-group {
+            .label-form {
+                position: absolute;
+                margin-top: 5px;
+                margin-left: 10px;
+
+                span {
+                    color: @secondary-color;
+                    font-size: 1.2rem;
+                }
+            }
+
+            .toggle {
+                span {
+                    color: @primary-color;
+                    font-size: 1.2rem;
+                    line-height: 1.8rem;
+
+                    position: absolute;
+
+                    margin-left: -1.6rem;
+
+                    cursor: pointer;
+                    user-select: none;
+                }
+            }
+        }
+
+        .btn_form {
+            color: @font-color-v1;
+            font-weight: @font-weight-semibold;
+            font-size: 1rem;
+
+            height: 2rem;
+            width: 20rem;
+
+            background-color: @primary-color;
+
+            border-radius: 10px;
+            border-style: none;
+
+            cursor: pointer;
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+    }
+
+    .container-line-form {
+        @text-color: @font-color-v2;
+
+        color: @text-color;
+        font-size: 0.875rem;
+
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+
+        width: 100%;
+
+        margin-top: 20px;
+        gap: 1rem;
+
+        a {
+            color: @font-color-links;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .line-form {
+            width: 100%;
+            background-color: @text-color;
+            height: 1px;
+        }
+
+        .enter-with {
+            width: max-content;
+        }
+    }
+
+    #signup, #recovery {
+        color: @font-color-v2;
+        font-size: 0.875rem;
+
+        margin-top: 1em;
+    }
+}

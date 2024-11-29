@@ -1,0 +1,44 @@
+@import url("src/layouts/colors.less");
+@import url("src/layouts/fonts.less");
+@import url("src/layouts/transitions.less");
+
+#header {
+
+    /* todo: Change 'color' and 'background-color' if user is logged */
+    .auth-button {
+        border-radius: 10px;
+        border: 1px solid  @primary-color;
+        margin-left: 1.5rem;
+
+        width: 5.75em;
+        line-height: 2em;
+        font-weight: @font-weight-semibold;
+        text-align: center;
+
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: @hover-transition-duration background-color, border-color;
+        will-change: background-color, border-color;
+
+        &, &.login, &.logout {
+            cursor: pointer;
+
+            &:hover {
+                background-color: @button-hover-color;
+                border-color: @button-hover-color;
+                color:  @primary-color;
+            }
+        }
+
+        &.login {
+            background-color:  @secondary-color;
+            color: @font-color-v1;
+        }
+
+        &.logout {
+            color: @font-color-v1;
+            border-color: @secondary-color;
+            background: none;
+        }
+    }
+}

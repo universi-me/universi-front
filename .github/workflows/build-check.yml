@@ -1,0 +1,42 @@
+name: Build Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '15'
+
+      - name: Install dependencies
+        run: npm install --include=dev
+
+      - name: Install dependencies
+        run: npm i --save-dev @types/jest
+
+
+      - name: Set NODE_ENV to production
+        run: echo "NODE_ENV=production" >> $GITHUB_ENV
+
+      - name: Build
+        run: npm run build
+
+      - name: Check for build success
+        run: |
+          if [ $? -ne 0 ]; then
+            echo "Error: 'npm run build' failed"
+            exit 1
+          fi

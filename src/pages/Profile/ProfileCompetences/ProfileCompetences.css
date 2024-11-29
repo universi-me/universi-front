@@ -1,0 +1,111 @@
+#profile-page #right-side .competences {
+    width: 100%;
+    height: fit-content;
+
+    border-radius: 20px;
+    background: var(--card-background-color);
+    overflow: hidden;
+
+    translate: 0 0;
+}
+
+#profile-page #right-side .competences .heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--primary-color);
+
+    color: var(--font-color-v1);
+    font-size: 1.875em;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+}
+
+#profile-page #right-side .competences .edit-button {
+    right: 1.5em;
+    color: var(--font-color-v1);
+    font-size: 1.5rem;
+}
+
+#profile-page #right-side .competences .competence-list {
+    padding: 2.25em 3em;
+}
+
+#profile-page #right-side .competences .competence-list .competence-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding: .75em 1em;
+
+    background: var(--font-color-v5);
+    border-radius: 20px;
+}
+
+#profile-page #right-side .competences .competence-list .competence-item:not(:last-of-type) {
+    margin-bottom: 1.7em;
+}
+
+#profile-page #right-side .competences .competence-list .competence-item .edit-competence {
+    background: none;
+    border: none;
+    margin-right: .25rem;
+}
+
+#profile-page #right-side .competences .competence-list .competence-item .competence-type {
+    font-size: 1rem;
+    margin-right: .5em;
+    text-transform: uppercase;
+    font-weight: var(--font-weight-bold);
+}
+
+#profile-page #right-side .competences .competence-list .competence-item .icon {
+    margin-right: 1.75em;
+
+    width: 1.875em;
+    aspect-ratio: 1;
+}
+
+#profile-page #right-side .competences .competence-list .competence-item .learning {
+    color: #000;
+    font-size: 0.875em;
+    font-weight: var(--font-weight-default);
+}
+
+#profile-page #right-side .competences .competence-list .competence-item .level-container {
+    margin-left: auto;
+    margin-right: 2.5em;
+}
+
+#profile-page #right-side .competences .competence-list .competence-item .level-container .level-label {
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+}
+
+#profile-page #right-side .competences .competence-list .competence-item .competence-level-list {
+    display: flex;
+    flex-direction: row;
+}
+
+#profile-page #right-side .competences .competence-list .competence-item .competence-level-list .competence-level {
+    width: 3.5em;
+    height: 0.5em;
+    border-radius: 10px;
+    background: #C1C1C1;
+}
+
+#profile-page #right-side .competences .competence-list .competence-item .competence-level-list .competence-level.learned {
+    background: var(--secondary-color);
+}
+
+#profile-page #right-side .competences .competence-list .competence-item .competence-level-list .competence-level:not(:last-of-type) {
+    margin-right: .5em;
+}
+
+#profile-page #right-side .competences .competence-list .empty-competences {
+    font-style: italic;
+    width: 100%;
+    text-align: center;
+}

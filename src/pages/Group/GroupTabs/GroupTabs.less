@@ -1,0 +1,98 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+#group-page #group-tabs {
+    width: 100%;
+
+    .group-tab-button {
+        background: @primary-color;
+
+        border: 1px solid rgba(0,0,0,0.25);
+        border-radius: 10px 10px 0px 0px;
+        border-bottom: none;
+
+        height: 100%;
+        padding: .6rem 1.3rem;
+
+        cursor: pointer;
+
+        color: @font-color-v1;
+        will-change: text-decoration;
+        transition: 0.2s linear;
+
+        font-size: 0.8rem;
+        font-weight: 400;
+
+        &[data-current-tab] {
+            background-color: white;
+            color:  @primary-color;
+            filter: drop-shadow(5px -3.5px 2px rgba(0, 0, 0, 0.25));
+            border: none;
+            outline: 0px 1px 1px 0px solid @primary-color;
+            font-size: medium;
+        }
+    }
+
+}
+
+#group-page .group-tab {
+    width: 100%;
+
+    padding: 1rem;
+    background-color: white;
+    overflow: hidden;
+    border-radius: 0px 0px var(--border-radius) var(--border-radius);
+    height: fit-content;
+
+
+    .heading {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        &.top-container{
+            justify-content: flex-end;
+        }
+
+        .tab-icon {
+            @side: 1.35em !important;
+            width: @side;
+            height: @side;
+            aspect-ratio: 1;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background-color:  @primary-color;
+            border-radius: 50%;
+
+            color: @font-color-v1;
+            font-size: 2rem;
+
+            margin-right: .75rem;
+        }
+
+        .title {
+            font-weight: @font-weight-default;
+            font-size: 1.5rem;
+        }
+
+        .go-right {
+            width: max-content;
+            display: flex;
+            gap: 1rem;
+
+            flex-wrap: wrap;
+            justify-content: right;
+
+            align-items: center;
+        }
+    }
+
+    .empty-text {
+        color: @font-color-v2;
+        font-style: italic;
+    }
+}
+

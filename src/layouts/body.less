@@ -1,0 +1,13 @@
+@import url(./colors.less);
+
+body {
+    background-color: @background-color;
+}
+
+/**
+ * :has() pseudo-class currently does not work on Firefox as of 2023-08-11
+ * Compatibility status: https://developer.mozilla.org/en-US/docs/Web/CSS/:has#browser_compatibility
+ */
+body:has(.universi-modal) {
+    overflow: hidden;
+}

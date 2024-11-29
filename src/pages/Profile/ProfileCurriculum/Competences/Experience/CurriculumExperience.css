@@ -1,0 +1,290 @@
+#item-competence .experience {
+    width: 100%;
+    height: fit-content;
+
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+
+    translate: 0 0;
+    border: solid 1px;
+    border-color: #e2e2e2;
+}
+
+#item-competence .experience .heading {
+    display: flex;
+    align-items: initial;
+    justify-content: space-between;
+    margin: 20px 10px 0px 18px;
+    border-radius: 20px 20px 0px 0px;
+
+    font-size: 1.2em;
+    font-weight: 600;
+    padding: 2px 0px 2px 0px;
+
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.experience .heading .experience-left-buttons{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+
+#item-competence .experience .add-button {
+    display: flex;
+    align-items: center;
+
+    color: var(--primary-color);
+    font-size: 1rem;
+    border: solid 2px;
+    border-radius: 20px;
+    padding: 5px 10px 5px 10px;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#item-competence .experience .add-button .icon-button {
+    margin-left: 5px;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+
+#item-competence .experience .add-button:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+#item-competence .experience .add-button:hover .icon-button {
+    color: #fff;
+}
+
+#item-competence .experience .experience-list {
+    padding: 1em 2em 1.5em;
+}
+
+#item-competence .experience .experience-title {
+    display: flex;
+    align-items: center;
+}
+
+#item-competence .experience-image {
+    margin-left: -5px;
+    margin-right: 8px;
+}
+
+.experience-presentation {
+    margin-left: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 25rem;
+}
+
+.experience-item .direction-dateStart{
+    position: relative;
+    right: auto;
+    left: auto;
+}
+
+.experience-item .direction-dateEnd{
+    position: relative;
+    right: auto;
+    left: auto;
+}
+
+.title {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.experience-item .direction-description{
+    position: relative;
+    right: auto;
+    left: auto;
+}
+
+.description-text {
+    word-wrap: break-word;
+}
+
+.config-button {
+    position: relative;
+}
+
+.config-button-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.experience .config-menu {
+    position: absolute;
+    top: -35%;
+    right: 0;
+    background: #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    display: none;
+}
+  
+.config-button:hover .config-menu {
+    display: block;
+}
+  
+.config-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+
+#item-competence .experience .experience-list .experience-item {
+    display: flex;
+    flex-direction: row;
+    align-items: initial;
+
+    padding: .75em 1em;
+
+    background: var(--card-item-color);
+    border-radius: 20px;
+
+    flex-wrap: wrap;
+
+    gap: 2rem;
+
+}
+
+#item-competence .experience .experience-list .experience-item:not(:last-of-type) {
+    margin-bottom: 0.95em;
+}
+
+#item-competence .experience .experience-list .experience-item .edit-experience {
+    background: none;
+    border: none;
+    margin-right: .25rem;
+}
+
+#item-competence .experience .experience-list .experience-item .experience-type {
+    font-size: 1rem;
+    margin-right: .5em;
+    text-transform: uppercase;
+    font-weight: var(--font-weight-bold);
+    word-break: normal;
+}
+#item-competence .experience .experience-list .experience-item .icon {
+    margin-right: 1.75em;
+
+    width: 1.875em;
+    aspect-ratio: 1;
+}
+
+#item-competence .experience .experience-list .experience-item .learning {
+    color: #000;
+    font-size: 0.875em;
+    font-weight: var(--font-weight-default);
+}
+
+#item-competence .experience .experience-list .experience-item .level-container {
+    margin-left: auto;
+    margin-right: 2.5em;
+}
+
+#item-competence .experience .experience-list .experience-item .level-container .level-label {
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+}
+
+#item-competence .experience .experience-list .experience-item .experience-level-list {
+    display: flex;
+    flex-direction: row;
+}
+
+#item-competence .experience .experience-list .experience-item .experience-level-list .experience-level {
+    width: 3.5em;
+    height: 0.5em;
+    border-radius: 10px;
+    background: #C1C1C1;
+}
+
+#item-competence .experience .experience-list .experience-item .experience-level-list .experience-level.learned {
+    background: var(--secondary-color);
+}
+
+#item-competence .experience .experience-list .experience-item .experience-level-list .experience-level:not(:last-of-type) {
+    margin-right: .5em;
+}
+
+#item-competence .experience .experience-list .empty-experience {
+    font-style: italic;
+    width: 100%;
+    text-align: center;
+}
+
+.empty-experiences {
+    text-align: center;
+}
+
+.config-button-experience {
+    position: fixed;
+
+    align-items: center;
+
+    display: flex;
+    flex-direction: column;
+
+    vertical-align: middle;
+
+    right: 45px;
+}
+
+.config-button-icon {
+    border: none;
+    cursor: pointer;
+}
+
+.experience-item .config-button-icon + .config-button-icon {
+    margin-top: 15px;
+    margin-left: 0px;
+}
+
+#item-competence .experience .edit-button {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    margin-top: -5px;
+
+    background-color: transparent;
+    border: solid 2px;
+    border-color: var(--primary-color);
+    border-radius: 10px;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+}
+
+#item-competence .experience .edit-button .icon-edit  {
+    color:  var(--primary-color);
+}
+
+#item-competence .experience .edit-button.active {
+    background-color: var(--primary-color);
+}
+
+#item-competence .experience .edit-button .icon-edit.active  {
+    color: #fff;
+}
+
+.experience-local {
+    margin-left: 28px;
+}

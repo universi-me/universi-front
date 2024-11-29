@@ -1,0 +1,290 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+@import url(/src/layouts/border-radius.less);
+@import url(/src/layouts/spacing.less);
+
+.image-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .image-preview {
+        height: 5rem;
+        max-width: 15rem;
+        //aspect-ratio: 1;
+
+        border-radius: 1rem;
+        border: 1px solid @secondary-color;
+        object-fit: cover;
+
+        &.default-image {
+            padding: .5rem;
+        }
+    }
+
+    fieldset {
+        margin-top: 0;
+    }
+        .image-button{
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 0.5rem 0.5rem ;
+            border-radius: 0.675rem;
+            cursor: pointer;
+        }
+
+}
+.checkbox-input{
+    .checkbox{
+        width: 1rem !important;
+    }
+    legend{
+        display: contents !important;
+    }
+    fieldset{
+        display: flex;
+        justify-content: space-between;
+    }
+}
+.radio-input{
+    fieldset{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    input{
+        margin-right: 0.5rem;
+    }
+}
+#universi-form-container {
+    @left-padding: 2.1rem;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: white;
+    border-radius: var(--border-radius);
+
+    width: min(80vw, 60rem);
+    overflow: hidden;
+
+    max-height: 90vh;
+
+    box-sizing: 0px 4px 4px 0px rgba(0, 0, 0, 0.50);
+
+    @header-padding: @universiform-header-padding;
+    @header-image-size: @universiform-header-image-size;
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        padding: @header-padding @left-padding;
+
+        background-color:  var(--primary-color);
+        border-bottom: 5px solid @secondary-color;
+
+        color: white;
+
+        gap: 1rem;
+
+        img {
+            width: @header-image-size;
+            height: @header-image-size;
+        }
+
+        .title {
+            color: @font-color-v1;
+        }
+    }
+
+    .universi-form-container.fields {
+        max-height: @universiform-max-height;
+        overflow: auto;
+
+        .url-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: start;
+
+            .type-fieldset {
+                padding-right: calc(@left-padding / 2);
+
+                .material-type-trigger {
+                    height: 3rem;
+                    padding: .5rem;
+                    aspect-ratio: 1;
+
+                    background-color: @card-background-color;
+
+                    cursor: pointer;
+                }
+
+                .type-dropdown-menu {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    background-color: @card-background-color;
+                    border-radius: @border-radius;
+
+                    border: 1px solid  var(--primary-color);
+
+                    .type-dropdown-arrow {
+                        fill: @card-background-color
+                    }
+
+                    .type-dropdown-option {
+                        outline: none;
+
+                        .material-type-icon {
+                            height: calc(4rem - 10px);
+                            cursor: pointer;
+                            padding: 5px;
+                            margin: 5px;
+
+                            border-radius: 10px;
+
+                            &:hover {
+                                outline: 2px solid  var(--primary-color);
+                            }
+                        }
+                    }
+
+                }
+            }
+
+
+            .url-fieldset {
+                width: 100%;
+                padding-left: 0;
+            }
+        }
+
+        fieldset {
+            border: none;
+            padding: 0 @left-padding;
+            margin-top: 1rem;
+
+            &:not(:last-child) {
+                margin-bottom: 1rem;
+            }
+
+            .field-input {
+                width: 100%;
+                background-color: @card-background-color;
+            }
+
+            input {
+                font-size: 1rem;
+                padding: 1rem .5rem;
+            }
+
+            input:required:valid, textarea:required:valid{
+                border: 2px solid var(--font-color-success) !important;
+            }
+
+            input:required:invalid, textarea:required:invalid{
+                border: 2px solid var(--wrong-invalid-color) !important;
+            }
+
+            textarea {
+                min-height: 2em;
+                max-height: 8rem;
+                padding: .5rem;
+
+                resize: vertical;
+            }
+
+            input, textarea, .material-type-trigger {
+                border: none;
+                border-radius: .625rem;
+
+                &:focus {
+                    outline: solid 2px  var(--primary-color);
+                }
+            }
+
+            > legend {
+                display: flex;
+                flex-direction: row;
+                align-items: end;
+                justify-content: space-between;
+
+                width: 100%;
+
+                font-size: 1.25rem;
+                padding-bottom: 0.75rem;
+
+                .char-counter {
+                    display: inline;
+                    margin-right: .25em;
+
+                    font-size: .75em;
+                }
+            }
+
+            .ql-editor {
+                min-height: 10em;
+            }
+        }
+
+        .operation-buttons {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+            margin: 2.1rem;
+            gap: 1rem;
+
+            > button {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                border: none;
+                width: 7.5em;
+                max-height: 2rem;
+                padding: .75em 0;
+                border-radius: .625rem;
+
+                gap: .5rem;
+
+                color: @font-color-v1;
+                font-size: .9rem;
+                font-weight: @font-weight-bold;
+
+                cursor: pointer;
+                will-change: background-color;
+
+                &.cancel-button {
+                    background-color:  @secondary-color;
+                }
+
+                &.submit-button {
+                    &:not(:disabled) {
+                        background-color:  var(--primary-color);
+                        &:hover {
+                            background-color:  @secondary-color;
+                        }
+                    }
+
+                    &:disabled {
+                        background-color: @font-color-v3;
+                    }
+                }
+
+                .bi {
+                    width: 1rem;
+                    font-size: 1.2rem;
+                    margin: 0;
+                }
+            }
+        }
+    }
+}

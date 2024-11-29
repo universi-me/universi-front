@@ -1,0 +1,208 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+@import url(/src/layouts/utils.less);
+
+#profile-page #profile-assigned-by-me-tab {
+    .title-filter-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: end;
+        justify-content: space-between;
+
+        margin-bottom: 1rem;
+
+        @media @onMobile {
+            flex-direction: column;
+            align-items: start;
+        }
+
+        .tab-title {
+            font-weight: 500;
+        }
+
+        #filters {
+            display: flex;
+            flex-direction: row;
+            align-items: end;
+            gap: 0.5rem;
+
+            flex-wrap: wrap;
+
+            #completion-selector {
+                font-size: 1rem;
+                padding: 0.25em 0.5em;
+
+                background-color: #FFF;
+                border: 2px solid @primary-color;
+                border-radius: .5em;
+
+                cursor: pointer;
+            }
+        }
+    }
+
+    #assigned-by-me-wrapper {
+        .folder-profile-item {
+            background-color: #FFF;
+            filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+            border-radius: 10px;
+            padding: 1rem;
+
+            display: flex;
+            flex-direction: row;
+
+            @gap: 1rem;
+            gap: @gap;
+
+            @folder-image-side: 4rem;
+            @folder-data-width: calc(100% - @folder-image-side - @gap * 2);
+
+            &:not(:last-child) {
+                margin-bottom: 1rem;
+            }
+
+            .folder-image {
+                width: @folder-image-side;
+                height: @folder-image-side;
+                object-fit: cover;
+
+                border-radius: 10px;
+            }
+
+            .folder-data {
+                width: @folder-data-width;
+
+                .folder-name {
+                    text-decoration: none;
+                    color: inherit;
+                    font-size: 1.65rem;
+                    font-weight: @font-weight-semibold;
+                }
+
+                @bar-heigth: .5rem;
+                @border-radius: 2 * @bar-heigth;
+
+                .folder-bar-wrapper {
+                    width: 100%;
+                    text-align: center;
+
+                    margin-bottom: 1rem;
+
+                    .folder-progress-bar-container {
+                        width: 100%;
+                        height: @bar-heigth;
+                        border-radius: @border-radius;
+                        background-color: gray;
+                        margin-bottom: 0.5em;
+
+                        overflow: hidden;
+
+                        .folder-progress-until-now {
+                            background-color: @primary-color;
+                            border-radius: @border-radius;
+                            height: 100%;
+                        }
+                    }
+                }
+
+                .profile-watcher-wrapper {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+
+                    overflow: hidden;
+
+                    &.collapsed {
+                        height: 0;
+                    }
+
+                    .profile-watcher {
+                        display: flex;
+                        flex-direction: row;
+                        width: 20rem;
+
+                        padding: .5rem;
+                        border-radius: 10px;
+                        color: inherit;
+                        text-decoration: none;
+
+                        &:not(:last-of-type) {
+                            margin-bottom: .5rem;
+                        }
+
+                        &:hover {
+                            background-color: #EEE;
+                        }
+
+                        .profile-image {
+                            width: 5rem;
+                            aspect-ratio: 1;
+                            border-radius: 50%;
+
+                            margin-right: .5rem;
+                        }
+
+                        .progress-data {
+                            display: flex;
+                            flex-direction: column;
+                            gap: .2rem;
+
+                            width: 100%;
+
+                            .profile-name {
+                                margin-top: .5em;
+                            }
+
+                            .profile-progress {
+                                width: 100%;
+
+                                .progress-bar-container {
+                                    width: 100%;
+                                    height: @bar-heigth;
+                                    border-radius: @border-radius;
+                                    overflow: hidden;
+
+                                    background-color: gray;
+
+                                    .progress-until-now {
+                                        height: @bar-heigth;
+                                        border-radius: @border-radius;
+                                        background-color: @primary-color;
+                                    }
+                                }
+
+                                .text-progress {
+                                    width: 100%;
+                                    text-align: center;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .expand-button {
+                background-color: transparent;
+                border: none;
+                font-size: 2rem;
+
+                height: min-content;
+                will-change: rotate;
+
+                transition-duration: 250ms;
+                transition-property: rotate;
+
+                cursor: pointer;
+
+                &.collapsed {
+                    transition-timing-function: ease-in;
+                }
+
+                &.expanded {
+                    transition-timing-function: ease-out;
+                    rotate: -180deg;
+                }
+            }
+        }
+    }
+}
