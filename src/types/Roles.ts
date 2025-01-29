@@ -8,11 +8,7 @@ export enum Permission {
     DEFAULT = READ_WRITE_DELETE,
 }
 
-export type RoleType = "ADMINISTRATOR" | "PARTICIPANT" | "VISITOR" | "CUSTOM";
-
-export type FeatureTypes = "FEED" | "CONTENT" | "GROUP" | "PEOPLE" | "COMPETENCE" | "JOBS";
-
-export const FeatureTypesToLabel: { [k in FeatureTypes]: string } = {
+export const FeatureTypesToLabel: { [k in Role.Feature]: string } = {
     "FEED":         "Publicações",
     "CONTENT":      "Conteúdo",
     "GROUP":        "Grupo",
@@ -20,23 +16,3 @@ export const FeatureTypesToLabel: { [k in FeatureTypes]: string } = {
     "COMPETENCE":   "Competência",
     "JOBS":         "Vagas",
 };
-
-export type Roles = {
-    id: string;
-    name: string;
-    description: string;
-    created: string;
-    roleType: RoleType;
-
-    canBeEdited: boolean;
-    canBeAssigned: boolean;
-
-    permissions: {
-        [k in FeatureTypes]: number;
-    }
-}
-
-export type RolesProfile = {
-    id: string;
-    roles: Roles;
-}

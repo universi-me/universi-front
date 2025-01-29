@@ -1,31 +1,14 @@
-import { compareAccessLevel, type User } from "@/types/User";
-import { type Nullable } from "@/types/utils";
+import { compareAccessLevel } from "@/types/User";
 import { IMG_DEFAULT_PROFILE } from "@/utils/assets";
-import { Competence } from "./Competence";
-import { Roles } from "./Roles";
 
-export type Gender = "M" | "F" | "O";
-export const GENDER_OPTIONS: {[k in Gender]: string} = {
+export const GENDER_OPTIONS: {[k in Profile.Gender]: string} = {
     M: "Masculino",
     F: "Feminino",
     O: "Outro",
 };
 
-export type Profile = {
-    id:           string;
-    user:         User;
-    firstname:    string | null;
-    gender:       Gender | null;
-    image:        string | null;
-    lastname:     string | null;
-    bio:          string | null;
-    creationDate: string;
-    competences:  Competence[] | null;
-    roles?:       Roles | undefined | null;
-}
-
-export class ProfileClass implements Profile {
-    constructor(private profile: Profile) {}
+export class ProfileClass implements Profile.DTO {
+    constructor(private readonly profile: Profile.DTO) {}
 
     /**
      * Builds the full name of the profile.
@@ -113,7 +96,7 @@ export class ProfileClass implements Profile {
     /**
      * The same as `new ProfileClass(profile)`, but can be used as a callback function.
      */
-    public static new(profile: Profile) {
+    public static new(profile: Profile.DTO) {
         return new ProfileClass(profile);
     }
 
@@ -135,7 +118,7 @@ export class ProfileClass implements Profile {
     set id(id: string) { this.profile.id = id }
 
     get user() { return this.profile.user }
-    set user(user: User) { this.profile.user = user }
+    set user(user: User.DTO) { this.profile.user = user }
 
     get firstname() { return this.profile.firstname }
     set firstname(firstname: Nullable<string>) { this.profile.firstname = firstname }
@@ -147,16 +130,13 @@ export class ProfileClass implements Profile {
     set bio(bio: Nullable<string>) { this.profile.bio = bio }
 
     get gender() { return this.profile.gender }
-    set gender(gender: Nullable<Gender>) { this.profile.gender = gender }
+    set gender(gender: Nullable<Profile.Gender>) { this.profile.gender = gender }
 
     get image() { return this.profile.image }
     set image(image: Nullable<string>) { this.profile.image = image }
 
-    get competences() { return this.profile.competences }
-    set competences(competences : Nullable<Competence[]>) {this.competences = competences}
-
     get creationDate() { return this.profile.creationDate }
 
-    get roles(): Roles | undefined | null { return this.profile.roles }
-    set roles(roles: Roles | undefined | null) { this.profile.roles = roles }
+    get role(): Role.DTO | undefined | null { return this.profile.role }
+    set role(role: Role.DTO | undefined | null) { this.profile.role = role }
 }
