@@ -1,65 +1,79 @@
 import { ApiResponse } from "@/utils/apiUtils";
 import { createApiInstance } from "./api";
 
-const api = createApiInstance( "/" )
+const api = createApiInstance( "" )
 
-export type UserSignUp_RequestDTO = {
-    firstname: string;
-    lastname:  string;
-    username: string;
-    email:    string;
-    password: string;
-    recaptchaToken: Nullable<string>;
-};
 
-export type UserEdit_RequestDTO = {
-    password: string;
-    newPassword: string;
-};
+export function account() {
+    return api.get<UserAccount_ResponseDTO>( "/account" ).then( ApiResponse.new );
+}
 
-export type UserRecoverPassword_RequestDTO = {
-    username: string;
-    recaptchaToken: string | null;
-};
+export function changePassword( body: UserChangePassword_ResponseDTO ) {
+    return api.patch<undefined>( "/account", body ).then( ApiResponse.new );
+}
 
-export type UserNewPassword_RequestDTO = {
-    newPassword: string;
-    token:    string | undefined;
-};
+export function logout() {
+    return api.get<boolean>( "/logout" ).then( ApiResponse.new );
+}
 
-export type UsernameAvailable_RequestDTO = {
-    username: string;
-};
-
-export type EmailAvailable_RequestDTO = {
-    email: string;
-};
-
-export function signUp(body: UserSignUp_RequestDTO) {
+export function signup( body: UserSignup_RequestDTO ) {
     return api.post<boolean>( "/signup", body ).then( ApiResponse.new );
 }
 
-export function edit(body: UserEdit_RequestDTO) {
-    return api.post<undefined>( "/account", body ).then( ApiResponse.new );
+export function usernameAvailable( username: string ) {
+    return api.get<UserGetAvailable_ResponseDTO>( `/available/username/${username}` ).then( ApiResponse.new );
 }
 
-export function recoverPassword(body : UserRecoverPassword_RequestDTO){
-    return api.post<undefined>( "/recovery-password", body ).then( ApiResponse.new );
+export function emailAvailable( email: string ) {
+    return api.get<UserGetAvailable_ResponseDTO>( `/available/email/${email}` ).then( ApiResponse.new );
 }
 
-export function newPassword(body : UserNewPassword_RequestDTO){
-    return api.post<undefined>( "/new-password", body ).then( ApiResponse.new );
+export function updateAccount( body: UserAccountUpdate_RequestDTO ) {
+    return api.patch<undefined>( "/admin/account", body ).then( ApiResponse.new );
 }
 
-export function usernameAvailable( username: string ){
-    return api.post<GetAvailableCheck_ResponseDTO>(`/available/username/${username}`).then( ApiResponse.new );
+export function listByAccessLevel( accessLevel: User.AccessLevel ) {
+    return api.get<User.DTO[]>( `/admin/accounts/${accessLevel}` ).then( ApiResponse.new );
 }
 
-export function emailAvailable( email: string ){
-    return api.post<GetAvailableCheck_ResponseDTO>(`/available/email/${email}`).then( ApiResponse.new );
-}
 
-export type GetAvailableCheck_ResponseDTO = {
+export type UserAccount_ResponseDTO = {
+    user: User.DTO;
+    roles: Role.DTO[];
+};
+
+export type UserChangePassword_ResponseDTO = {
+    password: string;
+    newPassword: string;
+};
+
+export type UserSignup_RequestDTO = {
+    recaptchaToken: Optional<string>;
+    username: string;
+    email: string;
+    password: string;
+    firstname: string;
+    lastname: string;
+};
+
+export type UserGetAvailable_ResponseDTO = {
     available: boolean;
     reason: string;
+};
+
+export type UserAccountUpdate_RequestDTO = {
+    userId: string;
+    username: Optional<string>;
+    email: Optional<string>;
+    password: Optional<string>;
+    authorityLevel: Optional<string>;
+    emailVerified: Optional<boolean>;
+    blockedAccount: Optional<boolean>;
+    inactiveAccount: Optional<boolean>;
+    credentialsExpired: Optional<boolean>;
+    expiredUser: Optional<boolean>;
+};
+
+export type UserLoginKeycloak_RequestDTO = {
+    token: string;
 };

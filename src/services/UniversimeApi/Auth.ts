@@ -27,6 +27,14 @@ export async function login_keycloak({ code }: KeyCloakSignIn_RequestDTO) {
     return response.data;
 }
 
+export function recoverPassword( body: RecoverPassword_RequestDTO ) {
+    return api.post<undefined>( "/recovery-password", body ).then( ApiResponse.new );
+}
+
+export function newPassword( body: RecoverNewPassword_RequestDTO ) {
+    return api.post<undefined>( "/new-password", body ).then( ApiResponse.new );
+}
+
 export type SignIn_RequestDTO = {
     username: string;
     password: string;
@@ -48,4 +56,14 @@ export type GetAccount_ResponseDTO = {
 
 export type SignIn_ResponseDTO = {
     user: User.DTO;
+};
+
+export type RecoverPassword_RequestDTO = {
+    recaptchaToken: Optional<string>;
+    username: string;
+};
+
+export type RecoverNewPassword_RequestDTO = {
+    token: string;
+    newPassword: string;
 };
