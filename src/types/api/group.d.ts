@@ -106,4 +106,14 @@ namespace Group {
 
         type Type = "END_WITH" | "START_WITH" | "CONTAINS" | "EQUALS" | "MASK" | "REGEX";
     }
+
+    namespace Feature {
+        type DTO = {
+            id: string;
+            name: string;
+            description: string;
+            enabled: boolean;
+            added: string;
+        };
+    }
 }

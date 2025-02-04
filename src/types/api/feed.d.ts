@@ -22,4 +22,13 @@ namespace Feed {
         author : Profile.DTO;
         authorId : string;
     };
+
+    type GroupGet = {
+        content: string;
+        author: Profile.DTO;
+        postId: string;
+        groupId: string;
+        reactions: Reaction[];
+        comments: Comment[];
+    };
 }
