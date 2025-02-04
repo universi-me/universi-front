@@ -16,5 +16,6 @@ export * as GroupFeature from "./GroupFeature";
 export * as GroupParticipant from "./GroupParticipant";
 export * as GroupTheme from "./GroupTheme";
 export * as Health from "./Health";
+export * as Image from "./Image";
 export * as Profile from "./Profile";
 export * as User from "./User";
