@@ -9,7 +9,7 @@ export function update( educationId: string, body: EducationUpdate_RequestDTO ) 
 }
 
 export function create( body: EducationCreate_RequestDTO ) {
-    return api.patch<Education.DTO>( "", body ).then( ApiResponse.new );
+    return api.post<Education.DTO>( "", body ).then( ApiResponse.new );
 }
 
 export function get( educationId: string ) {
@@ -25,15 +25,15 @@ export async function remove( educationId: string ) {
 }
 
 export type EducationUpdate_RequestDTO = {
-    educationType?: string;
-    institution?: string;
-    startDate?: string;
-    endDate?: string;
+    educationType: Optional<string>;
+    institution: Optional<string>;
+    startDate: Optional<string>;
+    endDate: Optional<string>;
 };
 
 export type EducationCreate_RequestDTO = {
     educationType: string;
     institution: string;
     startDate: string;
-    endDate?: string;
+    endDate: Optional<string>;
 };
