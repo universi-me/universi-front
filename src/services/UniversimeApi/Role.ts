@@ -1,0 +1,40 @@
+import { ApiResponse } from "@/utils/apiUtils";
+import { createApiInstance } from "./api";
+
+const api = createApiInstance( "/roles" )
+
+
+export function create( body: RoleCreate_RequestDTO ) {
+    return api.post<Role.DTO>( "", body ).then( ApiResponse.new );
+}
+
+export function update( roleId: string, body: RoleUpdate_RequestDTO ) {
+    return api.patch<Role.DTO>( `/${roleId}`, body ).then( ApiResponse.new );
+}
+
+export function remove( roleId: string ) {
+    return api.delete<undefined>( `/${roleId}` ).then( ApiResponse.new );
+}
+
+export function assign( roleId: string, profile: string ) {
+    return api.patch<undefined>( `/${roleId}/assign/${profile}` ).then( ApiResponse.new );
+}
+
+export function getAssigned( groupId: string, profile: string ) {
+    return api.get<Role.DTO>( `/${groupId}/${profile}/role` ).then( ApiResponse.new );
+}
+
+export type RoleCreate_RequestDTO = {
+    name: string;
+    description: Optional<string>;
+    group: string;
+};
+
+export type RoleUpdate_RequestDTO = {
+    name: Optional<string>;
+    description: Optional<string>;
+    group: Optional<string>;
+    features: Optional<{
+        [ k in Role.Feature ]?: Role.Permission;
+    }>;
+};

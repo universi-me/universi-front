@@ -21,4 +21,5 @@ export * as Institution from "./Institution";
 export * as Job from "./Job";
 export * as Link from "./Link";
 export * as Profile from "./Profile";
+export * as Role from "./Role";
 export * as User from "./User";
