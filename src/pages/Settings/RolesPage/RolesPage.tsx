@@ -2,7 +2,7 @@ import { useReducer, useState, useContext } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { AuthContext } from "@/contexts/Auth";
 import { SettingsTitle, type RolesPageLoaderResponse, RolesPageFetch, SettingsDescription } from "@/pages/Settings";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";

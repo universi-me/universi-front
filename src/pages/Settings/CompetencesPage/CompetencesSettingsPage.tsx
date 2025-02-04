@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { Filter } from "@/components/Filter/Filter";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { type CompetencesSettingsLoaderResponse, SettingsDescription, SettingsTitle, CompetenceTypeEditor } from "@/pages/Settings";

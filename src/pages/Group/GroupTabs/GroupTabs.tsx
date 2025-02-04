@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, type ReactElement } from "react";
 import { GroupContents, GroupContext, GroupGroups, GroupPeople, GroupFeed, GroupContextType, GroupJobs } from "@/pages/Group";
 import "./GroupTabs.less";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { AuthContext } from "@/contexts/Auth";
 import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 import { GroupCompetences } from "./GroupCompetences/GroupCompetences";

@@ -9,7 +9,7 @@ import "./GroupPeople.less";
 import { Filter } from "@/components/Filter/Filter";
 import Select from 'react-select'
 import { CompetenceType, LevelToLabel, Level, intToLevel } from "@/types/Competence";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import ActionButton from "@/components/ActionButton";
 
 type competenceSearch = {

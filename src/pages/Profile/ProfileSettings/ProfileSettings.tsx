@@ -2,7 +2,7 @@ import { ChangeEvent, MouseEvent, useContext, useMemo, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { Link, TypeLink, TypeLinkToBootstrapIcon, TypeLinkToLabel } from '@/types/Link';
 import { GENDER_OPTIONS, ProfileClass } from "@/types/Profile";
-import { UniversimeApi } from '@/services/UniversimeApi';
+import { UniversimeApi } from '@/services';
 import './ProfileSettings.css'
 
 export type ProfileSettingsProps = {

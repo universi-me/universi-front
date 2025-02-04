@@ -2,7 +2,7 @@ import { useContext, MouseEvent, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { ICON_DELETE_BLACK, ICON_EDIT_BLACK } from '@/utils/assets';
 import './CurriculumExperience.css'
-import UniversimeApi from '@/services/UniversimeApi';
+import { UniversimeApi } from "@/services"
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { dateWithoutTimezone } from '@/utils/dateUtils';
 

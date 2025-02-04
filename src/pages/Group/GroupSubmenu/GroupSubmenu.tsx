@@ -3,7 +3,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import "./GroupSubmenu.less"
 import { GroupContext } from "../GroupContext"
 import { AuthContext } from "@/contexts/Auth"
-import UniversimeApi from "@/services/UniversimeApi"
+import { UniversimeApi } from "@/services"
 import { hasAvailableOption, OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils"
 import { Group } from "@/types/Group"
 

@@ -64,7 +64,7 @@ export class ApiResponse<T> {
         return new ApiResponse<T>( response );
     }
 
-    isSuccess(): this is Api.ResponseSuccess<T> {
+    isSuccess(): this is SuccessfulApiResponse<T> {
         return this.status.toString().startsWith( "2" );
     }
 
@@ -72,6 +72,10 @@ export class ApiResponse<T> {
         return isApiError( this.data )
             ? ( this.response as Api.ResponseError ).status.code
             : this.response.status as number;
+    }
+
+    get body(): T | undefined {
+        return this.data;
     }
 
     get data(): T | undefined {
@@ -91,4 +95,10 @@ export class ApiResponse<T> {
 
         return undefined;
     }
+}
+
+interface SuccessfulApiResponse<T> {
+    data: T;
+    body: T;
+    error: undefined;
 }

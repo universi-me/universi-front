@@ -1,7 +1,7 @@
 import { useContext, MouseEvent } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { YouTubePlayerContext, type YouTubePlayerContextType } from "@/contexts/YouTube";
 import { ContentContext, type ContentContextType } from "@/pages/Content";
 import { MATERIAL_THUMB_FILE, MATERIAL_THUMB_LINK, MATERIAL_THUMB_VIDEO } from "@/utils/assets";

@@ -3,7 +3,7 @@ import DOMPurify from "dompurify";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 import useCanI from "@/hooks/useCanI";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 
 import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";

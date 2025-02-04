@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import ActionButton from "@/components/ActionButton";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { Job } from "@/types/Job";

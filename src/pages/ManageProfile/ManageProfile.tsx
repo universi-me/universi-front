@@ -1,7 +1,7 @@
 import { MouseEvent, useContext, useState } from "react";
 import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { ManageProfileLinks, ManageProfileLoaderResponse, ManageProfilePassword, ManageProfileImage, getManageLinks } from "@/pages/ManageProfile";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { AuthContext } from "@/contexts/Auth";

@@ -8,7 +8,7 @@ import { type Group } from "@/types/Group";
 import "./GroupGroups.less";
 import { Filter } from "@/components/Filter/Filter";
 import { AuthContext } from "@/contexts/Auth";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdownMenuUtils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as SwalUtils from "@/utils/sweetalertUtils";

@@ -6,7 +6,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { AuthContext } from "@/contexts/Auth";
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 

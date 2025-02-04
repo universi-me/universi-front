@@ -3,7 +3,7 @@ import { ProfileContext } from '@/pages/Profile';
 import { Competence, Level, LevelToLabel } from '@/types/Competence';
 import { ICON_DELETE_BLACK } from '@/utils/assets';
 import './CurriculumAbility.css';
-import UniversimeApi from '@/services/UniversimeApi';
+import { UniversimeApi } from "@/services"
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { IconVerificated } from '@/components/UniversiSvg';
 

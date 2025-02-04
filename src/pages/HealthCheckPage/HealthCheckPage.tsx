@@ -1,5 +1,5 @@
 import BootstrapIcon from "@/components/BootstrapIcon";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { ServiceId, SERVICES_AVAILABLE, HealthResponseDTO } from "@/types/Health";
 import { Optional } from "@/types/utils";
 import { useEffect, useState } from "react";

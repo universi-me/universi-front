@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 import { UniversiModal } from "@/components/UniversiModal";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { isEmail } from "@/utils/regexUtils";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { AuthContext } from "@/contexts/Auth/AuthContext";

@@ -4,7 +4,7 @@ import { YouTubePlayerContext } from "@/contexts/YouTube";
 import { ContentStatusEnum, type Content } from "@/types/Capacity";
 import { getYouTubeVideoIdFromUrl } from "@/utils/regexUtils";
 import { VideoPopup } from "@/components/VideoPopup/VideoPopup";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 
 type YouTubePlayerProviderProps = Readonly<PropsWithChildren<{}>>;
 

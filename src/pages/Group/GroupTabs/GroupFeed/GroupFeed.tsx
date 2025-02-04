@@ -4,7 +4,7 @@ import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm
 import { RequiredValidation } from "@/components/UniversiForm/Validation/RequiredValidation";
 import { TextValidation } from "@/components/UniversiForm/Validation/TextValidation";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { useContext, useState } from "react";
 import { GroupContext, GroupFeedPost } from "@/pages/Group";
 import "./GroupFeed.less";

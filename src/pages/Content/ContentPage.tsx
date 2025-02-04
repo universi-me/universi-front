@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { type ContentPageLoaderSuccess, type ContentPageLoaderResponse, ContentHeader, MaterialList, fetchContentPageData } from "@/pages/Content";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ContentContext, ContentContextType } from "./ContentContext";

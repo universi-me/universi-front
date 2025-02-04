@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import DOMPurify from "dompurify";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { makeClassName } from "@/utils/tsxUtils";
 import { GroupContext } from "@/pages/Group";
 import { ProfileClass } from "@/types/Profile";

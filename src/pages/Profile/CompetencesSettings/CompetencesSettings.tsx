@@ -2,7 +2,7 @@ import { useContext, useMemo } from "react";
 
 import { ProfileContext } from "@/pages/Profile";
 import { CompetenceType, Level, LevelToDescription, LevelToLabel } from "@/types/Competence";
-import { UniversimeApi } from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
 export function CompetencesSettings() {

@@ -1,7 +1,7 @@
 import { Job } from "@/types/Job";
 
 import { FormInputs, UniversiForm } from "@/components/UniversiForm";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { Institution } from "@/types/Institution";
 import { useEffect, useState } from "react";
 import { CompetenceType } from "@/types/Competence";

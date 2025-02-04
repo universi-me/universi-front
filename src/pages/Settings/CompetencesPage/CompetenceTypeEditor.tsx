@@ -1,6 +1,6 @@
 import { type MouseEvent, useEffect, useState } from "react";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { makeClassName, setStateAsValue } from "@/utils/tsxUtils";
 

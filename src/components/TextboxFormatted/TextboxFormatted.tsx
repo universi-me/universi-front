@@ -1,4 +1,4 @@
-import UniversimeApi from '@/services/UniversimeApi';
+import { UniversimeApi } from "@/services"
 import { isAbsoluteUrl } from '@/utils/regexUtils';
 import { useMemo } from 'react';
 

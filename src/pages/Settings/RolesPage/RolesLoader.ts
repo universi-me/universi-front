@@ -1,4 +1,4 @@
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { LoaderFunctionArgs } from "react-router-dom";
 import { type Profile } from "@/types/Profile";
 import { type Optional } from "@/types/utils";

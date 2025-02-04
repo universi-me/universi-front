@@ -1,7 +1,7 @@
 import "./Recovery.css"
 import "../singin/SignInForm.less"
 import {useState, useContext} from "react"
-import UniversimeApi from "@/services/UniversimeApi"
+import { UniversimeApi } from "@/services"
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import ReCAPTCHA from "react-google-recaptcha-enterprise";

@@ -1,4 +1,4 @@
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { type Gender, ProfileClass, GENDER_OPTIONS } from "@/types/Profile";
 import { Link, TypeLink, TypeLinkToLabel } from "@/types/Link";
 

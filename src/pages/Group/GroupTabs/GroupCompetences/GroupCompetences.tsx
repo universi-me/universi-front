@@ -1,4 +1,4 @@
-import UniversimeApi from "@/services/UniversimeApi"
+import { UniversimeApi } from "@/services"
 import { competenceListResponse } from "@/services/UniversimeApi/Group"
 import { LevelToLabel} from "@/types/Competence"
 import { Profile } from "@/types/Profile"

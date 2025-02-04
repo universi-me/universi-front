@@ -3,7 +3,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import * as Switch from "@radix-ui/react-switch"
 
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 
 import { type EnvironmentsLoaderResponse, EnvironmentsFetch } from "./EnvironmentsLoader";
 import "./EnvironmentsPage.less";

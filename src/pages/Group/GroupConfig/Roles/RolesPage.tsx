@@ -4,7 +4,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import { AuthContext } from "@/contexts/Auth";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { TextValidation } from "@/components/UniversiForm/Validation/TextValidation";

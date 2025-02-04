@@ -1,7 +1,7 @@
 import { useState, MouseEvent, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
 import { AuthContext } from "@/contexts/Auth";

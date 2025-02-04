@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useReducer, useState } from "react";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext } from "@/pages/Group";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";

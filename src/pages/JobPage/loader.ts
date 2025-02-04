@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs } from "react-router-dom";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { Job } from "@/types/Job";
 
 export async function fetchJobPageData(id: string | undefined): Promise<JobPageLoaderResponse> {

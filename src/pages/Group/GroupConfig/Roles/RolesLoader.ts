@@ -1,5 +1,5 @@
 import { Roles } from "@/types/Roles";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { Profile } from "@/types/Profile";
 
 export type RolesResponse = {

@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs } from "react-router-dom";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import type { Profile } from "@/types/Profile";
 import type { Group } from "@/types/Group";
 import type { Folder } from "@/types/Capacity";

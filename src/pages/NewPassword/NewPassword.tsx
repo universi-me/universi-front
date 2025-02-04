@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { useState } from "react"
 import "./NewPassword.css"
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import NewPasswordInput from "@/components/NewPasswordInput/NewPasswordInput";

@@ -1,4 +1,4 @@
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { FeatureTypes, Roles, Permission, RoleType } from "@/types/Roles";
 import { Profile } from "@/types/Profile";
 import { Group } from "@/types/Group";

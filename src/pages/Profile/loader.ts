@@ -1,4 +1,4 @@
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import type { Folder, FolderProfile } from "@/types/Capacity";
 import type { CompetenceProfileDTO, CompetenceType } from "@/types/Competence";
 import { Education } from "@/types/Education";

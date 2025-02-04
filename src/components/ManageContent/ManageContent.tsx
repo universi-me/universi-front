@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
 import { contentImageUrl } from "@/utils/apiUtils";

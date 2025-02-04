@@ -1,7 +1,7 @@
 import { ReactNode, useState, useEffect } from "react"
 
 import "./UniversiForm.less"
-import UniversimeApi from "@/services/UniversimeApi"
+import { UniversimeApi } from "@/services"
 import { arrayBufferToBase64 } from "@/utils/fileUtils"
 import Select, { GroupBase, StylesConfig } from "react-select"
 import CreatableSelect from "react-select/creatable"

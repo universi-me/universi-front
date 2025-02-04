@@ -1,5 +1,5 @@
 import { type LoaderFunctionArgs } from "react-router-dom";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 
 export type EnvironmentsLoaderResponse = {
     envDic: {} | undefined;

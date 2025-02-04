@@ -1,5 +1,5 @@
 import { FormInputs, TextValidation, UniversiForm, ValidationComposite } from "@/components/UniversiForm";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 
 import { groupBannerUrl, groupHeaderUrl, groupImageUrl } from "@/utils/apiUtils";
 import { Group, GroupType, GroupTypeToLabel } from "@/types/Group";
