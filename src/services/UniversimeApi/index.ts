@@ -19,5 +19,6 @@ export * as Health from "./Health";
 export * as Image from "./Image";
 export * as Institution from "./Institution";
 export * as Job from "./Job";
+export * as Link from "./Link";
 export * as Profile from "./Profile";
 export * as User from "./User";
