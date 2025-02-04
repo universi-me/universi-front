@@ -32,8 +32,6 @@ export type CompetenceTypeMerge_RequestDTO = {
 
 export type AdminEditAccount_ResponseDTO = ApiResponse;
 export type AdminListAccounts_ResponseDTO = ApiResponse<{ users: User[] }>;
-export type CompetenceTypeMerge_ResponseDTO =  ApiResponse;
-export type CompetenceTypeRemove_ResponseDTO = ApiResponse;
 
 export async function editAccount(body: AdminEditAccount_RequestDTO) {
     return (await api.post<AdminEditAccount_ResponseDTO>("/account/edit", {
@@ -53,18 +51,5 @@ export async function editAccount(body: AdminEditAccount_RequestDTO) {
 export async function listAccounts(body: AdminListAccounts_RequestDTO) {
     return (await api.post<AdminListAccounts_ResponseDTO>("/account/list", {
         accessLevel: body.accessLevel,
-    })).data;
-}
-
-export async function removeCompetenceType(body: CompetenceTypeRemove_RequestDTO) {
-    return (await api.post<CompetenceTypeRemove_ResponseDTO>("/competencetype/remove", {
-        competenceTypeId: body.id,
-    })).data;
-}
-
-export async function mergeCompetenceType(body: CompetenceTypeMerge_RequestDTO) {
-    return (await api.post<CompetenceTypeMerge_ResponseDTO>("/competencetype/merge", {
-        removedCompetenceTypeId:   body.removedCompetenceTypeId,
-        remainingCompetenceTypeId: body.remainingCompetenceTypeId,
     })).data;
 }

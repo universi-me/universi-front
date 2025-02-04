@@ -1,48 +1,43 @@
-import type { CompetenceType } from "@/types/Competence";
-import type { ApiResponse } from "@/types/UniversimeApi";
+import { ApiResponse } from "@/utils/apiUtils";
 import { createApiInstance } from "./api";
 
-const api = createApiInstance( "/competencetype" )
+const api = createApiInstance( "/competence-types" )
 
-export type CompetenceTypeGet_RequestDTO = {
-    competenceTypeId: string;
-};
+
+export function create( body: CompetenceTypeCreate_RequestDTO ) {
+    return api.post<Competence.Type>( "", body ).then( ApiResponse.new );
+}
+
+export function update( competenceTypeId: string, body: CompetenceTypeUpdate_RequestDTO ) {
+    return api.patch<Competence.Type>( `/${competenceTypeId}`, body ).then( ApiResponse.new );
+}
+
+export function remove( competenceTypeId: string ) {
+    return api.delete<undefined>( `/${competenceTypeId}` ).then( ApiResponse.new );
+}
+
+export function get( competenceTypeId: string ) {
+    return api.get<Competence.Type>( `/${competenceTypeId}` ).then( ApiResponse.new );
+}
+
+export function list() {
+    return api.get<Competence.Type[]>( "" ).then( ApiResponse.new );
+}
+
+export function merge( body: CompetenceTypeMerge_RequestDTO ) {
+    return api.patch<undefined>( "/merge", body ).then( ApiResponse.new );
+}
 
 export type CompetenceTypeCreate_RequestDTO = {
-    name:   string;
+    name: string;
 };
 
 export type CompetenceTypeUpdate_RequestDTO = {
-    id:        string;
-    name?:     string;
+    name?: string;
     reviewed?: boolean;
 };
 
-export type CompetenceTypeGet_ResponseDTO =  ApiResponse<{ competenceType: CompetenceType }>;
-export type CompetenceTypeList_ResponseDTO = ApiResponse<{ list: CompetenceType[] }>;
-export type CompetenceTypeCreate_ResponseDTO = ApiResponse;
-export type CompetenceTypeUpdate_ResponseDTO = ApiResponse;
-
-export async function get(body: CompetenceTypeGet_RequestDTO) {
-    return (await api.post<CompetenceTypeGet_ResponseDTO>("/get", {
-        competenceTypeId: body.competenceTypeId,
-    })).data;
-}
-
-export async function create(body: CompetenceTypeCreate_RequestDTO) {
-    return (await api.post<CompetenceTypeCreate_ResponseDTO>("/create", {
-        name:         body.name,
-    })).data;
-}
-
-export async function update(body: CompetenceTypeUpdate_RequestDTO) {
-    return (await api.post<CompetenceTypeUpdate_ResponseDTO>("/admin/update", {
-        competenceTypeId: body.id,
-        name:             body.name,
-        reviewed:         body.reviewed,
-    })).data;
-}
-
-export async function list() {
-    return (await api.post<CompetenceTypeList_ResponseDTO>("/list", {})).data;
-}
+export type CompetenceTypeMerge_RequestDTO = {
+    removedCompetenceType: string;
+    remainingCompetenceType: string;
+};

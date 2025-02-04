@@ -1,5 +1,6 @@
 export * as Auth from "./Auth";
 export * as Competence from "./Competence";
+export * as CompetenceType from "./CompetenceType";
 export * as Group from "./Group";
 export * as GroupEmailFilter from "./GroupEmailFilter";
 export * as GroupEnvironment from "./GroupEnvironment";
