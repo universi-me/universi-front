@@ -11,18 +11,25 @@ namespace Capacity {
             createdAt: string;
             author: Profile.DTO;
             type: Type;
-            status: Optional<Status>;
+            status: Optional<Status.Type>;
         };
 
         type Rating = 0 | 1 | 2 | 3 | 4 | 5;
 
         type Type = "VIDEO" | "LINK" | "FOLDER" | "FILE";
 
-        type Status = "VIEW" | "DONE" | "NOT_VIEWED";
+        namespace Status {
+            type DTO = {
+                status: Type;
+                updatedAt: string;
+            };
+
+            type Type = "VIEW" | "DONE" | "NOT_VIEWED";
+        }
 
         type WatchProgress = {
             content: DTO;
-            status: Status;
+            status: Status.Type;
         };
     }
 }

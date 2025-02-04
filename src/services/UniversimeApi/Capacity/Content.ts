@@ -1,112 +1,58 @@
-import type { Content, ContentStatus } from "@/types/Capacity";
-import type { ApiResponse } from "@/types/UniversimeApi";
+import { ApiResponse } from "@/utils/apiUtils";
 import { createApiInstance } from "../api";
 
-const api = createApiInstance( "/capacity/content" )
+const api = createApiInstance( "/capacity/contents" );
 
-export type ContentId_RequestDTO = {
-    id: string;
-};
+
+export function create( body: ContentCreate_RequestDTO ) {
+    return api.post<Capacity.Content.DTO>( "", body ).then( ApiResponse.new );
+}
+
+export function update( contentId: string, body: ContentUpdate_RequestDTO ) {
+    return api.patch<Capacity.Content.DTO>( `/${contentId}`, body ).then( ApiResponse.new );
+}
+
+export function remove( contentId: string ) {
+    return api.delete<undefined>( `/${contentId}` ).then( ApiResponse.new );
+}
+
+export function get( contentId: string ) {
+    return api.get<Capacity.Content.DTO>( `/${contentId}` ).then( ApiResponse.new );
+}
+
+export function list() {
+    return api.get<Capacity.Content.DTO[]>( "" ).then( ApiResponse.new );
+}
+
+export function getStatus( contentId: string ) {
+    return api.get<Capacity.Content.Status.DTO>( `/${contentId}/status` ).then( ApiResponse.new );
+}
+
+export function setStatus( contentId: string, body: ContentSetStatus_RequestDTO ) {
+    return api.patch<Capacity.Content.Status.DTO>( `/${contentId}/status`, body ).then( ApiResponse.new );
+}
 
 export type ContentCreate_RequestDTO = {
-    url:                 string;
-    title:               string;
-    description?:        string;
-    type?:               string;
-    addCategoriesByIds?: string | string[];
-    addFoldersByIds?:    string | string[];
-    rating?:             number;
-    image?:              string;
+    url: string;
+    title: string;
+    type: Capacity.Content.Type;
+    image: Optional<string>;
+    description: Optional<string>;
+    rating: Capacity.Content.Rating;
+    categoriesIds: Optional<string[]>;
+    folders: Optional<string[]>;
 };
 
-export type ContentEdit_RequestDTO = {
-    id:                     string;
-    url?:                   string;
-    title?:                 string;
-    description?:           string;
-    addCategoriesByIds?:    string | string[];
-    removeCategoriesByIds?: string | string[];
-    addFoldersByIds?:       string | string[];
-    removeFoldersByIds?:    string | string[];
-    rating?:                number;
-    image?:                 string;
-    type?:                  string;
+export type ContentUpdate_RequestDTO = {
+    url: Optional<string>;
+    title: Optional<string>;
+    type: Optional<Capacity.Content.Type>;
+    image: Optional<string>;
+    description: Optional<string>;
+    rating: Optional<Capacity.Content.Rating>;
+    categoriesIds: Optional<string[]>;
 };
 
-export type ContentStatus_RequestDTO={
-    contentId:              string;
-}
-
-export type ContentStatusEdit_RequestDTO={
-    contentId            : string;
-    contentStatusType    : string;
-}
-
-export type ContentGet_ResponseDTO =        ApiResponse<{content: Content}>;
-export type ContentCreate_ResponseDTO =     ApiResponse;
-export type ContentEdit_ResponseDTO =       ApiResponse;
-export type ContentRemove_ResponseDTO =     ApiResponse;
-export type ContentStatusEdit_ResponseDTO = ApiResponse<{ contentStatus: ContentStatus }>;
-export type ContentList_ResponseDTO =  ApiResponse<{ contents: Content[] }>;
-
-export async function getContent(body: ContentId_RequestDTO) {
-    return (await api.post<ContentGet_ResponseDTO>("/get", {
-        id: body.id,
-    })).data;
-}
-
-export async function createContent(body: ContentCreate_RequestDTO) {
-    return (await api.post<ContentCreate_ResponseDTO>("/create", {
-        url:                body.url,
-        title:              body.title,
-        image:              body.image,
-        description:        body.description,
-        rating:             body.rating,
-        type:               body.type,
-        addCategoriesByIds: body.addCategoriesByIds,
-        addFoldersByIds:    body.addFoldersByIds,
-    })).data;
-}
-
-export async function editContent(body: ContentEdit_RequestDTO) {
-    return (await api.post<ContentEdit_ResponseDTO>("/edit", {
-        id:                    body.id,
-        url:                   body.url,
-        title:                 body.title,
-        image:                 body.image,
-        description:           body.description,
-        rating:                body.rating,
-        addCategoriesByIds:    body.addCategoriesByIds,
-        removeCategoriesByIds: body.removeCategoriesByIds,
-        addFoldersByIds:       body.addFoldersByIds,
-        removeFoldersByIds:    body.removeFoldersByIds,
-        type:                  body.type,
-    })).data;
-}
-
-export async function removeContent(body: ContentId_RequestDTO) {
-    return (await api.post<ContentRemove_ResponseDTO>("/delete", {
-        id: body.id,
-    })).data;
-}
-
-export async function createContentStatus(body : ContentStatus_RequestDTO){
-    return(
-        await api.post<ContentStatus_RequestDTO>("/status" ,{
-            contentId : body.contentId,
-        })
-    ).data;
-}
-
-export async function editContentStatus(body : ContentStatusEdit_RequestDTO){
-    return(
-        await api.post<ContentStatusEdit_ResponseDTO>("/status/edit", {
-            contentId : body.contentId,
-            contentStatusType : body.contentStatusType,
-        })
-    ).data;
-}
-
-export async function contentList() {
-    return (await api.get<ContentList_ResponseDTO>("/all")).data;
-}
+export type ContentSetStatus_RequestDTO = {
+    contentStatusType: Capacity.Content.Status.Type;
+};

@@ -1,4 +1,5 @@
 export * as Auth from "./Auth";
+export * as Capacity from "./Capacity";
 export * as Competence from "./Competence";
 export * as CompetenceType from "./CompetenceType";
 export * as Education from "./Education";
