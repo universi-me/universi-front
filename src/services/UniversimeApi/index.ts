@@ -3,6 +3,7 @@ export * as Competence from "./Competence";
 export * as CompetenceType from "./CompetenceType";
 export * as Education from "./Education";
 export * as EducationType from "./EducationType";
+export * as Experience from "./Experience";
 export * as Group from "./Group";
 export * as GroupEmailFilter from "./GroupEmailFilter";
 export * as GroupEnvironment from "./GroupEnvironment";
