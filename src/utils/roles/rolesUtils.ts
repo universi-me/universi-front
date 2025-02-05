@@ -1,9 +1,6 @@
 import { UniversimeApi } from "@/services"
-import { FeatureTypes, Roles, Permission, RoleType } from "@/types/Roles";
-import { Profile } from "@/types/Profile";
-import { Group } from "@/types/Group";
 
-export type CanI_AsyncFunction = (feature: FeatureTypes, permission?: Permission, optionalGroup?: Group | undefined) => Promise<boolean>;
+export type CanI_AsyncFunction = (feature: Role.Feature, permission?: Permission, optionalGroup?: Group.DTO | undefined) => Promise<boolean>;
 
 /**
  * Similar to the `useCanI` hook, but doesn't return a function. Uses localStorage
@@ -19,10 +16,10 @@ export type CanI_AsyncFunction = (feature: FeatureTypes, permission?: Permission
  * const canReadFeed = await canI_API("FEED", Permission.READ, groupContext.group);
  * const canPost = await canI_API("FEED", Permission.READ_WRITE, groupContext.group);
  */
-export async function canI_API(feature: FeatureTypes, permission: Permission = Permission.READ, group?: Group): Promise<boolean> {
-    [group] = await Promise.all([
-        group ?? (await UniversimeApi.User.organization()).body?.organization ?? undefined,
-    ]);
+export async function canI_API(feature: Role.Feature, permission: Permission = Permission.READ, group?: Group.DTO): Promise<boolean> {
+    if ( !group ) {
+        group = ( await UniversimeApi.Group.currentOrganization() ).data;
+    }
 
     if (!group)
         return false;
@@ -33,16 +30,15 @@ export async function canI_API(feature: FeatureTypes, permission: Permission = P
 /**
  * Fetch current user roles from local storage (if available) or refetch from API (if not)
  */
-export async function fetchRoles(): Promise<Roles[] | undefined> {
-    const data = await UniversimeApi.Roles.listRoles()
-    if (!data.success)
-        return undefined;
-
-    return data.body.roles;
+export async function fetchRoles(): Promise<Role.DTO[] | undefined> {
+    const res = await UniversimeApi.User.account();
+    return res.isSuccess()
+        ? res.data.roles
+        : undefined;
 }
 
-export function rolesSorter(a: Roles, b: Roles): number {
-    const orderHelper: { [k in RoleType]: number } = {
+export function rolesSorter(a: Role.DTO, b: Role.DTO): number {
+    const orderHelper: { [k in Role.Type]: number } = {
         ADMINISTRATOR: 0,
         PARTICIPANT: 1,
         VISITOR: 2,
@@ -51,3 +47,21 @@ export function rolesSorter(a: Roles, b: Roles): number {
 
     return orderHelper[a.roleType] - orderHelper[b.roleType];
 }
+
+export enum Permission {
+    NONE = 0,
+    DISABLED = 1,
+    READ = 2,
+    READ_WRITE = 3,
+    READ_WRITE_DELETE = 4,
+    DEFAULT = READ_WRITE_DELETE,
+}
+
+export const FeatureTypesToLabel: { [k in Role.Feature]: string } = {
+    "FEED":         "Publicações",
+    "CONTENT":      "Conteúdo",
+    "GROUP":        "Grupo",
+    "PEOPLE":       "Pessoas",
+    "COMPETENCE":   "Competência",
+    "JOBS":         "Vagas",
+};

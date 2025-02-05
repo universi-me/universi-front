@@ -5,7 +5,7 @@ const api = createApiInstance( "/feeds/groups" );
 
 
 export function listGroup( groupId: string ) {
-    return api.get<Feed.GroupGet>( `/${groupId}/posts` ).then( ApiResponse.new );
+    return api.get<Feed.GroupGet[]>( `/${groupId}/posts` ).then( ApiResponse.new );
 }
 
 export function createPost( groupId: string, body: FeedCreatePost_RequestDTO ) {
