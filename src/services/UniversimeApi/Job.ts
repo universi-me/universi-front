@@ -17,12 +17,7 @@ export function get( jobId: string ) {
 }
 
 export function list( searchParams: JobListSearchParams ) {
-    const encodedParams = new URLSearchParams();
-    Object.entries( searchParams ).forEach( ( [k, v] ) => {
-        encodedParams.set( k, String( v ) );
-    } );
-
-    return api.get<Job.DTO[]>( "?" + encodedParams.toString() ).then( ApiResponse.new );
+    return api.get<Job.DTO[]>( "", { params: searchParams } ).then( ApiResponse.new );
 }
 
 export function close( jobId: string ) {
@@ -46,6 +41,6 @@ export type JobUpdate_RequestDTO = {
 };
 
 export type JobListSearchParams = {
-    onlyOpen: Optional<boolean>;
-    competenceTypesIds: Optional<string[]>;
+    onlyOpen?: boolean;
+    competenceTypesIds?: string[];
 };

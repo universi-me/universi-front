@@ -23,6 +23,10 @@ export function get( groupId: string ) {
     return api.get<Group.DTO>( `/${groupId}` ).then( ApiResponse.new );
 }
 
+export function getFromPath( group: string ) {
+    return api.get<Group.DTO>( "/from-path", { params: { group } } ).then( ApiResponse.new );
+}
+
 export function subgroups( groupId: string ) {
     return api.get<Group.DTO[]>( `/${groupId}/subgroups` ).then( ApiResponse.new );
 }

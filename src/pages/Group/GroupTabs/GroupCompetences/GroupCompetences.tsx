@@ -1,7 +1,5 @@
 import { UniversimeApi } from "@/services"
-import { competenceListResponse } from "@/services/UniversimeApi/Group"
 import { LevelToLabel} from "@/types/Competence"
-import { Profile } from "@/types/Profile"
 import { useContext, useEffect, useState } from "react"
 import { GroupContext } from "../../GroupContext"
 import "./GroupCompetence.less"
@@ -9,7 +7,7 @@ import "./GroupCompetence.less"
 export function GroupCompetences(){
 
     const groupContext = useContext(GroupContext)
-    const [groupCompetences, setGroupCompetences] = useState<competenceListResponse>();
+    const [groupCompetences, setGroupCompetences] = useState<Competence.Info[]>();
     const [competencesInfo, setCompetencesInfo] = useState<CompetenceInfo[]>();
 
     const [orderedByName, setOrderedByName] = useState<boolean | undefined>(undefined);
@@ -18,21 +16,19 @@ export function GroupCompetences(){
 
     type CompetenceInfo = {
         competenceName: string,
-        competencePeople: Profile[],
+        competencePeople: Profile.DTO[],
         competenceTypeId: string,
         competenceLevelInfo: {
             level: string,
-            people: Profile[]
+            people: Profile.DTO[]
         }[]
     }
 
 
     useEffect(()=>{
-        UniversimeApi.Group.listCompetences({groupId: groupContext?.group.id}).then((response)=>{
-            return response.body;
-        }).then((body)=>{
-            if(body?.competences){
-                setGroupCompetences({competences: body.competences});
+        UniversimeApi.GroupParticipant.competences( groupContext?.group.id! ).then( response => {
+            if ( response.data ) {
+                setGroupCompetences( response.data );
             }
         })
     }, [])
@@ -46,23 +42,23 @@ export function GroupCompetences(){
             return;
 
         let createCompetenceInfo : CompetenceInfo[] = []
-        groupCompetences.competences.map((competence)=>{
+        groupCompetences.forEach((competence)=>{
 
-            let people : Profile[] = [];
+            let people : Profile.DTO[] = [];
             let levelInfo : {
                 level: string,
-                people: Profile[]
+                people: Profile.DTO[]
             }[] = [];
 
-            Object.entries(LevelToLabel).map((level)=>{
+            Object.entries(LevelToLabel).forEach((level)=>{
                 levelInfo.push({level: level[0], people: []})
             })
 
-            Object.entries(competence.levelInfo).map(([level, profiles])=>{
-                profiles.map((profile)=>{
+            Object.entries(competence.levelInfo).forEach(([level, profiles])=>{
+                profiles.forEach((profile)=>{
                     people.push(profile)
                 })
-                levelInfo.map((infoLevel)=>{
+                levelInfo.forEach((infoLevel)=>{
                     infoLevel.level == level ? infoLevel.people = profiles : null;
                 })
             })
@@ -83,7 +79,7 @@ export function GroupCompetences(){
 
     }
 
-    function getLevelPercentage(competencePeople : Profile[], levelInfo: Profile[]) : number{
+    function getLevelPercentage(competencePeople : Profile.DTO[], levelInfo: Profile.DTO[]) : number{
 
         if(!competencePeople || !levelInfo)
             return 0;

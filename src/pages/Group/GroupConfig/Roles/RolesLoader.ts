@@ -1,27 +1,25 @@
-import { Roles } from "@/types/Roles";
 import { UniversimeApi } from "@/services"
-import { Profile } from "@/types/Profile";
 
 export type RolesResponse = {
-    roles: Roles[] | undefined;
-    participants: Profile[] | undefined;
+    roles: Role.DTO[] | undefined;
+    participants: Profile.DTO[] | undefined;
 };
 
 export async function RolesFetch(groupId: string): Promise<RolesResponse> {
     const profile = await UniversimeApi.Profile.profile();
-    if (!profile.success) return FAILED_TO_LOAD;
+    if (!profile.isSuccess()) return FAILED_TO_LOAD;
 
-    const roles = await UniversimeApi.Roles.list({ groupId });
+    const roles = await UniversimeApi.Group.roles( groupId );
     
-    const participants = await UniversimeApi.Roles.listParticipants({ groupId });
+    const participants = await UniversimeApi.GroupParticipant.filter({ groupId: groupId, competences: [], matchEveryCompetence: false });
 
-    if(!roles.success ) {
+    if(!roles.isSuccess() ) {
         return FAILED_TO_LOAD;
     }
 
     return {
-        roles: roles.body?.roles,
-        participants: participants.body?.participants,
+        roles: roles.data,
+        participants: participants.data,
     }
 }
 

@@ -10,22 +10,20 @@ import { ProfileClass } from "@/types/Profile";
 import { hasAvailableOption, renderOption, type OptionInMenu } from "@/utils/dropdownMenuUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
-import { GroupPostComment, GroupPostReaction, type GroupPost } from "@/types/Feed";
 import useCanI from "@/hooks/useCanI";
-import { Permission } from "@/types/Roles";
+import { Permission } from "@/utils/roles/rolesUtils";
 
 import { ICON_LIKE, ICON_CLAP, ICON_HEART, ICON_SUPPORT, ICON_GENIUS, ICON_HAPPY, ICON_COMMENT } from '@/utils/assets';
-import TextboxFormatted from "@/components/TextboxFormatted/TextboxFormatted";
 import UniversiForm, { FormInputs, RequiredValidation, TextValidation, ValidationComposite } from "@/components/UniversiForm";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
 export type GroupFeedPostProps = Readonly<{
-    post: GroupPost;
+    post: Feed.GroupPost;
     isComment?: boolean;
 }>;
 
 export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
-    const feedDescriptionId = `post-${isComment ? (post as GroupPostComment).id : post.postId}`;
+    const feedDescriptionId = `post-${isComment ? (post as Feed.Comment).id : post.postId}`;
     const [feedDescriptionElement, setFeedDescriptionElement] = useState(document.getElementById(feedDescriptionId));
 
     const groupContext = useContext(GroupContext);
@@ -77,7 +75,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
 
     const author = new ProfileClass(post.author);
 
-    const OPTIONS_DEFINITION: OptionInMenu<GroupPost>[] = [
+    const OPTIONS_DEFINITION: OptionInMenu<Feed.GroupPost>[] = [
         {
             text: isComment ? "Editar comentário" : "Editar publicação",
             biIcon: "pencil-fill",
@@ -113,7 +111,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
     const [selectedReaction, setSelectedReaction] = useState<any>(null);
     const [hoveredReaction, setHoveredReaction] = useState<any>(null);
 
-    const [showReactionsPost, setShowReactionsPost] = useState<GroupPost | null>(null);
+    const [showReactionsPost, setShowReactionsPost] = useState<Feed.GroupPost | null>(null);
 
     useEffect(() => {
         REACTIONS_LIST.map((reaction) => (
@@ -264,7 +262,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
                                 DTOName : "groupPostId", label : "", type : FormInputs.HIDDEN, value : post?.postId
                             }
                         ]}
-                        requisition={UniversimeApi.Feed.commentGroupPost}
+                        requisition={UniversimeApi.FeedComment.create}
                         callback={async() => {
                             groupContext!.refreshData();
                             setCommentText("");
@@ -340,23 +338,22 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
         }).then(value => {
             if (value.isConfirmed) {
                 if(isComment) {
-                    UniversimeApi.Feed
-                    .deleteGroupPostComment({ commentId: (post as GroupPostComment).id })
+                    UniversimeApi.FeedComment
+                    .remove( (post as Feed.Comment).id )
                     .then(() => groupContext!.refreshData());
                 } else {
                     UniversimeApi.Feed
-                    .deleteGroupPost({ postId: post.postId, groupId: post.groupId })
+                    .removePost( post.groupId, post.postId )
                     .then(() => groupContext!.refreshData());
                 }
             }
         })
     }
 
-    function reactToPost(post: GroupPost, reaction: string) {
+    function reactToPost(post: Feed.GroupPost, reaction: string) {
         return () => {
             setSelectedReaction(isMyReaction(post, reaction) ? null : REACTIONS_LIST.find(r => r.reaction === reaction));
-            UniversimeApi.Feed.reactGroupPost({
-                groupPostId: post.postId,
+            UniversimeApi.FeedReaction.set( post.postId, {
                 reaction: isMyReaction(post, reaction) ? '0' : reaction,
             }).then(() => {
                 groupContext!.refreshData()
@@ -364,28 +361,28 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
         }
     }
 
-    function countReaction(post: GroupPost, reaction: string): number {
-        return (post.reactions ?? ([] as GroupPostReaction[])).filter(r => r.reaction === reaction).length;
+    function countReaction(post: Feed.GroupPost, reaction: string): number {
+        return (post.reactions ?? ([] as Feed.Reaction[])).filter(r => r.reaction === reaction).length;
     }
 
-    function countComment(post: GroupPost): number {
+    function countComment(post: Feed.GroupPost): number {
         return (post.comments ?? []).length;
     }
 
-    function getReactionCount(post: GroupPost, reaction: string): string {
+    function getReactionCount(post: Feed.GroupPost, reaction: string): string {
         return countReaction(post, reaction).toString();
     }
 
-    function getCommentCount(post: GroupPost): string {
+    function getCommentCount(post: Feed.GroupPost): string {
         return countComment(post).toString();
     }
 
-    function countReactions(post: GroupPost): number {
+    function countReactions(post: Feed.GroupPost): number {
         return REACTIONS_LIST.reduce((acc, reaction) => acc + countReaction(post, reaction.reaction), 0);
     }
 
-    function isMyReaction(post: GroupPost, reaction: string): boolean {
-        return (post.reactions ?? ([] as GroupPostReaction[])).some(r => r.reaction === reaction && r.authorId === groupContext!.loggedData.profile.id);
+    function isMyReaction(post: Feed.GroupPost, reaction: string): boolean {
+        return (post.reactions ?? ([] as Feed.Reaction[])).some(r => r.reaction === reaction && r.authorId === groupContext!.loggedData.profile.id);
     }
 
 }

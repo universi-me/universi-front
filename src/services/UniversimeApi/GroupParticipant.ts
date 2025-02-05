@@ -43,6 +43,6 @@ export type GroupParticipantFilter_RequestDTO = {
         level: number;
     }[];
     matchEveryCompetence: boolean;
-    groupId: Optional<string>;
-    groupPath: Optional<string>;
+    groupId?: string;
+    groupPath?: string;
 };

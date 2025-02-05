@@ -23,7 +23,7 @@ namespace Feed {
         authorId : string;
     };
 
-    type GroupGet = {
+    type GroupPost = {
         content: string;
         author: Profile.DTO;
         postId: string;

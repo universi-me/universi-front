@@ -9,10 +9,9 @@ import { useContext, useState } from "react";
 import { GroupContext, GroupFeedPost } from "@/pages/Group";
 import "./GroupFeed.less";
 import useCanI from "@/hooks/useCanI";
-import { Permission } from "@/types/Roles";
-import { GroupPostComment } from "@/types/Feed";
+import { Permission } from "@/utils/roles/rolesUtils";
 
-function isGroupPostComment(post: any): post is GroupPostComment {
+function isGroupPostComment(post: any): post is Feed.Comment {
     try {
         return 'id' in post;
     } catch {
@@ -87,10 +86,10 @@ export function GroupFeed(){
                         }, {
                             DTOName : "postId", label : "", type : FormInputs.HIDDEN, value : groupContext.editPost?.postId
                         }, {
-                            DTOName : "commentId", label : "", type : FormInputs.HIDDEN, value : (groupContext.editPost as GroupPostComment)?.id
+                            DTOName : "commentId", label : "", type : FormInputs.HIDDEN, value : (groupContext.editPost as Feed.Comment)?.id
                         },
                     ]}
-                    requisition={groupContext.editPost ? (isGroupPostComment(groupContext.editPost) ? UniversimeApi.Feed.editGroupPostComment : UniversimeApi.Feed.editGroupPost) : UniversimeApi.Feed.createGroupPost}
+                    requisition={groupContext.editPost ? (isGroupPostComment(groupContext.editPost) ? UniversimeApi.FeedComment.update : UniversimeApi.Feed.updatePost) : UniversimeApi.Feed.createPost}
                     callback={async() => await groupContext.refreshData()}
                 />
                 :

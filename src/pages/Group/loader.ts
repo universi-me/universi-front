@@ -1,77 +1,78 @@
 import { LoaderFunctionArgs } from "react-router-dom";
 
 import { UniversimeApi } from "@/services"
-import type { Profile } from "@/types/Profile";
-import type { Group } from "@/types/Group";
-import type { Folder } from "@/types/Capacity";
-import { Link } from "@/types/Link";
-import { GroupPost } from "@/types/Feed";
-import { canI_API, fetchRoles } from "@/utils/roles/rolesUtils";
-import { Permission } from "@/types/Roles";
-import { Job } from "@/types/Job";
-import { CompetenceType } from "@/types/Competence";
+import { canI_API, fetchRoles, Permission } from "@/utils/roles/rolesUtils";
 
 export type GroupPageLoaderResponse = {
-    group: Group | undefined;
-    subGroups: Group[];
-    participants: Profile[];
-    folders: Folder[];
-    posts: GroupPost[];
-    jobs: Job[] | undefined;
+    group: Group.DTO | undefined;
+    subGroups: Group.DTO[];
+    participants: Profile.DTO[];
+    folders: Capacity.Folder.DTO[];
+    posts: Feed.GroupPost[];
+    jobs: Job.DTO[] | undefined;
 
-    competenceTypes: CompetenceType[];
+    competenceTypes: Competence.Type[];
 
     loggedData: undefined | {
-        profile: Profile;
-        groups: Group[];
-        links: Link[];
+        profile: Profile.DTO;
+        groups: Group.DTO[];
+        links: Link.DTO[];
         isParticipant: boolean;
     };
 };
 
 export async function fetchGroupPageData(props: {groupPath: string | undefined}): Promise<GroupPageLoaderResponse> {
-    const [groupRes, profileRes] = await Promise.all([
-        UniversimeApi.Group.get({groupPath: props.groupPath}),
+    if ( props.groupPath === undefined )
+        return FAILED_TO_LOAD;
+
+    const [ groupRes, profileRes ] = await Promise.all([
+        UniversimeApi.Group.getFromPath( props.groupPath ),
         UniversimeApi.Profile.profile(),
         fetchRoles()
     ]);
-    if (!groupRes.success || !groupRes.body || !profileRes.success || !profileRes.body) {
+
+    if ( !groupRes.isSuccess() || !profileRes.isSuccess() ) {
         return FAILED_TO_LOAD;
     }
-    
-    const group = groupRes.body.group;
-    const profile = profileRes.body.profile;
-    
-    const canISubgroups =    await canI_API('GROUP',   Permission.READ, group);
-    const canIParticipants = await canI_API('PEOPLE',  Permission.READ, group);
-    const canIFolders =      await canI_API('CONTENT', Permission.READ, group);
-    const canIFeed =         await canI_API('FEED',    Permission.READ, group);
+
+    const group = groupRes.body;
+    const profile = profileRes.body;
+
+    if ( group.id === undefined )
+        return FAILED_TO_LOAD;
+
+    const [ canISubgroups, canIParticipants, canIFolders, canIFeed ] = await Promise.all([
+        canI_API('GROUP',   Permission.READ, group),
+        canI_API('PEOPLE',  Permission.READ, group),
+        canI_API('CONTENT', Permission.READ, group),
+        canI_API('FEED',    Permission.READ, group),
+    ]);
 
     const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes, groupPostsRes, jobsRes, competenceTypesRes] = await Promise.all([
-        canISubgroups ? UniversimeApi.Group.subgroups({groupId: group.id})       : undefined,
-        canIParticipants ? UniversimeApi.Group.participants({groupId: group.id}) : undefined,
-        canIFolders ? UniversimeApi.Group.folders({groupId: group.id})           : undefined,
-        UniversimeApi.Profile.groups({profileId: profile.id}),
-        UniversimeApi.Profile.links({profileId: profile.id}),
-        canIFeed ? UniversimeApi.Feed.getGroupPosts({groupId: group.id}) : undefined,
+        canISubgroups ? UniversimeApi.Group.subgroups(group.id)       : undefined,
+        canIParticipants ? UniversimeApi.GroupParticipant.get(group.id) : undefined,
+        canIFolders ? UniversimeApi.Group.folders(group.id)           : undefined,
+        UniversimeApi.Profile.groups( profile.id ),
+        UniversimeApi.Profile.links( profile.id ),
+        canIFeed ? UniversimeApi.Feed.listGroup(group.id) : undefined,
         group.rootGroup ? UniversimeApi.Job.list({}) : undefined,
         UniversimeApi.CompetenceType.list()
     ]);
 
     return {
         group: group,
-        folders: foldersRes?.success ? foldersRes.body.folders : [],
-        participants: participantsRes?.success ? participantsRes.body.participants : [],
-        subGroups: subgroupsRes?.success ? subgroupsRes.body.subgroups : [],
-        posts: groupPostsRes?.success ? groupPostsRes.body.posts : [],
-        jobs: jobsRes?.body?.list,
-        competenceTypes: competenceTypesRes.body?.list ?? [],
+        folders: foldersRes?.data ?? [],
+        participants: participantsRes?.data ?? [],
+        subGroups: subgroupsRes?.data ?? [],
+        posts: groupPostsRes?.data ?? [],
+        jobs: jobsRes?.body,
+        competenceTypes: competenceTypesRes.body ?? [],
         loggedData: {
             profile: profile,
-            groups: profileGroupsRes.body?.groups ?? [],
-            links: profileLinksRes.body?.links ?? [],
-            isParticipant: participantsRes?.body?.participants
-            .find((p : any) => p.user.name === profile.user?.name) !== undefined,
+            groups: profileGroupsRes.body ?? [],
+            links: profileLinksRes.body ?? [],
+            isParticipant: participantsRes?.body
+            ?.find((p : any) => p.user.name === profile.user?.name) !== undefined,
         }
     };
 }

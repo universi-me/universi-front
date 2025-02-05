@@ -31,10 +31,10 @@ export type RoleCreate_RequestDTO = {
 };
 
 export type RoleUpdate_RequestDTO = {
-    name: Optional<string>;
-    description: Optional<string>;
-    group: Optional<string>;
-    features: Optional<{
+    name?: string;
+    description?: string;
+    group?: string;
+    features?: {
         [ k in Role.Feature ]?: Role.Permission;
-    }>;
+    };
 };

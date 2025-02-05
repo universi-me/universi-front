@@ -12,8 +12,6 @@ import { ValidationComposite } from "@/components/UniversiForm/Validation/Valida
 
 import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 
-import { FeatureTypes, FeatureTypesToLabel, Permission, Roles } from "@/types/Roles";
-
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
 import { ProfileClass } from "@/types/Profile";
@@ -22,14 +20,13 @@ import { type RolesResponse, RolesFetch } from "./RolesLoader";
 
 
 import "./Roles.less";
-import { Group } from "@/types/Group";
-import { rolesSorter } from "@/utils/roles/rolesUtils";
+import { rolesSorter, Permission, FeatureTypesToLabel } from "@/utils/roles/rolesUtils";
 import { removeFalsy } from "@/utils/arrayUtils";
 import { Filter } from "@/components/Filter/Filter";
 import stringUtils from "@/utils/stringUtils";
 
 type RolesPageProps = {
-    group: Group | undefined;
+    group: Group.DTO | undefined;
 };
 
 
@@ -42,10 +39,10 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     const editMode = true;
 
     const [showRolesForm, setShowRolesForm] = useState(false);
-    const [rolesEdit, setRolesEdit] = useState(null as Roles | null);
+    const [rolesEdit, setRolesEdit] = useState(null as Role.DTO | null);
     const [filterParticipant, setFilterParticipant] = useState("");
 
-    const [rows, setRows] = useState(null as Roles[] | null);
+    const [rows, setRows] = useState(null as Role.DTO[] | null);
 
     const [participants, setParticipants] = useState(null as ProfileClass[] | null);
 
@@ -54,7 +51,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
         .map((roles) => ({
             text: roles.name,
             onSelect(data) {
-                UniversimeApi.Roles.assign({rolesId: roles.id, groupId: group!?.id, profileId: data.id}).then(
+                UniversimeApi.Role.assign( roles.id, data.id ).then(
                     refreshPage
                 );
             },
@@ -65,13 +62,16 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
         refreshPage();
     }, [data]);
     
-    const handleFeatureCheckboxChange = (e : ChangeEvent<HTMLSelectElement>, row : Roles, column : FeatureTypes) => {
-        UniversimeApi.Feature.toggle({rolesId: row.id, feature: column, value: parseInt(e.target.value)}).then(
+    const handleFeatureCheckboxChange = (e : ChangeEvent<HTMLSelectElement>, row : Role.DTO, column : Role.Feature) => {
+        const features: { [k in Role.Feature]?: Role.Permission } = {};
+        features[ column ] = parseInt( e.target.value ) as Role.Permission;
+
+        UniversimeApi.Role.update( row.id, { features } ).then(
             refreshPage
         );
     };
 
-    const isFeatureChecked = (row : Roles, column : FeatureTypes) => {
+    const isFeatureChecked = (row : Role.DTO, column : Role.Feature) => {
         return row.permissions[column];
     };
 
@@ -98,7 +98,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                             value: rolesEdit?.id
                         },
                     ]}
-                    requisition={rolesEdit ? UniversimeApi.Roles.edit : UniversimeApi.Roles.create}
+                    requisition={rolesEdit ? UniversimeApi.Role.update : UniversimeApi.Role.create}
                     callback={async () => {setRolesEdit(null); setShowRolesForm(false); await refreshPage()}}
                 />
             }
@@ -125,7 +125,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                     <tr>
                       <th></th>
                       { Object.keys(FeatureTypesToLabel).map((key, index, value) => (
-                        <th key={key}>{FeatureTypesToLabel[key as FeatureTypes]}</th>
+                        <th key={key}>{FeatureTypesToLabel[key as Role.Feature]}</th>
                       ))}
                     </tr>
                   </thead>
@@ -142,8 +142,8 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                         {Object.keys(FeatureTypesToLabel).map((key, index, value) => (
                           <td key={key}>
                             <select
-              value={isFeatureChecked(row, key as FeatureTypes)}
-              onChange={(e) => handleFeatureCheckboxChange(e, row, key as FeatureTypes)}
+              value={isFeatureChecked(row, key as Role.Feature)}
+              onChange={(e) => handleFeatureCheckboxChange(e, row, key as Role.Feature)}
             >
               <option value={ Permission.DISABLED }>Desabilitada</option>
               <option value={ Permission.READ }>Ver</option>
@@ -177,7 +177,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
             <section id="participants-list">
         { participants?.filter(p => stringUtils.includesIgnoreCase(p.fullname ?? "", filterParticipant)).map(profile => {
             const isOwnProfile = auth.profile!.id === profile.id;
-            const isOwnerGroup = group?.admin.id === profile.id;
+            const isOwnerGroup = group?.admin?.id === profile.id;
 
             const disable = isOwnProfile || isOwnerGroup;
             const title = isOwnProfile 
@@ -200,7 +200,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild disabled={disable} title={title}>
                         <button type="button" className="set-role-trigger">
-                            { profile.roles?.name }
+                            { profile.role?.name }
                             <span className="bi"/>
                         </button>
                     </DropdownMenu.Trigger>
@@ -221,7 +221,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     </div>
 
     async function refreshPage() {
-        const newData = await RolesFetch(group!.id);
+        const newData = await RolesFetch(group!.id!);
         setValuesWithData(newData);
     }
 
@@ -232,8 +232,8 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
         setParticipants(data.participants
             ?.map(ProfileClass.new)
             .sort((a, b) => {
-                if (a.roles && b.roles && a.roles !== b.roles)
-                    return rolesSorter(a.roles, b.roles)
+                if (a.role && b.role && a.role !== b.role)
+                    return rolesSorter(a.role, b.role)
 
                 return ProfileClass.compare(a, b);
             }) ?? []

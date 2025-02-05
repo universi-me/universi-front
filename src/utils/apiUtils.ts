@@ -31,7 +31,7 @@ export function groupImageUrl(group: Group.DTO) {
         return import.meta.env.VITE_UNIVERSIME_API + group.image;
     }
 
-    return `${import.meta.env.VITE_UNIVERSIME_API}/group/image/${group.id}`;
+    return `${import.meta.env.VITE_UNIVERSIME_API}/groups/${group.id}/image`;
 }
 
 export function contentImageUrl(content: Capacity.Folder.DTO) {
@@ -95,10 +95,19 @@ export class ApiResponse<T> {
 
         return undefined;
     }
+
+    get errorMessage(): string | undefined {
+        const err = this.error;
+        if ( err === undefined )
+            return undefined;
+
+        return err.errors.join( "\n" )
+    }
 }
 
 interface SuccessfulApiResponse<T> {
     data: T;
     body: T;
     error: undefined;
+    errorMessage: undefined;
 }

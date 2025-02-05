@@ -5,7 +5,6 @@ import { UniversimeApi } from "@/services"
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { ManageMaterial } from "@/components/ManageMaterial";
-import { ContentStatusEnum, type Content } from "@/types/Capacity";
 
 import "./GroupContentMaterials.less";
 import { renderOption, type OptionInMenu, hasAvailableOption } from "@/utils/dropdownMenuUtils";
@@ -23,7 +22,7 @@ export function GroupContentMaterials() {
     const playingVideo = youTubeContext.currentVideoId;
     const isMiniature = youTubeContext.playingInMiniature;
 
-    const [materials, setMaterials] = useState<Content[]>();
+    const [materials, setMaterials] = useState<Capacity.Content.DTO[]>();
     const [filterMaterials, setFilterMaterials] = useState<string>("");
 
 
@@ -35,7 +34,7 @@ export function GroupContentMaterials() {
         return null;
     }
 
-    const OPTIONS_DEFINITION: OptionInMenu<Content>[] = [
+    const OPTIONS_DEFINITION: OptionInMenu<Capacity.Content.DTO>[] = [
         {
             text: "Editar",
             biIcon: "pencil-fill",
@@ -88,12 +87,12 @@ export function GroupContentMaterials() {
             return;
         }
 
-        UniversimeApi.Capacity.contentsInFolder({id: contentId})
+        UniversimeApi.Capacity.Folder.contents( contentId )
             .then(response => {
-                if (!response.success || !response.body) {
+                if (!response.isSuccess() || !response.body) {
                     SwalUtils.fireModal({
                         titleText: "Erro ao acessar conteúdo",
-                        text: response.message,
+                        text: response.errorMessage,
                         confirmButtonText: "Voltar aos conteúdos",
                     })
                         .then(result => {
@@ -104,11 +103,11 @@ export function GroupContentMaterials() {
                     return;
                 }
 
-                setMaterials(response.body.contents);
+                setMaterials(response.body);
             });
     }
 
-    type MaterialsListProps = { materials: Content[]; filter: string };
+    type MaterialsListProps = { materials: Capacity.Content.DTO[]; filter: string };
     function MaterialsList(props: Readonly<MaterialsListProps>) {
         const {materials, filter} = props;
 
@@ -129,7 +128,7 @@ export function GroupContentMaterials() {
         </div>
     }
 
-    type RenderMaterialProps = { material: Content };
+    type RenderMaterialProps = { material: Capacity.Content.DTO };
     function RenderMaterial(props: Readonly<RenderMaterialProps>) {
         const { material } = props;
         const materialUrl = isAbsoluteUrl(material.url)
@@ -193,7 +192,7 @@ export function GroupContentMaterials() {
         );
     }
 
-    function renderYouTubeEmbed(videoId: string, material : Content) {
+    function renderYouTubeEmbed(videoId: string, material : Capacity.Content.DTO) {
         return (
             <div className="icon-container" id={`icon-container-${videoId}`} onClick={() => {if(!isMiniature || videoId != playingVideo) youTubeContext?.playMaterial(material, refreshMaterials)}}>
                 <img src={MATERIAL_THUMB_VIDEO} className="material-image"></img>
@@ -201,7 +200,7 @@ export function GroupContentMaterials() {
         )
     }
 
-    function handleDeleteMaterial(material: Content) {
+    function handleDeleteMaterial(material: Capacity.Content.DTO) {
         SwalUtils.fireModal({
             showCancelButton: true,
 
@@ -215,9 +214,9 @@ export function GroupContentMaterials() {
             if (res.isConfirmed) {
                 const currentContentId = groupContext?.currentContent?.id!;
 
-                UniversimeApi.Capacity.removeContentFromFolder({ folderId: currentContentId, contentIds: material.id })
+                UniversimeApi.Capacity.Folder.changeContents(currentContentId, { removeContentsIds: [ material.id ] })
                     .then(res => {
-                        if (!res.success)
+                        if (!res.isSuccess())
                             return;
 
                         refreshMaterials();
@@ -226,13 +225,13 @@ export function GroupContentMaterials() {
         });
     }
 
-    function handleCheckButton(material: Content) {
-        const nextStatus: ContentStatusEnum = material.status === "DONE"
+    function handleCheckButton(material: Capacity.Content.DTO) {
+        const nextStatus: Capacity.Content.Status.Type = material.status === "DONE"
             ? "VIEW"
             : "DONE";
 
-        UniversimeApi.Capacity.editContentStatus({ contentId: material.id, contentStatusType: nextStatus }).then(res => {
-            if (res.success) refreshMaterials();
+        UniversimeApi.Capacity.Content.setStatus( material.id, { contentStatusType: nextStatus } ).then(res => {
+            if (res.isSuccess()) refreshMaterials();
         });
     }
 }

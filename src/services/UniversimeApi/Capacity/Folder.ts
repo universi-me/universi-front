@@ -40,12 +40,7 @@ export function changeAssignments( folderId: string, body: FolderChangeAssignmen
 }
 
 export function assignments( folderId: string, searchParams: FolderAssignmentsSearchParams ) {
-    const encodedParams = new URLSearchParams();
-    Object.entries( searchParams ).forEach( ( [k, v] ) => {
-        encodedParams.set( k, String( v ) );
-    } );
-
-    return api.get<Capacity.Folder.Assignment[]>( `/${folderId}/assignments?` + encodedParams.toString() ).then( ApiResponse.new );
+    return api.get<Capacity.Folder.Assignment[]>( `/${folderId}/assignments`, { params: searchParams } ).then( ApiResponse.new );
 }
 
 export function favorite( folderId: string ) {
@@ -70,29 +65,31 @@ export function move( folderId: string, body: FolderMove_RequestDTO ) {
 
 export type FolderCreate_RequestDTO = {
     name: string;
-    image: Optional<string>;
-    description: Optional<string>;
+    image?: string;
+    description?: string;
     rating: Capacity.Folder.Rating;
-    publicFolder: Optional<boolean>;
-    categoriesIds: Optional<string[]>;
-    grantedAccessGroupsIds: Optional<string[]>;
-    competenceTypeBadgeIds: Optional<string[]>;
+    publicFolder?: boolean;
+    categoriesIds?: string[];
+    grantedAccessGroupsIds?: string[];
+    competenceTypeBadgeIds?: string[];
 };
 
 export type FolderUpdate_RequestDTO = {
-    name: Optional<string>;
-    image: Optional<string>;
-    description: Optional<string>;
-    rating: Optional<Capacity.Folder.Rating>;
-    publicFolder: Optional<boolean>;
-    categoriesIds: Optional<string[]>;
-    grantedAccessGroupsIds: Optional<string[]>;
-    competenceTypeBadgeIds: Optional<string[]>;
+    name?: string;
+    image?: string;
+    description?: string;
+    rating?: Capacity.Folder.Rating;
+    publicFolder?: boolean;
+    categoriesIds?: string[];
+    grantedAccessGroups?: string[];
+    addGrantedAccessGroups?: string[];
+    removeGrantedAccessGroups?: string[];
+    competenceTypeBadgeIds?: string[];
 };
 
 export type FolderChangeContents_RequestDTO = {
-    addContentsIds: Optional<string[]>;
-    removeContentsIds: Optional<string[]>;
+    addContentsIds?: string[];
+    removeContentsIds?: string[];
 };
 
 export type FolderMoveContent_RequestDTO = {
@@ -105,9 +102,9 @@ export type FolderChangeAssignments_RequestDTO = {
 };
 
 export type FolderAssignmentsSearchParams = {
-    folder: Optional<string>;
-    assignedBy: Optional<string>;
-    assignedTo: Optional<string>;
+    folder?: string;
+    assignedBy?: string;
+    assignedTo?: string;
 };
 
 export type FolderDuplicate_RequestDTO = {

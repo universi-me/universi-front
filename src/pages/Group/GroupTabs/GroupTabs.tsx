@@ -6,8 +6,7 @@ import { AuthContext } from "@/contexts/Auth";
 import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 import { GroupCompetences } from "./GroupCompetences/GroupCompetences";
 import useCanI, { CanI_SyncFunction } from "@/hooks/useCanI";
-import { Permission } from "@/types/Roles";
-import { Optional } from "@/types/utils";
+import { Permission } from "@/utils/roles/rolesUtils";
 
 export type AvailableTabs = "feed" | "contents" | "groups" | "people" | "competences" | "jobs";
 
@@ -49,7 +48,7 @@ export function GroupTabs(props: Readonly<GroupTabsProps>) {
         if(!context?.group.canEnter || context.group.id == null)
             return;
 
-        const resData = await UniversimeApi.Group.join({groupId: context.group.id});
+        await UniversimeApi.GroupParticipant.join( context.group.id );
         await Promise.all([
             context.refreshData(),
             auth.updateLoggedUser(),
