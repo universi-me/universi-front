@@ -10,3 +10,5 @@ namespace Job {
         closed: boolean;
     };
 }
+
+type Job = Job.DTO;

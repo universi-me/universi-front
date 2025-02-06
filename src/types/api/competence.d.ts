@@ -16,12 +16,8 @@ namespace Competence {
     };
 
     type Level = 0 | 1 | 2 | 3;
-
-    type Info = {
-        competenceName: string;
-        competenceTypeId: string;
-        levelInfo: {
-            [ k: number ]: Profile.DTO[];
-        }
-    };
 }
+
+type Competence = Competence.DTO;
+type CompetenceType = Competence.Type;
+type CompetenceLevel = Competence.Level;

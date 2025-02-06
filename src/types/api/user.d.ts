@@ -12,3 +12,6 @@ namespace User {
 
     type AccessLevel = "ROLE_USER" | "ROLE_DEV" | "ROLE_ADMIN";
 }
+
+type User = User.DTO;
+type UserAccessLevel = User.AccessLevel;

@@ -5,3 +5,5 @@ namespace Institution {
         creationDate: string;
     }
 }
+
+type Institution = Institution.DTO;

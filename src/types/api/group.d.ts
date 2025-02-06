@@ -116,4 +116,23 @@ namespace Group {
             added: string;
         };
     }
+
+    type CompetenceInfo = {
+        competenceName: string;
+        competenceTypeId: string;
+        levelInfo: {
+            [ k: number ]: Profile.DTO[];
+        }
+    };
 }
+
+type Group = Group.DTO;
+type GroupSettings = Group.Settings;
+type GroupEmailFilter = Group.EmailFilter;
+type GroupTheme = Group.Theme;
+type GroupEnvironment = Group.Environment;
+type GroupType = Group.Type;
+type GroupEmailFilter = Group.EmailFilter.DTO;
+type GroupEmailFilterType = Group.EmailFilter.Type;
+type GroupFeature = Group.Feature.DTO;
+type GroupCompetenceInfo = Group.CompetenceInfo;

@@ -18,3 +18,8 @@ namespace Role {
 
     type Permission = 0 | 1 | 2 | 3 | 4;
 }
+
+type Roles = Role.DTO;
+type RoleType = Role.Type;
+type FeatureTypes = Role.Feature;
+type Permission = Role.Permission;

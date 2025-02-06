@@ -13,3 +13,7 @@ namespace Health {
         [ k in ServiceId ]: ResponseDTO;
     };
 }
+
+type HealthResponseDTO = Health.ResponseDTO;
+type HealthAllResponseDTO = Health.AllResponseDTO;
+type ServiceId = Health.ServiceId;

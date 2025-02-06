@@ -16,3 +16,6 @@ namespace Experience {
         creationDate: string;
     };
 }
+
+type Experience = Experience.DTO;
+type TypeExperience = Experience.Type;

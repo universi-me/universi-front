@@ -28,7 +28,7 @@ export function filter( body: GroupParticipantFilter_RequestDTO ) {
 }
 
 export function competences( groupId: string ) {
-    return api.get<Competence.Info[]>( `/competences/${groupId}` ).then( ApiResponse.new );
+    return api.get<Group.CompetenceInfo[]>( `/competences/${groupId}` ).then( ApiResponse.new );
 }
 
 

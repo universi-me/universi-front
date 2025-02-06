@@ -7,7 +7,7 @@ import "./GroupCompetence.less"
 export function GroupCompetences(){
 
     const groupContext = useContext(GroupContext)
-    const [groupCompetences, setGroupCompetences] = useState<Competence.Info[]>();
+    const [groupCompetences, setGroupCompetences] = useState<Group.CompetenceInfo[]>();
     const [competencesInfo, setCompetencesInfo] = useState<CompetenceInfo[]>();
 
     const [orderedByName, setOrderedByName] = useState<boolean | undefined>(undefined);

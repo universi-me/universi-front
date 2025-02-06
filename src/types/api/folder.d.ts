@@ -37,3 +37,8 @@ namespace Capacity {
         };
     }
 }
+
+type Folder = Capacity.Folder.DTO;
+type FolderRating = Capacity.Folder.Rating;
+type FolderFavorite = Capacity.Folder.Favorite;
+type FolderProfile = Capacity.Folder.Assignment;

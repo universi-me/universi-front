@@ -15,11 +15,10 @@ namespace Feed {
         authorId: string;
     };
 
-    type Comment = Post & {
+    type Comment = {
         id: string;
         groupPostId: string;
         content : string;
-        author : Profile.DTO;
         authorId : string;
     };
 
@@ -32,3 +31,8 @@ namespace Feed {
         comments: Comment[];
     };
 }
+
+type GroupPost = Feed.Post;
+type GroupGetPostDTO = Feed.GroupPost;
+type GroupPostComment = Feed.Comment;
+type GroupPostReaction = Feed.Reaction;

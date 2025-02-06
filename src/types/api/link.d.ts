@@ -10,3 +10,6 @@ namespace Link {
               | "LINKEDIN" | "DISCORD" | "PAYPAL" | "WHATSAPP" | "TRELLO" | "SLACK" | "SPOTIFY" | "YOUTUBE"
               | "SKYPE" | "STACK" | "FACEBOOK";
 }
+
+type Link = Link.DTO;
+type TypeLink = Link.Type;

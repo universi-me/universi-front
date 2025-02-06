@@ -13,3 +13,6 @@ namespace Profile {
 
     type Gender = "M" | "F" | "O";
 }
+
+type Profile = Profile.DTO;
+type Gender = Profile.Gender;

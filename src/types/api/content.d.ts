@@ -33,3 +33,10 @@ namespace Capacity {
         };
     }
 }
+
+type Content = Capacity.Content.DTO;
+type ContentRating = Capacity.Content.Rating;
+type ContentType = Capacity.Content.Type;
+type ContentStatus = Capacity.Content.Status.DTO;
+type ContentStatusEnum = Capacity.Content.Status.Type;
+type WatchProfileProgress = Capacity.Content.WatchProgress;

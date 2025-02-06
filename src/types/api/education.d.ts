@@ -15,3 +15,6 @@ namespace Education {
         creationDate: string;
     };
 };
+
+type Education = Education.DTO;
+type TypeEducation = Education.Type;
