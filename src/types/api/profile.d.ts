@@ -1,7 +1,7 @@
 namespace Profile {
     type DTO = {
         id: string;
-        user: Api.User.User;
+        user: User.DTO;
         firstname: Nullable<string>;
         lastname: Nullable<string>;
         image: Nullable<string>;

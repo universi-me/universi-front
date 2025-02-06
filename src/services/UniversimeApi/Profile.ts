@@ -9,7 +9,7 @@ export type ProfileEdit_RequestDTO = {
     biography?: string;
     gender?: Profile.Gender;
     image?: string;
-    password: string;
+    password?: string;
 };
 
 export function profile() {
@@ -57,6 +57,6 @@ export function image( idOrUsername: string ) {
 }
 
 export type ProfileFoldersResponseDTO = {
-    favorites: Capacity.Folder.Favorite;
-    assignments: Capacity.Folder.Assignment;
+    favorites: Capacity.Folder.Favorite[];
+    assignments: Capacity.Folder.Assignment[];
 };

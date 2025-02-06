@@ -1,13 +1,5 @@
 import { createContext } from "react";
 import type { ProfileClass } from "@/types/Profile";
-import type { Group } from "@/types/Group";
-import type { Competence, CompetenceProfileDTO, CompetenceType } from "@/types/Competence";
-import type { Link } from "@/types/Link";
-import type { Folder, FolderProfile } from "@/types/Capacity";
-import { Education } from "@/types/Education";
-import { Experience, TypeExperience } from "@/types/Experience";
-import { Institution } from "@/types/Institution";
-import { TypeEducation } from "@/types/TypeEducation";
 
 export type ProfileContextType = null | {
     accessingLoggedUser: boolean;
@@ -31,7 +23,7 @@ export type ProfileContextType = null | {
         groups:                  Group[];
         education:               Education[];
         experience:              Experience[];
-        competences:             CompetenceProfileDTO[];
+        competences:             Competence.DTO[];
         links:                   Link[];
         folders:                 Folder[];
         favorites:               Folder[];

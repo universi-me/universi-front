@@ -39,8 +39,8 @@ export function changeAssignments( folderId: string, body: FolderChangeAssignmen
     return api.patch<undefined>( `/${folderId}/assign`, body ).then( ApiResponse.new );
 }
 
-export function assignments( folderId: string, searchParams: FolderAssignmentsSearchParams ) {
-    return api.get<Capacity.Folder.Assignment[]>( `/${folderId}/assignments`, { params: searchParams } ).then( ApiResponse.new );
+export function assignments( searchParams: FolderAssignmentsSearchParams ) {
+    return api.get<Capacity.Folder.Assignment[]>( "/assignments", { params: searchParams } ).then( ApiResponse.new );
 }
 
 export function favorite( folderId: string ) {

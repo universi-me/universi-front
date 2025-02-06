@@ -8,7 +8,6 @@ import { contentImageUrl } from "@/utils/apiUtils";
 import { makeClassName } from "@/utils/tsxUtils";
 import stringUtils from "@/utils/stringUtils";
 
-import { type Folder, type FolderProfile } from "@/types/Capacity";
 import { ProfileClass } from "@/types/Profile";
 
 import "./ProfileAssignedByMe.less";

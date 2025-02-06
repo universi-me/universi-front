@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 
 import { ProfileContext } from "@/pages/Profile";
-import { CompetenceType, Level, LevelToDescription, LevelToLabel } from "@/types/Competence";
+import { LevelToDescription, LevelToLabel } from "@/types/Competence";
 import { UniversimeApi } from "@/services";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
@@ -29,7 +29,7 @@ export function CompetencesSettings() {
     }
 
     const levelOptions = Object.entries(LevelToLabel)
-        .map(([level]) => makeLevelOption(parseInt(level) as Level));
+        .map(([level]) => makeLevelOption(parseInt(level) as Competence.Level));
 
     return (
         profileContext &&
@@ -43,11 +43,11 @@ export function CompetencesSettings() {
                     required: true,
                     canCreate: true,
                     onCreate: (value: any) => UniversimeApi.CompetenceType.create({name: value}).then(response => {
-                        if (response.success) {
+                        if (response.isSuccess()) {
                             // return updated competence types
                             return UniversimeApi.CompetenceType.list().then(response => {
-                                if (response.success && response.body) {
-                                    let options = orderByName(response.body.list)
+                                if (response.isSuccess() && response.body) {
+                                    let options = orderByName(response.data)
                                     return options;
                                 }
                             })
@@ -73,7 +73,7 @@ export function CompetencesSettings() {
         />
     );
 
-    function makeLevelOption(level: Level) {
+    function makeLevelOption(level: Competence.Level) {
         return {
             value: level,
             label: `${LevelToLabel[level]}: ${LevelToDescription[level]}`,

@@ -50,10 +50,10 @@ export function CurriculumEducation() {
         if (!response.isConfirmed)
             return;
 
-        UniversimeApi.Education.remove({ educationId })
+        UniversimeApi.Education.remove( educationId )
         .then((response) => {
-            if (!response.success) {
-                throw new Error(response.message);
+            if (!response.isSuccess()) {
+                throw new Error(response.errorMessage);
             } else {
               profileContext.reloadPage();
             }
@@ -109,7 +109,7 @@ export function CurriculumEducation() {
             return (
               <div className="education-item" key={education.id}>
                 <div className="education-presentation">
-                  <h4 className="education-type">{education.typeEducation.name}</h4>
+                  <h4 className="education-type">{education.educationType.name}</h4>
                   <h4 className="learning">{education.institution.name}</h4>
                 </div>
                 <div className="direction-dateStart">
@@ -120,7 +120,7 @@ export function CurriculumEducation() {
                   <h4 className="title-date">Data de Término</h4>
                   <h4 className="learning education-date">
                     {
-                      education.presentDate ? 'Atuando' : education.endDate !== null ? formatDate(education.endDate) : 'Data não disponível'
+                      education.endDate === null ? 'Atuando' : formatDate(education.endDate)
                     }
                   </h4>
                 </div>
