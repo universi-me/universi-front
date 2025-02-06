@@ -6,13 +6,9 @@ import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm
 import { contentImageUrl } from "@/utils/apiUtils";
 import { IMG_DEFAULT_CONTENT } from "@/utils/assets";
 
-import type { Category, Folder } from "@/types/Capacity";
-import type { Group } from "@/types/Group";
-
 import "./ManageContent.less";
 import { GroupContext } from "@/pages/Group";
-import { FolderCreate_RequestDTO } from "@/services/UniversimeApi/Capacity";
-import { CompetenceType } from "@/types/Competence";
+import { FolderCreate_RequestDTO } from "@/services/UniversimeApi/Capacity/Folder";
 
 export type ManageContentProps = {
     /** A null `content` means a content is being created, while a value means
@@ -83,7 +79,7 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
                 DTOName: "groupPath", label: "Path do grupo", type: FormInputs.HIDDEN, value: group?.path
             }
         ]}
-        requisition = { !isNewContent ? UniversimeApi.Capacity.editFolder : handleCreateNewContent }
+        requisition = { !isNewContent ? UniversimeApi.Capacity.Folder.update : handleCreateNewContent }
         callback = {() => { props.afterSave?.();}}
     />;
 
@@ -95,45 +91,45 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
 
         const canPost = (
         (groupContext.group.everyoneCanPost) ||
-        (!groupContext.group.everyoneCanPost && groupContext.group.admin.id == groupContext.loggedData.profile.id)
+        (!groupContext.group.everyoneCanPost && groupContext.group.admin!.id == groupContext.loggedData.profile.id)
         )
 
-        UniversimeApi.Capacity.createFolder(dto)
+        UniversimeApi.Capacity.Folder.create(dto)
             .then(()=>{groupContext.refreshData()})
 
     }
 
     async function handleCreateCategory(value: string){
-        const createResponse = await UniversimeApi.Capacity.createCategory({ name: value, image: "" });
-        if (!createResponse.success) return [];
+        const createResponse = await UniversimeApi.Capacity.Category.create({ name: value });
+        if (!createResponse.isSuccess()) return [];
 
         const response = await updateCategories();
-        if (!response.success) return [];
+        if (!response.isSuccess()) return [];
 
-        return response.body.categories.map(t => ({ value: t.id, label: t.name }));
+        return response.data.map(t => ({ value: t.id, label: t.name }));
     }
 
     async function handleCreateCompetenceType(value: string){
         const createResponse = await UniversimeApi.CompetenceType.create({ name: value });
-        if (!createResponse.success) return [];
+        if (!createResponse.isSuccess()) return [];
 
         const response = await updateCompetenceTypes();
-        if (!response.success) return [];
+        if (!response.isSuccess()) return [];
 
-        return response.body.list.map(t => ({ value: t.id, label: t.name }));
+        return response.data.map(t => ({ value: t.id, label: t.name }));
     }
 
     async function updateCategories() {
-        const res = await UniversimeApi.Capacity.categoryList();
-        if (res.success) setAvailableCategories(res.body.categories);
+        const res = await UniversimeApi.Capacity.Category.list();
+        if (res.isSuccess()) setAvailableCategories(res.data);
 
         return res;
     }
 
     async function updateCompetenceTypes() {
         const res = await UniversimeApi.CompetenceType.list();
-        if (res.success)
-            setAvailableCompetenceTypes(res.body.list);
+        if (res.isSuccess())
+            setAvailableCompetenceTypes(res.data);
 
         return res;
     }

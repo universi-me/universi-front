@@ -34,10 +34,10 @@ export function folders( categoryId: string ) {
 
 export type CategoryCreate_RequestDTO = {
     name: string;
-    image: Optional<string>;
+    image?: string;
 };
 
 export type CategoryUpdate_RequestDTO = {
-    name: Optional<string>;
-    image: Optional<string>;
+    name?: string;
+    image?: string;
 };
