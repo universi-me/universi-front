@@ -13,3 +13,5 @@ describe("sample tests used as examples", () => {
       expect(i.id).toBe('pretend-its-a-uuid');
     })
 })
+
+export {};
