@@ -16,7 +16,7 @@ export function remove( emailFilterId: string ) {
 }
 
 export function list( groupId: string ) {
-    return api.get<undefined>( `/${groupId}` ).then( ApiResponse.new );
+    return api.get<Group.EmailFilter.DTO[]>( `/${groupId}` ).then( ApiResponse.new );
 }
 
 export type GroupEmailFilterCreate_RequestDTO = {

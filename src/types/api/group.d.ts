@@ -128,7 +128,7 @@ namespace Group {
 
 type Group = Group.DTO;
 type GroupSettings = Group.Settings;
-type GroupEmailFilter = Group.EmailFilter;
+type GroupEmailFilter = Group.EmailFilter.DTO;
 type GroupTheme = Group.Theme;
 type GroupEnvironment = Group.Environment;
 type GroupType = Group.Type;
