@@ -29,7 +29,7 @@ export function HealthCheckPage() {
 
     async function updateServiceHealth(service: ServiceId) {
         const health = await UniversimeApi.Health.checkHealth(service);
-        updateStatus( service, health.body.status );
+        updateStatus( service, health.data );
         return health;
     }
 
@@ -44,8 +44,8 @@ export function HealthCheckPage() {
             const state = { ...s };
             state[service] = health;
 
-            if(health && health!.exceptionMessage) {
-                logToBoxConsole(SERVICES_AVAILABLE[service as ServiceId].name + ": " + health.exceptionMessage);
+            if(health?.exceptionMessage) {
+                logToBoxConsole(SERVICES_AVAILABLE[service].name + ": " + health.exceptionMessage);
             }
 
             if(Object.values(state).every(h => h !== undefined && (h.up || h.disabled))) {
@@ -62,7 +62,7 @@ export function HealthCheckPage() {
 
         const apiHealth = await updateServiceHealth("API");
 
-        const procedure = apiHealth.success
+        const procedure = apiHealth.isSuccess()
             ? updateServiceHealth
             : unreachableServiceHealth
 
@@ -76,7 +76,7 @@ export function HealthCheckPage() {
 
 function logToBoxConsole(message: string) {
     if(message !== undefined) {
-        var div = document.getElementById('errors');
+        const div = document.getElementById('errors');
         if(div!.innerHTML.endsWith(message + "\n") === false) {
             div!.innerHTML += message + "\n";
         }
