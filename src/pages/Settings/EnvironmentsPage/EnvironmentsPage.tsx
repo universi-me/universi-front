@@ -1,21 +1,22 @@
 import { useReducer, useState, useEffect } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import * as Switch from "@radix-ui/react-switch"
 
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import { UniversimeApi } from "@/services"
 
 import { type EnvironmentsLoaderResponse, EnvironmentsFetch } from "./EnvironmentsLoader";
+import { type GroupEnvironmentUpdate_RequestDTO } from "@/services/UniversimeApi/GroupEnvironment";
 import "./EnvironmentsPage.less";
 import TextboxFormatted from "@/components/TextboxFormatted/TextboxFormatted";
 
 export function EnvironmentsPage() {
     const data = useLoaderData() as EnvironmentsLoaderResponse;
 
-    const [fetchEnvironmentsItems, setFetchEnvironmentsItems] = useState<any>({});
-    const [environmentsItems, setEnvironmentsItems] = useState<Array<{}>>([]);
+    const [fetchEnvironmentsItems, setFetchEnvironmentsItems] = useState<GroupEnvironmentUpdate_RequestDTO>({});
+    const [environmentsItems, setEnvironmentsItems] = useState<Array<EnvironmentField>>([]);
 
-    const [editedItems, setEditedItems] = useReducer((state:any, action:any) => {
+    const [editedItems, setEditedItems] = useReducer((state: GroupEnvironmentUpdate_RequestDTO , action: EditedItemsAction ) => {
         switch (action.type) {
           case 'RESET':
             return {};
@@ -97,7 +98,7 @@ export function EnvironmentsPage() {
                 items: [
                     {
                         name: "Notificar Novo Conteúdo No Grupo",
-                        key: "message_new_content_enabled",
+                        key: "alert_new_content_enabled",
                         type: "boolean",
                         defaultValue: true,
                     },
@@ -110,7 +111,7 @@ export function EnvironmentsPage() {
                     },
                     {
                         name: "Notificar Conteúdo Atribuído",
-                        key: "message_assigned_content_enabled",
+                        key: "alert_assigned_content_enabled",
                         type: "boolean",
                         defaultValue: true,
                     },
@@ -217,14 +218,14 @@ export function EnvironmentsPage() {
 
     return <div id="environments-settings">
         <SettingsTitle>Variáveis Ambiente</SettingsTitle>
-        <SettingsDescription>Aqui você pode configurar as variáveis ambiente para algumas funcinalidades da plataforma.</SettingsDescription>
+        <SettingsDescription>Aqui você pode configurar as variáveis ambiente para algumas funcionalidades da plataforma.</SettingsDescription>
 
         <section className="environments-list">
-        {environmentsItems.map((section : any) => (
+        {environmentsItems.map((section) => (
             <div className="environments-item" key={section.title}>
             <h3>{section.title}</h3>
-            {section.items.map((item : any) => (
-                <div className="environments-row-content">
+            {section.items.map((item) => (
+                <div className="environments-row-content" key={item.key}>
 
                 <div className="enabled-delete-wrapper" key={item.name}>
                     <div className="environments-label">{item.name}</div>
@@ -233,7 +234,7 @@ export function EnvironmentsPage() {
                         <div className="enabled-delete-wrapper">
                             <div className="enabled-wrapper">
                                 {getValue(item) ? "Ativado" : "Desativado"}
-                                <Switch.Root className="filter-enabled-root" checked={getValue(item)} onCheckedChange={makeToggleFilter(item)} >
+                                <Switch.Root className="filter-enabled-root" checked={!!getValue(item)} onCheckedChange={makeToggleFilter(item)} >
                                     <Switch.Thumb className="filter-enabled-thumb" />
                                 </Switch.Root>
                             </div>
@@ -281,26 +282,26 @@ export function EnvironmentsPage() {
     </div>
 
 
-    function getValue(item: any) {
-        return editedItems[item.key] !== undefined ? editedItems[item.key] : fetchEnvironmentsItems[item.key] ?? item.defaultValue;
+    function getValue(item: EnvironmentItem) {
+        return editedItems[item.key] ?? fetchEnvironmentsItems[item.key] ?? item.defaultValue;
     }
 
-    function setTextValue(item: any, event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+    function setTextValue(item: EnvironmentItem, event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
         setTextValueString(item, event.target.value);
     }
 
-    function setTextValueString(item: any, value: string) {
+    function setTextValueString(item: EnvironmentItem, value: string) {
         setEditedItems({ type: 'EDIT', id: item.key, value: value });
     }
 
-    function makeToggleFilter(item: any) {
+    function makeToggleFilter(item: EnvironmentItem) {
         return function (checked: boolean) {
             setEditedItems({ type: 'EDIT', id: item.key, value: checked });
         };
     }
 
     async function submitChanges() {
-        const response = await UniversimeApi.Group.editEnvironments(editedItems);
+        await UniversimeApi.GroupEnvironment.update(editedItems);
         refreshPage();
     }
 
@@ -311,3 +312,24 @@ export function EnvironmentsPage() {
     }
 }
 
+type EditedItemsAction = {
+    type: "RESET";
+} | {
+    type: "EDIT";
+    id: keyof GroupEnvironmentUpdate_RequestDTO;
+    value: unknown;
+};
+
+type EnvironmentField = {
+    title: string;
+    items: EnvironmentItem[];
+};
+
+type EnvironmentItem = {
+    name: string;
+    key: keyof GroupEnvironmentUpdate_RequestDTO;
+    description?: string;
+    type: "boolean" | "string" | "textbox" | "textbox-html";
+    defaultValue: any;
+    secure?: boolean;
+};
