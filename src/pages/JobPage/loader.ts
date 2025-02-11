@@ -8,17 +8,17 @@ export async function fetchJobPageData(id: string | undefined): Promise<JobPageL
     };
 
     const [ jobRes ] = await Promise.all([
-        UniversimeApi.Job.get({ jobId: id }),
+        UniversimeApi.Job.get( id ),
     ]);
 
-    if (!jobRes.success) return {
+    if (!jobRes.isSuccess()) return {
         success: false,
-        reason: jobRes.message ?? "Não foi possível encontrar a vaga."
+        reason: jobRes.errorMessage ?? "Não foi possível encontrar a vaga."
     };
 
     return {
         success: true,
-        job: jobRes.body.job,
+        job: jobRes.data,
     };
 }
 

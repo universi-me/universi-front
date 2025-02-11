@@ -32,7 +32,7 @@ export function JobActions( props : Readonly<JobActionsProps> ) {
         });
 
         if (res.isConfirmed) {
-            await UniversimeApi.Job.close({ jobId: job!.id });
+            await UniversimeApi.Job.close( job!.id );
             await context?.refresh();
         }
     }
