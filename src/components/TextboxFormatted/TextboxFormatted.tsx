@@ -72,20 +72,20 @@ const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModu
             return new Promise(async (resolve, reject) => {
                 try {
                   let res = await UniversimeApi.Image.upload({image: file})
-                  if(res.success && res.body) {
-                    resolve(isAbsoluteUrl(res.body.link) ? res.body.link : import.meta.env.VITE_UNIVERSIME_API + res.body.link)
+                  if(res.isSuccess()) {
+                    resolve(isAbsoluteUrl(res.data) ? res.data : import.meta.env.VITE_UNIVERSIME_API + res.data );
                   } else {
-                    reject()
+                    reject( new Error( res.errorMessage ) )
                   }
                 }catch(e) {
-                  reject()
+                  reject( new Error( String( e ) ) )
                 }
             });
         },
     },
   }), []);
 
-  const modules = customModules || defaultModules;
+  const modules = customModules ?? defaultModules;
 
 
   return (

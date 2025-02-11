@@ -286,7 +286,7 @@ export function UniversiForm(props : formProps){
                     }
 
                     const res = await UniversimeApi.Image.upload({image: imageFile})
-                    if(res.success && res.body)
+                    if(res.isSuccess())
                         handleChange(index, res.body.link)
                 }
             };

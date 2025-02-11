@@ -9,7 +9,7 @@ export async function upload( body: ImageUpload_RequestDTO ) {
     formData.append("imagem", body.image);
 
     const res = await api.post<undefined>( "", formData );
-    return new ApiResponse({
+    return new ApiResponse<string>({
         data: res.headers.Location,
         status: res.status,
     })
