@@ -53,14 +53,14 @@ export function OAuth2Element() {
             navigate("/");
         }
 
-        else if ( response.success ) {
+        else if ( response.isSuccess() ) {
             auth.signinGoogle();
         }
 
         else {
             await SweetAlertUtils.fireModal({
                 title: "Erro ao fazer login com Google",
-                text: response.message,
+                text: response.errorMessage,
                 confirmButtonText: "Voltar para o login",
             });
 

@@ -13,7 +13,7 @@ export function KeyCloakOAuth2Element() {
     useEffect(() => {
         UniversimeApi.Auth.login_keycloak({ code: code })
         .then((res) => {
-            if (!res.success)
+            if (!res.isSuccess())
                 navigate("/login")
             
             else {

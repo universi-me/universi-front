@@ -4,10 +4,6 @@ import { ApiResponse } from "@/utils/apiUtils";
 const api = createApiInstance("/")
 
 
-export function getAccount() {
-    return api.get<GetAccount_ResponseDTO>("/account").then( ApiResponse.new );
-}
-
 export function signin( body: SignIn_RequestDTO ) {
     return api.post<SignIn_ResponseDTO>( "/signin", body ).then( ApiResponse.new );
 }
@@ -17,14 +13,12 @@ export async function logout() {
     return response.data;
 }
 
-export async function login_google({ token }: GoogleSignIn_RequestDTO) {
-    const response = await api.post<SignIn_ResponseDTO>("/login/google", { token });
-    return response.data;
+export function login_google({ token }: GoogleSignIn_RequestDTO) {
+    return api.post<SignIn_ResponseDTO>("/login/google", { token }).then( ApiResponse.new );
 }
 
-export async function login_keycloak({ code }: KeyCloakSignIn_RequestDTO) {
-    const response = await api.post<SignIn_ResponseDTO>("/login/keycloak", { code });
-    return response.data;
+export function login_keycloak({ code }: KeyCloakSignIn_RequestDTO) {
+    return api.post<SignIn_ResponseDTO>("/login/keycloak", { code }).then( ApiResponse.new );;
 }
 
 export function recoverPassword( body: RecoverPassword_RequestDTO ) {
