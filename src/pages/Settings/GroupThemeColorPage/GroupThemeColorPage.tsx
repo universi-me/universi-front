@@ -68,15 +68,12 @@ export function GroupThemeColorPage() {
     </div>;
 
     async function saveChanges() {
-        const res = await UniversimeApi.Group.editTheme({
-            groupId: auth.organization.id,
-            ...selectedTheme,
-        }).catch(err => null);
+        const res = await UniversimeApi.GroupTheme.update( buildThemeUpdateDTO() ).catch(err => null);
 
-        if ( !res?.success ) {
+        if ( !res?.isSuccess() ) {
             SwalUtils.fireModal({
                 title: "Erro ao salvar alterações",
-                text: res?.message ?? "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente mais tarde. Se o problema persistir entre em contato com o suporte."
+                text: res?.errorMessage ?? "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente mais tarde. Se o problema persistir entre em contato com o suporte."
             });
         }
 
@@ -91,5 +88,25 @@ export function GroupThemeColorPage() {
         newTheme[variable] = value.toLocaleUpperCase();
 
         setSelectedTheme(newTheme);
+    }
+
+    function buildThemeUpdateDTO(): UniversimeApi.GroupTheme.GroupThemeUpdate_RequestDTO {
+        return {
+            groupId: auth.organization.id!,
+            background_color: selectedTheme.backgroundColor,
+            button_hover_color: selectedTheme.buttonHoverColor,
+            card_background_color: selectedTheme.cardBackgroundColor,
+            card_item_color: selectedTheme.cardItemColor,
+            font_color_alert: selectedTheme.fontColorAlert,
+            font_color_disabled: selectedTheme.fontColorDisabled,
+            font_color_links: selectedTheme.fontColorLinks,
+            font_color_success: selectedTheme.fontColorSuccess,
+            font_color_v1: selectedTheme.fontColorV1,
+            font_color_v2: selectedTheme.fontColorV2,
+            font_color_v3: selectedTheme.fontColorV3,
+            primary_color: selectedTheme.primaryColor,
+            secondary_color: selectedTheme.secondaryColor,
+            wrong_invalid_color: selectedTheme.wrongInvalidColor,
+        };
     }
 }

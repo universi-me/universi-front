@@ -10,18 +10,18 @@ export function update( body: GroupThemeUpdate_RequestDTO ) {
 export type GroupThemeUpdate_RequestDTO = {
     groupId: string;
 
-    primary_color: Optional<string>;
-    secondary_color: Optional<string>;
-    background_color: Optional<string>;
-    card_background_color: Optional<string>;
-    card_item_color: Optional<string>;
-    font_color_v1: Optional<string>;
-    font_color_v2: Optional<string>;
-    font_color_v3: Optional<string>;
-    font_color_links: Optional<string>;
-    font_color_disabled: Optional<string>;
-    button_hover_color: Optional<string>;
-    font_color_alert: Optional<string>;
-    font_color_success: Optional<string>;
-    wrong_invalid_color: Optional<string>;
+    primary_color?: string;
+    secondary_color?: string;
+    background_color?: string;
+    card_background_color?: string;
+    card_item_color?: string;
+    font_color_v1?: string;
+    font_color_v2?: string;
+    font_color_v3?: string;
+    font_color_links?: string;
+    font_color_disabled?: string;
+    button_hover_color?: string;
+    font_color_alert?: string;
+    font_color_success?: string;
+    wrong_invalid_color?: string;
 };
