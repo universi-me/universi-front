@@ -12,15 +12,15 @@ export type CompetencesSettingsLoaderResponse = {
 export async function CompetencesSettingsFetch(): Promise<CompetencesSettingsLoaderResponse> {
     const competencesTypeResponse = await UniversimeApi.CompetenceType.list();
 
-    if (!competencesTypeResponse.success) {
+    if (!competencesTypeResponse.isSuccess()) {
         return {
             competenceTypes: undefined,
-            errorReason: competencesTypeResponse.message,
+            errorReason: competencesTypeResponse.errorMessage,
         };
     }
 
     return {
-        competenceTypes: competencesTypeResponse.body.list,
+        competenceTypes: competencesTypeResponse.data,
         errorReason: undefined,
     };
 }

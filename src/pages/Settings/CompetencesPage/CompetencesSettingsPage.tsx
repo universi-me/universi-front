@@ -113,7 +113,7 @@ export function CompetencesSettingsPage() {
 
     async function refreshCompetenceTypes() {
         const competenceTypes = await UniversimeApi.CompetenceType.list();
-        setCompetenceTypes(competenceTypes.body?.list ?? []);
+        setCompetenceTypes(competenceTypes.data ?? []);
     }
 
     type MergeCompetencesProps = {
@@ -125,9 +125,9 @@ export function CompetencesSettingsPage() {
 
         const { remainingCompetenceTypeId } = props;
 
-        await UniversimeApi.Admin.mergeCompetenceType({
-            remainingCompetenceTypeId,
-            removedCompetenceTypeId: mergeCompetence.id
+        await UniversimeApi.CompetenceType.merge({
+            remainingCompetenceType: remainingCompetenceTypeId,
+            removedCompetenceType: mergeCompetence.id,
         });
     }
 }

@@ -95,7 +95,7 @@ export function CompetenceTypeEditor(props: Readonly<CompetenceTypeEditorProps>)
         if (!response.isConfirmed)
             return;
 
-        await UniversimeApi.CompetenceType.update({ id: ct.id, reviewed: true });
+        await UniversimeApi.CompetenceType.update(ct.id, { reviewed: true });
         await refreshCompetenceTypes();
     }
 
@@ -105,7 +105,7 @@ export function CompetenceTypeEditor(props: Readonly<CompetenceTypeEditorProps>)
         if (nameInput === undefined)
             return;
 
-        await UniversimeApi.CompetenceType.update({ id: ct.id, name: nameInput });
+        await UniversimeApi.CompetenceType.update(ct.id, { name: nameInput });
         await refreshCompetenceTypes();
         setNameInput(undefined);
     }
@@ -124,7 +124,7 @@ export function CompetenceTypeEditor(props: Readonly<CompetenceTypeEditorProps>)
         if (!response.isConfirmed)
             return;
 
-        await UniversimeApi.Admin.removeCompetenceType({ id: ct.id });
+        await UniversimeApi.CompetenceType.remove( ct.id );
         await refreshCompetenceTypes();
     }
 }
