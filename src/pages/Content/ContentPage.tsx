@@ -75,12 +75,12 @@ export function ContentPage() {
             },
 
             async refreshContent() {
-                const res = await UniversimeApi.Capacity.getFolder({ reference: this.content.reference });
-                if (!res.success) return this;
+                const res = await UniversimeApi.Capacity.Folder.get( this.content.reference );
+                if (!res.isSuccess()) return this;
 
                 const newContext = {
                     ...this,
-                    content: res.body.folder,
+                    content: res.data,
                 };
 
                 setContext(newContext);
@@ -88,12 +88,12 @@ export function ContentPage() {
             },
 
             async refreshMaterials() {
-                const res = await UniversimeApi.Capacity.contentsInFolder({ reference: this.content.reference });
-                if (!res.success) return this;
+                const res = await UniversimeApi.Capacity.Folder.contents( this.content.reference );
+                if (!res.isSuccess()) return this;
 
                 const newContext = {
                     ...this,
-                    materials: res.body.contents,
+                    materials: res.data,
                 };
 
                 setContext(newContext);

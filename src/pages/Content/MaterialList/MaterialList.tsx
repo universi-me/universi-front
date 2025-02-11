@@ -69,10 +69,11 @@ function RenderMaterial(props: Readonly<RenderMaterialProps>) {
                     icon: "warning",
                 }).then(res => {
                     if (res.isConfirmed) {
-                        UniversimeApi.Capacity.removeContentFromFolder({ reference: contexts.contentContext.content.reference, contentIds: material.id })
-                            .then(res => {
-                                if (res.success) contexts.contentContext.refreshMaterials();
-                            });
+                        UniversimeApi.Capacity.Folder.changeContents( contexts.contentContext.content.reference, {
+                            removeContentsIds: [ material.id ],
+                        } ).then(res => {
+                            if (res.isSuccess()) contexts.contentContext.refreshMaterials();
+                        });
                     }
                 });
             },
@@ -123,9 +124,9 @@ function RenderMaterial(props: Readonly<RenderMaterialProps>) {
             ? "VIEW"
             : "DONE";
 
-        UniversimeApi.Capacity.editContentStatus({ contentId: material.id, contentStatusType: nextStatus })
+        UniversimeApi.Capacity.Content.setStatus( material.id, { contentStatusType: nextStatus })
             .then(res => {
-                if (res.success)
+                if (res.isSuccess())
                     contexts.contentContext.refreshMaterials();
             })
     }
