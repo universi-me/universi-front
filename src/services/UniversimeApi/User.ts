@@ -63,15 +63,15 @@ export type UserGetAvailable_ResponseDTO = {
 
 export type UserAccountUpdate_RequestDTO = {
     userId: string;
-    username: Optional<string>;
-    email: Optional<string>;
-    password: Optional<string>;
-    authorityLevel: Optional<string>;
-    emailVerified: Optional<boolean>;
-    blockedAccount: Optional<boolean>;
-    inactiveAccount: Optional<boolean>;
-    credentialsExpired: Optional<boolean>;
-    expiredUser: Optional<boolean>;
+    username?: string;
+    email?: string;
+    password?: string;
+    authorityLevel?: string;
+    emailVerified?: boolean;
+    blockedAccount?: boolean;
+    inactiveAccount?: boolean;
+    credentialsExpired?: boolean;
+    expiredUser?: boolean;
 };
 
 export type UserLoginKeycloak_RequestDTO = {

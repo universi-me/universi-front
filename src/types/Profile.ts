@@ -50,7 +50,7 @@ export class ProfileClass implements Profile.DTO {
             return import.meta.env.VITE_UNIVERSIME_API + this.image;
         }
 
-        return import.meta.env.VITE_UNIVERSIME_API + "/profile/image/" + this.id;
+        return `${import.meta.env.VITE_UNIVERSIME_API}/profiles/${this.user.name}/image`;
     }
 
     /**
