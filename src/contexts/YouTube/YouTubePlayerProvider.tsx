@@ -36,8 +36,8 @@ export function YouTubePlayerProvider({children}: YouTubePlayerProviderProps) {
     );
 
     async function playMaterial(material: Content, onChangeStatus?: (material: Content) => any) {
-        const fetchApiMaterial = await UniversimeApi.Capacity.getContent({ id: material.id });
-        const apiMaterial = fetchApiMaterial.success ? fetchApiMaterial.body.content : undefined;
+        const fetchApiMaterial = await UniversimeApi.Capacity.Content.get( material.id );
+        const apiMaterial = fetchApiMaterial.data;
 
         if (!apiMaterial) return false;
 
@@ -100,13 +100,11 @@ export function YouTubePlayerProvider({children}: YouTubePlayerProviderProps) {
 
         let nextStatus: ContentStatusEnum = material.status == "DONE" ? "NOT_VIEWED" : "DONE"
 
-        await UniversimeApi.Capacity.createContentStatus({contentId : material.id});
+        const data = await UniversimeApi.Capacity.Content.setStatus( material.id, { contentStatusType: nextStatus } );
 
-        const data = await UniversimeApi.Capacity.editContentStatus({contentId: material.id, contentStatusType : nextStatus});
+        if (!data.isSuccess()) return;
 
-        if (!data.success) return;
-
-        const status = data.body.contentStatus.status;
+        const status = data.data.status;
         if(status == "DONE" || status == "NOT_VIEWED") {
             setCurrentMaterial({...material, status});
             await onChangeStatus?.(material);
