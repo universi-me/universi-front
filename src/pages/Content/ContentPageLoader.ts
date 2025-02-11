@@ -2,7 +2,6 @@ import { type LoaderFunctionArgs } from "react-router";
 
 import { UniversimeApi } from "@/services"
 import { removeFalsy } from "@/utils/arrayUtils";
-import { type Content, type Folder } from "@/types/Capacity";
 import { ProfileClass } from "@/types/Profile";
 
 export type ContentPageLoaderSuccess = {

@@ -1,10 +1,6 @@
 import { type PropsWithChildren, type HTMLAttributes } from "react";
 import { ProfileBio, ProfileGroups } from "@/components/ProfileInfo";
 
-import { type Profile } from "@/types/Profile";
-import { type Link } from "@/types/Link";
-import { type Group } from "@/types/Group";
-
 import "./ProfileInfo.less";
 import { makeClassName } from "@/utils/tsxUtils";
 

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase, equality } from "@/utils/passwordValidation";
-import { NullableBoolean } from "@/types/utils";
 
 import './NewPasswordInput.less';
 

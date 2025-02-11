@@ -1,6 +1,5 @@
 import { useState, MouseEvent, ChangeEvent, EventHandler } from "react";
-import { Link, TypeLink, TypeLinkToBootstrapIcon } from "@/types/Link";
-import { Profile } from "@/types/Profile";
+import { TypeLinkToBootstrapIcon } from "@/types/Link";
 
 export type ManageProfileLinksProps = {
     profileLinks: Link[];

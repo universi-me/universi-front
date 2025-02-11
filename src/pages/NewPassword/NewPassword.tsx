@@ -5,7 +5,6 @@ import { UniversimeApi } from "@/services"
 import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import NewPasswordInput from "@/components/NewPasswordInput/NewPasswordInput";
-import { NullableBoolean } from "@/types/utils";
 
 export default function NewPassword(){
     const { id: token } = useParams();

@@ -10,7 +10,6 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import { stringIncludesIgnoreCase } from "@/utils/stringUtils";
 import { groupArray } from "@/utils/arrayUtils";
 
-import { type CompetenceType } from "@/types/Competence";
 import "./CompetencesSettingsPage.less";
 
 export function CompetencesSettingsPage() {

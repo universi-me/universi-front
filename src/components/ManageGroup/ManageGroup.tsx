@@ -2,7 +2,7 @@ import { FormInputs, TextValidation, UniversiForm, ValidationComposite } from "@
 import { UniversimeApi } from "@/services"
 
 import { groupBannerUrl, groupHeaderUrl, groupImageUrl } from "@/utils/apiUtils";
-import { Group, GroupType, GroupTypeToLabel } from "@/types/Group";
+import { GroupTypeToLabel } from "@/types/Group";
 
 export type ManageGroupProps = {
     group: Group | null;

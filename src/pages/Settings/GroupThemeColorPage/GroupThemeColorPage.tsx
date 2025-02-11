@@ -4,7 +4,6 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import { UniversimeApi } from "@/services"
-import type { GroupTheme } from "@/types/Group";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import ThemeContext from "@/contexts/Theme";
 import ThemeMappings from "@/configs/ThemeMappings";

@@ -1,7 +1,6 @@
 import { MouseEvent, PropsWithChildren, useMemo, useState } from "react";
 import { YouTubePlayerContext } from "@/contexts/YouTube";
 
-import { ContentStatusEnum, type Content } from "@/types/Capacity";
 import { getYouTubeVideoIdFromUrl } from "@/utils/regexUtils";
 import { VideoPopup } from "@/components/VideoPopup/VideoPopup";
 import { UniversimeApi } from "@/services"

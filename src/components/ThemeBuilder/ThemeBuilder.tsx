@@ -3,7 +3,6 @@ import { HexColorPicker } from "react-colorful";
 
 import { makeClassName } from "@/utils/tsxUtils";
 import { GroupThemeToLabel } from "@/utils/themeUtils";
-import { GroupTheme } from "@/types/Group";
 
 import styles from "./ThemeBuilder.module.less";
 

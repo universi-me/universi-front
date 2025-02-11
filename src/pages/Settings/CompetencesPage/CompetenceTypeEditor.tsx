@@ -4,8 +4,6 @@ import { UniversimeApi } from "@/services"
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { makeClassName, setStateAsValue } from "@/utils/tsxUtils";
 
-import { type CompetenceType } from "@/types/Competence";
-
 export type CompetenceTypeEditorProps = {
     /** CompetenceType being edited */
     ct: CompetenceType;

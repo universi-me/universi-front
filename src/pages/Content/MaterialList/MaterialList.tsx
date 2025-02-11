@@ -10,8 +10,6 @@ import { type OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dro
 import { makeClassName } from "@/utils/tsxUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
-import { ContentStatusEnum, type Content } from "@/types/Capacity";
-
 import "./MaterialList.less";
 
 export function MaterialList() {

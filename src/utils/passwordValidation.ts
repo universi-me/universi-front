@@ -1,5 +1,3 @@
-import { NullableBoolean } from "@/types/utils";
-
 const MINIMUM_PASSWORD_LENGTH = 8;
 
 const FAIL_VALIDATION_CLASS =    "failed-validation";

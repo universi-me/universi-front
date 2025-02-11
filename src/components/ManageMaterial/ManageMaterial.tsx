@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { UniversimeApi } from "@/services"
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 
-import { AVAILABLE_MATERIAL_TYPES, MATERIAL_TYPES_TEXT, type Category, type Content, type Folder } from "@/types/Capacity";
+import { AVAILABLE_MATERIAL_TYPES, MATERIAL_TYPES_TEXT } from "@/types/Capacity";
 import "./ManageMaterial.less";
 
 export type ManageMaterialProps = {

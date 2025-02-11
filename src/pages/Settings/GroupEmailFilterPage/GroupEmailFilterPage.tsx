@@ -11,7 +11,7 @@ import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import { type GroupEmailFilterLoaderResponse, GroupEmailFilterFetch } from "./GroupEmailFilterLoader";
-import { GroupEmailFilterTypeToLabel, type GroupEmailFilter, type GroupEmailFilterType } from "@/types/Group";
+import { GroupEmailFilterTypeToLabel } from "@/types/Group";
 import "./GroupEmailFilter.less";
 
 let NEW_FILTER_ID = 0;

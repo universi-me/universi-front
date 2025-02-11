@@ -3,7 +3,6 @@ import { useContext } from "react";
 import { UniversimeApi } from "@/services"
 import ActionButton from "@/components/ActionButton";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { Job } from "@/types/Job";
 
 import { JobContext } from "@/pages/JobPage";
 

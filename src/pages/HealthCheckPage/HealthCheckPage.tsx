@@ -1,7 +1,6 @@
 import BootstrapIcon from "@/components/BootstrapIcon";
 import { UniversimeApi } from "@/services"
-import { ServiceId, SERVICES_AVAILABLE, HealthResponseDTO } from "@/types/Health";
-import { Optional } from "@/types/utils";
+import { SERVICES_AVAILABLE } from "@/types/Health";
 import { useEffect, useState } from "react";
 
 import "./HealthCheckPage.less";

@@ -2,7 +2,6 @@ import YouTube from "react-youtube";
 import { MouseEvent, useState } from "react";
 
 import "./VideoPopup.css";
-import { Content } from "@/types/Capacity";
 import { getYouTubeVideoIdFromUrl } from "@/utils/regexUtils";
 
 export type VideoPopupProps = {

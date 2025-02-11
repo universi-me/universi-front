@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 
-import type { Group } from "@/types/Group";
 import { groupImageUrl } from "@/utils/apiUtils";
 
 import "./ProfileGroups.less";

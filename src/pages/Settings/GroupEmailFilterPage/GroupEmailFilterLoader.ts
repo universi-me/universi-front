@@ -1,5 +1,4 @@
 import { type LoaderFunctionArgs } from "react-router-dom";
-import { type GroupEmailFilter } from "@/types/Group";
 import { UniversimeApi } from "@/services"
 
 export type GroupEmailFilterLoaderResponse = {

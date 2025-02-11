@@ -1,5 +1,4 @@
 import { createContext } from "react";
-import { type Content, type Folder } from "@/types/Capacity";
 import { type ProfileClass } from "@/types/Profile";
 
 type EditingSettings = {

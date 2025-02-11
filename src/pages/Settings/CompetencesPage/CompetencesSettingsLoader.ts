@@ -1,5 +1,4 @@
 import { UniversimeApi } from "@/services"
-import { type CompetenceType } from "@/types/Competence";
 import { LoaderFunctionArgs } from "react-router-dom";
 
 export type CompetencesSettingsLoaderResponse = {

@@ -4,15 +4,14 @@ import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
 import { ICON_EDIT_WHITE } from '@/utils/assets';
 import { groupBannerUrl } from '@/utils/apiUtils';
 
-import { type Profile, ProfileClass } from '@/types/Profile';
-import { TypeLinkToBootstrapIcon, type Link as Link_API } from '@/types/Link';
-import type { Group } from '@/types/Group';
+import { ProfileClass } from '@/types/Profile';
+import { TypeLinkToBootstrapIcon } from '@/types/Link';
 import './ProfileBio.less';
 
 export type ProfileBioProps = {
     profile: Profile;
     organization?: Group | null;
-    links: Link_API[];
+    links: Link[];
 };
 
 
