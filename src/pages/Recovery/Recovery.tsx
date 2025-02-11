@@ -20,10 +20,10 @@ export default function Recovery(){
 
     function handleRecover(){
         SwalUtils.fireToasty({title: "Verificando dados"})
-        UniversimeApi.User.recoverPassword({username, recaptchaToken})
+        UniversimeApi.Auth.recoverPassword({username, recaptchaToken: recaptchaToken ?? undefined})
         .then(res =>{
-            if(res.success) {
-                setMsg(res.message ?? "Houve um erro")
+            if(res.isSuccess()) {
+                setMsg(res.errorMessage ?? "Houve um erro")
             } else {
                 recaptchaRef.reset();
             }

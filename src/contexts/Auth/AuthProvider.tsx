@@ -140,7 +140,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 };
 
 async function getLoggedProfile(): Promise<Nullable<ProfileClass>> {
-    if(!await UniversimeApi.User.account()) {
+    const account = await UniversimeApi.User.account();
+
+    if( !account.isSuccess() ) {
         return null;
     }
 

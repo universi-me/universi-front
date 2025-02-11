@@ -53,7 +53,7 @@ export type SignIn_ResponseDTO = {
 };
 
 export type RecoverPassword_RequestDTO = {
-    recaptchaToken: Optional<string>;
+    recaptchaToken?: string;
     username: string;
 };
 
