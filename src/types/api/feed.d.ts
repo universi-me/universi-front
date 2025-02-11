@@ -28,7 +28,14 @@ namespace Feed {
         postId: string;
         groupId: string;
         reactions: Reaction[];
-        comments: Comment[];
+        comments: GroupPostComment[];
+    };
+
+    type GroupPostComment = {
+        id: string;
+        content: string;
+        authorId: string;
+        author: Profile.DTO;
     };
 }
 

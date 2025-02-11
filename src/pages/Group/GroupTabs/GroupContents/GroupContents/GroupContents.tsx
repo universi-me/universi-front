@@ -37,7 +37,10 @@ function SelectPeople(){
     useEffect(() => {
         if (!groupContext?.assignFolder) return;
 
-        UniversimeApi.Capacity.Folder.assignments( groupContext.assignFolder.reference, { assignedTo: authContext.profile?.user.name })
+        UniversimeApi.Capacity.Folder.assignments({
+            folder: groupContext.assignFolder.reference,
+            assignedTo: authContext.profile?.user.name,
+        })
             .then((res) => { setCurrentlyAssigned(res.data?.map( a => new ProfileClass( a.assignedBy )) ?? []) });
     }, [groupContext?.assignFolder]);
 

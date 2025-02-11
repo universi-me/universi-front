@@ -10,14 +10,7 @@ import { GroupContext, GroupFeedPost } from "@/pages/Group";
 import "./GroupFeed.less";
 import useCanI from "@/hooks/useCanI";
 import { Permission } from "@/utils/roles/rolesUtils";
-
-function isGroupPostComment(post: any): post is Feed.Comment {
-    try {
-        return 'id' in post;
-    } catch {
-        return false;
-    }
-}
+import { isGroupPostComment } from "@/types/Feed";
 
 export function GroupFeed(){
 
@@ -84,12 +77,21 @@ export function GroupFeed(){
                             value: groupContext.editPost ? groupContext.editPost.content : ""
                             ,validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
                         }, {
-                            DTOName : "postId", label : "", type : FormInputs.HIDDEN, value : groupContext.editPost?.postId
+                            DTOName : "postId", label : "", type : FormInputs.HIDDEN, value : isGroupPostComment( groupContext.editPost ) ? undefined : groupContext.editPost?.postId
                         }, {
-                            DTOName : "commentId", label : "", type : FormInputs.HIDDEN, value : (groupContext.editPost as Feed.Comment)?.id
+                            DTOName : "commentId", label : "", type : FormInputs.HIDDEN, value : isGroupPostComment( groupContext.editPost ) ? groupContext.editPost.id : undefined
                         },
                     ]}
-                    requisition={groupContext.editPost ? (isGroupPostComment(groupContext.editPost) ? UniversimeApi.FeedComment.update : UniversimeApi.Feed.updatePost) : UniversimeApi.Feed.createPost}
+                    requisition={ (data: FeedFormData) => {
+                        if ( groupContext.editPost === null )
+                            return UniversimeApi.Feed.createPost( data.groupId, { authorId: data.authorId, content: data.content } );
+
+                        else if ( isGroupPostComment( groupContext.editPost ) )
+                            return UniversimeApi.FeedComment.update( data.commentId!, { content: data.content } );
+
+                        else
+                            return UniversimeApi.Feed.updatePost( data.groupId, data.postId!, { authorId: data.authorId, content: data.content } );
+                    } }
                     callback={async() => await groupContext.refreshData()}
                 />
                 :
@@ -98,3 +100,11 @@ export function GroupFeed(){
         </section>
     )
 }
+
+type FeedFormData = {
+    groupId: string;
+    authorId: string;
+    content: string;
+    postId?: string;
+    commentId?: string;
+};

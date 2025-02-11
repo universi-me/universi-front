@@ -54,8 +54,8 @@ export type GroupContextType = null | {
      * If `null`, should handle creation of a post. If has a value, should handle
      * post edit. If `undefined`, no post is being edited nor created.
      */
-    editPost: Feed.GroupPost | null | undefined;
-    setEditPost(post: Feed.GroupPost | null | undefined) : any;
+    editPost: Feed.GroupPost | Feed.GroupPostComment | null | undefined;
+    setEditPost(post: Feed.GroupPost | Feed.GroupPostComment | null | undefined) : any;
 
     /**
      * The Folder being assigned to someone

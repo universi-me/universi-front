@@ -17,13 +17,18 @@ import { ICON_LIKE, ICON_CLAP, ICON_HEART, ICON_SUPPORT, ICON_GENIUS, ICON_HAPPY
 import UniversiForm, { FormInputs, RequiredValidation, TextValidation, ValidationComposite } from "@/components/UniversiForm";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
-export type GroupFeedPostProps = Readonly<{
+export type GroupFeedPostProps<C extends boolean = boolean> = Readonly<{
     post: Feed.GroupPost;
-    isComment?: boolean;
+    isComment?: false;
+    commentPostId?: undefined;
+} | {
+    post: Feed.GroupPostComment;
+    isComment: true;
+    commentPostId: string;
 }>;
 
-export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
-    const feedDescriptionId = `post-${isComment ? (post as Feed.Comment).id : post.postId}`;
+export function GroupFeedPost({ post, isComment, commentPostId }: GroupFeedPostProps) {
+    const feedDescriptionId = `post-${isComment ? post.id : post.postId}`;
     const [feedDescriptionElement, setFeedDescriptionElement] = useState(document.getElementById(feedDescriptionId));
 
     const groupContext = useContext(GroupContext);
@@ -75,7 +80,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
 
     const author = new ProfileClass(post.author);
 
-    const OPTIONS_DEFINITION: OptionInMenu<Feed.GroupPost>[] = [
+    const OPTIONS_DEFINITION: OptionInMenu<Feed.GroupPost | Feed.GroupPostComment>[] = [
         {
             text: isComment ? "Editar comentário" : "Editar publicação",
             biIcon: "pencil-fill",
@@ -114,9 +119,11 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
     const [showReactionsPost, setShowReactionsPost] = useState<Feed.GroupPost | null>(null);
 
     useEffect(() => {
-        REACTIONS_LIST.map((reaction) => (
-            isMyReaction(post, reaction.reaction) && setSelectedReaction(reaction)
-        ))
+        if ( !isComment ) {
+            REACTIONS_LIST.forEach((reaction) => (
+                isMyReaction(post, reaction.reaction) && setSelectedReaction(reaction)
+            ))
+        }
     }, [post, feedDescriptionElement]);
     
     return <div className="feed-item tab-item">
@@ -167,7 +174,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
 
             <div className="post-actions-info">
 
-            {countReactions(post) > 0 &&
+            { !isComment && countReactions(post) > 0 &&
                 <div className="post-info-reaction">
                     <div className="reaction-icons">
                         {REACTIONS_LIST.map((reaction) => (
@@ -185,7 +192,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
 
             <div/>
 
-            {countComment(post) > 0 && <div className="post-info-comments">
+            {!isComment && countComment(post) > 0 && <div className="post-info-comments">
                     <div className="comments-count" onClick={toggleShowComments}>
                         {getCommentCount(post)} comentário(s)
                     </div>
@@ -202,7 +209,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
         className={selectedReaction ? "like-button like-button-selected" : "like-button"}
         onMouseEnter={() => setShowReactions(true)}
         onMouseLeave={() => setShowReactions(false)}
-        onClick={() => hoveredReaction==null && reactToPost(post, selectedReaction ? selectedReaction.reaction : REACTIONS_LIST[0].reaction)()}
+        onClick={() => !isComment && hoveredReaction==null && reactToPost(post, selectedReaction ? selectedReaction.reaction : REACTIONS_LIST[0].reaction)()}
       >
 
         <div className="like-button-content">
@@ -217,7 +224,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
               <div 
                 key={reaction.name}
                 className={ (selectedReaction && selectedReaction.reaction == reaction.reaction) ? "reaction reaction-selected" : "reaction"}
-                onClick={() => { reactToPost(post, reaction.reaction)(); }}
+                onClick={() => { !isComment && reactToPost(post, reaction.reaction)(); }}
                 onMouseEnter={() => setHoveredReaction(reaction)}
                 onMouseLeave={() => setHoveredReaction(null)}
               >
@@ -237,7 +244,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
       <div className="comment-button" onClick={toggleComment}>{ <img src={ICON_COMMENT} height={20} width={20} /> } Comentar</div>
     </div>
 
-    <div className={(isCommentExpanded || (isShowComments && countComment(post) > 0)) ? "comment-area-expanded" : "comment-area"}>
+    <div className={!isComment && (isCommentExpanded || (isShowComments && countComment(post) > 0)) ? "comment-area-expanded" : "comment-area"}>
         {(isCommentExpanded || isShowComments) && <div className="comment-area-content">
 
             {isCommentExpanded && <div className="comment-area-input">
@@ -259,10 +266,12 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
                                 value: commentText ?? "",
                                 validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
                             }, {
-                                DTOName : "groupPostId", label : "", type : FormInputs.HIDDEN, value : post?.postId
+                                DTOName : "groupPostId", label : "", type : FormInputs.HIDDEN, value : isComment ? commentPostId : post.postId
                             }
                         ]}
-                        requisition={UniversimeApi.FeedComment.create}
+                        requisition={(data: any) => {
+                            return UniversimeApi.FeedComment.create( data.groupPostId, { content: data.content } );
+                        }}
                         callback={async() => {
                             groupContext!.refreshData();
                             setCommentText("");
@@ -273,12 +282,12 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
                 </div>
             </div>}
 
-            {isShowComments && <div className="comment-area-comments">
+            {!isComment && isShowComments && <div className="comment-area-comments">
                 {
                     post.comments
                     .slice()
                     .reverse()
-                    .map(p => <GroupFeedPost post={p} key={p.postId} isComment={true}/>)
+                    .map(p => <GroupFeedPost post={p} key={p.id} isComment commentPostId={post.postId}/>)
                 }
                 </div>
             }
@@ -339,7 +348,7 @@ export function GroupFeedPost({ post, isComment }: GroupFeedPostProps) {
             if (value.isConfirmed) {
                 if(isComment) {
                     UniversimeApi.FeedComment
-                    .remove( (post as Feed.Comment).id )
+                    .remove( post.id )
                     .then(() => groupContext!.refreshData());
                 } else {
                     UniversimeApi.Feed
