@@ -260,7 +260,7 @@ export function RolesPage() {
     }
 
     async function refreshParticipants() {
-        const response = await RolesPageFetch(auth.organization!.id);
+        const response = await RolesPageFetch(auth.organization.id!);
         participantsDispatch({
             type: "SET_ALL",
             setParticipants: response.success
