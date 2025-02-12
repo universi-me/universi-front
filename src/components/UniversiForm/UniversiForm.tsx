@@ -14,6 +14,7 @@ import { stringEqualsIgnoreCase } from "@/utils/stringUtils"
 import { update } from "@/services/UniversimeApi/Group"
 import CropperComponent from "../ImageCropper/ImageCropper"
 import TextboxFormatted from "../TextboxFormatted/TextboxFormatted"
+import { HttpStatusCode } from "axios"
 
 export type cancelPopup = {
     confirmCancel? : boolean,
@@ -286,8 +287,8 @@ export function UniversiForm(props : formProps){
                     }
 
                     const res = await UniversimeApi.Image.upload({image: imageFile})
-                    if(res.isSuccess())
-                        handleChange(index, res.body.link)
+                    if(res.isSuccess() && res.status == HttpStatusCode.Created)
+                        handleChange(index, res.data)
                 }
             };
 

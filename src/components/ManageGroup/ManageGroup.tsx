@@ -40,7 +40,7 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
                 charLimit: 200,
                 validation: new ValidationComposite<string>().addValidation(new TextValidation())
             }, {
-                DTOName: "imageUrl", label: "Imagem do grupo",
+                DTOName: "image", label: "Imagem do grupo",
                 type: FormInputs.IMAGE,
                 value:undefined, 
                 defaultImageUrl: group ? groupImageUrl(group) : undefined,
@@ -48,7 +48,7 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
                 aspectRatio: 1,
                 required: false
             }, {
-                DTOName: "bannerImageUrl", label: "Banner do grupo",
+                DTOName: "bannerImage", label: "Banner do grupo",
                 type: FormInputs.IMAGE,
                 value:undefined, 
                 defaultImageUrl: group ? groupBannerUrl(group) : undefined,
@@ -56,7 +56,7 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
                 aspectRatio: 2.5,
                 required: false
             }, {
-                DTOName: "headerImageUrl", label: "Logo da Organização",
+                DTOName: "headerImage", label: "Logo da Organização",
                 type: group?.rootGroup ? FormInputs.IMAGE : FormInputs.HIDDEN,
                 value:undefined,
                 defaultImageUrl: group ? groupHeaderUrl(group) : undefined,
