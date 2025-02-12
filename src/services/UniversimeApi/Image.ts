@@ -6,7 +6,7 @@ const api = createApiInstance( "/img" )
 
 export async function upload( body: ImageUpload_RequestDTO ) {
     const formData = new FormData();
-    formData.append("imagem", body.image);
+    formData.append("image", body.image);
 
     const res = await api.post<undefined>( "", formData );
     return new ApiResponse<string>({
