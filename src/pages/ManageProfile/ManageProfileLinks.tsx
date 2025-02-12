@@ -14,7 +14,7 @@ export type ManageProfileLinksProps = {
 // Decreases by 1 each time a link is added
 let NEW_LINK_ID = -1;
 
-export function ManageProfileLinks(props: ManageProfileLinksProps) {
+export function ManageProfileLinks(props: Readonly<ManageProfileLinksProps>) {
     const [profileLinks, setProfileLinks] = useState(props.profileLinks);
 
     return (
@@ -70,9 +70,6 @@ export function ManageProfileLinks(props: ManageProfileLinksProps) {
             name: "",
             typeLink: "LINK",
             url: "",
-
-            // there is no need to fill the profile as it will not be sent when creating the link
-            perfil: {} as Profile,
         };
 
         setProfileLinks(profileLinks.concat([newLink]));
