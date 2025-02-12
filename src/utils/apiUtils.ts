@@ -14,7 +14,7 @@ export function groupBannerUrl(group: Group.DTO) {
 
 export function groupHeaderUrl(group: Group.DTO): Optional<string> {
 
-    if (group.headerImage!.startsWith("/")) {
+    if (group.headerImage?.startsWith("/")) {
         return import.meta.env.VITE_UNIVERSIME_API + group.headerImage;
     }
 

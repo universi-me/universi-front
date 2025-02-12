@@ -58,7 +58,7 @@ export function GroupTabs(props: Readonly<GroupTabsProps>) {
     if (!context)
         return <></>;
 
-    const joined = (auth.profileGroups ?? []).find((g : Group.DTO) => g.id === context.group.id) !== undefined;
+    const joined = (context.loggedData.groups ?? []).find((g : Group.DTO) => g.id === context.group.id) !== undefined;
     const renderJoinOrLeave = (joined || context.group.canEnter);
 
     return (
