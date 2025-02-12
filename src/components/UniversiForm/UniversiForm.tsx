@@ -65,6 +65,7 @@ export type FormObjectImage = FormObjectBase<FormInputs.IMAGE, string> & {
     defaultImageUrl?: string;
     aspectRatio?: number;
     crop?: boolean;
+    isPublic?: boolean;
 };
 
 export type FormObjectFile = FormObjectBase<FormInputs.FILE, File> & {
@@ -286,7 +287,7 @@ export function UniversiForm(props : formProps){
                         return;
                     }
 
-                    const res = await UniversimeApi.Image.upload({image: imageFile})
+                    const res = await UniversimeApi.Image.upload({image: imageFile, isPublic: object.isPublic});
                     if(res.isSuccess() && res.status == HttpStatusCode.Created)
                         handleChange(index, res.data)
                 }

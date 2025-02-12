@@ -61,6 +61,7 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
                 value:undefined,
                 defaultImageUrl: group ? groupHeaderUrl(group) : undefined,
                 crop: true,
+                isPublic: group?.rootGroup,
                 required: false
             }, {
                 DTOName: "groupType", label: "Tipo do grupo",

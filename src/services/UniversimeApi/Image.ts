@@ -7,6 +7,7 @@ const api = createApiInstance( "/img" )
 export async function upload( body: ImageUpload_RequestDTO ) {
     const formData = new FormData();
     formData.append("image", body.image);
+    body.isPublic && formData.append("isPublic", body.isPublic.toString());
 
     const res = await api.post<undefined>( "", formData );
     return new ApiResponse<string>({
@@ -17,7 +18,8 @@ export async function upload( body: ImageUpload_RequestDTO ) {
 
 export type ImageUpload_RequestDTO = {
     image: File;
+    isPublic?: boolean;
 };
 
-export type ImageUpload_ResponseDTO = ApiResponse<{ link: string }>;
+export type ImageUpload_ResponseDTO = ApiResponse<string>;
 
