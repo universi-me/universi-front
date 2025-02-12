@@ -11,6 +11,7 @@ import 'react-quill/dist/quill.snow.css'
 import 'quill-image-uploader/dist/quill.imageUploader.min.css'
 
 import './TextboxFormatted.less'
+import { HttpStatusCode } from "axios";
 
 Quill.register('modules/imageUploader', ImageUploader);
 Quill.register('modules/imageActions', ImageActions);
@@ -19,6 +20,7 @@ Quill.register('modules/imageFormats', ImageFormats);
 
 interface TextboxFormattedProps {
   value: string;
+  imageUploadPublic?: boolean;
   onChange: (value: string) => void;
   theme?: string;
   modules?: object;
@@ -71,9 +73,9 @@ const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModu
         upload: (file : File) => {
             return new Promise(async (resolve, reject) => {
                 try {
-                  let res = await UniversimeApi.Image.upload({image: file})
-                  if(res.isSuccess()) {
-                    resolve(isAbsoluteUrl(res.data) ? res.data : import.meta.env.VITE_UNIVERSIME_API + res.data );
+                  let res = await UniversimeApi.Image.upload({image: file, isPublic: props.imageUploadPublic});
+                  if(res.isSuccess() && res.status === HttpStatusCode.Created) {
+                    resolve(isAbsoluteUrl(res.data) ? res.data : import.meta.env.VITE_UNIVERSIME_API + '/img/' + res.data );
                   } else {
                     reject( new Error( res.errorMessage ) )
                   }

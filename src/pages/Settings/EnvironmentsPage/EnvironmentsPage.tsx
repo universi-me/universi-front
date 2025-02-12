@@ -106,6 +106,7 @@ export function EnvironmentsPage() {
                         name: "Template de Email para Novo Conteúdo",
                         key: "message_template_new_content",
                         type: "textbox-html",
+                        imageUploadPublic: true,
                         defaultValue: "Olá, {{ groupName }} tem um novo conteúdo: {{ contentName }}.<br/><br/>Acesse: {{ contentUrl }}",
                         description: "groupName: Nome do Grupo.\ncontentName: Nome do Conteúdo.\ncontentUrl: Link do Conteúdo.",
                     },
@@ -119,6 +120,7 @@ export function EnvironmentsPage() {
                         name: "Template de Email para Conteúdo Atribuído",
                         key: "message_template_assigned_content",
                         type: "textbox-html",
+                        imageUploadPublic: true,
                         defaultValue: "Olá {{ toUser }}, você recebeu um novo conteúdo de {{ fromUser }}: {{ contentName }}.<br/><br/>Acesse: {{ contentUrl }}",
                         description: "contentName: Nome do Conteúdo.\ncontentUrl: Link do Conteúdo.\nfromUser: Nome do autor da atribuição.\ntoUser: Nome do usuário que foi alvo da atribuição.",
                     },
@@ -260,7 +262,7 @@ export function EnvironmentsPage() {
                 { item.type === "textbox-html" ? (
                     <div className="">
                         <div className="enabled-delete-wrapper row-item environments-text-wrapper environments-text-input">
-                            <TextboxFormatted value={getValue(item)??""} onChange={(e) => setTextValueString(item, e)} />
+                            <TextboxFormatted value={getValue(item)??""} imageUploadPublic={item.imageUploadPublic} onChange={(e) => setTextValueString(item, e)} />
                         </div>
                         </div>
                     ) : null}
@@ -328,6 +330,7 @@ type EnvironmentField = {
 type EnvironmentItem = {
     name: string;
     key: keyof GroupEnvironmentUpdate_RequestDTO;
+    imageUploadPublic?: boolean;
     description?: string;
     type: "boolean" | "string" | "textbox" | "textbox-html";
     defaultValue: any;
