@@ -3,6 +3,7 @@ import * as SwalUtils from "@/utils/sweetalertUtils"
 import axios from "axios";
 import { goTo } from "@/configs/routes";
 import { LOGIN_REDIRECT_PARAM } from "@/pages/singin/Singin";
+import { isApiError } from "@/utils/apiUtils";
 
 const baseApiUrl = import.meta.env.VITE_UNIVERSIME_API;
 
@@ -13,8 +14,15 @@ export function createApiInstance( path: string ) {
     });
 
     api.interceptors.response.use( response => {
+
+        if(isApiError(response.data)) {
+            handleForResponseData(response.data as any, true, true);
+        }
+
         if ( response.data )
             handleForResponseData( response.data, false, false );
+
+        
 
         return response;
     }, error => {
@@ -42,10 +50,20 @@ function handleForResponseData( response: ApiResponse<any>, isModalAsDefault: bo
 
         goTo(redirectUrl);
     }
+
+    var messageResp = response.message;
+    
+    if(isError) {
+        var errors = (response as any).errors ?? [];
+        if(errors.length > 0) {
+            messageResp = messageResp ?? errors.join('<br>');
+        }
+    }
+
     // handle alert
-    if(response.message) {
+    if(messageResp) {
         const alertOptions : any = {
-            text: response.message,
+            text: messageResp,
         };
 
         if(isError) {

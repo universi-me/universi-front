@@ -48,7 +48,7 @@ export function contentImageUrl(content: Capacity.Folder.DTO) {
         : import.meta.env.VITE_UNIVERSIME_API + content.image;
 }
 
-function isApiError( data: any ): data is Api.ResponseError {
+export function isApiError( data: any ): data is Api.ResponseError {
     return typeof data === "object"
         && "timestamp" in data
         && typeof data.timestamp === "number"
