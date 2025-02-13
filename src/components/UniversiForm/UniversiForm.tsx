@@ -217,22 +217,24 @@ export function UniversiForm(props : formProps){
             handleContentChange()
         },[valueState])
 
-        function validHtml(value : string){
-            
-            let validValue = ""
+        function validHtml(value: string): string {
+            if (value.trim() === "") return "";
+        
+            const validValueArray: string[] = [];
 
-            if(value.trim() == "")
-                return
-
-            for(let line of value.split("<p>")){
-                for(let line1 of line.split("</p>")){
-                    if(line1.trim() != "<br>" && line1.trim() != ""){
-                        validValue+="<p>"+line
-                    }
+            const regex = /(<p[^>]*>)([\s\S]*?)(<\/p>)/g;
+        
+            value.replace(regex, (match, openTag, content, closeTag) => {
+                content = content.trim();
+        
+                if (content !== "" && content !== "<br>") {  
+                    validValueArray.push(openTag + content + closeTag); // Preserve original <p> tag
                 }
-            }
-
-            return validValue
+        
+                return match;
+            });
+        
+            return validValueArray.join("");
         }
 
         function handleContentChange(){
