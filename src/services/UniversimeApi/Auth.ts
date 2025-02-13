@@ -9,7 +9,7 @@ export function signin( body: SignIn_RequestDTO ) {
 }
 
 export async function logout() {
-    const response = await api.get<boolean>('/logout');
+    const response = await api.get<boolean>('/account/logout');
     return response.data;
 }
 
