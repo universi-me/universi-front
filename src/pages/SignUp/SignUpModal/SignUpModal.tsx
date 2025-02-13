@@ -64,7 +64,7 @@ export function SignUpModal(props: SignUpModalProps) {
                 return;
             }
             const resp = await UniversimeApi.User.usernameAvailable( username );
-            setUsernameAvailable(resp.isSuccess());
+            setUsernameAvailable(resp.isSuccess() && resp.body?.available);
             setUsernameUnavailableMessage((resp.body as any)!?.reason ?? 'Usuário não está disponivel para uso.');
             setUsernameAvailableChecked(true);
         }, 1000)
@@ -79,7 +79,7 @@ export function SignUpModal(props: SignUpModalProps) {
                 return;
             }
             const resp = await UniversimeApi.User.emailAvailable( email );
-            setEmailAvailable(resp.isSuccess());
+            setEmailAvailable(resp.isSuccess() && resp.body?.available);
             setEmailUnavailableMessage((resp.body as any)!?.reason ?? 'Email não está disponivel para uso.');
             setEmailAvailableChecked(true);
         }, 1000)
