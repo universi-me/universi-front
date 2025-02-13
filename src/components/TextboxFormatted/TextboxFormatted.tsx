@@ -1,6 +1,6 @@
 import { UniversimeApi } from "@/services"
 import { isAbsoluteUrl } from '@/utils/regexUtils';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 
 import ReactQuill, { Quill } from "react-quill"
 import { ImageActions } from '@xeger/quill-image-actions';
@@ -29,6 +29,8 @@ interface TextboxFormattedProps {
 }
 
 const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModules, formats: customFormats, toolbar: customtToolbar, ...props }: TextboxFormattedProps) => {
+  const quillRef = useRef<any>(null);
+
 
   const defaultFormats = useMemo(() => ([
     "align",
@@ -89,9 +91,43 @@ const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModu
 
   const modules = customModules ?? defaultModules;
 
+  
+  // set new image inserted centered position as default
+  const handleChange = (content: string, delta: any, source: string, editor: any) => {
+    onChange(content);
+
+    var editorCurr = quillRef.current?.getEditor();
+    if (!editorCurr) return;
+  
+    if (source === "user") {
+      delta.ops.forEach((op: any) => {
+        if (op.insert && op.insert.image) {
+          var imgUrl = op.insert.image;
+          var quillEditor = editorCurr;
+          var images = quillEditor.container.querySelectorAll(`img[src="${imgUrl}"]`);
+          images.forEach((img: HTMLImageElement) => {
+            if(img.tagName === "IMG") {
+              var parent = img.parentElement;
+              if ((!parent || !parent.classList.contains("ql-align-center")) && (!parent || (parent && parent.tagName === "P"))) {
+                var wrapper = document.createElement("p");
+                wrapper.classList.add("ql-align-center");
+                img.replaceWith(wrapper);
+                wrapper.appendChild(img);
+                // update back the content with actual changes
+                handleChange(editorCurr.root.innerHTML, delta, "api", editorCurr);
+              }
+            }
+          });
+        }
+      });
+    }
+
+  };
+  
+  
 
   return (
-    <ReactQuill formats={formats} modules={modules} theme={theme} value={value} onChange={onChange} {...props} />
+    <ReactQuill ref={quillRef} formats={formats} modules={modules} theme={theme} value={value} onChange={handleChange} {...props} />
   );
 };
 
