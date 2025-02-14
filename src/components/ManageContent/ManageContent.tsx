@@ -60,8 +60,6 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
                     ? contentImageUrl(content)
                     : IMG_DEFAULT_CONTENT,
             }, {
-                DTOName: "rating", label: "Rating do conteúdo", type: FormInputs.HIDDEN, value: content ?  content?.rating : 1,
-            }, {
                 DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.SELECT_MULTI,
                 value: content?.categories.map(t => ({ label: t.name, value: t.id })) ?? [],
                 options: availableCategoriesOptions,
@@ -79,7 +77,26 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
                 DTOName: "groupPath", label: "Path do grupo", type: FormInputs.HIDDEN, value: group?.path
             }
         ]}
-        requisition = { !isNewContent ? UniversimeApi.Capacity.Folder.update : handleCreateNewContent }
+        requisition = { (data: ManageContentForm) => {
+            const body = {
+                name: data.name,
+                rating: 1 as const,
+                categoriesIds: data.addCategoriesByIds,
+                competenceTypeBadgeIds: data.addCompetenceTypeBadgeIds,
+                description: data.description,
+                image: data.image,
+                publicFolder: true,
+            };
+
+            if ( isNewContent )
+                return UniversimeApi.Capacity.Folder.create( {
+                    ...body,
+                    grantedAccessGroupsIds: group ? [ group.id! ] : undefined,
+                } );
+
+            else
+                return UniversimeApi.Capacity.Folder.update( content.id, body );
+        } }
         callback = {() => { props.afterSave?.();}}
     />;
 
@@ -134,3 +151,14 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
         return res;
     }
 }
+
+type ManageContentForm = {
+    name: string;
+    description?: string;
+    image?: string;
+    addCategoriesByIds: string[];
+    addCompetenceTypeBadgeIds: string[];
+    groupId?: string;
+    id?: string;
+    groupPath?: string;
+};

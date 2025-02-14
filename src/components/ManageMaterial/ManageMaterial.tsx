@@ -45,8 +45,6 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
                 }, {
                     DTOName: "description", label: "Descrição do material", type: FormInputs.LONG_TEXT, value: material?.description ?? "", required: false, charLimit: 200,
                 }, {
-                    DTOName: "rating", label: "Rating do material", type: FormInputs.HIDDEN, value: material ? material?.rating : 1
-                }, {
                     DTOName: "url", label: "Link do material", type: FormInputs.URL, value: material?.url, required: true
                 }, {
                     DTOName: "type", label: "Tipo do material", type: FormInputs.SELECT_SINGLE, 
@@ -57,28 +55,54 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
                     value: material?.categories.map((t)=>({value: t.id, label: t.name})) ?? [],
                     options: availableOptions, canCreate: true, onCreate: handleCreateOption
                 }, {
-                    DTOName: "addFoldersByIds", label: "", type: FormInputs.HIDDEN, value: material ? material?.folders.map(t=>(t.id)) : content?.id
-                }, {
                     DTOName: "id", label: "", type: FormInputs.HIDDEN, value: material?.id
                 }
-            ]}  requisition={ !isNewMaterial ? UniversimeApi.Capacity.editContent : UniversimeApi.Capacity.createContent}
+            ]}  requisition={ (data: ManageMaterialForm ) => {
+                const body = {
+                    categoriesIds: data.addCategoriesByIds,
+                    description: data.description,
+                    rating: 1 as const,
+                    title: data.title,
+                    type: data.type,
+                    url: data.url,
+                };
+
+                if ( isNewMaterial )
+                    return UniversimeApi.Capacity.Content.create( {
+                        ...body,
+                        folders: content ? [ content.id ] : undefined,
+                    } );
+
+                else
+                    return UniversimeApi.Capacity.Content.update( material.id, body );
+            } }
                 callback={() => { props.afterSave?.(); }}
     />
 
     async function handleCreateOption(value: string){
-        const createResponse = await UniversimeApi.Capacity.createCategory({ name: value, image: "" });
-        if (!createResponse.success) return [];
+        const createResponse = await UniversimeApi.Capacity.Category.create({ name: value });
+        if (!createResponse.isSuccess()) return [];
 
         const response = await updateCategories();
-        if (!response.success) return [];
+        if (!response.isSuccess()) return [];
 
-        return response.body.categories.map(t => ({ value: t.id, label: t.name }));
+        return response.data.map(t => ({ value: t.id, label: t.name }));
     }
 
     async function updateCategories() {
-        const res = await UniversimeApi.Capacity.categoryList();
-        if (res.success) setAvailableCategories(res.body.categories);
+        const res = await UniversimeApi.Capacity.Category.list();
+        if (res.isSuccess()) setAvailableCategories(res.data);
 
         return res;
     }
 }
+
+type ManageMaterialForm = {
+    title: string;
+    description?: string;
+    url: string;
+    type: Capacity.Content.Type;
+    addCategoriesByIds: string[];
+    addFoldersByIds: string[];
+    id?: string;
+};

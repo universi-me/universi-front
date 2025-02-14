@@ -36,21 +36,21 @@ export type ContentCreate_RequestDTO = {
     url: string;
     title: string;
     type: Capacity.Content.Type;
-    image: Optional<string>;
-    description: Optional<string>;
+    image?: string;
+    description?: string;
     rating: Capacity.Content.Rating;
-    categoriesIds: Optional<string[]>;
-    folders: Optional<string[]>;
+    categoriesIds?: string[];
+    folders?: string[];
 };
 
 export type ContentUpdate_RequestDTO = {
-    url: Optional<string>;
-    title: Optional<string>;
-    type: Optional<Capacity.Content.Type>;
-    image: Optional<string>;
-    description: Optional<string>;
-    rating: Optional<Capacity.Content.Rating>;
-    categoriesIds: Optional<string[]>;
+    url?: string;
+    title?: string;
+    type?: Capacity.Content.Type;
+    image?: string;
+    description?: string;
+    rating?: Capacity.Content.Rating;
+    categoriesIds?: string[];
 };
 
 export type ContentSetStatus_RequestDTO = {
