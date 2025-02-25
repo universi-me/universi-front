@@ -54,7 +54,11 @@ export function OAuth2Element() {
         }
 
         else if ( response.isSuccess() ) {
-            auth.signinGoogle();
+            var profile = auth.signinGoogle();
+            
+            if(profile != null) {
+                navigate("/");
+            }
         }
 
         else {
