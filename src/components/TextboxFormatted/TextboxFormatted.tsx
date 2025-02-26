@@ -2,20 +2,17 @@ import { UniversimeApi } from "@/services"
 import { isAbsoluteUrl } from '@/utils/regexUtils';
 import { useMemo, useRef } from 'react';
 
-import ReactQuill, { Quill } from "react-quill"
+import ReactQuill, { Quill } from "react-quill-new"
 import { ImageActions } from '@xeger/quill-image-actions';
-import { ImageFormats } from '@xeger/quill-image-formats';
+import BlotFormatter from 'quill-blot-formatter';
 import ImageUploader from "quill-image-uploader";
-
-import 'react-quill/dist/quill.snow.css'
-import 'quill-image-uploader/dist/quill.imageUploader.min.css'
 
 import './TextboxFormatted.less'
 import { HttpStatusCode } from "axios";
 
 Quill.register('modules/imageUploader', ImageUploader);
 Quill.register('modules/imageActions', ImageActions);
-Quill.register('modules/imageFormats', ImageFormats);
+Quill.register('modules/blotFormatter', BlotFormatter);
 
 
 interface TextboxFormattedProps {
@@ -40,10 +37,8 @@ const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModu
     "bold",
     "code-block",
     "color",
-    "float",
     "font",
     "header",
-    "height",
     "image",
     "imageBlot",
     "italic",
@@ -51,15 +46,18 @@ const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModu
     "script",
     "strike",
     "size",
-    "underline",
-    "width"
+    "underline"
   ]), []);
 
   const formats = customFormats || defaultFormats;
 
   const defaultModules = useMemo(() => ({
     imageActions: {},
-    imageFormats: {},
+    blotFormatter: {
+      align: {
+        defaultAlignment: 'center',
+      },
+    },
     toolbar: customtToolbar || [
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
         ["bold", "italic", "underline", "strike",],
@@ -127,7 +125,7 @@ const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModu
   
 
   return (
-    <ReactQuill ref={quillRef} formats={formats} modules={modules} theme={theme} value={value} onChange={handleChange} {...props} />
+    <ReactQuill ref={quillRef} formats={formats} modules={modules as any} theme={theme} value={value} onChange={handleChange} {...props} />
   );
 };
 
