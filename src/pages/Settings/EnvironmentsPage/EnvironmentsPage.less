@@ -21,6 +21,37 @@
             margin-bottom: 1rem;
             border-bottom: solid 1px @card-item-color;
         }
+
+        .section-header {
+            
+            &:hover {
+                cursor: pointer;
+                
+                .section-title {
+                    color: @primary-color;
+                    text-decoration: underline;
+                }
+            }
+            display: flex;
+            justify-content: space-between;
+
+            #toggle-icon {
+                font-size: 1.5em;
+
+                will-change: rotate;
+                transition-duration: 200ms;
+                transition-property: rotate;
+
+                &.extended {
+                    rotate: 180deg;
+                    transition-timing-function: ease-in;
+                }
+
+                &.collapsed {
+                    transition-timing-function: ease-out;
+                }
+            }
+        }
     }
     .environments-item + .environments-item {
         @margin-size: .5rem;

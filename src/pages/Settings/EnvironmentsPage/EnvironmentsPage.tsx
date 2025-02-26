@@ -1,9 +1,10 @@
 import { useReducer, useState, useEffect } from "react";
 import { useLoaderData } from "react-router-dom";
-import * as Switch from "@radix-ui/react-switch"
+import * as Switch from "@radix-ui/react-switch";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
-import { UniversimeApi } from "@/services"
+import { UniversimeApi } from "@/services";
 
 import { type EnvironmentsLoaderResponse, EnvironmentsFetch } from "./EnvironmentsLoader";
 import { type GroupEnvironmentUpdate_RequestDTO } from "@/services/UniversimeApi/GroupEnvironment";
@@ -15,24 +16,23 @@ export function EnvironmentsPage() {
 
     const [fetchEnvironmentsItems, setFetchEnvironmentsItems] = useState<GroupEnvironmentUpdate_RequestDTO>({});
     const [environmentsItems, setEnvironmentsItems] = useState<Array<EnvironmentField>>([]);
+    const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
 
-    const [editedItems, setEditedItems] = useReducer((state: GroupEnvironmentUpdate_RequestDTO , action: EditedItemsAction ) => {
+    const [editedItems, setEditedItems] = useReducer((state: GroupEnvironmentUpdate_RequestDTO, action: EditedItemsAction) => {
         switch (action.type) {
-          case 'RESET':
-            return {};
-          case 'EDIT':
-            return { ...state, [action.id]: action.value };
-          default:
-            return state;
+            case 'RESET':
+                return {};
+            case 'EDIT':
+                return { ...state, [action.id]: action.value };
+            default:
+                return state;
         }
     }, {});
 
     const canSave = Object.keys(editedItems).length > 0;
-    
+
     useEffect(() => {
-
         setFetchEnvironmentsItems(data.envDic);
-
         setEnvironmentsItems([
             {
                 title: "Conta",
@@ -215,80 +215,95 @@ export function EnvironmentsPage() {
                 ]
             },
         ]);
-
     }, [data]);
+
+    const toggleSection = (title: string) => {
+        setExpandedSections((prev) => ({ ...prev, [title]: !prev[title] }));
+    };
 
     return <div id="environments-settings">
         <SettingsTitle>Variáveis Ambiente</SettingsTitle>
         <SettingsDescription>Aqui você pode configurar as variáveis ambiente para algumas funcionalidades da plataforma.</SettingsDescription>
 
         <section className="environments-list">
-        {environmentsItems.map((section) => (
-            <div className="environments-item" key={section.title}>
-            <h3>{section.title}</h3>
-            {section.items.map((item) => (
-                <div className="environments-row-content" key={item.key}>
+            {environmentsItems.map((section) => (
+                <div className="environments-item" key={section.title}>
+                    <h3 onClick={() => toggleSection(section.title)} className="section-header">
+                        <span className="section-title">{section.title}</span>
+                        <span id="toggle-icon" className={expandedSections[section.title] ? "bi bi-chevron-down extended" : "bi bi-chevron-down collapsed"}></span>
+                    </h3>
+                    <AnimatePresence>
+                        {expandedSections[section.title] && (
+                            <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="section-content"
+                            >
+                                {section.items.map((item) => (
+                                    <div className="environments-row-content" key={item.key}>
+                                        <div className="enabled-delete-wrapper" key={item.name}>
+                                            <div className="environments-label">{item.name}</div>
+                                            <div className="row-item">
+                                                {item.type === "boolean" && (
+                                                    <div className="enabled-wrapper">
+                                                        {getValue(item) ? "Ativado" : "Desativado"}
+                                                        <Switch.Root className="filter-enabled-root" checked={!!getValue(item)} onCheckedChange={makeToggleFilter(item)}>
+                                                            <Switch.Thumb className="filter-enabled-thumb" />
+                                                        </Switch.Root>
+                                                    </div>
+                                                )}
+                                                {item.type === "string" && (
+                                                    <div className="environments-text-wrapper">
+                                                        <input type={item.secure ? "password" : "text"} className="environments-text-input" value={getValue(item) ?? ""} onChange={(e) => setTextValue(item, e)} />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                        
+                                        { item.type === "textbox" ? (
+                                            <div className="">
+                                                <div className="enabled-delete-wrapper row-item environments-text-wrapper environments-text-input">
+                                                    <textarea rows={8} className="environments-text-area" value={getValue(item)??""} onChange={(e) => setTextValue(item, e)} />
+                                                </div>
+                                            </div>
+                                        ) : null}
 
-                <div className="enabled-delete-wrapper" key={item.name}>
-                    <div className="environments-label">{item.name}</div>
-                    <div className="row-item">
-                    { item.type === "boolean" ? (
-                        <div className="enabled-delete-wrapper">
-                            <div className="enabled-wrapper">
-                                {getValue(item) ? "Ativado" : "Desativado"}
-                                <Switch.Root className="filter-enabled-root" checked={!!getValue(item)} onCheckedChange={makeToggleFilter(item)} >
-                                    <Switch.Thumb className="filter-enabled-thumb" />
-                                </Switch.Root>
-                            </div>
-                        </div>
-                    ) : null}
-                    { item.type === "string" ? (
-                        <div className="environments-text-wrapper">
-                            <input type={item.secure ? "password" : "text"} className="environments-text-input" value={getValue(item)??""} onChange={(e) => setTextValue(item, e)} />
-                        </div>
-                    ) : null}
-                    
-                    </div>
-                </div>
+                                        { item.type === "textbox-html" ? (
+                                            <div className="">
+                                                <div className="enabled-delete-wrapper row-item environments-text-wrapper environments-text-input">
+                                                    <TextboxFormatted value={getValue(item)??""} imageUploadPublic={item.imageUploadPublic} onChange={(e) => setTextValueString(item, e)} />
+                                                </div>
+                                            </div>
+                                        ) : null}
 
-                { item.type === "textbox" ? (
-                    <div className="">
-                        <div className="enabled-delete-wrapper row-item environments-text-wrapper environments-text-input">
-                            <textarea rows={8} className="environments-text-area" value={getValue(item)??""} onChange={(e) => setTextValue(item, e)} />
-                        </div>
-                        </div>
-                    ) : null}
+                                        { item.description ? (
+                                            <div className="environments-description">
+                                                {item.description}
+                                            </div>
+                                        ) : null}
 
-                { item.type === "textbox-html" ? (
-                    <div className="">
-                        <div className="enabled-delete-wrapper row-item environments-text-wrapper environments-text-input">
-                            <TextboxFormatted value={getValue(item)??""} imageUploadPublic={item.imageUploadPublic} onChange={(e) => setTextValueString(item, e)} />
-                        </div>
-                        </div>
-                    ) : null}
-
-                { item.description ? (
-                    <div className="environments-description">
-                        {item.description}
-                    </div>
-                ) : null}
+                                    </div>
+                                ))}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             ))}
-            </div>
-        ))}
         </section>
         <br/>
+
         <div className="buttons-wrapper">
             <button type="button" className="submit" onClick={submitChanges} disabled={!canSave} title={canSave ? undefined : "Faça uma alteração para poder salvar"}>Salvar alterações</button>
         </div>
-    </div>
-
+    </div>;
 
     function getValue(item: EnvironmentItem) {
         return editedItems[item.key] ?? fetchEnvironmentsItems[item.key] ?? item.defaultValue;
     }
 
-    function setTextValue(item: EnvironmentItem, event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+    function setTextValue(item: EnvironmentItem, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         setTextValueString(item, event.target.value);
     }
 
