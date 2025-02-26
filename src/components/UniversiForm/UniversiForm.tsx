@@ -527,9 +527,9 @@ export function UniversiForm(props : formProps){
                     object.canCreate != undefined && object.canCreate ? 
                         <CreatableSelect isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
                         menuPosition="fixed"
-                        onChange={(value) => handleSelectChange(index, value)}
+                        onChange={(value:any) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
-                        formatCreateLabel={(value) => `Criar "${value}"`}
+                        formatCreateLabel={(value:any) => `Criar "${value}"`}
                         classNamePrefix="category-item"
                         styles={object.stylesConfig}
                         required={object.required}
@@ -541,7 +541,7 @@ export function UniversiForm(props : formProps){
                     :
                         <Select isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
                         menuPosition="fixed"
-                        onChange={(value) => handleSelectChange(index, value)}
+                        onChange={(value:any) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
                         classNamePrefix="category-item"
                         styles={object.stylesConfig}

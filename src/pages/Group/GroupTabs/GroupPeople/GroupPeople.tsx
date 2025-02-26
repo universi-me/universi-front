@@ -154,7 +154,7 @@ export function GroupPeople() {
                 <Select
                     options={competenceTypeOptions}
                     value={{value: currentCompetence?.typeId?.toString(), label : currentCompetence?.label}}
-                    onChange={(option)=>{
+                    onChange={(option:any)=>{
                         if(!option || !option.value) return
                         let newCompetence : competenceSearch;
                         newCompetence = {

@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import _ from "lodash";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
@@ -30,6 +29,9 @@ export function GroupThemeColorPage() {
         };
     }, [auth.organization.groupSettings.theme]);
 
+    const isEqual = (obj1: any, obj2: any) =>
+        JSON.stringify(obj1) === JSON.stringify(obj2);
+
     return <div id="theme-color-settings">
         <SettingsTitle>Configuração de Tema</SettingsTitle>
         <SettingsDescription>Escolha o tema para o grupo.</SettingsDescription>
@@ -41,7 +43,7 @@ export function GroupThemeColorPage() {
                 return <ThemeColorItem
                     key={themeName}
                     theme={theme}
-                    isSelected={ _.isEqual(theme, selectedTheme) }
+                    isSelected={ isEqual(theme, selectedTheme) }
                     onClick={ setSelectedTheme }
                 />
             })}
