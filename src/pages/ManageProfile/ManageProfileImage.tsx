@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from "react"
+import { ChangeEvent, useState } from "react"
 
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { arrayBufferToBase64 } from "@/utils/fileUtils";
@@ -10,7 +10,7 @@ export type ManageProfileImageProps = {
     name: string | null;
 };
 
-export function ManageProfileImage(props: ManageProfileImageProps) {
+export function ManageProfileImage(props: Readonly<ManageProfileImageProps>) {
     const [imageBuffer, setImageBuffer] = useState<ArrayBuffer | null>(null);
     const [mimeType, setMimeType] = useState<string>('image/jpeg');
     const [showCrop, setShowCrop] = useState<boolean>(false);
@@ -19,7 +19,7 @@ export function ManageProfileImage(props: ManageProfileImageProps) {
         : props.currentImage;
     return (
         <fieldset id="fieldset-image">
-            <legend className="required-input">Alterar imagem do perfil</legend>
+            <legend>Alterar imagem do perfil</legend>
             <input id="image" name="image" accept="image/*" type="file" onChange={changeImage} />
             <label htmlFor="image"><ProfileImage imageUrl={image} name={props.name} id="profile-image-view" /></label>
             <CropperComponent show={showCrop} src={image as string} selectImage={updateImage} willClose={() => setShowCrop(false)} options={{aspectRatio: 1,}} />
