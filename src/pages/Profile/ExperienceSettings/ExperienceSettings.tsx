@@ -20,7 +20,7 @@ export function ExperienceSettings() {
                     options: profileContext.allTypeExperience.map((t) => ({value: t.id, label: t.name})),
                     required: true,
                     canCreate: true,
-                    onCreate: (value: any) => UniversimeApi.EducationType.create({name: value}).then(response => {
+                    onCreate: (value: any) => UniversimeApi.ExperienceType.create({name: value}).then(response => {
                         if (response.isSuccess()) {
                             // return updated type experience
                             return UniversimeApi.ExperienceType.list().then(response => {
