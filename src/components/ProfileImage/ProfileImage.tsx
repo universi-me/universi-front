@@ -16,7 +16,7 @@ export function ProfileImage(props: ProfileImageProps) {
     const {imageUrl, name, noImageColor, ...genericElementProps} = props;
     const className = makeClassName("profile-image-component", genericElementProps.className);
 
-    return <div className={className} >
-        <Avatar size="100%" name={name!} src={imageUrl!} round={true} textSizeRatio={3} maxInitials={2}/>
+    return <div {...genericElementProps} className={className} >
+        <Avatar size="100%" name={ name ?? undefined } src={ imageUrl ?? undefined } round={true} textSizeRatio={3} maxInitials={2}/>
     </div>;
 }
