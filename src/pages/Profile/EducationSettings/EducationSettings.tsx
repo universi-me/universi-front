@@ -88,11 +88,31 @@ export function EducationSettings() {
                     value: profileContext?.editEducation?.id
                 }
             ]}
-            requisition={ profileContext?.editEducation?.id ? UniversimeApi.Education.update : UniversimeApi.Education.create }
+            requisition={ ( form: EducationSettingsForm ) => {
+                const body = {
+                    educationType: form.typeEducationId,
+                    institution: form.institutionId,
+                    startDate: form.startDate,
+                    endDate: form.presentDate
+                        ? null
+                        : form.endDate
+                };
+
+                if ( form.educationId !== undefined )
+                    return UniversimeApi.Education.update( form.educationId, body );
+                else
+                    return UniversimeApi.Education.create( body );
+            } }
             callback={async()=> await profileContext?.reloadPage() }
         />
     );
-
 }
 
-
+type EducationSettingsForm = {
+    institutionId: string;
+    typeEducationId: string;
+    startDate: string;
+    endDate: string | undefined;
+    presentDate: boolean;
+    educationId: string | undefined;
+};

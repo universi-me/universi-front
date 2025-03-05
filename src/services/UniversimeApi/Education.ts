@@ -28,12 +28,12 @@ export type EducationUpdate_RequestDTO = {
     educationType: Optional<string>;
     institution: Optional<string>;
     startDate: Optional<string>;
-    endDate: Optional<string>;
+    endDate: Possibly<string>;
 };
 
 export type EducationCreate_RequestDTO = {
     educationType: string;
     institution: string;
     startDate: string;
-    endDate: Optional<string>;
+    endDate: Possibly<string>;
 };
