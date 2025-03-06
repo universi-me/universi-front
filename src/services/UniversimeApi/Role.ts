@@ -8,8 +8,8 @@ export function create( body: RoleCreate_RequestDTO ) {
     return api.post<Role.DTO>( "", body ).then( ApiResponse.new );
 }
 
-export function update( roleId: string, body: RoleUpdate_RequestDTO ) {
-    return api.patch<Role.DTO>( `/${roleId}`, body ).then( ApiResponse.new );
+export function update( body: RoleUpdate_RequestDTO ) {
+    return api.patch<Role.DTO>( `/${body.rolesId}`, body ).then( ApiResponse.new );
 }
 
 export function remove( roleId: string ) {
@@ -31,6 +31,7 @@ export type RoleCreate_RequestDTO = {
 };
 
 export type RoleUpdate_RequestDTO = {
+    rolesId: string;
     name?: string;
     description?: string;
     group?: string;

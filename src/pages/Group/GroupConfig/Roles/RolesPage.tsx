@@ -66,7 +66,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
         const features: { [k in Role.Feature]?: Role.Permission } = {};
         features[ column ] = parseInt( e.target.value ) as Role.Permission;
 
-        UniversimeApi.Role.update( row.id, { features } ).then(
+        UniversimeApi.Role.update( { rolesId: row.id, features } ).then(
             refreshPage
         );
     };
@@ -90,7 +90,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                             charLimit: 130
                         },
                         {
-                            DTOName: "groupId", label: "id", type: FormInputs.HIDDEN,
+                            DTOName: "group", label: "id", type: FormInputs.HIDDEN,
                             value: group?.id
                         },
                         {
