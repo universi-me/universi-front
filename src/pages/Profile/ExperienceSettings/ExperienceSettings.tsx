@@ -15,7 +15,7 @@ export function ExperienceSettings() {
             formTitle={profileContext?.editExperience?.id ? "Editar Experiência" : "Adicionar Experiência"}
             objects={[
                 {
-                    DTOName: "typeExperienceId", label: "Tipo de Experiência", type: FormInputs.SELECT_SINGLE, 
+                    DTOName: "experienceType", label: "Tipo de Experiência", type: FormInputs.SELECT_SINGLE, 
                     value: profileContext?.editExperience?.experienceType ? {value: profileContext?.editExperience?.experienceType.id, label: profileContext?.editExperience?.experienceType.name } : undefined,
                     options: profileContext.allTypeExperience.map((t) => ({value: t.id, label: t.name})),
                     required: true,
@@ -38,7 +38,7 @@ export function ExperienceSettings() {
                     required: true
                 },
                 {
-                    DTOName: "institutionId", label: "Instituição", type: FormInputs.SELECT_SINGLE,
+                    DTOName: "institution", label: "Instituição", type: FormInputs.SELECT_SINGLE,
                     value: profileContext?.editExperience?.institution ? makeInstitutionOption(profileContext?.editExperience?.institution) : undefined,
                     options: profileContext.allInstitution.map(makeInstitutionOption),
                     required: true, canCreate: true, onCreate: handleCreateInstitution
@@ -77,7 +77,7 @@ export function ExperienceSettings() {
                     value: profileContext?.editExperience?.endDate === null
                 },
                 {
-                    DTOName: "profileExperienceId", label: "profileExperienceId", type: FormInputs.HIDDEN,
+                    DTOName: "experienceId", label: "profileExperienceId", type: FormInputs.HIDDEN,
                     value: profileContext?.editExperience?.id
                 }
             ]}

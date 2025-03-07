@@ -8,8 +8,8 @@ export function create( body: ExperienceCreate_RequestDTO ) {
     return api.post<Experience.DTO>( "", body ).then( ApiResponse.new );
 }
 
-export function update( experienceId: string, body: ExperienceUpdate_RequestDTO ) {
-    return api.patch<Experience.DTO>( `/${experienceId}`, body ).then( ApiResponse.new );
+export function update( body: ExperienceUpdate_RequestDTO ) {
+    return api.patch<Experience.DTO>( `/${body.experienceId}`, body ).then( ApiResponse.new );
 }
 
 export function remove( experienceId: string ) {
@@ -33,6 +33,7 @@ export type ExperienceCreate_RequestDTO = {
 };
 
 export type ExperienceUpdate_RequestDTO = {
+    experienceId: string;
     experienceType: Optional<string>;
     institution: Optional<string>;
     description: Optional<string>;
