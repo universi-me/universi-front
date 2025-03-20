@@ -123,6 +123,7 @@ export function EnvironmentsPage() {
                         imageUploadPublic: true,
                         defaultValue: "Olá {{ toUser }}, você recebeu um novo conteúdo de {{ fromUser }}: {{ contentName }}.<br/><br/>Acesse: {{ contentUrl }}",
                         description: "contentName: Nome do Conteúdo.\ncontentUrl: Link do Conteúdo.\nfromUser: Nome do autor da atribuição.\ntoUser: Nome do usuário que foi alvo da atribuição.",
+                        descriptionBootstrapIcon: "bi-info-circle",
                     },
                 ]
             },
@@ -145,6 +146,8 @@ export function EnvironmentsPage() {
             },
             {
                 title: "Login via Keycloak - OIDC",
+                description: "Requer configurar o Realm, Client ID, Client Secret, habilitar a opção Autenticação de Cliente, Standard Flow e adicionar á lista de url de redirecionamento válidos ao Keycloak.",
+                descriptionBootstrapIcon: "bi-info-circle",
                 items: [
                     {
                         name: "Habilitar",
@@ -280,12 +283,24 @@ export function EnvironmentsPage() {
 
                                         { item.description ? (
                                             <div className="environments-description">
-                                                {item.description}
+                                                <div className={ (item.descriptionBootstrapIcon ? "description-bi bi " + item.descriptionBootstrapIcon : "")}>
+                                                    <div className="text">{item.description}</div>
+                                                </div>
                                             </div>
                                         ) : null}
 
                                     </div>
                                 ))}
+                            
+                            { section.description ? (
+                                <div className="section-description">
+                                    <div className={ (section.descriptionBootstrapIcon ? "description-bi bi " + section.descriptionBootstrapIcon : "")}>
+                                        <div className="text">{section.description}</div>
+                                    </div>
+                                </div>
+                            ) : null}
+
+                            <div className="section-botton" />
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -340,6 +355,8 @@ type EditedItemsAction = {
 type EnvironmentField = {
     title: string;
     items: EnvironmentItem[];
+    description?: string;
+    descriptionBootstrapIcon?: string;
 };
 
 type EnvironmentItem = {
@@ -347,6 +364,7 @@ type EnvironmentItem = {
     key: keyof GroupEnvironmentUpdate_RequestDTO;
     imageUploadPublic?: boolean;
     description?: string;
+    descriptionBootstrapIcon?: string;
     type: "boolean" | "string" | "textbox" | "textbox-html";
     defaultValue: any;
     secure?: boolean;
