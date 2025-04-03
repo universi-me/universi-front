@@ -68,7 +68,18 @@ export function CompetencesSettings() {
                     value: editCompetence?.id
                 }
             ]}
-            requisition={ editCompetence?.id ? UniversimeApi.Competence.update : UniversimeApi.Competence.create }
+            requisition={ ( form: CompetenceForm ) => {
+                const body = {
+                    competenceTypeId: form.competenceTypeId,
+                    description: form.description,
+                    level: form.level,
+                };
+
+                if ( form.competenceId )
+                    return UniversimeApi.Competence.update( form.competenceId, body );
+                else
+                    return UniversimeApi.Competence.create( body )
+            } }
             callback={()=> {profileContext.reloadPage()} }
         />
     );
@@ -80,3 +91,10 @@ export function CompetencesSettings() {
         };
     }
 }
+
+type CompetenceForm = {
+    competenceId: Optional<string>;
+    competenceTypeId: string;
+    description: string;
+    level: CompetenceLevel;
+};
