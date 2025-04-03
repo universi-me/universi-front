@@ -1,90 +1,79 @@
-import { ApiResponse } from "@/types/UniversimeApi";
+import { ApiResponse } from "@/utils/apiUtils";
 import { createApiInstance } from "./api";
-import { Group } from "@/types/Group";
 
-const api = createApiInstance( "/" )
+const api = createApiInstance( "" )
 
-export type UserSignUp_RequestDTO = {
-    firstname: string;
-    lastname:  string;
-    username: string;
-    email:    string;
+
+export function account() {
+    return api.get<UserAccount_ResponseDTO>( "/account" ).then( ApiResponse.new );
+}
+
+export function changePassword( body: UserChangePassword_ResponseDTO ) {
+    return api.patch<undefined>( "/account", body ).then( ApiResponse.new );
+}
+
+export function logout() {
+    return api.get<boolean>( "/logout" ).then( ApiResponse.new );
+}
+
+export function signup( body: UserSignup_RequestDTO ) {
+    return api.post<boolean>( "/signup", body ).then( ApiResponse.new );
+}
+
+export function usernameAvailable( username: string ) {
+    return api.get<UserGetAvailable_ResponseDTO>( `/available/username/${username}` ).then( ApiResponse.new );
+}
+
+export function emailAvailable( email: string ) {
+    return api.get<UserGetAvailable_ResponseDTO>( `/available/email/${email}` ).then( ApiResponse.new );
+}
+
+export function updateAccount( body: UserAccountUpdate_RequestDTO ) {
+    return api.patch<undefined>( "/admin/account", body ).then( ApiResponse.new );
+}
+
+export function listByAccessLevel( accessLevel: User.AccessLevel ) {
+    return api.get<User.DTO[]>( `/admin/accounts/${accessLevel}` ).then( ApiResponse.new );
+}
+
+
+export type UserAccount_ResponseDTO = {
+    user: User.DTO;
+    roles: Role.DTO[];
+};
+
+export type UserChangePassword_ResponseDTO = {
     password: string;
-    recaptchaToken: string | null;
+    newPassword: string;
 };
 
-export type UserEdit_RequestDTO = {
-    currentPassword: string;
-    newPassword:     string;
-};
-
-export type UserRecoverPassword_RequestDTO = {
+export type UserSignup_RequestDTO = {
+    recaptchaToken: Optional<string>;
     username: string;
-    recaptchaToken: string | null;
-};
-
-export type UserNewPassword_RequestDTO = {
-    password: string;
-    token:    string | undefined;
-};
-
-export type UsernameAvailable_RequestDTO = {
-    username: string;
-};
-
-export type EmailAvailable_RequestDTO = {
     email: string;
+    password: string;
+    firstname: string;
+    lastname: string;
 };
 
-export type UserSignUp_ResponseDTO = ApiResponse;
-export type UserEdit_ResponseDTO =   ApiResponse;
-export type UserOrganization_ResponseDTO = ApiResponse<{organization : Group | null}>
+export type UserGetAvailable_ResponseDTO = {
+    available: boolean;
+    reason: string;
+};
 
-export async function signUp(body: UserSignUp_RequestDTO) {
-    return (await api.post<UserSignUp_ResponseDTO>("/signup", {
-        firstname: body.firstname,
-        lastname: body.lastname,
-        username: body.username,
-        email:    body.email,
-        password: body.password,
-        recaptchaToken: body.recaptchaToken,
-    })).data;
-}
+export type UserAccountUpdate_RequestDTO = {
+    userId: string;
+    username?: string;
+    email?: string;
+    password?: string;
+    authorityLevel?: string;
+    emailVerified?: boolean;
+    blockedAccount?: boolean;
+    inactiveAccount?: boolean;
+    credentialsExpired?: boolean;
+    expiredUser?: boolean;
+};
 
-export async function edit(body: UserEdit_RequestDTO) {
-    return (await api.post<UserEdit_ResponseDTO>("/account/edit", {
-        password: body.currentPassword,
-        newPassword: body.newPassword,
-    })).data;
-}
-
-export async function recoverPassword(body : UserRecoverPassword_RequestDTO){
-    return (await api.post<ApiResponse>("/recovery-password",{
-        username: body.username,
-        recaptchaToken: body.recaptchaToken,
-    })).data;
-}
-
-export async function newPassword(body : UserNewPassword_RequestDTO){
-    return (await api.post<ApiResponse>("/new-password", {
-        newPassword: body.password,
-        token: body.token,
-    })).data;
-}
-
-export async function usernameAvailable(body : UsernameAvailable_RequestDTO){
-    return (await api.post<ApiResponse>("/username-available",{
-        username: body.username,
-    })).data;
-}
-
-export async function emailAvailable(body : EmailAvailable_RequestDTO){
-    return (await api.post<ApiResponse>("/email-available",{
-        email: body.email,
-    })).data;
-}
-
-export async function organization(){
-    return (await api.post<UserOrganization_ResponseDTO>("/group/current-organization", {
-    })).data;
-}
+export type UserLoginKeycloak_RequestDTO = {
+    token: string;
+};

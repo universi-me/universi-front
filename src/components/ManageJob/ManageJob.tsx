@@ -1,10 +1,6 @@
-import { Job } from "@/types/Job";
-
 import { FormInputs, UniversiForm } from "@/components/UniversiForm";
-import UniversimeApi from "@/services/UniversimeApi";
-import { Institution } from "@/types/Institution";
+import { UniversimeApi } from "@/services"
 import { useEffect, useState } from "react";
-import { CompetenceType } from "@/types/Competence";
 
 export type ManageJobsProps = {
     job: Job | null;
@@ -79,25 +75,25 @@ export function ManageJob(props: Readonly<ManageJobsProps>) {
 
     async function handleCreateInstitution(name: string){
         const response = await UniversimeApi.Institution.create({ name: name });
-        if (!response.success) return [];
+        if (!response.isSuccess()) return [];
 
-        const listResponse = await UniversimeApi.Institution.listAll();
-        if (!listResponse.success) return [];
+        const listResponse = await UniversimeApi.Institution.list();
+        if (!listResponse.isSuccess()) return [];
 
-        return listResponse.body.list.map(makeInstitutionOption);
+        return listResponse.data.map(makeInstitutionOption);
     }
 
     async function updateInstitutions() {
-        const res = await UniversimeApi.Institution.listAll();
-        if (res.success)
-            setInstitutions(res.body.list);
+        const res = await UniversimeApi.Institution.list();
+        if (res.isSuccess())
+            setInstitutions(res.data);
 
-        return res.body?.list;
+        return res.data;
     }
 
     async function handleCreateCompetenceType(name: string){
         const response = await UniversimeApi.CompetenceType.create({ name: name });
-        if (!response.success) return [];
+        if (!response.isSuccess()) return [];
 
         const listResponse = await updateCompetenceTypes();
 
@@ -106,9 +102,9 @@ export function ManageJob(props: Readonly<ManageJobsProps>) {
 
     async function updateCompetenceTypes() {
         const res = await UniversimeApi.CompetenceType.list();
-        if (res.success)
-            setCompetenceTypes(res.body.list);
+        if (res.isSuccess())
+            setCompetenceTypes(res.data);
 
-        return res.body?.list;
+        return res.data;
     }
 }

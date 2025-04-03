@@ -21,6 +21,6 @@ export const LoggedIn: Story = {
       name: 'Jane Doe',
     },
   },
-};
+} as any;
 
-export const LoggedOut: Story = {};
+export const LoggedOut: Story = {} as any;

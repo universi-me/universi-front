@@ -1,7 +1,7 @@
 import { useState, MouseEvent, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { minimumLength, numberOrSpecialChar, passwordValidationClass, upperAndLowerCase } from "@/utils/passwordValidation";
 import { AuthContext } from "@/contexts/Auth";
@@ -67,12 +67,12 @@ export function ManageProfilePassword() {
     );
 
     function changePassword(e: MouseEvent<HTMLButtonElement>) {
-        UniversimeApi.User.edit({
-            currentPassword: oldPassword,
+        UniversimeApi.User.changePassword({
+            password: oldPassword,
             newPassword,
         }).then(res => {
-            if (!res.success)
-                throw new Error(res.message);
+            if (!res.isSuccess())
+                throw new Error(res.errorMessage);
 
             navigate(`/profile/${authContext.profile!.user.name}`);
         }).catch((reason: Error) => {

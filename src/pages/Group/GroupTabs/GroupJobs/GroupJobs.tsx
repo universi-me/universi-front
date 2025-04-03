@@ -3,7 +3,7 @@ import DOMPurify from "dompurify";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 import useCanI from "@/hooks/useCanI";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 
 import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
@@ -14,12 +14,10 @@ import StringUtils from "@/utils/stringUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { makeClassName } from "@/utils/tsxUtils";
 import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdownMenuUtils";
-import { Job } from "@/types/Job";
-import { Permission } from "@/types/Roles";
+import { Permission } from "@/utils/roles/rolesUtils";
 
 import "./GroupJobs.less";
 import UniversiForm, { FormInputs } from "@/components/UniversiForm";
-import { CompetenceType } from "@/types/Competence";
 
 export function GroupJobs() {
     const groupContext = useContext(GroupContext);
@@ -27,7 +25,7 @@ export function GroupJobs() {
 
     const [filterText, setFilterText] = useState<string>("");
     const filterOnlyOpen = useRef(false);
-    const filterCompetenceTypes = useRef<CompetenceType[]>([]);
+    const filterCompetenceTypes = useRef<Competence.Type[]>([]);
     const [renderFilterForm, setRenderFilterForm] = useState(false);
 
     const canI = useCanI();
@@ -94,24 +92,24 @@ export function GroupJobs() {
         filterCompetenceTypes.current = form.competences.map(
             ctId => groupContext!.competenceTypes
                 .find(ct => ct.id === ctId))
-                .filter(ct => ct !== undefined) as CompetenceType[];
+                .filter(ct => ct !== undefined) as Competence.Type[];
 
         await refreshJobs();
     }
 
     async function refreshJobs() {
-        const res = await UniversimeApi.Job.list({ filters: {
+        const res = await UniversimeApi.Job.list({
             onlyOpen: filterOnlyOpen.current,
             competenceTypesIds: filterCompetenceTypes.current.map(ct => ct.id),
-        } });
+        });
 
-        if (!res.success) return;
-        setJobsFetched(res.body.list);
+        if (!res.isSuccess()) return;
+        setJobsFetched(res.data);
     }
 }
 
 type RenderManyJobsProps = {
-    jobs: Job[];
+    jobs: Job.DTO[];
     contexts: {
         group: NonNullable<GroupContextType>;
     }
@@ -129,7 +127,7 @@ function RenderManyJobs(props: Readonly<RenderManyJobsProps>) {
 }
 
 type RenderJobProps = {
-    job: Job;
+    job: Job.DTO;
     contexts: {
         group: NonNullable<GroupContextType>;
     }
@@ -139,7 +137,7 @@ function RenderJob(props: Readonly<RenderJobProps>) {
     const { job, contexts } = props;
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
-    const OPTIONS: OptionInMenu<Job>[] = [
+    const OPTIONS: OptionInMenu<Job.DTO>[] = [
         {
             text: "Editar",
             biIcon: "pencil-fill",
@@ -162,7 +160,7 @@ function RenderJob(props: Readonly<RenderJobProps>) {
                 });
 
                 if (res.isConfirmed) {
-                    await UniversimeApi.Job.close({ jobId: data.id });
+                    await UniversimeApi.Job.close( data.id );
                     await contexts.group.refreshData();
                 }
             }

@@ -1,4 +1,3 @@
-import { Folder } from "@/types/Capacity";
 import { Link } from "react-router-dom";
 import { contentImageUrl } from "@/utils/apiUtils";
 import './ProfileContentItem.less'

@@ -1,45 +1,26 @@
-import * as Auth from "./Auth";
-import * as Competence from "./Competence";
-import * as Education from "./Education";
-import * as Experience from "./Experience";
-import * as TypeEducation from "./TypeEducation";
-import * as Institution from "./Institution";
-import * as TypeExperience from "./TypeExperience";
-import * as CompetenceType from "./CompetenceType";
-import * as Group from "./Group";
-import * as Link from "./Link";
-import * as Profile from "./Profile";
-import * as Capacity from "./Capacity"
-import * as User from "./User"
-import * as Image from "./Image"
-import * as Admin from "./Admin"
-import * as Feed from "./Feed"
-import * as Roles from "./Roles"
-import * as Feature from "./Feature"
-import * as Job from "./Job"
-import * as Health from "./Health"
-
-export const UniversimeApi = {
-    Auth,
-    Capacity,
-    Competence,
-    Education,
-    Experience,
-    Institution,
-    TypeEducation,
-    TypeExperience,
-    CompetenceType,
-    Group,
-    Link,
-    Profile,
-    User,
-    Image,
-    Admin,
-    Feed,
-    Roles,
-    Feature,
-    Job,
-    Health
-};
-
-export default UniversimeApi;
+export * as Auth from "./Auth";
+export * as Capacity from "./Capacity";
+export * as Competence from "./Competence";
+export * as CompetenceType from "./CompetenceType";
+export * as Education from "./Education";
+export * as EducationType from "./EducationType";
+export * as Experience from "./Experience";
+export * as ExperienceType from "./ExperienceType";
+export * as Feed from "./Feed";
+export * as FeedReaction from "./FeedReaction";
+export * as FeedComment from "./FeedComment";
+export * as Group from "./Group";
+export * as GroupAdmin from "./GroupAdmin";
+export * as GroupEmailFilter from "./GroupEmailFilter";
+export * as GroupEnvironment from "./GroupEnvironment";
+export * as GroupFeature from "./GroupFeature";
+export * as GroupParticipant from "./GroupParticipant";
+export * as GroupTheme from "./GroupTheme";
+export * as Health from "./Health";
+export * as Image from "./Image";
+export * as Institution from "./Institution";
+export * as Job from "./Job";
+export * as Link from "./Link";
+export * as Profile from "./Profile";
+export * as Role from "./Role";
+export * as User from "./User";

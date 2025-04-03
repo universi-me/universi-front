@@ -1,12 +1,11 @@
 import { useContext } from "react";
 
 import { AuthContext } from "@/contexts/Auth";
-
-import { Group } from "@/types/Group";
-import { FeatureTypes, Permission } from "@/types/Roles";
+import { Permission } from "@/utils/roles/rolesUtils";
 
 
-export type CanI_SyncFunction = (feature: FeatureTypes, permission?: Permission, optionalGroup?: Group | undefined) => boolean;
+
+export type CanI_SyncFunction = (feature: Role.Feature, permission?: Permission, optionalGroup?: Group.DTO | undefined) => boolean;
 
 /**
  * React Hook that uses `AuthContext` data to verify if a user can use a feature in a group.
@@ -24,7 +23,7 @@ export type CanI_SyncFunction = (feature: FeatureTypes, permission?: Permission,
 export default function useCanI(): CanI_SyncFunction {
     const auth = useContext(AuthContext);
 
-    return function(feature: FeatureTypes, permission = Permission.READ, optionalGroup?: Group): boolean {
+    return function(feature: Role.Feature, permission = Permission.READ, optionalGroup?: Group.DTO): boolean {
         if (optionalGroup === undefined && auth.organization === null) return false;
 
         const group = (optionalGroup ?? auth.organization)!;

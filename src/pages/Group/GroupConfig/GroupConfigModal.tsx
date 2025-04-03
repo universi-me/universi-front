@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import RolesPage from './Roles/RolesPage';
 import './GroupConfigModal.css';
-import { Group } from '@/types/Group';
 import { GroupContext } from "@/pages/Group";
 
 enum Tab {

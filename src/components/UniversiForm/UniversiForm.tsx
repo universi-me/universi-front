@@ -1,7 +1,7 @@
 import { ReactNode, useState, useEffect } from "react"
 
 import "./UniversiForm.less"
-import UniversimeApi from "@/services/UniversimeApi"
+import { UniversimeApi } from "@/services"
 import { arrayBufferToBase64 } from "@/utils/fileUtils"
 import Select, { GroupBase, StylesConfig } from "react-select"
 import CreatableSelect from "react-select/creatable"
@@ -14,6 +14,7 @@ import { stringEqualsIgnoreCase } from "@/utils/stringUtils"
 import { update } from "@/services/UniversimeApi/Group"
 import CropperComponent from "../ImageCropper/ImageCropper"
 import TextboxFormatted from "../TextboxFormatted/TextboxFormatted"
+import { HttpStatusCode } from "axios"
 
 export type cancelPopup = {
     confirmCancel? : boolean,
@@ -64,6 +65,7 @@ export type FormObjectImage = FormObjectBase<FormInputs.IMAGE, string> & {
     defaultImageUrl?: string;
     aspectRatio?: number;
     crop?: boolean;
+    isPublic?: boolean;
 };
 
 export type FormObjectFile = FormObjectBase<FormInputs.FILE, File> & {
@@ -215,22 +217,24 @@ export function UniversiForm(props : formProps){
             handleContentChange()
         },[valueState])
 
-        function validHtml(value : string){
-            
-            let validValue = ""
+        function validHtml(value: string): string {
+            if (value.trim() === "") return "";
+        
+            const validValueArray: string[] = [];
 
-            if(value.trim() == "")
-                return
-
-            for(let line of value.split("<p>")){
-                for(let line1 of line.split("</p>")){
-                    if(line1.trim() != "<br>" && line1.trim() != ""){
-                        validValue+="<p>"+line
-                    }
+            const regex = /(<p[^>]*>)([\s\S]*?)(<\/p>)/g;
+        
+            value.replace(regex, (match, openTag, content, closeTag) => {
+                content = content.trim();
+        
+                if (content !== "" && content !== "<br>") {  
+                    validValueArray.push(openTag + content + closeTag); // Preserve original <p> tag
                 }
-            }
-
-            return validValue
+        
+                return match;
+            });
+        
+            return validValueArray.join("");
         }
 
         function handleContentChange(){
@@ -285,9 +289,9 @@ export function UniversiForm(props : formProps){
                         return;
                     }
 
-                    const res = await UniversimeApi.Image.upload({image: imageFile})
-                    if(res.success && res.body)
-                        handleChange(index, res.body.link)
+                    const res = await UniversimeApi.Image.upload({image: imageFile, isPublic: object.isPublic});
+                    if(res.isSuccess() && res.status == HttpStatusCode.Created)
+                        handleChange(index, res.data)
                 }
             };
 
@@ -523,9 +527,9 @@ export function UniversiForm(props : formProps){
                     object.canCreate != undefined && object.canCreate ? 
                         <CreatableSelect isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
                         menuPosition="fixed"
-                        onChange={(value) => handleSelectChange(index, value)}
+                        onChange={(value:any) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
-                        formatCreateLabel={(value) => `Criar "${value}"`}
+                        formatCreateLabel={(value:any) => `Criar "${value}"`}
                         classNamePrefix="category-item"
                         styles={object.stylesConfig}
                         required={object.required}
@@ -537,7 +541,7 @@ export function UniversiForm(props : formProps){
                     :
                         <Select isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
                         menuPosition="fixed"
-                        onChange={(value) => handleSelectChange(index, value)}
+                        onChange={(value:any) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
                         classNamePrefix="category-item"
                         styles={object.stylesConfig}

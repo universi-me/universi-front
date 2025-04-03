@@ -1,73 +1,7 @@
-import { Group } from "@/types/Group";
-import { Profile } from "@/types/Profile";
-import { CompetenceType } from "@/types/Competence";
-
-
-export type ContentStatusEnum = "VIEW" | "DONE" | "NOT_VIEWED"
-export type ContentStatus = {status : ContentStatusEnum, updatedAt: string}
-export type ContentType = "VIDEO" | "LINK" | "FOLDER" | "FILE";
-
-export const MATERIAL_TYPES_TEXT: {[k in ContentType]: string} = {
+export const MATERIAL_TYPES_TEXT: {[k in Capacity.Content.Type]: string} = {
     VIDEO:  "Vídeo",
     LINK:   "Link",
     FOLDER: "Pasta",
     FILE:   "Arquivo",
 };
-export const AVAILABLE_MATERIAL_TYPES = Object.keys(MATERIAL_TYPES_TEXT) as ContentType[];
-
-export type Content = {
-    id:                 string;
-    url:                string;
-    title:              string;
-    image:              string | null;
-    description:        string | null;
-    categories:         Category[];
-    folders:            Folder[];
-    rating:             number;
-    createdAt:          string;
-    author:             Profile;
-    type:               ContentType | null;
-    status:             ContentStatusEnum;
-};
-
-export type WatchProfileProgress = {
-    content: Content;
-    status:  ContentStatusEnum;
-}
-
-export type Category = {
-    id:        string;
-    name:      string;
-    image:     string | null;
-};
-
-export type Folder = {
-    id:                  string;
-    reference:           string;
-    name:                string;
-    image:               string | null;
-    description:         string | null;
-    rating:              number;
-    categories:          Category[];
-    createdAt:           string;
-    author:              Profile;
-    publicFolder:        boolean;
-    grantedAccessGroups: Group[];
-    assignedBy?:         Profile[];
-    favorite?:           true;
-    canEdit:             boolean;
-
-    grantsBadgeToCompetences: CompetenceType[]
-};
-
-export type FolderProfile = {
-    assignedBy:  Profile;
-    assignedTo: Profile;
-    folder:  Folder;
-
-    id:       string;
-    created:  string;
-
-    doneUntilNow: number;
-    folderSize:   number;
-}
+export const AVAILABLE_MATERIAL_TYPES = Object.keys(MATERIAL_TYPES_TEXT) as Capacity.Content.Type[];

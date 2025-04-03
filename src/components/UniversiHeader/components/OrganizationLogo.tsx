@@ -27,7 +27,5 @@ export function OrganizationLogo() {
             </div>
     };
 
-    return authContext.profile
-        ? <Link {...wrapperAttributes} to={`/group${authContext.organization.path}`} />
-        : <div {...wrapperAttributes}/>
+    return <Link {...wrapperAttributes} to={ authContext.profile ? `/group${authContext.organization.path}` : '/' } />
 }

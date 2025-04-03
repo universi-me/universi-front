@@ -1,95 +1,62 @@
-import type { CompetenceProfileDTO } from "@/types/Competence";
-import type { Group } from "@/types/Group";
-import type { Link } from "@/types/Link";
-import type { Profile } from "@/types/Profile";
-import type { ApiResponse } from "@/types/UniversimeApi";
-import type { Folder } from "@/types/Capacity";
 import { createApiInstance } from "./api";
-import { Education } from "@/types/Education";
-import { Experience } from "@/types/Experience";
+import { ApiResponse } from "@/utils/apiUtils";
 
-const api = createApiInstance( "/profile" )
+const api = createApiInstance( "/profiles" )
 
 export type ProfileEdit_RequestDTO = {
-    profileId: string;
-    name?:     string;
+    firstname?: string;
     lastname?: string;
-    bio?:      string;
-    gender?:   string;
-    imageUrl?: string;
-    rawPassword?: string;
+    biography?: string;
+    gender?: Profile.Gender;
+    image?: string;
+    password?: string;
 };
 
-export type ProfileIdAndUsername_RequestDTO = {
-    profileId?: string;
-    username?:  string;
+export function profile() {
+    return api.get<Profile.DTO>( "" ).then( ApiResponse.new );
+}
+
+export function get( idOrUsername: string ) {
+    return api.get<Profile.DTO>( `/${idOrUsername}` ).then( ApiResponse.new );
+}
+
+export function update( body: ProfileEdit_RequestDTO ) {
+    return api.patch<Profile.DTO>( "", body ).then( ApiResponse.new );
+}
+
+export function groups( idOrUsername: string ) {
+    return api.get<Group.DTO[]>( `/${idOrUsername}/groups` ).then( ApiResponse.new );
+}
+
+export function competences( idOrUsername: string ) {
+    return api.get<Competence.DTO[]>( `/${idOrUsername}/competences` ).then( ApiResponse.new );
+}
+
+export function educations( idOrUsername: string ) {
+    return api.get<Education.DTO[]>( `/${idOrUsername}/educations` ).then( ApiResponse.new );
+}
+
+export function experiences( idOrUsername: string ) {
+    return api.get<Experience.DTO[]>( `/${idOrUsername}/experiences` ).then( ApiResponse.new );
+}
+
+export function links( idOrUsername: string ) {
+    return api.get<Link.DTO[]>( `/${idOrUsername}/links` ).then( ApiResponse.new );
+}
+
+export function folders( idOrUsername: string ) {
+    return api.get<ProfileFoldersResponseDTO>( `/${idOrUsername}/folders` ).then( ApiResponse.new );
+}
+
+export function favorites( idOrUsername: string ) {
+    return api.get<Capacity.Folder.Favorite[]>( `/${idOrUsername}/favorites` ).then( ApiResponse.new );
+}
+
+export function image( idOrUsername: string ) {
+    return api.get<unknown>( `/${idOrUsername}/image` ).then( ApiResponse.new );
+}
+
+export type ProfileFoldersResponseDTO = {
+    favorites: Capacity.Folder.Favorite[];
+    assignments: Capacity.Folder.Assignment[];
 };
-
-export type ProfileFolders_RequestDTO = ProfileIdAndUsername_RequestDTO & {
-};
-
-export type ProfileGet_ResponseDTO =             ApiResponse<{ profile: Profile }>;
-export type ProfileEdit_ResponseDTO =            ApiResponse;
-export type ProfileGroups_ResponseDTO =          ApiResponse<{ groups: Group[] }>;
-export type ProfileCompetences_ResponseDTO =     ApiResponse<{ competences: CompetenceProfileDTO[] }>;
-export type ProfileEducation_ResponseDTO =     ApiResponse<{ educations: Education[] }>;
-export type ProfileExperience_ResponseDTO =     ApiResponse<{ experiences: Experience[] }>;
-export type ProfileLinks_ResponseDTO =           ApiResponse<{ links: Link[] }>;
-export type ProfileFolders_ResponseDTO         = ApiResponse<{ folders: Folder[], favorites: Folder[] }>;
-
-export async function profile() {
-    return (await api.get<ProfileGet_ResponseDTO>('', {})).data
-}
-
-export async function get(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileGet_ResponseDTO>('/get', {
-        profileId: body.profileId,
-        username:  body.username,
-    })).data
-}
-
-export async function edit(body: ProfileEdit_RequestDTO) {
-    return (await api.post<ProfileEdit_ResponseDTO>('/edit', body)).data
-}
-
-export async function groups(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileGroups_ResponseDTO>('/groups', {
-        profileId: body.profileId,
-        username:  body.username,
-    })).data
-}
-
-export async function competences(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileCompetences_ResponseDTO>('/competences', {
-        profileId: body.profileId,
-        username:  body.username,
-    })).data
-}
-
-export async function educations(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileEducation_ResponseDTO>('/educations', {
-        profileId: body.profileId,
-        username:  body.username,
-    })).data
-}
-
-export async function experiences(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileExperience_ResponseDTO>('/experiences', {
-        profileId: body.profileId,
-        username:  body.username,
-    })).data
-}
-
-export async function links(body: ProfileIdAndUsername_RequestDTO) {
-    return (await api.post<ProfileLinks_ResponseDTO>('/links', {
-        profileId: body.profileId,
-        username:  body.username,
-    })).data
-}
-
-export async function folders(body: ProfileFolders_RequestDTO) {
-    return (await api.post<ProfileFolders_ResponseDTO>("/folders", {
-        profileId: body.profileId,
-        username:  body.username,
-    })).data;
-}

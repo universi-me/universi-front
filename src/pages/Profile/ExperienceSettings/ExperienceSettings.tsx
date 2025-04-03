@@ -1,11 +1,10 @@
 import { useContext, useState } from "react";
 
 import { ProfileContext } from "@/pages/Profile";
-import { UniversimeApi } from "@/services/UniversimeApi"
+import { UniversimeApi } from "@/services"
 
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
-import { Institution } from "@/types/Institution";
 
 export function ExperienceSettings() {
     const profileContext = useContext(ProfileContext)
@@ -16,17 +15,17 @@ export function ExperienceSettings() {
             formTitle={profileContext?.editExperience?.id ? "Editar Experiência" : "Adicionar Experiência"}
             objects={[
                 {
-                    DTOName: "typeExperienceId", label: "Tipo de Experiência", type: FormInputs.SELECT_SINGLE, 
-                    value: profileContext?.editExperience?.typeExperience ? {value: profileContext?.editExperience?.typeExperience.id, label: profileContext?.editExperience?.typeExperience.name } : undefined,
+                    DTOName: "experienceType", label: "Tipo de Experiência", type: FormInputs.SELECT_SINGLE, 
+                    value: profileContext?.editExperience?.experienceType ? {value: profileContext?.editExperience?.experienceType.id, label: profileContext?.editExperience?.experienceType.name } : undefined,
                     options: profileContext.allTypeExperience.map((t) => ({value: t.id, label: t.name})),
                     required: true,
                     canCreate: true,
-                    onCreate: (value: any) => UniversimeApi.TypeExperience.create({name: value}).then(response => {
-                        if (response.success) {
+                    onCreate: (value: any) => UniversimeApi.ExperienceType.create({name: value}).then(response => {
+                        if (response.isSuccess()) {
                             // return updated type experience
-                            return UniversimeApi.TypeExperience.list().then(response => {
-                                if (response.success && response.body) {
-                                    let options = response.body.lista.map(t => ({ value: t.id, label: t.name }));
+                            return UniversimeApi.ExperienceType.list().then(response => {
+                                if (response.isSuccess() && response.body) {
+                                    let options = response.data.map(t => ({ value: t.id, label: t.name }));
                                     return options;
                                 }
                             })
@@ -39,7 +38,7 @@ export function ExperienceSettings() {
                     required: true
                 },
                 {
-                    DTOName: "institutionId", label: "Instituição", type: FormInputs.SELECT_SINGLE,
+                    DTOName: "institution", label: "Instituição", type: FormInputs.SELECT_SINGLE,
                     value: profileContext?.editExperience?.institution ? makeInstitutionOption(profileContext?.editExperience?.institution) : undefined,
                     options: profileContext.allInstitution.map(makeInstitutionOption),
                     required: true, canCreate: true, onCreate: handleCreateInstitution
@@ -51,7 +50,7 @@ export function ExperienceSettings() {
                 },
                 {
                     DTOName: "endDate", label: "Data de Término", type: FormInputs.DATE,
-                    value: profileContext?.editExperience?.endDate,
+                    value: profileContext?.editExperience?.endDate ?? undefined,
                     disabled: (objects) => objects.find((obj) => obj.DTOName == "presentDate")?.value ?? false,
                     validation: new ValidationComposite<any>().addValidation({
                         validate(object: any, objects: any[]) {
@@ -75,10 +74,10 @@ export function ExperienceSettings() {
                 },
                 {
                     DTOName: "presentDate", label: "Em andamento", type: FormInputs.BOOLEAN,
-                    value: profileContext?.editExperience?.presentDate ?? false
+                    value: profileContext?.editExperience?.endDate === null
                 },
                 {
-                    DTOName: "profileExperienceId", label: "profileExperienceId", type: FormInputs.HIDDEN,
+                    DTOName: "experienceId", label: "profileExperienceId", type: FormInputs.HIDDEN,
                     value: profileContext?.editExperience?.id
                 }
             ]}
@@ -96,11 +95,11 @@ export function ExperienceSettings() {
 
     async function handleCreateInstitution(name: string){
         const response = await UniversimeApi.Institution.create({ name: name });
-        if (!response.success) return [];
+        if (!response.isSuccess()) return [];
 
-        const listResponse = await UniversimeApi.Institution.listAll();
-        if (!listResponse.success) return [];
+        const listResponse = await UniversimeApi.Institution.list();
+        if (!listResponse.isSuccess()) return [];
 
-        return listResponse.body.list.map(makeInstitutionOption);
+        return listResponse.data.map(makeInstitutionOption);
     }
 }

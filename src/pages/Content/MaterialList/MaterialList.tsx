@@ -1,7 +1,7 @@
 import { useContext, MouseEvent } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { YouTubePlayerContext, type YouTubePlayerContextType } from "@/contexts/YouTube";
 import { ContentContext, type ContentContextType } from "@/pages/Content";
 import { MATERIAL_THUMB_FILE, MATERIAL_THUMB_LINK, MATERIAL_THUMB_VIDEO } from "@/utils/assets";
@@ -9,8 +9,6 @@ import { getYouTubeVideoIdFromUrl, isAbsoluteUrl } from "@/utils/regexUtils";
 import { type OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdownMenuUtils";
 import { makeClassName } from "@/utils/tsxUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-
-import { ContentStatusEnum, type Content } from "@/types/Capacity";
 
 import "./MaterialList.less";
 
@@ -71,10 +69,11 @@ function RenderMaterial(props: Readonly<RenderMaterialProps>) {
                     icon: "warning",
                 }).then(res => {
                     if (res.isConfirmed) {
-                        UniversimeApi.Capacity.removeContentFromFolder({ reference: contexts.contentContext.content.reference, contentIds: material.id })
-                            .then(res => {
-                                if (res.success) contexts.contentContext.refreshMaterials();
-                            });
+                        UniversimeApi.Capacity.Folder.changeContents( contexts.contentContext.content.reference, {
+                            removeContentsIds: [ material.id ],
+                        } ).then(res => {
+                            if (res.isSuccess()) contexts.contentContext.refreshMaterials();
+                        });
                     }
                 });
             },
@@ -125,9 +124,9 @@ function RenderMaterial(props: Readonly<RenderMaterialProps>) {
             ? "VIEW"
             : "DONE";
 
-        UniversimeApi.Capacity.editContentStatus({ contentId: material.id, contentStatusType: nextStatus })
+        UniversimeApi.Capacity.Content.setStatus( material.id, { contentStatusType: nextStatus })
             .then(res => {
-                if (res.success)
+                if (res.isSuccess())
                     contexts.contentContext.refreshMaterials();
             })
     }

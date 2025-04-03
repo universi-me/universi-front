@@ -1,6 +1,4 @@
 import { createContext } from "react";
-import { GroupTheme } from "@/types/Group";
-import { Nullable } from "@/types/utils";
 
 export type ThemeContextType = {
     theme: GroupTheme;

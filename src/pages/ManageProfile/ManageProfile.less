@@ -143,12 +143,15 @@
                 cursor: pointer;
 
                 #profile-image-view {
+                    @hover-outline: 5px;
+
                     width: 10rem;
                     aspect-ratio: 1;
+                    margin-top: @hover-outline;
 
                     &:hover {
-                        outline: 5px solid @primary-color;
-                        filter: contrast(80%);
+                        outline: @hover-outline solid @primary-color;
+                        filter: contrast( 70% );
                     }
                 }
             }

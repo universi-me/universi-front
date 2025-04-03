@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 
 // Import pages
-import { App } from "@/src/App";
+import { App } from "@/App";
 import GroupPage, { GroupPageLoader } from "@/pages/Group";
 import { ProfilePage, ProfilePageLoader } from "@/pages/Profile";
 import Singin from "@/pages/singin/Singin";

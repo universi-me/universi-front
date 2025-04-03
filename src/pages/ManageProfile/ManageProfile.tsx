@@ -1,7 +1,7 @@
 import { MouseEvent, useContext, useState } from "react";
 import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { ManageProfileLinks, ManageProfileLoaderResponse, ManageProfilePassword, ManageProfileImage, getManageLinks } from "@/pages/ManageProfile";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { AuthContext } from "@/contexts/Auth";
@@ -20,7 +20,7 @@ export function ManageProfilePage() {
     const [firstname, setFirstname] = useState(profile?.firstname ?? "");
     const [lastname, setLastname] = useState(profile?.lastname ?? "");
     const [bio, setBio] = useState(profile?.bio ?? "");
-    const [gender, setGender] = useState(profile?.gender ?? "");
+    const [gender, setGender] = useState<Profile.Gender | "">(profile?.gender ?? "");
 
     // undefined means the profile image was unchanged, while a `File` value means it was changed
     const [image, setImage] = useState<File | undefined>(undefined);
@@ -76,7 +76,7 @@ export function ManageProfilePage() {
 
                     <fieldset id="fieldset-gender">
                         <legend>Gênero</legend>
-                        <select name="gender" id="gender" defaultValue={gender} onChange={setStateAsValue(setGender)} >
+                        <select name="gender" id="gender" defaultValue={gender} onChange={ e => setGender( e.currentTarget.value as Gender | "" ) } >
                             { genderOptions.map(g => {
                                 return <option key={g.value} value={g.value}>{g.label}</option>
                             }) }
@@ -105,11 +105,11 @@ export function ManageProfilePage() {
         if (!profile)
             return;
 
-        let newImageUrl = undefined;
+        let newImageUrl: string | undefined = undefined;
         if (image) {
             const res = await UniversimeApi.Image.upload({image});
-            if (res.success && res.body) {
-                newImageUrl = res.body.link;
+            if (res.isSuccess() && res.body) {
+                newImageUrl = res.data;
             }
         }
 
@@ -132,17 +132,16 @@ export function ManageProfilePage() {
         if (!isConfirmed)
             return;
 
-        UniversimeApi.Profile.edit({
-            profileId: profile.id,
-            name: firstname,
+        UniversimeApi.Profile.update({
+            firstname,
             lastname,
-            bio,
+            biography: bio,
             gender: gender || undefined,
-            imageUrl: newImageUrl,
-            rawPassword: password,
+            image: newImageUrl,
+            password,
         }).then(async res => {
-            if (!res.success)
-                throw new Error(res.message);
+            if (!res.isSuccess())
+                throw new Error(res.errorMessage);
 
             const p = await authContext.updateLoggedUser();
             navigate(`/profile/${p!.user.name}`);
@@ -161,39 +160,47 @@ export function ManageProfilePage() {
                 const idNum = Number(l.id);
                 return !isNaN(idNum) && idNum < 0;
             })
-            .map(l => UniversimeApi.Link.create(l));
+            .map(l => UniversimeApi.Link.create({
+                name: l.name,
+                type: l.typeLink,
+                url: l.url,
+            }));
 
         const linksRemoved = links
             .filter(l => undefined === manageLinks.find(ml => ml.id === l.id))
-            .map(l => UniversimeApi.Link.remove(l));
+            .map(l => UniversimeApi.Link.remove( l.id ));
 
         const linksUpdated = manageLinks
             .filter(l => {
                 const oldLink = links.find(ol => ol.id === l.id);
                 return !!oldLink && (oldLink.name !== l.name || oldLink.typeLink !== l.typeLink || oldLink.url !== l.url);
             })
-            .map(l => UniversimeApi.Link.update(l));
+            .map(l => UniversimeApi.Link.update(l.id, {
+                name: l.name,
+                type: l.typeLink,
+                url: l.url,
+            }));
 
         Promise.all([
             Promise.all(linksCreated),
             Promise.all(linksRemoved),
             Promise.all(linksUpdated),
         ]).then(res => {
-            const failedCreate = res[0].filter(i => !i.success);
-            const failedRemove = res[1].filter(i => !i.success);
-            const failedUpdate = res[2].filter(i => !i.success);
+            const failedCreate = res[0].filter(i => !i.isSuccess());
+            const failedRemove = res[1].filter(i => !i.isSuccess());
+            const failedUpdate = res[2].filter(i => !i.isSuccess());
 
             const errorBuilder: string[] = [];
             failedCreate.forEach(c => {
-                errorBuilder.push(`Ao criar link: ${c.message}`);
+                errorBuilder.push(`Ao criar link: ${c.errorMessage}`);
             });
 
             failedRemove.forEach(c => {
-                errorBuilder.push(`Ao remover link: ${c.message}`);
+                errorBuilder.push(`Ao remover link: ${c.errorMessage}`);
             });
 
             failedUpdate.forEach(c => {
-                errorBuilder.push(`Ao atualizar link: ${c.message}`);
+                errorBuilder.push(`Ao atualizar link: ${c.errorMessage}`);
             });
 
             if (errorBuilder.length > 0)

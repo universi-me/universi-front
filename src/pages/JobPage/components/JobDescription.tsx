@@ -1,8 +1,6 @@
 import { useContext } from "react";
 import DOMPurify from "dompurify";
 
-import { Job } from "@/types/Job";
-
 import { JobContext } from "@/pages/JobPage";
 
 export function JobShortDescription(props : Readonly<JobTextProps>) {

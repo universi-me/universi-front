@@ -1,9 +1,9 @@
 import { useContext, MouseEvent, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
-import { Competence, Level, LevelToLabel } from '@/types/Competence';
+import { LevelToLabel } from '@/types/Competence';
 import { ICON_DELETE_BLACK } from '@/utils/assets';
 import './CurriculumAbility.css';
-import UniversimeApi from '@/services/UniversimeApi';
+import { UniversimeApi } from "@/services"
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { IconVerificated } from '@/components/UniversiSvg';
 
@@ -45,10 +45,10 @@ export function CurriculumAbility() {
         if (!response.isConfirmed)
             return;
 
-        UniversimeApi.Competence.remove({ competenceId })
+        UniversimeApi.Competence.remove( competenceId )
         .then((response) => {
-            if (!response.success) {
-                throw new Error(response.message);
+            if (!response.isSuccess()) {
+                throw new Error(response.errorMessage);
             } else {
                 profileContext.reloadPage();
             }
@@ -63,7 +63,7 @@ export function CurriculumAbility() {
     });
   };
 
-  function calculateWidth(level: Level) {
+  function calculateWidth(level: Competence.Level) {
     return 25*(level+1)
   };
   

@@ -8,20 +8,20 @@ import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import "./GroupPeople.less";
 import { Filter } from "@/components/Filter/Filter";
 import Select from 'react-select'
-import { CompetenceType, LevelToLabel, Level, intToLevel } from "@/types/Competence";
-import UniversimeApi from "@/services/UniversimeApi";
+import { LevelToLabel, intToLevel } from "@/types/Competence";
+import { UniversimeApi } from "@/services"
 import ActionButton from "@/components/ActionButton";
 
 type competenceSearch = {
     typeId?: string,
-    level?: Level,
+    level?: Competence.Level,
     label?: string
 }
 
 export function GroupPeople() {
     const groupContext = useContext(GroupContext);
     const [filterPeople, setFilterPeople] = useState<string>("");
-    const [allTypeCompetence, setAllTypeCompetence] = useState<CompetenceType[] | undefined>()
+    const [allTypeCompetence, setAllTypeCompetence] = useState<Competence.Type[] | undefined>()
     const [currentCompetence, setCurrentCompetence] = useState<competenceSearch>()
     const [addedCompetences, setAddedCompetences] = useState<competenceSearch[]>([])
     const [matchEveryCompetence, setMatchEveryCompetence] = useState<boolean>(false)
@@ -29,8 +29,8 @@ export function GroupPeople() {
 
     useEffect(()=>{
         UniversimeApi.CompetenceType.list().then((response)=>{
-            if(response.success)
-                return response.body.list
+            if(response.isSuccess())
+                return response.data
         })
         .then((list)=>{
             setAllTypeCompetence(list)
@@ -53,14 +53,14 @@ export function GroupPeople() {
         return orderByName(allTypeCompetence ?? [])
     }, [allTypeCompetence]);
 
-    function orderByName(competences : CompetenceType[]){
+    function orderByName(competences : Competence.Type[]){
         return competences
             .slice()
             .sort((c1,c2) => c1.name.localeCompare(c2.name))
             .map((t)=> ({value: t.id, label: t.name})) ?? [];
     }
 
-    function removeAddedCompetence(typeId: string, level: Level){
+    function removeAddedCompetence(typeId: string, level: Competence.Level){
         setAddedCompetences((addedCompetences) => addedCompetences.filter((element) => !(element.typeId === typeId && element.level === level)))
     }
 
@@ -154,7 +154,7 @@ export function GroupPeople() {
                 <Select
                     options={competenceTypeOptions}
                     value={{value: currentCompetence?.typeId?.toString(), label : currentCompetence?.label}}
-                    onChange={(option)=>{
+                    onChange={(option:any)=>{
                         if(!option || !option.value) return
                         let newCompetence : competenceSearch;
                         newCompetence = {
@@ -199,14 +199,14 @@ export function GroupPeople() {
     }
 
     function showOnlyFilteredPeople(searchCompetence : competenceSearch[], matchEveryCompetence : boolean){
-            UniversimeApi.Group.filterParticipants({
+            UniversimeApi.GroupParticipant.filter({
                 competences: searchCompetence.map((c) => ({ id: c.typeId ?? "", level: c.level ?? 0 })),
                 matchEveryCompetence: matchEveryCompetence,
                 groupId: groupContext?.group.id,
                 groupPath: groupContext?.group.path
             }).then((response) => {
-                if (response.data.success) {
-                    return response.data.body?.filteredParticipants;
+                if (response.isSuccess()) {
+                    return response.data;
                 } 
             }).then((participants) => {
                 if (participants) {

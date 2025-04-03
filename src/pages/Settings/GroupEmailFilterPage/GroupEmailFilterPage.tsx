@@ -6,12 +6,12 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { AuthContext } from "@/contexts/Auth";
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import { type GroupEmailFilterLoaderResponse, GroupEmailFilterFetch } from "./GroupEmailFilterLoader";
-import { GroupEmailFilterTypeToLabel, type GroupEmailFilter, type GroupEmailFilterType } from "@/types/Group";
+import { GroupEmailFilterTypeToLabel } from "@/types/Group";
 import "./GroupEmailFilter.less";
 
 let NEW_FILTER_ID = 0;
@@ -166,13 +166,13 @@ export function GroupEmailFilterPage() {
         const toDeleteResponses = emailFilters!.filter(f => f.state === "DELETED");
 
         Promise.all([
-            Promise.all(toCreateFilters.map(f => UniversimeApi.Group.addEmailFilter({ email: f.email, groupId: auth.organization!.id, isEnabled: f.enabled, type: f.type }))),
-            Promise.all(toEditFilters.map(f => UniversimeApi.Group.editEmailFilter({ emailFilterId: f.id, groupId: auth.organization!.id, email: f.email, isEnabled: f.enabled, type: f.type }))),
-            Promise.all(toDeleteResponses.map(f => UniversimeApi.Group.deleteEmailFilter({ emailFilterId: f.id, groupId: auth.organization!.id }))),
+            Promise.all(toCreateFilters.map(f => UniversimeApi.GroupEmailFilter.create({ email: f.email, groupId: auth.organization.id!, enabled: f.enabled, type: f.type }))),
+            Promise.all(toEditFilters.map(f => UniversimeApi.GroupEmailFilter.update({ groupEmailFilterId: f.id, email: f.email, enabled: f.enabled, type: f.type }))),
+            Promise.all(toDeleteResponses.map(f => UniversimeApi.GroupEmailFilter.remove( f.id ))),
         ]).then(([createRes, editRes, deleteRes]) => {
-            const failedCreate = createRes.filter(f => !f.success);
-            const failedEdit = editRes.filter(f => !f.success);
-            const failedDelete = deleteRes.filter(f => !f.success);
+            const failedCreate = createRes.filter(f => !f.isSuccess());
+            const failedEdit = editRes.filter(f => !f.isSuccess());
+            const failedDelete = deleteRes.filter(f => !f.isSuccess());
 
             if (failedCreate.length + failedEdit.length + failedDelete.length === 0) {
                 refreshPage();
@@ -181,13 +181,13 @@ export function GroupEmailFilterPage() {
 
             const errorBuilder: string[] = [];
             failedCreate.forEach(c => {
-                errorBuilder.push(`Ao criar filtro: ${c.message}`);
+                errorBuilder.push(`Ao criar filtro: ${c.errorMessage}`);
             });
             failedEdit.forEach(c => {
-                errorBuilder.push(`Ao editar filtro: ${c.message}`);
+                errorBuilder.push(`Ao editar filtro: ${c.errorMessage}`);
             });
             failedDelete.forEach(c => {
-                errorBuilder.push(`Ao deletar filtro: ${c.message}`);
+                errorBuilder.push(`Ao deletar filtro: ${c.errorMessage}`);
             });
 
             refreshPage();
@@ -201,7 +201,7 @@ export function GroupEmailFilterPage() {
     }
 
     async function refreshPage() {
-        const newData = await GroupEmailFilterFetch(auth.organization!.id);
+        const newData = await GroupEmailFilterFetch(auth.organization.id!);
 
         emailFiltersDispatch({
             type: "SET",

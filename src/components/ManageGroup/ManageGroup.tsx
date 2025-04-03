@@ -1,8 +1,8 @@
 import { FormInputs, TextValidation, UniversiForm, ValidationComposite } from "@/components/UniversiForm";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 
 import { groupBannerUrl, groupHeaderUrl, groupImageUrl } from "@/utils/apiUtils";
-import { Group, GroupType, GroupTypeToLabel } from "@/types/Group";
+import { GroupTypeToLabel } from "@/types/Group";
 
 export type ManageGroupProps = {
     group: Group | null;
@@ -14,33 +14,34 @@ export type ManageGroupProps = {
 export function ManageGroup(props: Readonly<ManageGroupProps>) {
     const { group, parentGroup, callback } = props;
     const isCreating = group === null;
+    const isOrganization = group?.rootGroup ?? false;
 
-    const formTitle = isCreating ? "Criar grupo" : "Editar grupo";
+    const formTitle = isCreating ? "Criar Grupo" : isOrganization ? "Editar Organização" : "Editar Grupo";
     const requisition = isCreating ? UniversimeApi.Group.create : UniversimeApi.Group.update;
 
     return <UniversiForm formTitle={ formTitle }
         objects={[
             {
-                DTOName: "nickname", label: "Apelido do grupo",
+                DTOName: "nickname", label: isOrganization ? "Apelido da Organização" : "Apelido do Grupo",
                 type: isCreating ? FormInputs.TEXT : FormInputs.HIDDEN,
                 value: undefined,
                 required: isCreating,
                 validation: isCreating ? new ValidationComposite<string>().addValidation(new TextValidation()) : undefined
             }, {
-                DTOName: "name", label: "Nome do grupo",
+                DTOName: "name", label: isOrganization ? "Nome da Organização" : "Nome do Grupo",
                 type: FormInputs.TEXT,
                 value: group?.name,
                 required: true, 
                 validation: new ValidationComposite<string>().addValidation(new TextValidation())
             }, {
-                DTOName: "description", label: "Descrição do grupo",
+                DTOName: "description", label: isOrganization ? "Descrição da Organização" : "Descrição do Grupo",
                 type: FormInputs.LONG_TEXT,
                 value: group?.description,
                 required: true,
                 charLimit: 200,
                 validation: new ValidationComposite<string>().addValidation(new TextValidation())
             }, {
-                DTOName: "imageUrl", label: "Imagem do grupo",
+                DTOName: "image", label: isOrganization ? "Imagem da Organização" : "Imagem do Grupo",
                 type: FormInputs.IMAGE,
                 value:undefined, 
                 defaultImageUrl: group ? groupImageUrl(group) : undefined,
@@ -48,7 +49,7 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
                 aspectRatio: 1,
                 required: false
             }, {
-                DTOName: "bannerImageUrl", label: "Banner do grupo",
+                DTOName: "bannerImage", label: isOrganization ? "Banner da Organização" : "Banner do Grupo",
                 type: FormInputs.IMAGE,
                 value:undefined, 
                 defaultImageUrl: group ? groupBannerUrl(group) : undefined,
@@ -56,28 +57,29 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
                 aspectRatio: 2.5,
                 required: false
             }, {
-                DTOName: "headerImageUrl", label: "Logo da Organização",
-                type: group?.rootGroup ? FormInputs.IMAGE : FormInputs.HIDDEN,
+                DTOName: "headerImage", label: "Logo da Organização",
+                type: isOrganization ? FormInputs.IMAGE : FormInputs.HIDDEN,
                 value:undefined,
                 defaultImageUrl: group ? groupHeaderUrl(group) : undefined,
                 crop: true,
+                isPublic: isOrganization,
                 required: false
             }, {
-                DTOName: "groupType", label: "Tipo do grupo",
+                DTOName: "groupType", label: isOrganization ? "Tipo da Organização" : "Tipo do Grupo",
                 type: FormInputs.SELECT_SINGLE,
                 value: group ? { value : group.type, label : group.type } : undefined,
                 options: OPTIONS_GROUP_TYPES,
                 required: true
             }, {
-                DTOName: "canHaveSubgroup", label: "Pode criar grupo",
+                DTOName: "canHaveSubgroup", label: "Permitir Criação de Subgrupos",
                 type: FormInputs.BOOLEAN,
                 value: group?.canCreateGroup
             }, {
-                DTOName: "isPublic", label: "Grupo público",
+                DTOName: "isPublic", label: "Grupo Público",
                 type: FormInputs.BOOLEAN,
                 value: group?.publicGroup ?? true
             }, {
-                DTOName: "canJoin", label: "Usuários podem entrar",
+                DTOName: "canJoin", label: "Permitir Entradas de Usuários",
                 type: FormInputs.BOOLEAN,
                 value: group?.canEnter
             }, {
@@ -89,7 +91,7 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
                 type: FormInputs.HIDDEN,
                 value: parentGroup.id
             }, {
-                DTOName: "everyoneCanPost", label: "Todos usuários podem postar",
+                DTOName: "everyoneCanPost", label: "Permitir Publicações para Todos os Usuários",
                 type: FormInputs.BOOLEAN,
                 value: group?.everyoneCanPost
             }, {

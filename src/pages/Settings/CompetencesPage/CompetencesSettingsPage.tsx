@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { Filter } from "@/components/Filter/Filter";
 import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
 import { type CompetencesSettingsLoaderResponse, SettingsDescription, SettingsTitle, CompetenceTypeEditor } from "@/pages/Settings";
@@ -10,7 +10,6 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import { stringIncludesIgnoreCase } from "@/utils/stringUtils";
 import { groupArray } from "@/utils/arrayUtils";
 
-import { type CompetenceType } from "@/types/Competence";
 import "./CompetencesSettingsPage.less";
 
 export function CompetencesSettingsPage() {
@@ -114,7 +113,7 @@ export function CompetencesSettingsPage() {
 
     async function refreshCompetenceTypes() {
         const competenceTypes = await UniversimeApi.CompetenceType.list();
-        setCompetenceTypes(competenceTypes.body?.list ?? []);
+        setCompetenceTypes(competenceTypes.data ?? []);
     }
 
     type MergeCompetencesProps = {
@@ -126,9 +125,9 @@ export function CompetencesSettingsPage() {
 
         const { remainingCompetenceTypeId } = props;
 
-        await UniversimeApi.Admin.mergeCompetenceType({
-            remainingCompetenceTypeId,
-            removedCompetenceTypeId: mergeCompetence.id
+        await UniversimeApi.CompetenceType.merge({
+            remainingCompetenceType: remainingCompetenceTypeId,
+            removedCompetenceType: mergeCompetence.id,
         });
     }
 }

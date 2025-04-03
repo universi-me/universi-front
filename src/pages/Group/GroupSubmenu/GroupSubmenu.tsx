@@ -3,9 +3,8 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import "./GroupSubmenu.less"
 import { GroupContext } from "../GroupContext"
 import { AuthContext } from "@/contexts/Auth"
-import UniversimeApi from "@/services/UniversimeApi"
+import { UniversimeApi } from "@/services"
 import { hasAvailableOption, OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils"
-import { Group } from "@/types/Group"
 
 export function GroupSubmenu(){
     const context = useContext(GroupContext);
@@ -30,7 +29,7 @@ export function GroupSubmenu(){
         </div>
     </DropdownMenu.Root>;
 
-    function makeGroupOptions(): OptionInMenu<Group>[] {
+    function makeGroupOptions(): OptionInMenu<Group.DTO>[] {
         return [
         {
             text: "Sair deste grupo",
@@ -39,7 +38,7 @@ export function GroupSubmenu(){
                 return !!data.rootGroup;
             },
             async onSelect(data) {
-                await UniversimeApi.Group.exit({groupId: data.id});
+                await UniversimeApi.GroupParticipant.leave( data.id! );
                 return await Promise.all([
                     context!.refreshData(),
                     authContext.updateLoggedUser(),

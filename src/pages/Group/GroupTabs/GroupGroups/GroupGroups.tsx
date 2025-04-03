@@ -4,11 +4,10 @@ import { Link } from "react-router-dom";
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { groupImageUrl } from "@/utils/apiUtils";
 
-import { type Group } from "@/types/Group";
 import "./GroupGroups.less";
 import { Filter } from "@/components/Filter/Filter";
 import { AuthContext } from "@/contexts/Auth";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdownMenuUtils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as SwalUtils from "@/utils/sweetalertUtils";
@@ -23,7 +22,7 @@ export function GroupGroups() {
     if(groupContext == null)
         return <></>
 
-    const OPTIONS_DEFINITION: OptionInMenu<Group>[] = [
+    const OPTIONS_DEFINITION: OptionInMenu<Group.DTO>[] = [
         {
             text: "Editar",
             biIcon: "pencil-fill",
@@ -46,7 +45,7 @@ export function GroupGroups() {
         }
     ];    
 
-    function handleRemoveGroup(group : Group){
+    function handleRemoveGroup(group : Group.DTO){
         let groupParentPath = group.path.substring(0, group.path.lastIndexOf("/"))
         SwalUtils.fireModal({
                 title: "Deseja remover este grupo?",
@@ -58,7 +57,7 @@ export function GroupGroups() {
                 confirmButtonColor: "var(--wrong-invalid-color)"
         }).then(response =>{
             if(response.isConfirmed){
-                UniversimeApi.Group.remove({groupPath: groupParentPath, groupIdRemove: group.id}).then(()=>{
+                UniversimeApi.Group.remove( group.id! ).then(()=>{
                     groupContext?.refreshData();
                 })
             }
@@ -82,7 +81,7 @@ export function GroupGroups() {
             <div className="group-list tab-list"> { makeGroupList(groupContext.subgroups, filterGroups) } </div>
         </section>
     );
-    function makeGroupList(groups: Group[], filter: string) {
+    function makeGroupList(groups: Group.DTO[], filter: string) {
         if (groups.length === 0) {
             return <p className={EMPTY_LIST_CLASS}>Esse grupo não possui grupos.</p>
         }
@@ -99,13 +98,13 @@ export function GroupGroups() {
             .map(renderGroup);
     }
 
-    function renderGroup(group: Group) {
+    function renderGroup(group: Group.DTO) {
         const linkToGroup = `/group${group.path}`;
 
         return (
             <div className="group-item tab-item" key={group.id}>
                 <Link to={linkToGroup}>
-                    <img className="group-image" src={groupImageUrl(group)} />
+                    <img className="group-image" src={ groupImageUrl( group ) } />
                 </Link>
 
                 <div className="info">

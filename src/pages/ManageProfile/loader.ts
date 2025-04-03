@@ -1,6 +1,6 @@
-import UniversimeApi from "@/services/UniversimeApi";
-import { type Gender, ProfileClass, GENDER_OPTIONS } from "@/types/Profile";
-import { Link, TypeLink, TypeLinkToLabel } from "@/types/Link";
+import { UniversimeApi } from "@/services"
+import { ProfileClass, GENDER_OPTIONS } from "@/types/Profile";
+import { TypeLinkToLabel } from "@/types/Link";
 
 export type ManageProfileLoaderResponse = {
     profile: ProfileClass | null;
@@ -34,15 +34,15 @@ export async function ManageProfileLoader(): Promise<ManageProfileLoaderResponse
         .sort((tl1, tl2) => tl1.label.localeCompare(tl2.label));
 
     const profileResponse = await UniversimeApi.Profile.profile();
-    const logged = profileResponse.success && profileResponse.body !== undefined;
 
-    const profile = logged
-        ? profileResponse.body!.profile
-        : null;
+    const profile = profileResponse.data ?? null;
 
-    const links = logged
-        ? (await UniversimeApi.Profile.links({profileId: profile!.id})).body!.links
-        : [];
+    let links: Link[] = [];
+    if ( profile ) {
+        const linksRes = await UniversimeApi.Profile.links( profile.id );
+        if ( linksRes.isSuccess() )
+            links = linksRes.data;
+    }
 
     return {
         profile: profile ? new ProfileClass(profile) : null,

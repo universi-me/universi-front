@@ -1,23 +1,10 @@
-export type UserAccessLevel = "ROLE_USER" | "ROLE_DEV" | "ROLE_ADMIN";
-
-export type User = {
-    id:             string;
-    name:           string;
-    email?:         string;
-    ownerOfSession: boolean;
-    needProfile:    boolean;
-    accessLevel?:   UserAccessLevel;
-    hasPassword?:   boolean;
-    blocked_account?: boolean;
-}
-
-export const UserAccessLevelLabel: { [k in UserAccessLevel]: string } = {
+export const UserAccessLevelLabel: { [k in User.AccessLevel]: string } = {
     ROLE_ADMIN: "Administrador",
     ROLE_DEV: "Desenvolvedor",
     ROLE_USER: "Usuário",
 }
 
-export function compareAccessLevel(a: UserAccessLevel, b: UserAccessLevel): number {
+export function compareAccessLevel(a: User.AccessLevel, b: User.AccessLevel): number {
     const A_FIRST = -1;
     const KEEP_ORDER = 0;
     const B_FIRST = 1;

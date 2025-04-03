@@ -1,13 +1,12 @@
 import { useContext, useEffect, useMemo, type ReactElement } from "react";
 import { GroupContents, GroupContext, GroupGroups, GroupPeople, GroupFeed, GroupContextType, GroupJobs } from "@/pages/Group";
 import "./GroupTabs.less";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { AuthContext } from "@/contexts/Auth";
 import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 import { GroupCompetences } from "./GroupCompetences/GroupCompetences";
 import useCanI, { CanI_SyncFunction } from "@/hooks/useCanI";
-import { Permission } from "@/types/Roles";
-import { Optional } from "@/types/utils";
+import { Permission } from "@/utils/roles/rolesUtils";
 
 export type AvailableTabs = "feed" | "contents" | "groups" | "people" | "competences" | "jobs";
 
@@ -49,7 +48,7 @@ export function GroupTabs(props: Readonly<GroupTabsProps>) {
         if(!context?.group.canEnter || context.group.id == null)
             return;
 
-        const resData = await UniversimeApi.Group.join({groupId: context.group.id});
+        await UniversimeApi.GroupParticipant.join( context.group.id );
         await Promise.all([
             context.refreshData(),
             auth.updateLoggedUser(),
@@ -59,7 +58,7 @@ export function GroupTabs(props: Readonly<GroupTabsProps>) {
     if (!context)
         return <></>;
 
-    const joined = context.loggedData.isParticipant;
+    const joined = (context.loggedData.groups ?? []).find((g : Group.DTO) => g.id === context.group.id) !== undefined;
     const renderJoinOrLeave = (joined || context.group.canEnter);
 
     return (

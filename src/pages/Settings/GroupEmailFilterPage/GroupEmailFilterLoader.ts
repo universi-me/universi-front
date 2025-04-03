@@ -1,26 +1,25 @@
 import { type LoaderFunctionArgs } from "react-router-dom";
-import { type GroupEmailFilter } from "@/types/Group";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 
 export type GroupEmailFilterLoaderResponse = {
     emailFilters: GroupEmailFilter[] | undefined;
 };
 
 export async function GroupEmailFilterFetch(organizationId: string): Promise<GroupEmailFilterLoaderResponse> {
-    const filters = await UniversimeApi.Group.listEmailFilter({ groupId: organizationId });
+    const filters = await UniversimeApi.GroupEmailFilter.list( organizationId );
 
     return {
-        emailFilters: filters.body?.emailFilters,
+        emailFilters: filters.data,
     }
 }
 
 export async function GroupEmailFilterLoader(args: LoaderFunctionArgs) {
-    const org = await UniversimeApi.User.organization();
-    if (!org.success || !org.body?.organization) {
+    const org = await UniversimeApi.Group.currentOrganization();
+    if (!org.isSuccess()) {
         return FAILED_TO_LOAD;
     }
 
-    return GroupEmailFilterFetch(org.body.organization.id);
+    return GroupEmailFilterFetch(org.data.id!);
 }
 
 const FAILED_TO_LOAD = {

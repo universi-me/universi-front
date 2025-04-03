@@ -1,71 +1,43 @@
-import type { Category, Content, Folder } from "@/types/Capacity";
-import type { ApiResponse } from "@/types/UniversimeApi";
+import { ApiResponse } from "@/utils/apiUtils";
 import { createApiInstance } from "../api";
 
-const api = createApiInstance( "/capacity/category" )
+const api = createApiInstance( "/capacity/categories" )
 
-export type CategoryId_RequestDTO = {
-    id: string;
-};
+
+export function create( body: CategoryCreate_RequestDTO ) {
+    return api.post<Capacity.Category.DTO>( "", body ).then( ApiResponse.new );
+}
+
+export function update( categoryId: string, body: CategoryUpdate_RequestDTO ) {
+    return api.patch<Capacity.Category.DTO>( `/${categoryId}`, body ).then( ApiResponse.new );
+}
+
+export function remove( categoryId: string ) {
+    return api.delete<undefined>( `/${categoryId}` ).then( ApiResponse.new );
+}
+
+export function get( categoryId: string ) {
+    return api.get<Capacity.Category.DTO>( `/${categoryId}` ).then( ApiResponse.new );
+}
+
+export function list() {
+    return api.get<Capacity.Category.DTO[]>( "" ).then( ApiResponse.new );
+}
+
+export function contents( categoryId: string ) {
+    return api.get<Capacity.Content.DTO[]>( `/${categoryId}/contents` ).then( ApiResponse.new );
+}
+
+export function folders( categoryId: string ) {
+    return api.get<Capacity.Folder.DTO[]>( `/${categoryId}/folders` ).then( ApiResponse.new );
+}
 
 export type CategoryCreate_RequestDTO = {
-    name:  string;
-    image: string;
-};
-
-export type CategoryEdit_RequestDTO = {
-    id:     string;
-    name?:  string;
+    name: string;
     image?: string;
 };
 
-export type CategoryGet_ResponseDTO =            ApiResponse<{ category: Category }>;
-export type CategoryCreate_ResponseDTO =         ApiResponse;
-export type CategoryEdit_ResponseDTO =           ApiResponse;
-export type CategoryRemove_ResponseDTO =         ApiResponse;
-export type ListContentsInCategory_ResponseDTO = ApiResponse<{ contents: Content[] }>;
-export type ListFoldersInCategory_ResponseDTO  = ApiResponse<{ folders: Folder[] }>;
-export type CategoryList_ResponseDTO = ApiResponse<{ categories: Category[] }>;
-
-export async function getCategory(body: CategoryId_RequestDTO) {
-    return (await api.post<CategoryGet_ResponseDTO>("/get", {
-        id: body.id,
-    })).data;
-}
-
-export async function createCategory(body: CategoryCreate_RequestDTO) {
-    return (await api.post<CategoryCreate_ResponseDTO>("/create", {
-        name:  body.name,
-        image: body.image,
-    })).data;
-}
-
-export async function editCategory(body: CategoryEdit_RequestDTO) {
-    return (await api.post<CategoryEdit_ResponseDTO>("/edit", {
-        id:    body.id,
-        name:  body.name,
-        image: body.image,
-    })).data;
-}
-
-export async function removeCategory(body: CategoryId_RequestDTO) {
-    return (await api.post<CategoryRemove_ResponseDTO>("/delete", {
-        id: body.id,
-    })).data;
-}
-
-export async function contentsInCategory(body: CategoryId_RequestDTO) {
-    return (await api.post<ListContentsInCategory_ResponseDTO>("/contents", {
-        id: body.id,
-    })).data;
-}
-
-export async function foldersInCategory(body: CategoryId_RequestDTO) {
-    return (await api.post<ListFoldersInCategory_ResponseDTO>("/folders", {
-        id: body.id,
-    })).data;
-}
-
-export async function categoryList() {
-    return (await api.get<CategoryList_ResponseDTO>("/all")).data;
-}
+export type CategoryUpdate_RequestDTO = {
+    name?: string;
+    image?: string;
+};

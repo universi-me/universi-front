@@ -1,5 +1,3 @@
-import type { GroupTheme } from "@/types/Group";
-
 export const themeColorMappings: { [k: string]: GroupTheme } = {
     defaultTheme: {
         primaryColor: "#F6BC0D",

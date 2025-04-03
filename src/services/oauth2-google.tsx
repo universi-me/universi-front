@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { UniversimeApi } from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import * as SweetAlertUtils from "@/utils/sweetalertUtils";
@@ -53,14 +53,18 @@ export function OAuth2Element() {
             navigate("/");
         }
 
-        else if ( response.success ) {
-            auth.signinGoogle();
+        else if ( response.isSuccess() ) {
+            var profile = auth.signinGoogle();
+            
+            if(profile != null) {
+                navigate("/");
+            }
         }
 
         else {
             await SweetAlertUtils.fireModal({
                 title: "Erro ao fazer login com Google",
-                text: response.message,
+                text: response.errorMessage,
                 confirmButtonText: "Voltar para o login",
             });
 

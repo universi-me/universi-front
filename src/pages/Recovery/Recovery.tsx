@@ -1,7 +1,7 @@
 import "./Recovery.css"
 import "../singin/SignInForm.less"
 import {useState, useContext} from "react"
-import UniversimeApi from "@/services/UniversimeApi"
+import { UniversimeApi } from "@/services"
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
@@ -20,10 +20,10 @@ export default function Recovery(){
 
     function handleRecover(){
         SwalUtils.fireToasty({title: "Verificando dados"})
-        UniversimeApi.User.recoverPassword({username, recaptchaToken})
+        UniversimeApi.Auth.recoverPassword({username, recaptchaToken: recaptchaToken ?? undefined})
         .then(res =>{
-            if(res.success) {
-                setMsg(res.message ?? "Houve um erro")
+            if(res.isSuccess()) {
+                setMsg(res.errorMessage ?? "Houve um erro")
             } else {
                 recaptchaRef.reset();
             }

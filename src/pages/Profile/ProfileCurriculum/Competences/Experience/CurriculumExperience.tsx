@@ -2,7 +2,7 @@ import { useContext, MouseEvent, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
 import { ICON_DELETE_BLACK, ICON_EDIT_BLACK } from '@/utils/assets';
 import './CurriculumExperience.css'
-import UniversimeApi from '@/services/UniversimeApi';
+import { UniversimeApi } from "@/services"
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { dateWithoutTimezone } from '@/utils/dateUtils';
 
@@ -50,11 +50,11 @@ export function CurriculumExperience() {
         if (!response.isConfirmed)
             return;
 
-        UniversimeApi.Experience.remove({ profileExperienceId })
+        UniversimeApi.Experience.remove( profileExperienceId )
         .then((response) => {
             console.log(profileExperienceId)
-            if (!response.success) {
-                throw new Error(response.message);
+            if (!response.isSuccess()) {
+                throw new Error(response.errorMessage);
             } else {
                 profileContext.reloadPage();
             }
@@ -110,7 +110,7 @@ export function CurriculumExperience() {
                 <div className="experience-presentation">
                   <div className="experience-title">
                     <img className="experience-image" src="/assets/icons/experience-black.svg"/>
-                    <h4 className="experience-type">{experience.typeExperience.name}</h4>
+                    <h4 className="experience-type">{experience.experienceType.name}</h4>
                   </div>
                   <h4 className="learning experience-local">{experience.institution.name}</h4>
                 </div>
@@ -122,7 +122,7 @@ export function CurriculumExperience() {
                   <h4 className="title">Data de Término</h4>
                   <h4 className="learning experience-date">
                     {
-                      experience.presentDate ? 'Atuando' : experience.endDate !== null ? formatDate(experience.endDate) : 'Data não disponível'
+                      experience.endDate === null ? 'Atuando' : formatDate(experience.endDate)
                     }
                   </h4>
                 </div>

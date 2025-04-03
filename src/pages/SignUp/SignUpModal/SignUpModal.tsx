@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 import { UniversiModal } from "@/components/UniversiModal";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { isEmail } from "@/utils/regexUtils";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
@@ -12,7 +12,6 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import "./SignUpModal.less"
 import NewPasswordInput from "@/components/NewPasswordInput/NewPasswordInput";
-import { NullableBoolean } from "@/types/utils";
 
 export type SignUpModalProps = {
     toggleModal: (state: boolean) => any;
@@ -43,7 +42,7 @@ export function SignUpModal(props: SignUpModalProps) {
     const [emailAvailableChecked, setEmailAvailableChecked] = useState<boolean>(false);
     const [emailUnavailableMessage, setEmailUnavailableMessage] = useState<string>('');
 
-    const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+    const [recaptchaToken, setRecaptchaToken] = useState<string | undefined>(undefined);
     const [recaptchaRef, setRecaptchaRef] = useState<any>(null);
 
     const isFirstnameFull = (firstname.length) >= FIRST_NAME_MAX_LENGTH;
@@ -54,7 +53,7 @@ export function SignUpModal(props: SignUpModalProps) {
     const closeModal = () => props.toggleModal(false);
 
     const handleRecaptchaChange = (token: string | null) => {
-        setRecaptchaToken(token);
+        setRecaptchaToken(token ?? undefined);
     };
 
     useEffect(() => {
@@ -64,8 +63,8 @@ export function SignUpModal(props: SignUpModalProps) {
                 setUsernameAvailable(false);
                 return;
             }
-            const resp = await UniversimeApi.User.usernameAvailable({username: username});
-            setUsernameAvailable(resp.success);
+            const resp = await UniversimeApi.User.usernameAvailable( username );
+            setUsernameAvailable(resp.isSuccess() && resp.body?.available);
             setUsernameUnavailableMessage((resp.body as any)!?.reason ?? 'Usuário não está disponivel para uso.');
             setUsernameAvailableChecked(true);
         }, 1000)
@@ -79,8 +78,8 @@ export function SignUpModal(props: SignUpModalProps) {
                 setEmailAvailable(false);
                 return;
             }
-            const resp = await UniversimeApi.User.emailAvailable({email: email});
-            setEmailAvailable(resp.success);
+            const resp = await UniversimeApi.User.emailAvailable( email );
+            setEmailAvailable(resp.isSuccess() && resp.body?.available);
             setEmailUnavailableMessage((resp.body as any)!?.reason ?? 'Email não está disponivel para uso.');
             setEmailAvailableChecked(true);
         }, 1000)
@@ -184,13 +183,13 @@ export function SignUpModal(props: SignUpModalProps) {
 
     function createAccount(e: MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        UniversimeApi.User.signUp({ firstname, lastname, username, email, password, recaptchaToken })
+        UniversimeApi.User.signup({ firstname, lastname, username, email, password, recaptchaToken })
             .then(res => {
-                if (!res.success) {
+                if (!res.isSuccess()) {
                     recaptchaRef.reset();
                     SwalUtils.fireModal({
                         title: "Erro ao criar sua conta",
-                        text: res.message ?? "Houve algo de errado em nosso sistema.",
+                        text: res.errorMessage ?? "Houve algo de errado em nosso sistema.",
                         icon: "error",
                     });
                 } else {
