@@ -16,7 +16,7 @@ export type ProfilePageLoaderResponse = {
         education:               Education[];
         experience:              Experience[];
         links:                   Link[];
-        folders:                 Folder[];
+        folders:                 Nullable<Folder[]>;
         favorites:               Folder[];
         assignedByMe:            FolderProfile[];
     };
@@ -39,11 +39,12 @@ export async function fetchProfilePageData(username: string | undefined): Promis
 
     const isOwnProfile = fetchProfile.data.user.ownerOfSession;
 
-    const [fetchGroups, fetchCompetences, fetchLinks, fetchFolders, fetchEducations, fetchExperiences, fetchAssignedByMe] = await Promise.all([
+    const [fetchGroups, fetchCompetences, fetchLinks, fetchFavorites, fetchAssignements, fetchEducations, fetchExperiences, fetchAssignedByMe] = await Promise.all([
         UniversimeApi.Profile.groups( username ),
         UniversimeApi.Profile.competences( username ),
         UniversimeApi.Profile.links( username ),
-        UniversimeApi.Profile.folders( username ),
+        UniversimeApi.Profile.favorites( username ),
+        isOwnProfile ? UniversimeApi.Capacity.Folder.assignments( { assignedTo: username } ) : Promise.resolve( undefined ),
         UniversimeApi.Profile.educations( username ),
         UniversimeApi.Profile.experiences( username ),
         isOwnProfile ? UniversimeApi.Capacity.Folder.assignments({ assignedBy: username }) : Promise.resolve(undefined),
@@ -61,8 +62,9 @@ export async function fetchProfilePageData(username: string | undefined): Promis
             competences: fetchCompetences.data ?? [],
             education: fetchEducations.data ?? [],
             experience: fetchExperiences.data ?? [],
-            folders: fetchFolders.isSuccess() ? removeFalsy(fetchFolders.data.assignments).map( f => f.folder ) : [],
-            favorites: fetchFolders.isSuccess() ? removeFalsy(fetchFolders.body.favorites).map( f => f.folder ) : [],
+            // folders: fetchAssignements?.isSuccess() ? removeFalsy(fetchAssignements.data).map( f => f.folder ) : [],
+            folders: fetchAssignements?.isSuccess() ? removeFalsy(fetchAssignements.data).map( f => f.folder ) : null,
+            favorites: fetchFavorites.isSuccess() ? removeFalsy(fetchFavorites.body).map( f => f.folder ) : [],
             groups: fetchGroups.data?.sort((g1, g2) => {
                 if (g1.rootGroup && !g2.rootGroup) {
                     return -1; 
