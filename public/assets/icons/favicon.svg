@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="715"
+   height="715"
+   viewBox="0 0 715 715"
+   fill="none"
+   version="1.1"
+   id="svg3"
+   sodipodi:docname="favicon.svg"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="namedview3"
+     pagecolor="#000000"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="true"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.0356355"
+     inkscape:cx="365.47607"
+     inkscape:cy="321.0589"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g4"
+     showborder="true"
+     borderlayer="true"
+     labelstyle="default"
+     inkscape:antialias-rendering="true"
+     inkscape:clip-to-page="false" />
+  <style
+     id="style1">
+        svg {
+            --u-color: black;
+            --u-thickness: 40;
+
+            --ring-color: #F2C02A;
+            --ring-thickness: 20;
+        }
+
+        .u { stroke: var( --u-color ); stroke-width: var( --u-thickness ); stroke-linecap: round; }
+        .ring { stroke: var( --ring-color ); stroke-width: var( --ring-thickness ); stroke-linecap: round; }
+        .planet { fill: var( --ring-color ); }
+    </style>
+  <ellipse
+     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:28.6554;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     id="path4"
+     cx="357.5"
+     cy="357.5"
+     inkscape:label="Background"
+     rx="357.45367"
+     ry="357.33984" />
+  <g
+     id="g4"
+     inkscape:label="Ícone"
+     transform="translate(12.870311,82.487707)">
+    <path
+       d="m 154.02732,369.95409 v 0 c 0,85.90099 71.05247,155.53773 158.69983,155.53773 h 15.51954 c 90.2116,0 174.21938,-77.91802 174.21938,-142.78069 v 0"
+       class="u"
+       id="path1"
+       style="stroke:#000000;stroke-width:80;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1" />
+    <ellipse
+       cx="220.13513"
+       cy="410.85559"
+       rx="328.35669"
+       ry="83.220093"
+       transform="matrix(0.89158715,-0.45284915,0.370501,0.92883207,0,0)"
+       class="ring"
+       id="ellipse1"
+       inkscape:label="Ring"
+       style="fill:none;fill-opacity:1;stroke:#f2c02a;stroke-width:49.2408;stroke-dasharray:none;stroke-opacity:1" />
+    <circle
+       class="planet"
+       id="circle1"
+       inkscape:label="Planet"
+       style="fill:#f2c02a;fill-opacity:1;stroke:none;stroke-width:1.07447;stroke-dasharray:none"
+       r="48.649139"
+       cy="287.7623"
+       cx="502.2467" />
+    <path
+       d="M 502.46607,191.35557 V 24.532765"
+       class="u"
+       id="path2"
+       style="stroke:#000000;stroke-width:80;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="M 154.02732,24.532765 V 369.95409"
+       class="u"
+       id="path3"
+       style="stroke:#000000;stroke-width:80;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
