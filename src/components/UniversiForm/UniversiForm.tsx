@@ -364,7 +364,7 @@ export function UniversiForm(props : formProps){
                     {
                         object.options.map((item, mapIndex) =>(
                             <label key={mapIndex}>
-                                <input type={"radio"} name={`radio-${index}`} value={item.value} onChange={(e) => {handleChange(index, e.target.value)}} required={object.required}/>
+                                <input type={"radio"} defaultChecked={ object.value === item.value } name={`radio-${index}`} value={item.value} onChange={(e) => {handleChange(index, e.target.value)}} required={object.required}/>
                                 {item.label}
                             </label>
                         ))

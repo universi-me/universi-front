@@ -15,3 +15,7 @@ export const LevelToDescription: { [l in Competence.Level]: string } = {
     2: "Você consegue fazer projetos complexos, sem precisar ficar consultando questões básicas. Você consegue ensinar pessoas iniciantes.",
     3: "Você consegue fazer projetos complexos e atuar em melhorias sobre a tecnologia. Consegue explorar aspectos profundos sobre este conhecimento. Você consegue ensinar pessoas com nível intermediário.",
 }
+
+export function compareCompetenceTypes( c1: Competence.Type, c2: Competence.Type ): number {
+    return c1.name.localeCompare( c2.name );
+}
