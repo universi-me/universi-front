@@ -25,7 +25,7 @@ export type ProfileContextType = null | {
         experience:              Experience[];
         competences:             Competence.DTO[];
         links:                   Link[];
-        folders:                 Folder[];
+        folders:                 Nullable<Folder[]>;
         favorites:               Folder[];
         assignedByMe:            FolderProfile[];
     };
