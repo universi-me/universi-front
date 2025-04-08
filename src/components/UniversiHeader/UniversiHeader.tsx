@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { Link } from "react-router";
 
 import AuthContext from "@/contexts/Auth";
 import { WelcomeUser } from "./components/WelcomeUser/WelcomeUser";
@@ -13,9 +14,9 @@ export function UniversiHeader() {
     return (
         <header id="header">
             { authContext.profile &&
-                <div className="logo-container">
+                <Link className="logo-container" to="/">
                     <img src={IMG_UNIVERSI_LOGO} alt="Universi.me" />
-                </div>
+                </Link>
             }
 
             <div className="left-items">
