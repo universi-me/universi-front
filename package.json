@@ -19,7 +19,7 @@
     "@types/youtube": "^0.1.0",
     "@xeger/quill-image-actions": "^0.7.2",
     "@xeger/quill-image-formats": "^0.7.2",
-    "axios": "^1.7.9",
+    "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "compressorjs": "^1.2.1",
@@ -48,7 +48,7 @@
     "react-youtube": "^10.1.0",
     "sweetalert2": "^11.17.2",
     "typescript": "^5.7.3",
-    "vite": "^6.2.0",
+    "vite": "^6.2.5",
     "vite-plugin-rewrite-all": "^1.0.2",
     "vite-tsconfig-paths": "^5.1.4"
   },
