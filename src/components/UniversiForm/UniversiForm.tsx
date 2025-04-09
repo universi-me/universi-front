@@ -689,6 +689,7 @@ export function UniversiForm(props : formProps){
                 <div className="header">
                     <img src="/assets/imgs/create-content.png" />
                     <h1 className="title">{ props.formTitle } </h1>
+                    <i className="bi bi-x close-button" title='Fechar' onClick={handleCancel}/>
                 </div>
 
                 {
