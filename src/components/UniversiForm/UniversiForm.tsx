@@ -525,7 +525,7 @@ export function UniversiForm(props : formProps){
                 <legend>{object.label}</legend>
                 {
                     object.canCreate != undefined && object.canCreate ? 
-                        <CreatableSelect isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
+                        <CreatableSelect isClearable placeholder={`Selecionar ${object.label}`} className={(`category-select` + (object.required? (values?` required-valid`:` required-invalid`) : ``) )} isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
                         menuPosition="fixed"
                         onChange={(value:any) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
@@ -539,7 +539,7 @@ export function UniversiForm(props : formProps){
                         }
                     />
                     :
-                        <Select isClearable placeholder={`Selecionar ${object.label}`} className="category-select" isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
+                        <Select isClearable placeholder={`Selecionar ${object.label}`} className={(`category-select` + (object.required? (values?` required-valid`:` required-invalid`) : ``) )} isMulti={object.type === FormInputs.SELECT_MULTI ? true : undefined} options={optionsList}
                         menuPosition="fixed"
                         onChange={(value:any) => handleSelectChange(index, value)}
                         noOptionsMessage={()=>`Não foi possível encontrar ${object.label}`}
@@ -689,6 +689,7 @@ export function UniversiForm(props : formProps){
                 <div className="header">
                     <img src="/assets/imgs/create-content.png" />
                     <h1 className="title">{ props.formTitle } </h1>
+                    <i className="bi bi-x close-button" title='Fechar' onClick={handleCancel}/>
                 </div>
 
                 {

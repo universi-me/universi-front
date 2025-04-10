@@ -99,6 +99,29 @@
         .title {
             color: @font-color-v1;
         }
+
+        .close-button {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+
+            width: 3rem;
+            height: 3rem;
+
+            font-size: 2.5rem;
+            color: @font-color-v1;
+
+
+            cursor: pointer;
+
+            &:hover {
+                color: @font-color-v3;
+            }
+
+            
+        }
     }
 
     .universi-form-container.fields {
@@ -190,6 +213,23 @@
 
             input:required:invalid, textarea:required:invalid{
                 border: 2px solid var(--wrong-invalid-color) !important;
+            }
+
+            .required-valid {
+                .category-item__control {
+                    border: 2px solid var(--font-color-success) !important;
+                }
+            }
+            
+            .required-invalid {
+                .category-item__control {
+                    border: 2px solid var(--wrong-invalid-color) !important;
+                }
+            }
+
+            .category-item__control {
+                border-width: 2px !important;
+                border-radius: 10px !important;
             }
 
             textarea {
