@@ -100,7 +100,7 @@ export function GroupPeople() {
                 if (response.isSuccess() && Array.isArray(response.data)) {
                     const formattedUsers = response.data.map((profile: Profile) => ({
                         value: profile.user.name,
-                        label: profile.firstname + " " + profile.lastname
+                        label: new ProfileClass(profile).fullname
                     }));
                     setParticipantsOrganization(formattedUsers as []);
                 }
