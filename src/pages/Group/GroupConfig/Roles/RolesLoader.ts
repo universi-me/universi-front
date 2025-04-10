@@ -11,7 +11,7 @@ export async function RolesFetch(groupId: string): Promise<RolesResponse> {
 
     const roles = await UniversimeApi.Group.roles( groupId );
     
-    const participants = await UniversimeApi.GroupParticipant.filter({ groupId: groupId, competences: [], matchEveryCompetence: false });
+    const participants = await UniversimeApi.Role.getParticipantsRoles( groupId );
 
     if(!roles.isSuccess() ) {
         return FAILED_TO_LOAD;
@@ -19,7 +19,10 @@ export async function RolesFetch(groupId: string): Promise<RolesResponse> {
 
     return {
         roles: roles.data,
-        participants: participants.data,
+        participants: participants.data?.map( p => ({
+            ...p.profile,
+            role: p.role,
+        })) ?? [],
     }
 }
 
