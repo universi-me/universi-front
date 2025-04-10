@@ -11,6 +11,10 @@ import Select from 'react-select'
 import { LevelToLabel, intToLevel } from "@/types/Competence";
 import { UniversimeApi } from "@/services"
 import ActionButton from "@/components/ActionButton";
+import useCanI from "@/hooks/useCanI";
+import { Permission } from "@/utils/roles/rolesUtils";
+import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
+import { AuthContext } from "@/contexts/Auth";
 
 type competenceSearch = {
     typeId?: string,
@@ -20,12 +24,16 @@ type competenceSearch = {
 
 export function GroupPeople() {
     const groupContext = useContext(GroupContext);
+    const authContext = useContext(AuthContext);
     const [filterPeople, setFilterPeople] = useState<string>("");
     const [allTypeCompetence, setAllTypeCompetence] = useState<Competence.Type[] | undefined>()
     const [currentCompetence, setCurrentCompetence] = useState<competenceSearch>()
     const [addedCompetences, setAddedCompetences] = useState<competenceSearch[]>([])
     const [matchEveryCompetence, setMatchEveryCompetence] = useState<boolean>(false)
     const [showAdvancedSearch, setShowAdvancedSearch] = useState<boolean>(false)
+    const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
+
+    const canI = useCanI();
 
     useEffect(()=>{
         UniversimeApi.CompetenceType.list().then((response)=>{
@@ -76,6 +84,34 @@ export function GroupPeople() {
     if (!groupContext)
         return null;
 
+    const [participantsOrganization, setParticipantsOrganization] = useState([]);
+    const [loadingParticipantsOrganization, setLoadingParticipantsOrganization] = useState(true);
+
+    function handleShowAddPeople(){
+        return () => {
+            setShowAddPeopleModal(true);
+        }
+    }
+
+    useEffect(() => {
+        const fetchParticipants = () => {
+            setLoadingParticipantsOrganization(true);
+            UniversimeApi.GroupParticipant.get(authContext.organization.id as string).then((response) => {
+                if (response.isSuccess() && Array.isArray(response.data)) {
+                    const formattedUsers = response.data.map((profile: Profile) => ({
+                        value: profile.user.name,
+                        label: new ProfileClass(profile).fullname
+                    }));
+                    setParticipantsOrganization(formattedUsers as []);
+                }
+                setLoadingParticipantsOrganization(false);
+            });
+        }
+        if (showAddPeopleModal) {
+            fetchParticipants();
+        }
+    }, [showAddPeopleModal, authContext.organization.id]);
+
     return (
         <section id="people" className="group-tab">
             <div className="heading top-container">
@@ -89,6 +125,36 @@ export function GroupPeople() {
                         showAdvancedSearch 
                         ? renderAdvancedSearch()
                         : <></>
+                    }
+
+                    {
+                        canI("PEOPLE", Permission.READ_WRITE, groupContext.group) &&
+                            <ActionButton name="Adicionar" buttonProps={{ onClick: handleShowAddPeople() }} />
+                    }
+
+                    {
+                        showAddPeopleModal && !loadingParticipantsOrganization &&
+                            <UniversiForm
+                                formTitle="Adicionar Participante"
+                                objects={[
+                                {
+                                    label: "Usuário", DTOName: "participant", type: FormInputs.SELECT_SINGLE,
+                                    canCreate: false, required: true,
+                                    options: participantsOrganization,
+                                },
+                                {
+                                    label: "groupId", DTOName: "groupId", type: FormInputs.HIDDEN, required: true,
+                                    value: groupContext.group.id
+                                }
+                                ]}
+                                saveButtonText="Adicionar"
+                                requisition={UniversimeApi.GroupParticipant.add}
+                                callback={() => {
+                                    setShowAddPeopleModal(false);
+                                    groupContext.refreshData();
+                                }}
+                                
+                            />
                     }
 
                 </div>
