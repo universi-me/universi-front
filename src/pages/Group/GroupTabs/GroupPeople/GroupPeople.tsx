@@ -129,7 +129,7 @@ export function GroupPeople() {
 
                     {
                         canI("PEOPLE", Permission.READ_WRITE, groupContext.group) &&
-                            <ActionButton name="Adicionar Pessoa" buttonProps={{ onClick: handleShowAddPeople() }} />
+                            <ActionButton name="Adicionar" buttonProps={{ onClick: handleShowAddPeople() }} />
                     }
 
                     {
