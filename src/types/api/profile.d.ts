@@ -9,6 +9,7 @@ namespace Profile {
         gender: Nullable<Gender>;
         creationDate: string;
         role: Optional<Role>;
+        department: Nullable<Department.DTO>;
     };
 
     type Gender = "M" | "F" | "O";
