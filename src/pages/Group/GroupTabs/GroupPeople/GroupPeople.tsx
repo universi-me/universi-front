@@ -151,7 +151,7 @@ export function GroupPeople() {
                                 requisition={UniversimeApi.GroupParticipant.add}
                                 callback={() => {
                                     setShowAddPeopleModal(false);
-                                    window.location.reload();
+                                    groupContext.refreshData();
                                 }}
                                 
                             />
