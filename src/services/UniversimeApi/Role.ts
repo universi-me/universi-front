@@ -1,5 +1,6 @@
 import { ApiResponse } from "@/utils/apiUtils";
 import { createApiInstance } from "./api";
+import { ProfileClass } from "@/types/Profile";
 
 const api = createApiInstance( "/roles" )
 
@@ -24,6 +25,10 @@ export function getAssigned( groupId: string, profile: string ) {
     return api.get<Role.DTO>( `/${groupId}/${profile}/role` ).then( ApiResponse.new );
 }
 
+export function getParticipantsRoles( groupId: string ) {
+    return api.get<ProfileRoleDTO[]>( `/${groupId}/participants` ).then( ApiResponse.new );
+}
+
 export type RoleCreate_RequestDTO = {
     name: string;
     description: Optional<string>;
@@ -38,4 +43,9 @@ export type RoleUpdate_RequestDTO = {
     features?: {
         [ k in Role.Feature ]?: Role.Permission;
     };
+};
+
+export type ProfileRoleDTO = {
+    profile: Profile;
+    role: Role.DTO;
 };
