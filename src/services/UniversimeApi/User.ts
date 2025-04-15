@@ -54,6 +54,7 @@ export type UserSignup_RequestDTO = {
     password: string;
     firstname: string;
     lastname: string;
+    department?: string;
 };
 
 export type UserGetAvailable_ResponseDTO = {

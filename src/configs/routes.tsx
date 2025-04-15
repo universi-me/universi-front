@@ -6,7 +6,7 @@ import { App } from "@/App";
 import GroupPage, { GroupPageLoader } from "@/pages/Group";
 import { ProfilePage, ProfilePageLoader } from "@/pages/Profile";
 import Singin from "@/pages/singin/Singin";
-import SignUpPage from "@/pages/SignUp";
+import SignUpPage, { SignUpPageLoader } from "@/pages/SignUp";
 import Recovery from "@/pages/Recovery/Recovery";
 import NewPassword from "@/pages/NewPassword/NewPassword";
 import ManageProfilePage, { ManageProfileLoader } from "@/pages/ManageProfile";
@@ -57,7 +57,8 @@ export const router = createBrowserRouter([{
         },
         {
             path: "/signup",
-            element: <SignUpPage />
+            element: <SignUpPage />,
+            loader: SignUpPageLoader,
         },
         {
             path: "/recovery",

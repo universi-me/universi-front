@@ -10,6 +10,7 @@ export type ProfileEdit_RequestDTO = {
     gender?: Profile.Gender;
     image?: string;
     password?: string;
+    department?: string,
 };
 
 export function profile() {

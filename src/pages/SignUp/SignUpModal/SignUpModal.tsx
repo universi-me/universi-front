@@ -1,5 +1,6 @@
 import { MouseEvent, FocusEvent, useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
+import Select from "react-select";
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 import { UniversiModal } from "@/components/UniversiModal";
@@ -15,6 +16,7 @@ import NewPasswordInput from "@/components/NewPasswordInput/NewPasswordInput";
 
 export type SignUpModalProps = {
     toggleModal: (state: boolean) => any;
+    departments: Department.DTO[];
 };
 
 const FIRST_NAME_MAX_LENGTH = 21;
@@ -41,6 +43,8 @@ export function SignUpModal(props: SignUpModalProps) {
     const [emailAvailable, setEmailAvailable] = useState<boolean>(false);
     const [emailAvailableChecked, setEmailAvailableChecked] = useState<boolean>(false);
     const [emailUnavailableMessage, setEmailUnavailableMessage] = useState<string>('');
+
+    const [department, setDepartment] = useState<Optional<string>>( undefined );
 
     const [recaptchaToken, setRecaptchaToken] = useState<string | undefined>(undefined);
     const [recaptchaRef, setRecaptchaRef] = useState<any>(null);
@@ -156,6 +160,16 @@ export function SignUpModal(props: SignUpModalProps) {
                         </section>
                     </fieldset>
 
+                    { props.departments.length > 0 && <fieldset id="department-fieldset">
+                        <legend>Departamento</legend>
+                        <Select isSearchable isClearable
+                            options={departmentOptions()}
+                            onChange={ ({ option }: { option: { value: string; label: string; } }) => setDepartment( option.value ) }
+                            placeholder={ "Selecionar departamento" }
+                            noOptionsMessage={ ({ inputValue }: { inputValue: string }) => `Não foi possível encontrar o departamento "${inputValue}"` }
+                        />
+                    </fieldset> }
+
                     <fieldset id="password-fieldset">
                         <legend>Senha</legend>
                         <NewPasswordInput password={password} setPassword={setPassword} valid={isPasswordValid} setValid={setIsPasswordValid}/>
@@ -183,7 +197,7 @@ export function SignUpModal(props: SignUpModalProps) {
 
     function createAccount(e: MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        UniversimeApi.User.signup({ firstname, lastname, username, email, password, recaptchaToken })
+        UniversimeApi.User.signup({ firstname, lastname, username, email, password, recaptchaToken, department })
             .then(res => {
                 if (!res.isSuccess()) {
                     recaptchaRef.reset();
@@ -196,6 +210,12 @@ export function SignUpModal(props: SignUpModalProps) {
                     navigate("/login");
                 }
             })
+    }
+
+    function departmentOptions() {
+        return props.departments
+            .map( d => ({ value: d.id, label: `${d.acronym} - ${d.name}` }) )
+            .sort( ( d1, d2 ) => d1.label.localeCompare( d2.label ) );
     }
 }
 

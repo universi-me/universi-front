@@ -14,13 +14,14 @@ const FIRST_NAME_MAX_LENGTH = 21;
 const LAST_NAME_MAX_LENGTH = 21;
 export function ManageProfilePage() {
     const navigate = useNavigate();
-    const { genderOptions, links, profile, typeLinks } = useLoaderData() as ManageProfileLoaderResponse;
+    const { genderOptions, links, profile, typeLinks, departments } = useLoaderData() as ManageProfileLoaderResponse;
     const authContext = useContext(AuthContext);
 
     const [firstname, setFirstname] = useState(profile?.firstname ?? "");
     const [lastname, setLastname] = useState(profile?.lastname ?? "");
     const [bio, setBio] = useState(profile?.bio ?? "");
     const [gender, setGender] = useState<Profile.Gender | "">(profile?.gender ?? "");
+    const [department, setDepartment] = useState<string>( profile?.department?.id ?? "" );
 
     // undefined means the profile image was unchanged, while a `File` value means it was changed
     const [image, setImage] = useState<File | undefined>(undefined);
@@ -83,6 +84,16 @@ export function ManageProfilePage() {
                         </select>
                     </fieldset>
 
+                    <fieldset id="fieldset-department">
+                        <legend>Departamento</legend>
+                        <select name="department" id="department" defaultValue={ department ?? "" } onChange={ e => setDepartment( e.currentTarget.value ) }>
+                            <option value="">–</option>
+                            { departmentOptions().map(d => {
+                                return <option key={d.value} value={d.value}>{d.label}</option>
+                            }) }
+                        </select>
+                    </fieldset>
+
                     <section id="submit-profile" className="submit">
                         <button type="button" onClick={submitProfileChanges}
                             disabled={!canSaveProfile} title={canSaveProfile ? undefined : "Preencha os campos obrigatórios marcados com *"}
@@ -139,6 +150,7 @@ export function ManageProfilePage() {
             gender: gender || undefined,
             image: newImageUrl,
             password,
+            department,
         }).then(async res => {
             if (!res.isSuccess())
                 throw new Error(res.errorMessage);
@@ -214,5 +226,11 @@ export function ManageProfilePage() {
                 icon: "error",
             })
         })
+    }
+
+    function departmentOptions() {
+        return departments
+            .map( d => ({ value: d.id, label: `${d.acronym} - ${d.name}` }) )
+            .sort( ( d1, d2 ) => d1.label.localeCompare( d2.label ) );
     }
 }

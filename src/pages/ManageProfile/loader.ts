@@ -14,6 +14,7 @@ export type ManageProfileLoaderResponse = {
         label: string
         value: TypeLink,
     }[];
+    departments: Department.DTO[];
 };
 
 export async function ManageProfileLoader(): Promise<ManageProfileLoaderResponse> {
@@ -33,7 +34,10 @@ export async function ManageProfileLoader(): Promise<ManageProfileLoaderResponse
         .map(tl => { return { value: tl[0] as TypeLink, label: tl[1] } })
         .sort((tl1, tl2) => tl1.label.localeCompare(tl2.label));
 
-    const profileResponse = await UniversimeApi.Profile.profile();
+    const [ profileResponse, departmentsResponse ] = await Promise.all([
+        UniversimeApi.Profile.profile(),
+        UniversimeApi.Department.list(),
+    ]);
 
     const profile = profileResponse.data ?? null;
 
@@ -49,5 +53,6 @@ export async function ManageProfileLoader(): Promise<ManageProfileLoaderResponse
         links,
         genderOptions,
         typeLinks,
+        departments: departmentsResponse.body ?? [],
     }
 }

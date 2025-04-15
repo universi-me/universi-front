@@ -2,6 +2,7 @@ export * as Auth from "./Auth";
 export * as Capacity from "./Capacity";
 export * as Competence from "./Competence";
 export * as CompetenceType from "./CompetenceType";
+export * as Department from "./Department";
 export * as Education from "./Education";
 export * as EducationType from "./EducationType";
 export * as Experience from "./Experience";

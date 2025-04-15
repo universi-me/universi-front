@@ -139,4 +139,7 @@ export class ProfileClass implements Profile.DTO {
 
     get role(): Role.DTO | undefined | null { return this.profile.role }
     set role(role: Role.DTO | undefined | null) { this.profile.role = role }
+
+    get department() { return this.profile.department; }
+    set department( department: Nullable<Department.DTO> ) { this.profile.department = department; }
 }
