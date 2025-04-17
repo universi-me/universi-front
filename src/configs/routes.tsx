@@ -21,6 +21,7 @@ import HealthCheckPage from "@/pages/HealthCheckPage";
 // Import services
 import { OAuth2Element } from '@/services/oauth2-google';
 import { KeyCloakOAuth2Element } from "@/services/oauth2-keycloak";
+import EntitiesPage from '@/pages/Settings/EntitiesPage';
 
 // Configure pages routing
 export const router = createBrowserRouter([{
@@ -92,9 +93,15 @@ export const router = createBrowserRouter([{
                     loader: EnvironmentsLoader,
                 },
                 {
-                    path: "competences",
-                    element: <CompetencesSettingsPage />,
-                    loader: CompetencesSettingsLoader,
+                    path: "entities",
+                    element: <EntitiesPage />,
+                    children: [
+                        {
+                            path: "competences",
+                            element: <CompetencesSettingsPage />,
+                            loader: CompetencesSettingsLoader,
+                        },
+                    ]
                 },
                 {
                     path: "theme-color",
