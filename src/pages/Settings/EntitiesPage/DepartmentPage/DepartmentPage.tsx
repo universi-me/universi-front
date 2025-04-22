@@ -4,11 +4,12 @@ import { useLoaderData } from "react-router";
 import { type DepartmentLoaderData } from "./DepartmentPageLoader";
 import { DepartmentItem } from "./components";
 import { Filter } from "@/components/Filter/Filter";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DepartmentPageContext } from "./DepartmentPageContext";
 import { UniversimeApi } from "@/services";
 import ActionButton from "@/components/ActionButton";
 import UniversiForm, { FormInputs } from "@/components/UniversiForm";
+import stringUtils from "@/utils/stringUtils";
 
 import "./DepartmentPage.less";
 
@@ -19,6 +20,11 @@ export function DepartmentPage() {
     const [ textFilter, setTextFilter ] = useState<string>( "" );
 
     const [ creatingDepartment, setCreatingDepartment ] = useState( false );
+    const filteredDepartments = useMemo( () => {
+        return departments === null
+            ? []
+            : departments.filter( d => stringUtils.includesIgnoreCase( d.acronym, textFilter ) || stringUtils.includesIgnoreCase( d.name, textFilter ) );
+    }, [ textFilter, departments ] );
 
     useEffect( () => {
         setDepartments( loaderData.departments );
@@ -37,7 +43,9 @@ export function DepartmentPage() {
                     ? <p className="error-warning">Falha ao buscar departamentos disponíveis.</p>
                 : departments.length == 0
                     ? <p className="error-warning">Nenhum departamento cadastrado.</p>
-                : departments.map( d => <DepartmentItem department={ d } key={ d.id } /> )
+                : filteredDepartments.length === 0
+                    ? <p className="error-warning">Nenhum departamento encontrado</p>
+                : filteredDepartments.map( d => <DepartmentItem department={ d } key={ d.id } /> )
                 }
             </section>
             { departments !== null && !creatingDepartment && <ActionButton name="Criar departamento" buttonProps={{ onClick: () => setCreatingDepartment( true ) }} /> }
