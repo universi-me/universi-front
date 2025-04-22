@@ -18,12 +18,12 @@ export function DepartmentItem( props: Readonly<DepartmentItemProps> ) {
             <div className="edit-buttons">
                 { editMode ? <SaveDepartment /> : <EditDepartmentButton /> }
             </div>
-            { editMode ? <InputDepartmentData /> : <p className="department-name">{ `${department.acronym} - ${department.name}` }</p> }
-        </form>
+            { editMode ? <InputDepartmentData /> : <p className="department-name">{ `${department.acronym} – ${department.name}` }</p> }
 
-        <div className="settings-buttons">
-            <DeleteDepartment />
-        </div>
+            <div className="settings-buttons">
+                <DeleteDepartment />
+            </div>
+        </form>
     </div>
 
     function SaveDepartment() {
@@ -50,10 +50,10 @@ export function DepartmentItem( props: Readonly<DepartmentItemProps> ) {
     }
 
     function InputDepartmentData() {
-        return <>
+        return <div className="form-inputs">
             <input type="text" name="acronym" id="acronym" defaultValue={ department.acronym } placeholder="Sigla" ref={ editAcronymRef } />
             <input type="text" name="name" id="name" defaultValue={ department.name } placeholder="Nome" ref={ editNameRef } />
-        </>
+        </div >
     }
 
     function DeleteDepartment() {

@@ -5,6 +5,11 @@
     #departments-listing {
         margin: 1rem 0;
 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: .25rem;
+
         .department-item {
             display: flex;
             flex-direction: row;
@@ -34,7 +39,7 @@
                 flex-direction: row;
                 align-items: center;
 
-                width: max( 500px, 50vw );
+                width: 100%;
 
                 font: inherit;
 
@@ -42,17 +47,27 @@
                     margin-left: .5rem;
                 }
 
-                input {
-                    font: inherit;
-                    padding: 0 .2em;
+                .form-inputs {
+                    width: 100%;
+                    @gap: 0.25rem;
 
-                    &[name="acronym"] {
-                        width: 6rem;
-                        margin-right: .5rem;
-                    }
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: @gap;
 
-                    &[name="name"] {
-                        width: 35rem;
+                    input {
+                        @acronym-x: 5.5rem;
+
+                        font: inherit;
+                        padding: 0 .2em;
+
+                        &[name="acronym"] {
+                            width: @acronym-x;
+                        }
+                        &[name="name"] {
+                            width: calc( 100% - @acronym-x - @gap );
+                        }
                     }
                 }
             }
