@@ -15,11 +15,13 @@ export function DepartmentItem( props: Readonly<DepartmentItemProps> ) {
 
     return <div className="department-item">
         <form className="department-form">
-            { editMode ? <SaveDepartment /> : <EditDepartmentButton /> }
+            <div className="edit-buttons">
+                { editMode ? <SaveDepartment /> : <EditDepartmentButton /> }
+            </div>
             { editMode ? <InputDepartmentData /> : <p className="department-name">{ `${department.acronym} - ${department.name}` }</p> }
         </form>
 
-        <div className="department-settings-wrapper">
+        <div className="settings-buttons">
             <DeleteDepartment />
         </div>
     </div>
@@ -49,13 +51,13 @@ export function DepartmentItem( props: Readonly<DepartmentItemProps> ) {
 
     function InputDepartmentData() {
         return <>
-            <input type="text" name="acronym" id="acronym" defaultValue={ department.acronym } ref={ editAcronymRef } />
-            <input type="text" name="name" id="name" defaultValue={ department.name } ref={ editNameRef } />
+            <input type="text" name="acronym" id="acronym" defaultValue={ department.acronym } placeholder="Sigla" ref={ editAcronymRef } />
+            <input type="text" name="name" id="name" defaultValue={ department.name } placeholder="Nome" ref={ editNameRef } />
         </>
     }
 
     function DeleteDepartment() {
-        return <button type="button" title="Excluir departamento" onClick={ deleteDepartment }>
+        return <button type="button" title="Excluir departamento" onClick={ deleteDepartment } className="delete-department">
             <i className="bi bi-trash-fill"/>
         </button>
 

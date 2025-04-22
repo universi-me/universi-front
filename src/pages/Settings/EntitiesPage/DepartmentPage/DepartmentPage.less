@@ -1,0 +1,83 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+#departments-settings-page {
+    #departments-listing {
+        margin: 1rem 0;
+
+        .department-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            width: 100%;
+            padding: .25rem .5rem;
+
+            background-color: @card-item-color;
+            border-radius: 10px;
+
+            font-size: 1.15rem;
+            font-weight: @font-weight-semibold;
+            color: @font-color-v2;
+
+            .edit-buttons {
+                display: flex;
+                align-items: center;
+                flex-direction: row;
+
+                gap: .25rem;
+                margin-right: .25rem;
+            }
+
+            .department-form {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                width: max( 500px, 50vw );
+
+                font: inherit;
+
+                .department-name {
+                    margin-left: .5rem;
+                }
+
+                input {
+                    font: inherit;
+                    padding: 0 .2em;
+
+                    &[name="acronym"] {
+                        width: 6rem;
+                        margin-right: .5rem;
+                    }
+
+                    &[name="name"] {
+                        width: 35rem;
+                    }
+                }
+            }
+
+            .settings-buttons {
+                margin-left: auto;
+                height: fit-content;
+            }
+
+            button {
+                background-color: transparent;
+                border: none;
+                font-size: 1.5rem;
+
+                cursor: pointer;
+
+                &.delete-department {
+                    color: @wrong-invalid-color;
+                }
+            }
+        }
+    }
+
+    .error-warning {
+        text-align: center;
+        font-style: italic;
+    }
+}

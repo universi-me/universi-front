@@ -10,6 +10,7 @@ import { UniversimeApi } from "@/services";
 import ActionButton from "@/components/ActionButton";
 import UniversiForm, { FormInputs } from "@/components/UniversiForm";
 
+import "./DepartmentPage.less";
 
 export function DepartmentPage() {
     const loaderData = useLoaderData() as DepartmentLoaderData;
@@ -28,22 +29,18 @@ export function DepartmentPage() {
             <SettingsTitle>Departamentos</SettingsTitle>
             <SettingsDescription>Aqui você pode configurar os departamentos disponíveis na plataforma.</SettingsDescription>
 
-            <section id="departments-listing">
-                <div className="filter-wrapper">
-                    <h2 className="section-title">Departamentos</h2>
-                    <Filter placeholderMessage="Pesquisar Departamento..." setter={ setTextFilter } />
-                </div>
+            <h2 className="section-title">Departamentos</h2>
+            <Filter placeholderMessage="Pesquisar Departamento..." setter={ setTextFilter } />
 
-                <div className="departaments-wrapper">
-                    { departments === null
-                        ? <p className="error-warning">Falha ao buscar departamentos disponíveis.</p>
-                    : departments.length == 0
-                        ? <p className="error-warning">Nenhum departamento cadastrado.</p>
-                    : departments.map( d => <DepartmentItem department={ d } key={ d.id } /> )
-                    }
-                    { departments !== null && !creatingDepartment && <ActionButton name="Criar departamento" buttonProps={{ onClick: () => setCreatingDepartment( true ) }} /> }
-                </div>
+            <section id="departments-listing">
+                { departments === null
+                    ? <p className="error-warning">Falha ao buscar departamentos disponíveis.</p>
+                : departments.length == 0
+                    ? <p className="error-warning">Nenhum departamento cadastrado.</p>
+                : departments.map( d => <DepartmentItem department={ d } key={ d.id } /> )
+                }
             </section>
+            { departments !== null && !creatingDepartment && <ActionButton name="Criar departamento" buttonProps={{ onClick: () => setCreatingDepartment( true ) }} /> }
 
             { creatingDepartment && <UniversiForm
                 formTitle="Criar departamento" saveButtonText="Criar"
