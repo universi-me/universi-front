@@ -22,6 +22,7 @@ import HealthCheckPage from "@/pages/HealthCheckPage";
 import { OAuth2Element } from '@/services/oauth2-google';
 import { KeyCloakOAuth2Element } from "@/services/oauth2-keycloak";
 import EntitiesPage from '@/pages/Settings/EntitiesPage';
+import DepartmentPage, { DepartmentPageLoaderFetch } from '@/pages/Settings/EntitiesPage/DepartmentPage';
 
 // Configure pages routing
 export const router = createBrowserRouter([{
@@ -100,6 +101,11 @@ export const router = createBrowserRouter([{
                             path: "competences",
                             element: <CompetencesSettingsPage />,
                             loader: CompetencesSettingsLoader,
+                        },
+                        {
+                            path: "departments",
+                            element: <DepartmentPage />,
+                            loader: DepartmentPageLoaderFetch,
                         },
                     ]
                 },

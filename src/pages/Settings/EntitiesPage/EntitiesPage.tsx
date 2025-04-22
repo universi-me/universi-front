@@ -12,6 +12,7 @@ export function EntitiesPage() {
             </SettingsDescription>
 
             <SettingsMoveTo title="Competências" description="Configurar e validar competências cadastradas na plataforma" to="competences" />
+            <SettingsMoveTo title="Departamentos" description="Configurar departamentos cadastrados na plataforma" to="departments" />
         </> }
     </div>
 }
