@@ -7,6 +7,8 @@ import { Filter } from "@/components/Filter/Filter";
 import { useEffect, useState } from "react";
 import { DepartmentPageContext } from "./DepartmentPageContext";
 import { UniversimeApi } from "@/services";
+import ActionButton from "@/components/ActionButton";
+import UniversiForm, { FormInputs } from "@/components/UniversiForm";
 
 
 export function DepartmentPage() {
@@ -14,6 +16,8 @@ export function DepartmentPage() {
 
     const [ departments, setDepartments ] = useState( loaderData.departments );
     const [ textFilter, setTextFilter ] = useState<string>( "" );
+
+    const [ creatingDepartment, setCreatingDepartment ] = useState( false );
 
     useEffect( () => {
         setDepartments( loaderData.departments );
@@ -37,8 +41,22 @@ export function DepartmentPage() {
                         ? <p className="error-warning">Nenhum departamento cadastrado.</p>
                     : departments.map( d => <DepartmentItem department={ d } key={ d.id } /> )
                     }
+                    { departments !== null && !creatingDepartment && <ActionButton name="Criar departamento" buttonProps={{ onClick: () => setCreatingDepartment( true ) }} /> }
                 </div>
             </section>
+
+            { creatingDepartment && <UniversiForm
+                formTitle="Criar departamento" saveButtonText="Criar"
+                objects={[
+                    { DTOName: "acronym", label: "Sigla", type: FormInputs.TEXT, required: true },
+                    { DTOName: "name", label: "Nome", type: FormInputs.TEXT, required: true },
+                ]}
+                requisition={ ( form: CreateDepartmentForm ) => UniversimeApi.Department.create( form ) }
+                callback={ async () => {
+                    await refreshDepartments();
+                    setCreatingDepartment( false );
+                } }
+            /> }
         </div>
     </DepartmentPageContext.Provider>
 
@@ -47,3 +65,8 @@ export function DepartmentPage() {
         setDepartments( res.body ?? null );
     }
 }
+
+type CreateDepartmentForm = {
+    acronym: string;
+    name: string;
+};
