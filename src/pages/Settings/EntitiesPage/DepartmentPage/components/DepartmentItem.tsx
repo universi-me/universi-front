@@ -38,8 +38,9 @@ export function DepartmentItem( props: Readonly<DepartmentItemProps> ) {
 
         async function save( e: MouseEvent<HTMLButtonElement> ) {
             e.preventDefault();
-            await UniversimeApi.Department.update( department.id, { acronym: editAcronymRef.current!.value, name: editNameRef.current!.value } );
-            await refresh();
+            const res = await UniversimeApi.Department.update( department.id, { acronym: editAcronymRef.current!.value, name: editNameRef.current!.value } );
+            if ( res.isSuccess() )
+                await refresh();
         }
     }
 
