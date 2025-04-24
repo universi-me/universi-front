@@ -36,4 +36,6 @@ export type GroupEnvironmentUpdate_RequestDTO = {
     email_protocol?: string;
     email_username?: string;
     email_password?: string;
+    organization_name?: string;
+    organization_nickname?: string;
 };
