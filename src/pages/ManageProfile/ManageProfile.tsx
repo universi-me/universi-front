@@ -84,6 +84,7 @@ export function ManageProfilePage() {
                         </select>
                     </fieldset>
 
+                    { departments.length > 0 &&
                     <fieldset id="fieldset-department">
                         <legend>Departamento</legend>
                         <select name="department" id="department" defaultValue={ department ?? "" } onChange={ e => setDepartment( e.currentTarget.value ) }>
@@ -93,6 +94,7 @@ export function ManageProfilePage() {
                             }) }
                         </select>
                     </fieldset>
+                    }
 
                     <section id="submit-profile" className="submit">
                         <button type="button" onClick={submitProfileChanges}
