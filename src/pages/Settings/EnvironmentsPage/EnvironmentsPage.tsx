@@ -10,9 +10,12 @@ import { type EnvironmentsLoaderResponse, EnvironmentsFetch } from "./Environmen
 import { type GroupEnvironmentUpdate_RequestDTO } from "@/services/UniversimeApi/GroupEnvironment";
 import "./EnvironmentsPage.less";
 import TextboxFormatted from "@/components/TextboxFormatted/TextboxFormatted";
+import { AuthContext } from "@/contexts/Auth";
+import { useContext } from "react";
 
 export function EnvironmentsPage() {
     const data = useLoaderData() as EnvironmentsLoaderResponse;
+    const authContext = useContext(AuthContext);
 
     const [fetchEnvironmentsItems, setFetchEnvironmentsItems] = useState<GroupEnvironmentUpdate_RequestDTO>({});
     const [environmentsItems, setEnvironmentsItems] = useState<Array<EnvironmentField>>([]);
@@ -34,6 +37,23 @@ export function EnvironmentsPage() {
     useEffect(() => {
         setFetchEnvironmentsItems(data.envDic);
         setEnvironmentsItems([
+            {
+                title: "Organização",
+                items: [
+                    {
+                        name: "Nome da Organização",
+                        key: "organization_name",
+                        type: "string",
+                        defaultValue: authContext.organization.name,
+                    },
+                    {
+                        name: "Id da Organização",
+                        key: "organization_nickname",
+                        type: "string",
+                        defaultValue: authContext.organization.nickname,
+                    },
+                ]
+            },
             {
                 title: "Conta",
                 items: [
@@ -109,6 +129,7 @@ export function EnvironmentsPage() {
                         imageUploadPublic: true,
                         defaultValue: "Olá, {{ groupName }} tem um novo conteúdo: {{ contentName }}.<br/><br/>Acesse: {{ contentUrl }}",
                         description: "groupName: Nome do Grupo.\ncontentName: Nome do Conteúdo.\ncontentUrl: Link do Conteúdo.",
+                        descriptionBootstrapIcon: "bi-info-circle",
                     },
                     {
                         name: "Notificar Conteúdo Atribuído",
@@ -218,7 +239,7 @@ export function EnvironmentsPage() {
                 ]
             },
         ]);
-    }, [data]);
+    }, [data, authContext.organization]);
 
     const toggleSection = (title: string) => {
         setExpandedSections((prev) => ({ ...prev, [title]: !prev[title] }));
@@ -338,6 +359,7 @@ export function EnvironmentsPage() {
     }
 
     async function refreshPage() {
+        authContext.updateLoggedUser();
         const newData = await EnvironmentsFetch();
         setFetchEnvironmentsItems(newData.envDic);
         setEditedItems({ type: 'RESET' });
