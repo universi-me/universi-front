@@ -45,7 +45,7 @@ export function DepartmentItem( props: Readonly<DepartmentItemProps> ) {
     }
 
     function EditDepartmentButton() {
-        return <button type="button" title="Alterar nome do departamento" onClick={ () => setEditMode( true ) }>
+        return <button type="button" title="Alterar nome do órgão/área" onClick={ () => setEditMode( true ) }>
             <i className="bi bi-pencil-square"/>
         </button>
     }
@@ -58,14 +58,14 @@ export function DepartmentItem( props: Readonly<DepartmentItemProps> ) {
     }
 
     function DeleteDepartment() {
-        return <button type="button" title="Excluir departamento" onClick={ deleteDepartment } className="delete-department">
+        return <button type="button" title="Excluir órgão/área" onClick={ deleteDepartment } className="delete-department">
             <i className="bi bi-trash-fill"/>
         </button>
 
         async function deleteDepartment( e: MouseEvent<HTMLButtonElement> ) {
             e.preventDefault();
             const modalRes = await SwalUtils.fireAreYouSure({
-                title: `Deseja excluir o departamento "${department.acronym} - ${department.name}"?`,
+                title: `Deseja excluir o órgão/área "${department.acronym} - ${department.name}"?`,
 
                 confirmButtonText: "Excluir",
                 confirmButtonColor: "var(--font-color-alert)",

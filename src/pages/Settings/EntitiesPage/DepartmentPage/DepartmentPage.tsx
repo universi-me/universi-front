@@ -32,26 +32,26 @@ export function DepartmentPage() {
 
     return <DepartmentPageContext.Provider value={{ departments, refreshDepartments }}>
         <div id="departments-settings-page">
-            <SettingsTitle>Departamentos</SettingsTitle>
-            <SettingsDescription>Aqui você pode configurar os departamentos disponíveis na plataforma.</SettingsDescription>
+            <SettingsTitle>Órgãos/Áreas</SettingsTitle>
+            <SettingsDescription>Aqui você pode configurar os órgãos/áreas disponíveis na plataforma.</SettingsDescription>
 
-            <h2 className="section-title">Departamentos</h2>
-            <Filter placeholderMessage="Pesquisar Departamento..." setter={ setTextFilter } />
+            <h2 className="section-title">Órgãos/Áreas</h2>
+            <Filter placeholderMessage="Pesquisar Órgão/Área..." setter={ setTextFilter } />
 
             <section id="departments-listing">
                 { departments === null
-                    ? <p className="error-warning">Falha ao buscar departamentos disponíveis.</p>
+                    ? <p className="error-warning">Falha ao buscar órgão/área disponíveis.</p>
                 : departments.length == 0
-                    ? <p className="error-warning">Nenhum departamento cadastrado.</p>
+                    ? <p className="error-warning">Nenhum órgão/área cadastrado.</p>
                 : filteredDepartments.length === 0
-                    ? <p className="error-warning">Nenhum departamento encontrado</p>
+                    ? <p className="error-warning">Nenhum órgão/área encontrado</p>
                 : filteredDepartments.map( d => <DepartmentItem department={ d } key={ d.id } /> )
                 }
             </section>
-            { departments !== null && !creatingDepartment && <ActionButton name="Criar departamento" buttonProps={{ onClick: () => setCreatingDepartment( true ) }} /> }
+            { departments !== null && !creatingDepartment && <ActionButton name="Criar órgão/área" buttonProps={{ onClick: () => setCreatingDepartment( true ) }} /> }
 
             { creatingDepartment && <UniversiForm
-                formTitle="Criar departamento" saveButtonText="Criar"
+                formTitle="Criar órgão/área" saveButtonText="Criar"
                 objects={[
                     { DTOName: "acronym", label: "Sigla", type: FormInputs.TEXT, required: true },
                     { DTOName: "name", label: "Nome", type: FormInputs.TEXT, required: true },

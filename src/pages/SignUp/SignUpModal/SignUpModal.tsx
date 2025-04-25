@@ -161,12 +161,12 @@ export function SignUpModal(props: SignUpModalProps) {
                     </fieldset>
 
                     { props.departments.length > 0 && <fieldset id="department-fieldset">
-                        <legend>Departamento</legend>
+                        <legend>Órgão/Área</legend>
                         <Select isSearchable isClearable
                             options={departmentOptions()}
                             onChange={ ({ option }: { option: { value: string; label: string; } }) => setDepartment( option.value ) }
-                            placeholder={ "Selecionar departamento" }
-                            noOptionsMessage={ ({ inputValue }: { inputValue: string }) => `Não foi possível encontrar o departamento "${inputValue}"` }
+                            placeholder={ "Selecionar órgão/área" }
+                            noOptionsMessage={ ({ inputValue }: { inputValue: string }) => `Não foi possível encontrar o órgão/área "${inputValue}"` }
                         />
                     </fieldset> }
 
