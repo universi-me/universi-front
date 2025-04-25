@@ -86,7 +86,7 @@ export function ManageProfilePage() {
 
                     { departments.length > 0 &&
                     <fieldset id="fieldset-department">
-                        <legend>Departamento</legend>
+                        <legend>Órgão/Área</legend>
                         <select name="department" id="department" defaultValue={ department ?? "" } onChange={ e => setDepartment( e.currentTarget.value ) }>
                             <option value="">–</option>
                             { departmentOptions().map(d => {
