@@ -37,6 +37,8 @@ export function ThemeBuilder(props: Readonly<ThemeBuilderProps>) {
                             color={currentTheme[key]}
                             onChange={e => changeValue(key, e)}
                             className={ styles.colorPickerInput }
+                            prefixed
+                            alpha
                         />
                     </div>
                 </div>
