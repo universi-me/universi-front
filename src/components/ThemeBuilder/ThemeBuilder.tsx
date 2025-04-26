@@ -1,5 +1,6 @@
 import { HTMLAttributes } from "react";
 import { HexColorPicker } from "react-colorful";
+import { HexColorInput } from "react-colorful";
 
 import { makeClassName } from "@/utils/tsxUtils";
 import { GroupThemeToLabel } from "@/utils/themeUtils";
@@ -25,11 +26,21 @@ export function ThemeBuilder(props: Readonly<ThemeBuilderProps>) {
                     { description && <p>{ description }</p> }
                 </div>
 
-                <HexColorPicker
-                    color={currentTheme[key]}
-                    onChange={e => changeValue(key, e)}
-                    className={ styles.colorPicker }
-                />
+                <div>
+                    <HexColorPicker
+                        color={currentTheme[key]}
+                        onChange={e => changeValue(key, e)}
+                        className={ styles.colorPicker }
+                    />
+                    <div className={ styles.colorPickerInputArea }>
+                        <HexColorInput
+                            color={currentTheme[key]}
+                            onChange={e => changeValue(key, e)}
+                            className={ styles.colorPickerInput }
+                            prefixed
+                        />
+                    </div>
+                </div>
             </fieldset>
         }) }
     </section>;
