@@ -26,7 +26,7 @@ export function ThemeBuilder(props: Readonly<ThemeBuilderProps>) {
                     { description && <p>{ description }</p> }
                 </div>
 
-                <div className={styles.colorPickerContainer}>
+                <div>
                     <HexColorPicker
                         color={currentTheme[key]}
                         onChange={e => changeValue(key, e)}
@@ -38,7 +38,6 @@ export function ThemeBuilder(props: Readonly<ThemeBuilderProps>) {
                             onChange={e => changeValue(key, e)}
                             className={ styles.colorPickerInput }
                             prefixed
-                            alpha
                         />
                     </div>
                 </div>
