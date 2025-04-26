@@ -17,7 +17,11 @@ export function KeyCloakOAuth2Element() {
                 navigate("/login")
             
             else {
-                auth.signinGoogle();
+                var profile = auth.signinGoogle();
+            
+                if(profile != null) {
+                    navigate("/");
+                }
             }
         })
         .catch((err) => {
