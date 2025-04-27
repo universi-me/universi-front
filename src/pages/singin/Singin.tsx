@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { AuthContext } from "@/contexts/Auth";
 import SinginForm from "./SinginForm";
-import "./signin.css";
+import "./SignIn.less";
 
 export default function Singin() {
     const authContext = useContext(AuthContext);
@@ -13,7 +13,7 @@ export default function Singin() {
     }
 
     return (
-    <div>
+    <div id="signin-page">
       <footer className="waves-footer">
         <div className="waves">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
