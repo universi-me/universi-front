@@ -26,7 +26,7 @@ export default function SinginForm() {
 
   const disableSignInButton = !email.length || !password.length || ( ENABLE_RECAPTCHA && !recaptchaToken );
 
-  return <div className="container">
+  return <div id="signin-form-container">
       <form action="/login" method="post" className="form-container">
         <div className="form-group">
           <div className="label-form">
