@@ -1,29 +1,44 @@
 @import url(/src/layouts/utils.less);
 
 #signin-page {
+    width: 100%;
+
     .signin-container {
         display: flex;
         justify-content: center;
         align-items: center;
-        flex-wrap: wrap;
-        gap: 5rem;
-
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-
-        flex-direction: row;
         width: 100%;
+
+        @media @onDesktop {
+            flex-direction: row;
+            gap: 5rem;
+
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @media @onMobile {
+            flex-direction: column;
+            padding: 4rem 0;
+        }
 
         .logo {
             height: auto;
-            width: 35rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             letter-spacing: 2px;
             gap: 2px;
+
+            @media @onMobile {
+                width: 100%;
+            }
+
+            @media @onDesktop {
+                width: 35rem;
+            }
 
             img {
                 width: 80%;
@@ -36,9 +51,16 @@
                 text-align: 10px;
                 color: var(--font-color-v2);
 
-                margin-left: 2rem;
+                @media @onDesktop {
+                    margin-left: 2rem;
+                    margin-top: 2.5rem;
+                }
 
-                margin-top: 1em;
+                @media @onMobile {
+                    font-size: 1.75rem;
+                    text-align: center;
+                    margin-top: 1rem;
+                }
             }
         }
     }
@@ -48,6 +70,7 @@
             display: none;
         }
 
+        z-index: -1;
         width: 100vw;
         position: fixed;
         top: 100%;
@@ -57,7 +80,6 @@
             fill: var(--primary-color);
             bottom: 0px;
             left: 0;
-            z-index: -1;
         }
     }
 }

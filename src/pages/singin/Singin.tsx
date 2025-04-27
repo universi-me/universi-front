@@ -14,6 +14,17 @@ export default function Singin() {
 
     return (
     <div id="signin-page">
+      <div className="signin-container">
+        <div className="logo">
+          {/* <UniversiLogo /> */}
+          <img src="/assets/imgs/universi-me2.png" alt="Universi.me" className="logo-login"/>
+
+          <h1>Sua plataforma de desenvolvimento pessoal</h1>
+        </div>
+
+        <SinginForm></SinginForm>
+      </div>
+
       <footer className="waves-footer">
         <div className="waves">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
@@ -24,18 +35,6 @@ export default function Singin() {
           </svg>
         </div>
       </footer>
-      <div className="signin-container">
-        <div className="logo">
-          {/* <UniversiLogo /> */}
-          <img src="/assets/imgs/universi-me2.png" alt="Universi.me" className="logo-login"/>
-
-          <h1>Sua plataforma de desenvolvimento pessoal</h1>
-        </div>
-
-        <div className="signin">
-          <SinginForm></SinginForm>
-        </div>
-      </div>
     </div>
   );
 }
