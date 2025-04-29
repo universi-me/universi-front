@@ -51,7 +51,7 @@ export function contentImageUrl(content: Capacity.Folder.DTO) {
 export function isApiError( data: any ): data is Api.ResponseError {
     return typeof data === "object"
         && "timestamp" in data
-        && typeof data.timestamp === "number"
+        && typeof data.timestamp === "string"
         && "errors" in data
         && Array.isArray( data.errors )
         && data.errors.every( ( e: any ) => typeof e === "string" )

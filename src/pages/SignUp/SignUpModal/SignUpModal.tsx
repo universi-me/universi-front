@@ -1,12 +1,10 @@
-import { MouseEvent, FocusEvent, useState, useEffect, useContext } from "react";
+import { FocusEvent, useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router";
-import Select from "react-select";
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
-import { UniversiModal } from "@/components/UniversiModal";
+import UniversiForm from "@/components/UniversiForm2";
 import { UniversimeApi } from "@/services"
 import { isEmail } from "@/utils/regexUtils";
-import { setStateAsValue } from "@/utils/tsxUtils";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import { enableSignUp } from "./helperFunctions";
 import * as SwalUtils from "@/utils/sweetalertUtils";
@@ -21,6 +19,8 @@ export type SignUpModalProps = {
 
 const FIRST_NAME_MAX_LENGTH = 21;
 const LAST_NAME_MAX_LENGTH = 21;
+const EMAIL_MAX_LENGTH = 255;
+const USERNAME_MAX_LENGTH = 255;
 
 const USERNAME_CHAR_REGEX = /[a-z0-9_.-]/
 
@@ -39,28 +39,30 @@ export function SignUpModal(props: SignUpModalProps) {
     const [usernameAvailable, setUsernameAvailable] = useState<boolean>(false);
     const [usernameAvailableChecked, setUsernameAvailableChecked] = useState<boolean>(false);
     const [usernameUnavailableMessage, setUsernameUnavailableMessage] = useState<string>('');
+    const usernameRef = useRef<Nullable<HTMLInputElement>>(null);
 
-    const [emailAvailable, setEmailAvailable] = useState<boolean>(false);
-    const [emailAvailableChecked, setEmailAvailableChecked] = useState<boolean>(false);
+    const [emailAvailable, setEmailAvailable] = useState<Nullable<boolean>>( null );
+    const emailAvailableChecked = emailAvailable !== null;
     const [emailUnavailableMessage, setEmailUnavailableMessage] = useState<string>('');
 
     const [department, setDepartment] = useState<Optional<string>>( undefined );
 
     const [recaptchaToken, setRecaptchaToken] = useState<string | undefined>(undefined);
-    const [recaptchaRef, setRecaptchaRef] = useState<any>(null);
+    const recaptchaRef = useRef<Nullable<ReCAPTCHA>>(null);
 
     const isFirstnameFull = (firstname.length) >= FIRST_NAME_MAX_LENGTH;
     const isLastnameFull = (lastname.length) >= LAST_NAME_MAX_LENGTH;
 
     const canSignUp = enableSignUp(username, email, password) && isPasswordValid && usernameAvailable && emailAvailable;
 
-    const closeModal = () => props.toggleModal(false);
-
     const handleRecaptchaChange = (token: string | null) => {
         setRecaptchaToken(token ?? undefined);
     };
 
     useEffect(() => {
+        if ( usernameRef.current )
+            usernameRef.current.value = username;
+
         setUsernameAvailableChecked(false);
         const delayDebounceFn = setTimeout(async () => {
             if(username.length < 1) {
@@ -76,7 +78,7 @@ export function SignUpModal(props: SignUpModalProps) {
     }, [username])
 
     useEffect(() => {
-        setEmailAvailableChecked(false);
+        setEmailAvailable( null );
         const delayDebounceFn = setTimeout(async () => {
             if(email.length < 1) {
                 setEmailAvailable(false);
@@ -84,8 +86,7 @@ export function SignUpModal(props: SignUpModalProps) {
             }
             const resp = await UniversimeApi.User.emailAvailable( email );
             setEmailAvailable(resp.isSuccess() && resp.body?.available);
-            setEmailUnavailableMessage((resp.body as any)!?.reason ?? 'Email não está disponivel para uso.');
-            setEmailAvailableChecked(true);
+            setEmailUnavailableMessage( resp.errorMessage ?? 'Email não está disponível para uso.' );
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [email])
@@ -94,122 +95,109 @@ export function SignUpModal(props: SignUpModalProps) {
     const ENABLE_RECAPTCHA = organizationEnv.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
     const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
-    return (
-        <UniversiModal>
-            <div id="sign-up-modal">
-                <div className="heading">
-                        <button className="close-modal-button" onClick={closeModal}>
-                            <i className="bi bi-x-lg" />
-                        </button>
-                </div>
+    return <UniversiForm.Root id="sign-up-modal" title="Cadastro" asModal callback={ createAccount } >
+        <UniversiForm.Input.Text required param="firstname"
+            label="Nome" placeholder="Insira seu nome"
+            maxLength={FIRST_NAME_MAX_LENGTH} onChange={ setFirstname }
+        />
 
-                <form>
-                <fieldset id="fieldset-name">
-                        <label className="legend" htmlFor="firstname">
-                            <span className="counter-wrapper">
-                                <legend className="required-input">Nome</legend>
-                                <span className={`counter ${isFirstnameFull ? 'full-counter' : ''}`}>{firstname.length} / {FIRST_NAME_MAX_LENGTH}</span>
-                            </span>
-                            <input type="text" name="firstname" id="firstname" placeholder="Insira seu nome" defaultValue={""} onChange={setStateAsValue(setFirstname)} required maxLength={FIRST_NAME_MAX_LENGTH} />
-                        </label>
+        <UniversiForm.Input.Text required param="lastname"
+            label="Sobrenome" placeholder="Insira seu sobrenome"
+            maxLength={LAST_NAME_MAX_LENGTH} onChange={ setLastname }
+        />
 
-                        <label className="legend" htmlFor="lastname">
-                            <span className="counter-wrapper">
-                                <legend className="required-input">Sobrenome</legend>
-                                <span className={`counter ${isLastnameFull ? 'full-counter' : ''}`}>{lastname.length} / {LAST_NAME_MAX_LENGTH}</span>
-                            </span>
+        <UniversiForm.Input.Text param="email"
+            label="Email"
+            placeholder="novousuario@email.com" required
+            maxLength={EMAIL_MAX_LENGTH} omitCharLimit
+            type="email" onBlur={ onBlurEmail }
+            onChange={ newEmail => { setEmail( newEmail ) } }
+        />
+        <section className="password-requirements">
+            { emailAvailableChecked && <p className={`bi fieldset-info ${emailAvailable?'success-validation':'failed-validation'}`}>
+                { emailAvailable ? 'Email Disponível para uso.' : emailUnavailableMessage }
+            </p> }
+        </section>
 
-                            <input type="text" name="lastname" id="lastname" placeholder="Insira seu sobrenome" defaultValue={""} onChange={setStateAsValue(setLastname)} required maxLength={LAST_NAME_MAX_LENGTH} />
-                        </label>
-                </fieldset>
-                <fieldset id="email-fieldset">
-                        <legend>Email</legend>
-                        <input type="text" name="email" maxLength={255}
-                            placeholder="novousuario@email.com" required
-                            onBlur={onBlurEmail} onChange={e => {
-                                document.querySelector("#email-fieldset")
-                                    ?.classList.remove(INVALID_EMAIL_CLASS);
-                                setEmail(e.currentTarget.value)
-                            }}
-                        />
-                        <section className="password-requirements">
-                            { emailAvailableChecked ? <p className={`bi fieldset-info ${emailAvailable?'success-validation':'failed-validation'}`}>{emailAvailable?'Email Disponível para uso.':emailUnavailableMessage}</p> : null }
-                        </section>
-                    </fieldset>
+        <UniversiForm.Input.Text required param="username"
+            label="Nome de usuário" ref={ usernameRef }
+            placeholder="nome_sobrenome" maxLength={USERNAME_MAX_LENGTH} omitCharLimit
+            onChange={ newUsername => {
+                const filteredUsername = Array.from( newUsername )
+                    .filter(c => USERNAME_CHAR_REGEX.exec(c) !== null)
+                    .join( "" );
 
-                    <fieldset>
-                        <legend>Nome de usuário</legend>
-                        <input type="text" name="username" maxLength={255}
-                            placeholder="nome_sobrenome" required
-                            onChange={e => {
-                                const filteredValue = Array.from(e.currentTarget.value)
-                                    .filter(c => USERNAME_CHAR_REGEX.exec(c) !== null)
-                                    .join("");
+                setUsername( filteredUsername );
+            } }
+        />
+        <section className="password-requirements">
+            { usernameAvailableChecked ? <p className={`bi fieldset-info ${usernameAvailable?'success-validation':'failed-validation'}`}>{usernameAvailable?'Usuário Disponível para uso.':usernameUnavailableMessage}</p> : null }
+            <p className="fieldset-info">
+                Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).<br/>
+                Todos irão acessar seu perfil em: <div className="profile-url-preview">{location.origin}/profile/{username || "<insira um nome de usuário>"}</div>
+            </p>
+        </section>
 
-                                e.currentTarget.value = filteredValue;
-                                setUsername(filteredValue);
-                            }}
-                        />
-                        <section className="password-requirements">
-                            { usernameAvailableChecked ? <p className={`bi fieldset-info ${usernameAvailable?'success-validation':'failed-validation'}`}>{usernameAvailable?'Usuário Disponível para uso.':usernameUnavailableMessage}</p> : null }
-                            <p className="fieldset-info">
-                                Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).<br/>
-                                Todos irão acessar seu perfil em: <div className="profile-url-preview">{location.origin}/profile/{username || "<insira um nome de usuário>"}</div>
-                            </p>
-                            {/* <p className="fieldset-info">Seu nome de usuário será usado para acessar seu perfil em: {location.origin}/profile/{username}</p> */}
-                        </section>
-                    </fieldset>
+        {/* todo - add departments as select input */}
+        {/* todo - add password field as password input */}
 
-                    { props.departments.length > 0 && <fieldset id="department-fieldset">
-                        <legend>Órgão/Área</legend>
-                        <Select isSearchable isClearable
-                            options={departmentOptions()}
-                            onChange={ ({ option }: { option: { value: string; label: string; } }) => setDepartment( option.value ) }
-                            placeholder={ "Selecionar órgão/área" }
-                            noOptionsMessage={ ({ inputValue }: { inputValue: string }) => `Não foi possível encontrar o órgão/área "${inputValue}"` }
-                        />
-                    </fieldset> }
+        { ENABLE_RECAPTCHA && <center>
+            <br/>
+            <ReCAPTCHA ref={ recaptchaRef } sitekey={ RECAPTCHA_SITE_KEY } onChange={ handleRecaptchaChange } />
+            <br/>
+        </center> }
+    </UniversiForm.Root>
 
-                    <fieldset id="password-fieldset">
-                        <legend>Senha</legend>
-                        <NewPasswordInput password={password} setPassword={setPassword} valid={isPasswordValid} setValid={setIsPasswordValid}/>
-                    </fieldset>
+    // return (
+    //     <UniversiModal>
+    //         <div id="sign-up-modal">
+    //             <form>
+    //                 { props.departments.length > 0 && <fieldset id="department-fieldset">
+    //                     <legend>Órgão/Área</legend>
+    //                     <Select isSearchable isClearable
+    //                         options={departmentOptions()}
+    //                         onChange={ ({ option }: { option: { value: string; label: string; } }) => setDepartment( option.value ) }
+    //                         placeholder={ "Selecionar órgão/área" }
+    //                         noOptionsMessage={ ({ inputValue }: { inputValue: string }) => `Não foi possível encontrar o órgão/área "${inputValue}"` }
+    //                     />
+    //                 </fieldset> }
 
-                    {
-                        !ENABLE_RECAPTCHA ? null :
-                            <center>
-                                <br/>
-                                <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
-                                <br/>
-                            </center>
-                    }
+    //                 <fieldset id="password-fieldset">
+    //                     <legend>Senha</legend>
+    //                     <NewPasswordInput password={password} setPassword={setPassword} valid={isPasswordValid} setValid={setIsPasswordValid}/>
+    //                 </fieldset>
 
-                    <div className="submit">
-                        <button type="submit" className="create-account" onClick={createAccount}
-                            disabled={!canSignUp} title={!canSignUp ? "Preencha todos os campos corretamente para poder se cadastrar" : undefined}>
-                            Criar conta
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </UniversiModal>
-    );
+    //                 <div className="submit">
+    //                     <button type="submit" className="create-account" onClick={createAccount}
+    //                         disabled={!canSignUp} title={!canSignUp ? "Preencha todos os campos corretamente para poder se cadastrar" : undefined}>
+    //                         Criar conta
+    //                     </button>
+    //                 </div>
+    //             </form>
+    //         </div>
+    //     </UniversiModal>
+    // );
 
-    function createAccount(e: MouseEvent<HTMLButtonElement>) {
-        e.preventDefault();
-        UniversimeApi.User.signup({ firstname, lastname, username, email, password, recaptchaToken, department })
-            .then(res => {
-                if (!res.isSuccess()) {
-                    recaptchaRef.reset();
-                    SwalUtils.fireModal({
-                        title: "Erro ao criar sua conta",
-                        text: res.errorMessage ?? "Houve algo de errado em nosso sistema.",
-                        icon: "error",
-                    });
-                } else {
-                    navigate("/login");
-                }
-            })
+    async function createAccount( data: UniversiForm.Data<SignUpForm> ) {
+        if ( !data.confirmed ) {
+            props.toggleModal( false );
+            return
+        }
+
+        const { firstname, lastname, username, email, password, department } = data.body;
+        const res = await UniversimeApi.User.signup({ firstname, lastname, username, email, password, recaptchaToken, department: department?.acronym });
+
+        if ( res.isSuccess() ) {
+            navigate( "/login" );
+            return;
+        }
+
+        recaptchaRef.current?.reset();
+        SwalUtils.fireModal({
+            title: "Erro ao criar sua conta",
+            text: res.errorMessage ?? "Houve algo de errado em nosso sistema.",
+            icon: "error",
+        });
     }
 
     function departmentOptions() {
@@ -231,3 +219,14 @@ function onBlurEmail(e: FocusEvent<HTMLInputElement>) {
     else
         fieldsetElement?.classList.remove(INVALID_EMAIL_CLASS);
 }
+
+type SignUpForm = {
+    firstname: string;
+    lastname: string;
+    email: string;
+    username: string;
+    department: Optional<Department.DTO>;
+
+    password: string;
+    confirmPassword: string;
+};
