@@ -138,7 +138,17 @@ export function SignUpModal(props: SignUpModalProps) {
             </p>
         </section>
 
-        {/* todo - add departments as select input */}
+        { props.departments.length > 0 && <UniversiForm.Input.Select
+            param="department"
+            label="Órgão/Área"
+            placeholder="Selecionar órgão/área"
+            options={ props.departments }
+            getOptionLabel={ d => `${ d.acronym } – ${ d.name }` }
+            getOptionUniqueValue={ d => d.id }
+            onChange={ d => setDepartment( d.id ) }
+            optionNotFoundMessage={ inputValue => `Não foi possível encontrar o órgão/área "${ inputValue }"` }
+        /> }
+
         {/* todo - add password field as password input */}
 
         { ENABLE_RECAPTCHA && <center>
@@ -152,16 +162,6 @@ export function SignUpModal(props: SignUpModalProps) {
     //     <UniversiModal>
     //         <div id="sign-up-modal">
     //             <form>
-    //                 { props.departments.length > 0 && <fieldset id="department-fieldset">
-    //                     <legend>Órgão/Área</legend>
-    //                     <Select isSearchable isClearable
-    //                         options={departmentOptions()}
-    //                         onChange={ ({ option }: { option: { value: string; label: string; } }) => setDepartment( option.value ) }
-    //                         placeholder={ "Selecionar órgão/área" }
-    //                         noOptionsMessage={ ({ inputValue }: { inputValue: string }) => `Não foi possível encontrar o órgão/área "${inputValue}"` }
-    //                     />
-    //                 </fieldset> }
-
     //                 <fieldset id="password-fieldset">
     //                     <legend>Senha</legend>
     //                     <NewPasswordInput password={password} setPassword={setPassword} valid={isPasswordValid} setValid={setIsPasswordValid}/>
