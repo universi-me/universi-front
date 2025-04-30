@@ -149,7 +149,15 @@ export function SignUpModal(props: SignUpModalProps) {
             optionNotFoundMessage={ inputValue => `Não foi possível encontrar o órgão/área "${ inputValue }"` }
         /> }
 
-        {/* todo - add password field as password input */}
+        <UniversiForm.Input.Password
+            param="password"
+            label="Senha"
+            required
+            mustConfirm
+            mustMatchRequirements
+            onChange={ setPassword }
+            onCheckValidity={ v => setIsPasswordValid( v.allValid ) }
+        />
 
         { ENABLE_RECAPTCHA && <center>
             <br/>
@@ -162,11 +170,6 @@ export function SignUpModal(props: SignUpModalProps) {
     //     <UniversiModal>
     //         <div id="sign-up-modal">
     //             <form>
-    //                 <fieldset id="password-fieldset">
-    //                     <legend>Senha</legend>
-    //                     <NewPasswordInput password={password} setPassword={setPassword} valid={isPasswordValid} setValid={setIsPasswordValid}/>
-    //                 </fieldset>
-
     //                 <div className="submit">
     //                     <button type="submit" className="create-account" onClick={createAccount}
     //                         disabled={!canSignUp} title={!canSignUp ? "Preencha todos os campos corretamente para poder se cadastrar" : undefined}>
@@ -199,12 +202,6 @@ export function SignUpModal(props: SignUpModalProps) {
             icon: "error",
         });
     }
-
-    function departmentOptions() {
-        return props.departments
-            .map( d => ({ value: d.id, label: `${d.acronym} - ${d.name}` }) )
-            .sort( ( d1, d2 ) => d1.label.localeCompare( d2.label ) );
-    }
 }
 
 const INVALID_EMAIL_CLASS = "invalid-email";
@@ -228,5 +225,4 @@ type SignUpForm = {
     department: Optional<Department.DTO>;
 
     password: string;
-    confirmPassword: string;
 };

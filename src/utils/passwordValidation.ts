@@ -31,6 +31,28 @@ export function equality(password: string, passwordRepeat: string): NullableBool
     return (password === passwordRepeat);
 }
 
+export class PasswordValidity {
+    constructor( public password: string, public passwordRepeat?: string ) {}
+
+    get length(): NullableBoolean { return minimumLength( this.password ); }
+    get case(): NullableBoolean { return upperAndLowerCase( this.password ); }
+    get special(): NullableBoolean { return numberOrSpecialChar( this.password ); }
+    get confirm(): Possibly<boolean> {
+        return this.passwordRepeat !== undefined
+            ? equality( this.password, this.passwordRepeat )
+            : undefined;
+    }
+
+    get allValid(): boolean {
+        const confirm = this.confirm;
+
+        return !!this.length
+            && !!this.case
+            && !!this.special
+            && ( confirm || confirm === undefined );
+    }
+};
+
 export function passwordValidationClass(validPassword: NullableBoolean): string {
     if (validPassword === null)
         return "";
