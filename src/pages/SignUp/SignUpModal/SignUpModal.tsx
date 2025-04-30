@@ -159,11 +159,12 @@ export function SignUpModal(props: SignUpModalProps) {
             onCheckValidity={ v => setIsPasswordValid( v.allValid ) }
         />
 
-        { ENABLE_RECAPTCHA && <center>
-            <br/>
-            <ReCAPTCHA ref={ recaptchaRef } sitekey={ RECAPTCHA_SITE_KEY } onChange={ handleRecaptchaChange } />
-            <br/>
-        </center> }
+        { ENABLE_RECAPTCHA && <UniversiForm.Input.ReCaptcha
+            param="recaptchaToken"
+            sitekey={ RECAPTCHA_SITE_KEY }
+            onChange={ handleRecaptchaChange }
+            ref={ recaptchaRef }
+        />}
     </UniversiForm.Root>
 
     // return (
@@ -187,7 +188,7 @@ export function SignUpModal(props: SignUpModalProps) {
             return
         }
 
-        const { firstname, lastname, username, email, password, department } = data.body;
+        const { firstname, lastname, username, email, password, department, recaptchaToken } = data.body;
         const res = await UniversimeApi.User.signup({ firstname, lastname, username, email, password, recaptchaToken, department: department?.acronym });
 
         if ( res.isSuccess() ) {
@@ -225,4 +226,5 @@ type SignUpForm = {
     department: Optional<Department.DTO>;
 
     password: string;
+    recaptchaToken: Nullable<string>;
 };
