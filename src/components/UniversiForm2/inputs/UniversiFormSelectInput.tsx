@@ -66,15 +66,9 @@ type GenericSelectProperties<T> = {
     placeholder?: string;
 }
 
-type NumberBasedSelectProperties<T> = {
-    isMultiSelection: true;
-    defaultValue?: T[];
-    onChange?( value: readonly T[] ): any;
-} | {
-    isMultiSelection?: false;
-    defaultValue?: T;
-    onChange?( value: T ): any;
-};
+type SingleSelectProperties<T> = UniversiFormFieldProps<T>   & { isMultiSelection?: false; };
+type MultiSelectProperties<T>  = UniversiFormFieldProps<T[]> & { isMultiSelection: true; };
+type NumberBasedSelectProperties<T> = MultiSelectProperties<T> | SingleSelectProperties<T>;
 
 type CreationBasedSelectProperties<T> = {
     canCreateOptions: true;
@@ -84,7 +78,6 @@ type CreationBasedSelectProperties<T> = {
     onCreateOption?( value: string ): T[];
 };
 
-export type UniversiFormSelectInputProps<T> = Omit<UniversiFormFieldProps<T>, "onChange">
-    & GenericSelectProperties<T>
+export type UniversiFormSelectInputProps<T> = GenericSelectProperties<T>
     & NumberBasedSelectProperties<T>
     & CreationBasedSelectProperties<T>;
