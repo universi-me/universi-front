@@ -1,8 +1,12 @@
 import { type ReactNode, type PropsWithChildren, useRef, useMemo, MouseEvent, FormHTMLAttributes } from "react";
 
 import { UniversiModal } from "@/components/UniversiModal";
+import BootstrapIcon from "@/components/BootstrapIcon";
 import { UniversiFormContext, type UniversiFormContextType } from "./UniversiFormContext";
 import { makeClassName } from "@/utils/tsxUtils";
+
+import styles from "./UniversiForm.module.less";
+
 
 export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const formBody = useRef( new Map<string, any> );
@@ -11,18 +15,25 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const { title, asModal, callback, children, ...formAttributes } = props;
 
     const formRender = <UniversiFormContext.Provider value={ contextValue } >
-        <form { ...formAttributes } className={makeClassName( "universi-form", formAttributes.className )}>
-            <section className="universi-form-fields">
+        <form { ...formAttributes } className={makeClassName( styles.form, formAttributes.className )}>
+            <div className={ styles.header }>
+                <h1>{ props.title }</h1>
+                <button type="button" className={ styles.close_button } onClick={ handleCancel } >
+                    <BootstrapIcon icon="x" />
+                </button>
+            </div>
+
+            <section className={ styles.fields }>
                 { props.children }
             </section>
 
-            <section className="universi-form-actions">
-                <button type="button" className="form-action form-cancel" onClick={ handleCancel }>
+            <section className={ styles.actions }>
+                <button type="button" className={ makeClassName( styles.cancel_button ) } onClick={ handleCancel }>
                     <i className="bi bi-x-circle-fill" /> Cancelar
                 </button>
 
                 {/* todo - handle required fields before allowing confirming */}
-                <button type="button" className="form-action form-confirm" onClick={ handleConfirm }>
+                <button type="button" className={ makeClassName( styles.confirm_button ) } onClick={ handleConfirm }>
                     <i className="bi bi-check-circle-fill" /> Confirmar
                 </button>
             </section>
@@ -67,7 +78,7 @@ export type UniversiFormRootProps = PropsWithChildren<{
     title: Truthy<ReactNode>;
     asModal?: boolean;
 
-    callback( formData: UniversiFormData<any> ): any;
+    callback( formData: UniversiFormData<Record<string, any>> ): any;
 }> & FormHTMLAttributes<HTMLFormElement>;
 
 export type UniversiFormData<T> = {
