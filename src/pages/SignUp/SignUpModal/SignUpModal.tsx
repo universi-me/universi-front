@@ -81,7 +81,7 @@ export function SignUpModal(props: SignUpModalProps) {
         setEmailAvailable( null );
         const delayDebounceFn = setTimeout(async () => {
             if(email.length < 1) {
-                setEmailAvailable(false);
+                setEmailAvailable( null );
                 return;
             }
             const resp = await UniversimeApi.User.emailAvailable( email );
@@ -142,6 +142,7 @@ export function SignUpModal(props: SignUpModalProps) {
             param="department"
             label="Órgão/Área"
             placeholder="Selecionar órgão/área"
+            isClearable
             options={ props.departments }
             getOptionLabel={ d => `${ d.acronym } – ${ d.name }` }
             getOptionUniqueValue={ d => d.id }
