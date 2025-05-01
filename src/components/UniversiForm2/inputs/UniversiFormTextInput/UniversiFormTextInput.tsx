@@ -1,25 +1,35 @@
 import { type ClassAttributes, type InputHTMLAttributes, useContext, useEffect, useState } from "react";
 
-import { UniversiFormContext } from "../UniversiFormContext";
+import { makeClassName } from "@/utils/tsxUtils";
+import { UniversiFormContext } from "../../UniversiFormContext";
+
+import formStyles from "../../UniversiForm.module.less";
+import styles from "./UniversiFormTextInput.module.less";
 
 
 export function UniversiFormTextInput( props: Readonly<UniversiFormTextInputProps> ) {
-    const { param, label, omitCharLimit, onChange, ...inputElementProps } = props;
+    const { param, label, omitCharLimit, onChange, className, ...inputElementProps } = props;
 
     const context = useContext( UniversiFormContext );
 
     const [ value, setValue ] = useState<string>( props.defaultValue ?? "" );
     useEffect( () => { handleOnChange( value ); }, [] );
 
-    return <fieldset className="universi-form-field">
-        <legend>
+    const isFull = Boolean( props.maxLength && ( value.length >= props.maxLength ) );
+
+    return <fieldset className={ formStyles.fieldset }>
+        <legend className={ styles.legend }>
             { label }
-            { props.maxLength && !omitCharLimit && <div className="char-counter">
+            { props.maxLength && !omitCharLimit && <div className={ makeClassName( styles.char_counter, isFull && styles.full_char_counter ) }>
                 { value.length ?? 0 } / { props.maxLength }
             </div> }
         </legend>
         <input
             name={ param }
+            className={ makeClassName(
+                className,
+                styles.input,
+            ) }
             { ...inputElementProps }
 
             onChange={ e => handleOnChange( e.currentTarget.value ) }

@@ -1,0 +1,26 @@
+@import url(/src/layouts/fonts.less);
+@import url(/src/layouts/colors.less);
+@import url(../styles.module.less);
+
+.legend {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+
+    .char_counter {
+        font-size: .75em;
+
+        &.full_char_counter {
+            color: @font-color-alert;
+            font-weight: @font-weight-semibold;
+        }
+    }
+}
+
+.input {
+    width: 100%;
+
+    #UniversiForm.rounded_corners();
+    #UniversiForm.input_padding();
+    #UniversiForm.focus_outline();
+}
