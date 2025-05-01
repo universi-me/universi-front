@@ -4,7 +4,7 @@ import { UniversiFormContext } from "../UniversiFormContext";
 
 
 export function UniversiFormTextInput( props: Readonly<UniversiFormTextInputProps> ) {
-    const { param, label, required, onChange, ...inputElementProps } = props;
+    const { param, label, omitCharLimit, onChange, ...inputElementProps } = props;
 
     const context = useContext( UniversiFormContext );
 
@@ -13,13 +13,13 @@ export function UniversiFormTextInput( props: Readonly<UniversiFormTextInputProp
 
     return <fieldset className="universi-form-field">
         <legend>
-            { props.label }
-            { props.maxLength && !props.omitCharLimit && <div className="char-counter">
+            { label }
+            { props.maxLength && !omitCharLimit && <div className="char-counter">
                 { value.length ?? 0 } / { props.maxLength }
             </div> }
         </legend>
         <input
-            name={ props.param }
+            name={ param }
             { ...inputElementProps }
 
             onChange={ e => handleOnChange( e.currentTarget.value ) }
@@ -27,13 +27,15 @@ export function UniversiFormTextInput( props: Readonly<UniversiFormTextInputProp
     </fieldset>
 
     function handleOnChange( newValue: string ) {
-        context?.set( props.param, newValue );
+        context?.set( param, newValue );
         setValue( newValue );
 
-        props.onChange?.( newValue );
+        onChange?.( newValue );
     }
 }
 
-export type UniversiFormTextInputProps = UniversiFormFieldPropsMergeWith<string, InputHTMLAttributes<HTMLInputElement> & ClassAttributes<HTMLInputElement>> & {
-    omitCharLimit?: boolean;
-};
+export type UniversiFormTextInputProps = UniversiFormFieldPropsMergeWith<string, InputHTMLAttributes<HTMLInputElement>
+    & ClassAttributes<HTMLInputElement>>
+    & {
+        omitCharLimit?: boolean;
+    };
