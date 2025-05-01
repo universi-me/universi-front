@@ -113,11 +113,11 @@ export function SignUpModal(props: SignUpModalProps) {
             type="email" onBlur={ onBlurEmail }
             onChange={ newEmail => { setEmail( newEmail ) } }
         />
-        <section className="password-requirements">
-            { emailAvailableChecked && <p className={`bi fieldset-info ${emailAvailable?'success-validation':'failed-validation'}`}>
+        { emailAvailableChecked && <section className="password-requirements">
+             <p className={`bi fieldset-info ${emailAvailable?'success-validation':'failed-validation'}`}>
                 { emailAvailable ? 'Email Disponível para uso.' : emailUnavailableMessage }
-            </p> }
-        </section>
+            </p>
+        </section> }
 
         <UniversiForm.Input.Text required param="username"
             label="Nome de usuário" ref={ usernameRef }
