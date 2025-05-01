@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import MaterialIcon from "@/components/MaterialIcon";
 import { passwordValidationClass, PasswordValidity } from "@/utils/passwordValidation";
@@ -6,56 +6,56 @@ import { passwordValidationClass, PasswordValidity } from "@/utils/passwordValid
 import { UniversiFormContext } from "../UniversiFormContext";
 
 
-const UniversiFormPasswordInputContext = createContext<Optional<UniversiFormPasswordInputProps>>( undefined );
+const UniversiFormPasswordInputContext = createContext<Optional<UniversiFormPasswordInputContextType>>( undefined );
 
 export function UniversiFormPasswordInput( props: Readonly<UniversiFormPasswordInputProps> ) {
     const context = useContext( UniversiFormContext );
 
     const [ password, setPassword ] = useState<string>( "" );
     const [ confirm, setConfirm ] = useState<Optional<string>>( props.mustConfirm ? password : undefined );
+
+    const valid = useMemo( () => new PasswordValidity( password, confirm ), [] );
+    const passwordContextValue = useMemo<UniversiFormPasswordInputContextType>( () => ({ ...props, valid }), [] );
+
     useEffect( () => {
         setConfirm( props.mustConfirm ? "" : undefined );
     }, [ props.mustConfirm ] );
 
-    const isValid = useRef<boolean>( true );
-
-    return <UniversiFormPasswordInputContext.Provider value={{ ...props, onCheckValidity }}>
+    return <UniversiFormPasswordInputContext.Provider value={ passwordContextValue }>
         <fieldset className="universi-form-field">
             <legend>{ props.label }</legend>
             <PasswordField
-                onChange={ onChangePassword }
+                onChange={ p => update( p, confirm ) }
                 placeholder={ props.passwordPlaceholder ?? "Insira sua senha" }
             />
             { props.mustConfirm && <PasswordField
-                onChange={ setConfirm }
+                onChange={ c => update( password, c ) }
                 placeholder={ props.confirmPlaceholder ?? "Confirme sua senha" }
             /> }
 
-            { props.mustMatchRequirements && <PasswordRequirements
-                password={password}
-                confirm={confirm}
-            /> }
+            { props.mustMatchRequirements && <PasswordRequirements /> }
         </fieldset>
     </UniversiFormPasswordInputContext.Provider>;
 
-    function onChangePassword( passwordInput: string ) {
-        let contextValue = passwordInput;
+    function update( password: string, confirm?: string ) {
+        let contextValue = password;
+        valid.password = password;
+        valid.passwordRepeat = confirm;
 
-        if ( props.mustMatchRequirements && !isValid.current )
+        if ( props.mustMatchRequirements && !valid.allValid )
             contextValue = "";
 
         if ( props.mustConfirm && password !== confirm )
             contextValue = "";
 
         context?.set( props.param, contextValue );
-        setPassword( passwordInput );
-        props.onChange?.( passwordInput );
-    }
+        props.onCheckValidity?.( valid );
 
-    function onCheckValidity( validity: PasswordValidity ) {
-        isValid.current = validity.allValid;
-
-        props.onCheckValidity?.( validity );
+        setPassword( old => {
+            if ( old !== password ) props.onChange?.( password );
+            return password;
+        } );
+        setConfirm( confirm );
     }
 }
 
@@ -66,6 +66,10 @@ export type UniversiFormPasswordInputProps = Omit<UniversiFormFieldProps<string>
 
     passwordPlaceholder?: string;
     confirmPlaceholder?: string;
+};
+
+type UniversiFormPasswordInputContextType = UniversiFormPasswordInputProps & {
+    valid: PasswordValidity;
 };
 
 function PasswordField( props: Readonly<PasswordFieldProps> ) {
@@ -95,16 +99,8 @@ type PasswordFieldProps = {
     placeholder?: string;
 };
 
-export function PasswordRequirements( props: Readonly<PasswordRequirementsProps> ) {
-    const context = useContext( UniversiFormPasswordInputContext );
-
-    const valid = new PasswordValidity( props.password, props.confirm );
-    useEffect( () => {
-        valid.password = props.password;
-        valid.passwordRepeat = props.confirm;
-
-        context?.onCheckValidity?.( valid );
-    }, [ props.password, props.confirm ] );
+export function PasswordRequirements() {
+    const { valid } = useContext( UniversiFormPasswordInputContext )!;
 
     return <div className="password-requirements">
         <h3>Sua senha precisa conter:</h3>
@@ -122,8 +118,3 @@ export function PasswordRequirements( props: Readonly<PasswordRequirementsProps>
         </p> }
     </div>
 }
-
-export type PasswordRequirementsProps = {
-    password: string;
-    confirm?: string;
-};
