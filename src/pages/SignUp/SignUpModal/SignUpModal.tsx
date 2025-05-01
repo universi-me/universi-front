@@ -146,7 +146,7 @@ export function SignUpModal(props: SignUpModalProps) {
             options={ props.departments }
             getOptionLabel={ d => `${ d.acronym } – ${ d.name }` }
             getOptionUniqueValue={ d => d.id }
-            onChange={ d => setDepartment( d.id ) }
+            onChange={ d => setDepartment( d?.id ) }
             optionNotFoundMessage={ inputValue => `Não foi possível encontrar o órgão/área "${ inputValue }"` }
         /> }
 

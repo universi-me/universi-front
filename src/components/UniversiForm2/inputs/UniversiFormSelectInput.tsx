@@ -56,8 +56,6 @@ type GenericSelectProperties<T> = {
     getOptionLabel?( option: T ): Truthy<ReactNode>;
     filterOption?( option: T, search: string ): boolean;
 
-    isClearable?: boolean;
-
     isSearchable?: boolean;
     optionNotFoundMessage?( search: string ): Truthy<ReactNode>;
 
@@ -66,8 +64,13 @@ type GenericSelectProperties<T> = {
     placeholder?: string;
 }
 
-type SingleSelectProperties<T> = UniversiFormFieldProps<T>   & { isMultiSelection?: false; };
-type MultiSelectProperties<T>  = UniversiFormFieldProps<T[]> & { isMultiSelection: true; };
+type SingleSelectProperties<T, IsClearable extends boolean = boolean> = { isMultiSelection?: false; }
+    & ( IsClearable extends true
+        ? UniversiFormFieldProps<Nullable<T>> & { isClearable: IsClearable }
+        : UniversiFormFieldProps<T> & { isClearable?: IsClearable }
+    );
+
+type MultiSelectProperties<T>  = UniversiFormFieldProps<T[]> & { isMultiSelection: true; isClearable?: boolean };
 type NumberBasedSelectProperties<T> = MultiSelectProperties<T> | SingleSelectProperties<T>;
 
 type CreationBasedSelectProperties<T> = {
