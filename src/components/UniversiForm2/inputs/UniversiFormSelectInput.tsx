@@ -4,7 +4,7 @@ import CreatableSelect from "react-select/creatable";
 
 import { UniversiFormContext } from "../UniversiFormContext";
 
-export function UniversiFormSelectInput<T>( props: Readonly<UniversiFormSelectInputProps<T>> ) {
+export function UniversiFormSelectInput<T, M extends boolean=false, C extends boolean=false>( props: Readonly<UniversiFormSelectInputProps<T, M, C>> ) {
     const context = useContext( UniversiFormContext );
     const [ options, setOptions ] = useState<T[]>( props.options );
 
@@ -50,7 +50,7 @@ export function UniversiFormSelectInput<T>( props: Readonly<UniversiFormSelectIn
     }
 }
 
-type GenericSelectProperties<T> = {
+type UniversiFormSelectInputProps<T, Multi extends boolean, Clear extends boolean> = {
     options: T[];
     getOptionUniqueValue( option: T ): string;
     getOptionLabel?( option: T ): Truthy<ReactNode>;
@@ -62,16 +62,14 @@ type GenericSelectProperties<T> = {
     createOptionLabel?( value: string ): Truthy<ReactNode>;
 
     placeholder?: string;
-}
 
-type SingleSelectProperties<T, IsClearable extends boolean = boolean> = { isMultiSelection?: false; }
-    & ( IsClearable extends true
-        ? UniversiFormFieldProps<Nullable<T>> & { isClearable: IsClearable }
-        : UniversiFormFieldProps<T> & { isClearable?: IsClearable }
-    );
-
-type MultiSelectProperties<T>  = UniversiFormFieldProps<T[]> & { isMultiSelection: true; isClearable?: boolean };
-type NumberBasedSelectProperties<T> = MultiSelectProperties<T> | SingleSelectProperties<T>;
+    isMultiSelection?: Multi;
+    isClearable?: Clear;
+} & UniversiFormFieldProps<
+    Multi extends true ? T[]
+    : Clear extends true ? Nullable<T>
+    : T
+> & CreationBasedSelectProperties<T>;
 
 type CreationBasedSelectProperties<T> = {
     canCreateOptions: true;
@@ -80,7 +78,3 @@ type CreationBasedSelectProperties<T> = {
     canCreateOptions?: false;
     onCreateOption?( value: string ): T[];
 };
-
-export type UniversiFormSelectInputProps<T> = GenericSelectProperties<T>
-    & NumberBasedSelectProperties<T>
-    & CreationBasedSelectProperties<T>;
