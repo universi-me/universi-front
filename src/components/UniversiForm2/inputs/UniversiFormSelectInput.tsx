@@ -1,8 +1,10 @@
 import { ReactNode, useContext, useState } from "react";
-import Select from "react-select";
+import Select, { type StylesConfig } from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 import { UniversiFormContext } from "../UniversiFormContext";
+import formStyles from "../UniversiForm.module.less";
+
 
 export function UniversiFormSelectInput<T, M extends Optional<boolean>=undefined, C extends Optional<boolean>=undefined>(
     props: Readonly<UniversiFormSelectInputProps<T, M, C>>
@@ -17,6 +19,15 @@ export function UniversiFormSelectInput<T, M extends Optional<boolean>=undefined
         isClearable: props.isClearable,
         isMulti: props.isMultiSelection,
         placeholder: props.placeholder ?? `Selecionar ${ props.label ?? "campo" }`,
+
+        styles: {
+            ...props.style,
+            control: props.style?.control ?? ( b => ({
+                ...b,
+                borderRadius: "10px", borderWidth: "2px", borderStyle: "solid",
+                borderColor: "transparent", // todo - set color based on requirements and validation
+            })),
+        },
 
         menuPosition: "fixed",
         onChange( newValue: T | readonly T[] ) {
@@ -36,7 +47,7 @@ export function UniversiFormSelectInput<T, M extends Optional<boolean>=undefined
         filterOption: props.filterOption ?? undefined,
     };
 
-    return <fieldset className="universi-form-field">
+    return <fieldset className={ formStyles.fieldset }>
         <legend>{ props.label }</legend>
         { props.canCreateOptions
             ? <CreatableSelect {...selectProps}
@@ -67,6 +78,8 @@ type UniversiFormSelectInputProps<T, Multi extends Optional<boolean>, Clear exte
 
     isMultiSelection?: Multi;
     isClearable?: Clear;
+
+    style?: StylesConfig<T, Multi extends true ? true : false>;
 } & UniversiFormFieldProps<
     Multi extends true ? T[]
     : Clear extends true ? Nullable<T>
