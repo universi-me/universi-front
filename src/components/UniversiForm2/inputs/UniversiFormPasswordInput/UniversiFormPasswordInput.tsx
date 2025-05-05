@@ -1,9 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, type ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
 import MaterialIcon from "@/components/MaterialIcon";
-import { passwordValidationClass, PasswordValidity } from "@/utils/passwordValidation";
+import { PasswordValidity } from "@/utils/passwordValidation";
 
-import { UniversiFormContext } from "../UniversiFormContext";
+import { UniversiFormContext } from "../../UniversiFormContext";
+import formStyles from "../../UniversiForm.module.less";
+import styles from "./UniversiFormPasswordInput.module.less";
 
 
 const UniversiFormPasswordInputContext = createContext<Optional<UniversiFormPasswordInputContextType>>( undefined );
@@ -22,7 +24,7 @@ export function UniversiFormPasswordInput( props: Readonly<UniversiFormPasswordI
     }, [ props.mustConfirm ] );
 
     return <UniversiFormPasswordInputContext.Provider value={ passwordContextValue }>
-        <fieldset className="universi-form-field">
+        <fieldset className={ formStyles.fieldset }>
             <legend>{ props.label }</legend>
             <PasswordField
                 onChange={ p => update( p, confirm ) }
@@ -33,7 +35,14 @@ export function UniversiFormPasswordInput( props: Readonly<UniversiFormPasswordI
                 placeholder={ props.confirmPlaceholder ?? "Confirme sua senha" }
             /> }
 
-            { props.mustMatchRequirements && <PasswordRequirements /> }
+            { props.mustMatchRequirements && <div className={ styles.requirements_wrapper }>
+                <h3>Sua senha precisa conter:</h3>
+                <ValidationText value={ valid.length }>Tamanho mínimo de oito caracteres</ValidationText>
+                <ValidationText value={ valid.case }>Letras minúsculas e maiúsculas</ValidationText>
+                <ValidationText value={ valid.special }>Números ou caracteres especiais</ValidationText>
+
+                { valid.confirm !== undefined && <ValidationText value={ valid.confirm }>Confirme a senha</ValidationText> }
+            </div> }
         </fieldset>
     </UniversiFormPasswordInputContext.Provider>;
 
@@ -78,8 +87,8 @@ function PasswordField( props: Readonly<PasswordFieldProps> ) {
 
     if ( context === undefined ) return null;
 
-    return <div className="password-input-wrapper">
-        <MaterialIcon icon="lock"/>
+    return <div className={ styles.input_wrapper }>
+        <MaterialIcon icon="lock" className={ styles.lock_icon } />
         <input
             type={ visible ? "text" : "password" }
             name={ context.param }
@@ -88,7 +97,7 @@ function PasswordField( props: Readonly<PasswordFieldProps> ) {
             onChange={ e => props.onChange( e.currentTarget.value ) }
             placeholder={ props.placeholder }
         />
-        <button type="button" onClick={ e => setVisible( v => !v ) }>
+        <button type="button" onClick={ e => setVisible( v => !v ) } className={ styles.toggle_visibility }>
             <MaterialIcon icon={ visible ? "visibility" : "visibility_off" } />
         </button>
     </div>
@@ -99,22 +108,27 @@ type PasswordFieldProps = {
     placeholder?: string;
 };
 
-export function PasswordRequirements() {
-    const { valid } = useContext( UniversiFormPasswordInputContext )!;
+function ValidationText( props: Readonly<ValidationIconProps> ) {
+    const { iconClass, textClass } = useMemo( () => ({
+        iconClass: props.value === null
+            ? "bi bi-circle"
+            : props.value
+                ? "bi bi-check-circle-fill"
+                : "bi bi-x-circle-fill",
 
-    return <div className="password-requirements">
-        <h3>Sua senha precisa conter:</h3>
-        <p className={ `bi min-length ${passwordValidationClass( valid.length )}` }>
-            Tamanho mínimo de oito caracteres
-        </p>
-        <p className={`bi upper-lower-case ${passwordValidationClass( valid.case )}`}>
-            Letras minúsculas e maiúsculas
-        </p>
-        <p className={`bi number-special-char ${passwordValidationClass( valid.special )}`}>
-            Números ou caracteres especiais
-        </p>
-        { valid.confirm !== undefined && <p className={`bi password-equality ${passwordValidationClass( valid.confirm )}`}>
-            Confirme a senha
-        </p> }
-    </div>
+        textClass: props.value === null
+            ? ""
+            : props.value
+                ? styles.valid_requirement
+                : styles.invalid_requirement
+    }), [ props.value ] )
+
+    return <p className={ textClass }>
+        <span className={ iconClass } /> { props.children }
+    </p>
 }
+
+type ValidationIconProps = {
+    value: Nullable<boolean>;
+    children: NonNullable<ReactNode>;
+};
