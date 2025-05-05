@@ -4,7 +4,9 @@ import CreatableSelect from "react-select/creatable";
 
 import { UniversiFormContext } from "../UniversiFormContext";
 
-export function UniversiFormSelectInput<T, M extends boolean=false, C extends boolean=false>( props: Readonly<UniversiFormSelectInputProps<T, M, C>> ) {
+export function UniversiFormSelectInput<T, M extends Optional<boolean>=undefined, C extends Optional<boolean>=undefined>(
+    props: Readonly<UniversiFormSelectInputProps<T, M, C>>
+) {
     const context = useContext( UniversiFormContext );
     const [ options, setOptions ] = useState<T[]>( props.options );
 
@@ -50,7 +52,7 @@ export function UniversiFormSelectInput<T, M extends boolean=false, C extends bo
     }
 }
 
-type UniversiFormSelectInputProps<T, Multi extends boolean, Clear extends boolean> = {
+type UniversiFormSelectInputProps<T, Multi extends Optional<boolean>, Clear extends Optional<boolean>> = {
     options: T[];
     getOptionUniqueValue( option: T ): string;
     getOptionLabel?( option: T ): Truthy<ReactNode>;
