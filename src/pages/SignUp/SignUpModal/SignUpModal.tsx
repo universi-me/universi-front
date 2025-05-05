@@ -106,6 +106,7 @@ export function SignUpModal(props: SignUpModalProps) {
             maxLength={LAST_NAME_MAX_LENGTH} onChange={ setLastname }
         />
 
+        <div>
         <UniversiForm.Input.Text param="email"
             label="Email"
             placeholder="novousuario@email.com" required
@@ -118,7 +119,9 @@ export function SignUpModal(props: SignUpModalProps) {
                 { emailAvailable ? 'Email Disponível para uso.' : emailUnavailableMessage }
             </p>
         </section> }
+        </div>
 
+        <div>
         <UniversiForm.Input.Text required param="username"
             label="Nome de usuário" ref={ usernameRef }
             placeholder="nome_sobrenome" maxLength={USERNAME_MAX_LENGTH} omitCharLimit
@@ -137,6 +140,7 @@ export function SignUpModal(props: SignUpModalProps) {
                 Todos irão acessar seu perfil em: <div className="profile-url-preview">{location.origin}/profile/{username || "<insira um nome de usuário>"}</div>
             </p>
         </section>
+        </div>
 
         { props.departments.length > 0 && <UniversiForm.Input.Select
             param="department"
