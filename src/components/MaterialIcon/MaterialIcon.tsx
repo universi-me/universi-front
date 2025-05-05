@@ -1,9 +1,15 @@
 import { type HTMLAttributes } from "react";
+import { makeClassName } from "@/utils/tsxUtils";
 
 export function MaterialIcon( props: Readonly<MaterialIconProps> ) {
-    return <span className="material-symbols-outlined">{ props.icon }</span>
+    const { icon, className, ...spanProps } = props;
+
+    return <span
+        { ...spanProps }
+        className={ makeClassName( "material-symbols-outlined", className ) }
+    >{ props.icon }</span>
 }
 
 export type MaterialIconProps = {
     icon: string;
-} & HTMLAttributes<HTMLSpanElement>;
+} & Omit<HTMLAttributes<HTMLSpanElement>, "children">;
