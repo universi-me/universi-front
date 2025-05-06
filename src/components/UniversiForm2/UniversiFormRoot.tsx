@@ -13,7 +13,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const validationsMap = useMemo( () => new Map<string, ValidationEntry>, [] );
     const contextValue = useMemo<UniversiFormContextType>( makeFormContext, [] );
 
-    const { title, asModal, callback, children, ...formAttributes } = props;
+    const { title, asModal, callback, children, allowConfirm, ...formAttributes } = props;
     const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
 
     const formRender = <UniversiFormContext.Provider value={ contextValue } >
@@ -34,7 +34,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                     <i className="bi bi-x-circle-fill" /> Cancelar
                 </button>
 
-                <button type="button" className={ makeClassName( styles.confirm_button ) } onClick={ handleConfirm } disabled={ !isAllValid }>
+                <button type="button" className={ makeClassName( styles.confirm_button ) } onClick={ handleConfirm } disabled={ !isAllValid || !allowConfirm }>
                     <i className="bi bi-check-circle-fill" /> Confirmar
                 </button>
             </section>
@@ -111,6 +111,7 @@ export type UniversiFormRootProps = PropsWithChildren<{
     asModal?: boolean;
 
     callback( formData: UniversiFormData<Record<string, any>> ): any;
+    allowConfirm?: boolean;
 }> & FormHTMLAttributes<HTMLFormElement>;
 
 export type UniversiFormData<T> = {

@@ -41,8 +41,8 @@ export function SignUpModal(props: SignUpModalProps) {
     const [usernameUnavailableMessage, setUsernameUnavailableMessage] = useState<string>('');
     const usernameRef = useRef<Nullable<HTMLInputElement>>(null);
 
-    const [emailAvailable, setEmailAvailable] = useState<Nullable<boolean>>( null );
-    const emailAvailableChecked = emailAvailable !== null;
+    const [emailAvailable, setEmailAvailable] = useState<boolean>();
+    const emailAvailableChecked = emailAvailable !== undefined;
     const [emailUnavailableMessage, setEmailUnavailableMessage] = useState<string>('');
 
     const [department, setDepartment] = useState<Optional<string>>( undefined );
@@ -78,10 +78,10 @@ export function SignUpModal(props: SignUpModalProps) {
     }, [username])
 
     useEffect(() => {
-        setEmailAvailable( null );
+        setEmailAvailable( undefined );
         const delayDebounceFn = setTimeout(async () => {
             if(email.length < 1) {
-                setEmailAvailable( null );
+                setEmailAvailable( undefined );
                 return;
             }
             const resp = await UniversimeApi.User.emailAvailable( email );
@@ -95,7 +95,7 @@ export function SignUpModal(props: SignUpModalProps) {
     const ENABLE_RECAPTCHA = organizationEnv.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
     const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
-    return <UniversiForm.Root id="sign-up-modal" title="Cadastro" asModal callback={ createAccount } >
+    return <UniversiForm.Root id="sign-up-modal" title="Cadastro" asModal callback={ createAccount } allowConfirm={ emailAvailable && usernameAvailableChecked && usernameAvailable }>
         <UniversiForm.Input.Text required param="firstname"
             label="Nome" placeholder="Insira seu nome"
             maxLength={FIRST_NAME_MAX_LENGTH} onChange={ setFirstname }
