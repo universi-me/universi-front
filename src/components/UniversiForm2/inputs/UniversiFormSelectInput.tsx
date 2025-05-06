@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import Select, { type StylesConfig } from "react-select";
 import CreatableSelect from "react-select/creatable";
 
@@ -10,6 +10,10 @@ export function UniversiFormSelectInput<T, M extends Optional<boolean>=undefined
     props: Readonly<UniversiFormSelectInputProps<T, M, C>>
 ) {
     const context = useContext( UniversiFormContext );
+    useEffect( () => {
+        context?.setValidations( props.param, { required: props.required, validations: props.validations } );
+    }, [ props.required, props.validations ] );
+
     const [ options, setOptions ] = useState<T[]>( props.options );
 
     const selectProps = {

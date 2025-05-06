@@ -1,4 +1,4 @@
-import { type ReactNode, type PropsWithChildren, useRef, useMemo, MouseEvent, FormHTMLAttributes } from "react";
+import { type ReactNode, type PropsWithChildren, useRef, useMemo, MouseEvent, FormHTMLAttributes, useState } from "react";
 
 import { UniversiModal } from "@/components/UniversiModal";
 import BootstrapIcon from "@/components/BootstrapIcon";
@@ -10,9 +10,11 @@ import styles from "./UniversiForm.module.less";
 
 export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const formBody = useRef( new Map<string, any> );
+    const validationsMap = useRef( new Map<string, ValidationEntry> );
     const contextValue = useMemo<UniversiFormContextType>( makeFormContext, [] );
 
     const { title, asModal, callback, children, ...formAttributes } = props;
+    const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
 
     const formRender = <UniversiFormContext.Provider value={ contextValue } >
         <form { ...formAttributes } className={makeClassName( styles.form, formAttributes.className )}>
@@ -32,8 +34,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                     <i className="bi bi-x-circle-fill" /> Cancelar
                 </button>
 
-                {/* todo - handle required fields before allowing confirming */}
-                <button type="button" className={ makeClassName( styles.confirm_button ) } onClick={ handleConfirm }>
+                <button type="button" className={ makeClassName( styles.confirm_button ) } onClick={ handleConfirm } disabled={ !isAllValid }>
                     <i className="bi bi-check-circle-fill" /> Confirmar
                 </button>
             </section>
@@ -65,12 +66,43 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                 return formBody.current.get( key );
             },
             set( key, value ) {
-                return formBody.current.set( key, value );
+                formBody.current.set( key, value );
+                updateValidations( key );
             },
             del( key ) {
                 return formBody.current.delete( key );
             },
+            setValidations( key, options ) {
+                const validationFunctions: UniversiFormFieldValidation<any>[] = [];
+
+                if ( options.required )
+                    validationFunctions.push( v => !!v );
+
+                if ( options.validations !== undefined )
+                    options.validations.forEach( v => validationFunctions.push( v ) );
+
+                validationsMap.current.set( key, { validations: validationFunctions, valid: true } );
+                updateValidations( key );
+            },
         }
+    }
+
+    async function updateValidations( key: string ) {
+        const value = formBody.current.get( key );
+        if ( !validationsMap.current.has( key ) ) {
+            validationsMap.current.set( key, { valid: true, validations: [] } );
+        }
+
+        setIsAllValid( false );
+        const responses = await Promise.all(
+            validationsMap.current.get( key )!.validations
+                .map( validate => validate( value ) )
+        );
+
+        validationsMap.current.get( key )!.valid = responses.every( r => r );
+        const allValid = validationsMap.current.values().every( v => v.valid );
+
+        setIsAllValid( allValid );
     }
 }
 
@@ -87,4 +119,9 @@ export type UniversiFormData<T> = {
 } | {
     confirmed: false;
     body?: undefined;
+};
+
+type ValidationEntry = {
+    validations: UniversiFormFieldValidation<any>[];
+    valid: boolean;
 };

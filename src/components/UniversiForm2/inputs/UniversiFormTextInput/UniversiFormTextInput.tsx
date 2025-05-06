@@ -8,9 +8,12 @@ import styles from "./UniversiFormTextInput.module.less";
 
 
 export function UniversiFormTextInput( props: Readonly<UniversiFormTextInputProps> ) {
-    const { param, label, omitCharLimit, onChange, className, ...inputElementProps } = props;
+    const { param, label, omitCharLimit, onChange, className, required, validations, ...inputElementProps } = props;
 
     const context = useContext( UniversiFormContext );
+    useEffect( () => {
+        context?.setValidations( props.param, { required, validations } );
+    }, [ props.required, props.validations ] );
 
     const [ value, setValue ] = useState<string>( props.defaultValue ?? "" );
     useEffect( () => { handleOnChange( value ); }, [] );

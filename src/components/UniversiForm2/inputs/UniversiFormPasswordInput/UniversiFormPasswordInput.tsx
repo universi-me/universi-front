@@ -12,6 +12,9 @@ const UniversiFormPasswordInputContext = createContext<Optional<UniversiFormPass
 
 export function UniversiFormPasswordInput( props: Readonly<UniversiFormPasswordInputProps> ) {
     const context = useContext( UniversiFormContext );
+    useEffect( () => {
+        context?.setValidations( props.param, { required: props.required, validations: props.validations } );
+    }, [ props.required, props.validations ] );
 
     const [ password, setPassword ] = useState<string>( "" );
     const [ confirm, setConfirm ] = useState<Optional<string>>( props.mustConfirm ? password : undefined );
