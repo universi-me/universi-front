@@ -1,4 +1,4 @@
-import { type ReactNode, type PropsWithChildren, useRef, useMemo, MouseEvent, FormHTMLAttributes, useState } from "react";
+import { type ReactNode, type PropsWithChildren, useMemo, MouseEvent, FormHTMLAttributes, useState } from "react";
 
 import { UniversiModal } from "@/components/UniversiModal";
 import BootstrapIcon from "@/components/BootstrapIcon";
@@ -9,8 +9,8 @@ import styles from "./UniversiForm.module.less";
 
 
 export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
-    const formBody = useRef( new Map<string, any> );
-    const validationsMap = useRef( new Map<string, ValidationEntry> );
+    const formBody = useMemo( () => new Map<string, any>, [] );
+    const validationsMap = useMemo( () => new Map<string, ValidationEntry>, [] );
     const contextValue = useMemo<UniversiFormContextType>( makeFormContext, [] );
 
     const { title, asModal, callback, children, ...formAttributes } = props;
@@ -54,8 +54,8 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         e.preventDefault();
 
         const body: Record<string, any> = {};
-        for ( const key of formBody.current.keys() )
-            body[ key ] = formBody.current.get( key );
+        for ( const key of formBody.keys() )
+            body[ key ] = formBody.get( key );
 
         callback( { confirmed: true, body } );
     }
@@ -63,14 +63,14 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     function makeFormContext(): UniversiFormContextType {
         return {
             get( key ) {
-                return formBody.current.get( key );
+                return formBody.get( key );
             },
             set( key, value ) {
-                formBody.current.set( key, value );
+                formBody.set( key, value );
                 updateValidations( key );
             },
             del( key ) {
-                return formBody.current.delete( key );
+                return formBody.delete( key );
             },
             setValidations( key, options ) {
                 const validationFunctions: UniversiFormFieldValidation<any>[] = [];
@@ -81,26 +81,26 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                 if ( options.validations !== undefined )
                     options.validations.forEach( v => validationFunctions.push( v ) );
 
-                validationsMap.current.set( key, { validations: validationFunctions, valid: true } );
+                validationsMap.set( key, { validations: validationFunctions, valid: true } );
                 updateValidations( key );
             },
         }
     }
 
     async function updateValidations( key: string ) {
-        const value = formBody.current.get( key );
-        if ( !validationsMap.current.has( key ) ) {
-            validationsMap.current.set( key, { valid: true, validations: [] } );
+        const value = formBody.get( key );
+        if ( !validationsMap.has( key ) ) {
+            validationsMap.set( key, { valid: true, validations: [] } );
         }
 
         setIsAllValid( false );
         const responses = await Promise.all(
-            validationsMap.current.get( key )!.validations
+            validationsMap.get( key )!.validations
                 .map( validate => validate( value ) )
         );
 
-        validationsMap.current.get( key )!.valid = responses.every( r => r );
-        const allValid = validationsMap.current.values().every( v => v.valid );
+        validationsMap.get( key )!.valid = responses.every( r => r );
+        const allValid = validationsMap.values().every( v => v.valid );
 
         setIsAllValid( allValid );
     }
