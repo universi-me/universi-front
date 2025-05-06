@@ -1,16 +1,14 @@
-import { FocusEvent, useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router";
-import ReCAPTCHA from "react-google-recaptcha-enterprise";
+import type ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 import UniversiForm from "@/components/UniversiForm2";
 import { UniversimeApi } from "@/services"
 import { isEmail } from "@/utils/regexUtils";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
-import { enableSignUp } from "./helperFunctions";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import "./SignUpModal.less"
-import NewPasswordInput from "@/components/NewPasswordInput/NewPasswordInput";
 
 export type SignUpModalProps = {
     toggleModal: (state: boolean) => any;
@@ -24,69 +22,55 @@ const USERNAME_MAX_LENGTH = 255;
 
 const USERNAME_CHAR_REGEX = /[a-z0-9_.-]/
 
-export function SignUpModal(props: SignUpModalProps) {
+export function SignUpModal( props: Readonly<SignUpModalProps> ) {
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
 
-    const [firstname, setFirstname] = useState<string>("");
-    const [lastname, setLastname] = useState<string>("");
     const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
 
-    const [isPasswordValid, setIsPasswordValid] = useState<NullableBoolean>(false);
-
-    const [usernameAvailable, setUsernameAvailable] = useState<boolean>(false);
-    const [usernameAvailableChecked, setUsernameAvailableChecked] = useState<boolean>(false);
-    const [usernameUnavailableMessage, setUsernameUnavailableMessage] = useState<string>('');
+    const [usernameUnavailableMessage, setUsernameUnavailableMessage] = useState<Nullable<string>>();
+    const usernameAvailable = usernameUnavailableMessage === null;
+    const usernameAvailableChecked = usernameUnavailableMessage !== undefined;
     const usernameRef = useRef<Nullable<HTMLInputElement>>(null);
 
-    const [emailAvailable, setEmailAvailable] = useState<boolean>();
-    const emailAvailableChecked = emailAvailable !== undefined;
-    const [emailUnavailableMessage, setEmailUnavailableMessage] = useState<string>('');
+    const [emailUnavailableMessage, setEmailUnavailableMessage] = useState<Nullable<string>>();
+    const emailAvailable = emailUnavailableMessage === null;
+    const emailAvailableChecked = emailUnavailableMessage !== undefined;
 
-    const [department, setDepartment] = useState<Optional<string>>( undefined );
-
-    const [recaptchaToken, setRecaptchaToken] = useState<string | undefined>(undefined);
     const recaptchaRef = useRef<Nullable<ReCAPTCHA>>(null);
-
-    const isFirstnameFull = (firstname.length) >= FIRST_NAME_MAX_LENGTH;
-    const isLastnameFull = (lastname.length) >= LAST_NAME_MAX_LENGTH;
-
-    const canSignUp = enableSignUp(username, email, password) && isPasswordValid && usernameAvailable && emailAvailable;
-
-    const handleRecaptchaChange = (token: string | null) => {
-        setRecaptchaToken(token ?? undefined);
-    };
 
     useEffect(() => {
         if ( usernameRef.current )
             usernameRef.current.value = username;
 
-        setUsernameAvailableChecked(false);
+        setUsernameUnavailableMessage( undefined );
         const delayDebounceFn = setTimeout(async () => {
             if(username.length < 1) {
-                setUsernameAvailable(false);
+                setUsernameUnavailableMessage( undefined );
                 return;
             }
             const resp = await UniversimeApi.User.usernameAvailable( username );
-            setUsernameAvailable(resp.isSuccess() && resp.body?.available);
-            setUsernameUnavailableMessage((resp.body as any)!?.reason ?? 'Usuário não está disponivel para uso.');
-            setUsernameAvailableChecked(true);
+            if ( resp.body?.available )
+                setUsernameUnavailableMessage( null );
+            else
+                setUsernameUnavailableMessage( resp.body?.reason ?? 'Nome de usuário não disponível' );
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [username])
 
     useEffect(() => {
-        setEmailAvailable( undefined );
+        setEmailUnavailableMessage( undefined );
         const delayDebounceFn = setTimeout(async () => {
             if(email.length < 1) {
-                setEmailAvailable( undefined );
+                setEmailUnavailableMessage( undefined );
                 return;
             }
             const resp = await UniversimeApi.User.emailAvailable( email );
-            setEmailAvailable(resp.isSuccess() && resp.body?.available);
-            setEmailUnavailableMessage( resp.errorMessage ?? 'Email não está disponível para uso.' );
+            if ( resp.body?.available )
+                setEmailUnavailableMessage( null );
+            else
+                setEmailUnavailableMessage( resp.body?.reason ?? 'Email não disponível' );
         }, 1000)
         return () => clearTimeout(delayDebounceFn)
     }, [email])
@@ -98,12 +82,12 @@ export function SignUpModal(props: SignUpModalProps) {
     return <UniversiForm.Root id="sign-up-modal" title="Cadastro" asModal callback={ createAccount } allowConfirm={ emailAvailable && usernameAvailableChecked && usernameAvailable }>
         <UniversiForm.Input.Text required param="firstname"
             label="Nome" placeholder="Insira seu nome"
-            maxLength={FIRST_NAME_MAX_LENGTH} onChange={ setFirstname }
+            maxLength={FIRST_NAME_MAX_LENGTH}
         />
 
         <UniversiForm.Input.Text required param="lastname"
             label="Sobrenome" placeholder="Insira seu sobrenome"
-            maxLength={LAST_NAME_MAX_LENGTH} onChange={ setLastname }
+            maxLength={LAST_NAME_MAX_LENGTH}
         />
 
         <div>
@@ -111,8 +95,9 @@ export function SignUpModal(props: SignUpModalProps) {
             label="Email"
             placeholder="novousuario@email.com" required
             maxLength={EMAIL_MAX_LENGTH} omitCharLimit
-            type="email" onBlur={ onBlurEmail }
+            type="email"
             onChange={ newEmail => { setEmail( newEmail ) } }
+            validations={[ isEmail ]}
         />
         { emailAvailableChecked && <section className="password-requirements">
              <p className={`bi fieldset-info ${emailAvailable?'success-validation':'failed-validation'}`}>
@@ -150,7 +135,6 @@ export function SignUpModal(props: SignUpModalProps) {
             options={ props.departments }
             getOptionLabel={ d => `${ d.acronym } – ${ d.name }` }
             getOptionUniqueValue={ d => d.id }
-            onChange={ d => setDepartment( d?.id ) }
             optionNotFoundMessage={ inputValue => `Não foi possível encontrar o órgão/área "${ inputValue }"` }
         /> }
 
@@ -160,32 +144,14 @@ export function SignUpModal(props: SignUpModalProps) {
             required
             mustConfirm
             mustMatchRequirements
-            onChange={ setPassword }
-            onCheckValidity={ v => setIsPasswordValid( v.allValid ) }
         />
 
         { ENABLE_RECAPTCHA && <UniversiForm.Input.ReCaptcha
             param="recaptchaToken"
             sitekey={ RECAPTCHA_SITE_KEY }
-            onChange={ handleRecaptchaChange }
             ref={ recaptchaRef }
         />}
     </UniversiForm.Root>
-
-    // return (
-    //     <UniversiModal>
-    //         <div id="sign-up-modal">
-    //             <form>
-    //                 <div className="submit">
-    //                     <button type="submit" className="create-account" onClick={createAccount}
-    //                         disabled={!canSignUp} title={!canSignUp ? "Preencha todos os campos corretamente para poder se cadastrar" : undefined}>
-    //                         Criar conta
-    //                     </button>
-    //                 </div>
-    //             </form>
-    //         </div>
-    //     </UniversiModal>
-    // );
 
     async function createAccount( data: UniversiForm.Data<SignUpForm> ) {
         if ( !data.confirmed ) {
@@ -208,19 +174,6 @@ export function SignUpModal(props: SignUpModalProps) {
             icon: "error",
         });
     }
-}
-
-const INVALID_EMAIL_CLASS = "invalid-email";
-function onBlurEmail(e: FocusEvent<HTMLInputElement>) {
-    const fieldsetElement = document.querySelector("#email-fieldset");
-
-    const email = e.currentTarget.value;
-
-    if (!!email && !isEmail(email))
-        fieldsetElement?.classList.add(INVALID_EMAIL_CLASS);
-
-    else
-        fieldsetElement?.classList.remove(INVALID_EMAIL_CLASS);
 }
 
 type SignUpForm = {
