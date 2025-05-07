@@ -3,6 +3,8 @@ import Select, { type StylesConfig } from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 import { UniversiFormContext } from "../UniversiFormContext";
+import { RequiredIndicator } from "../utils";
+
 import formStyles from "../UniversiForm.module.less";
 
 
@@ -52,7 +54,7 @@ export function UniversiFormSelectInput<T, M extends Optional<boolean>=undefined
     };
 
     return <fieldset className={ formStyles.fieldset }>
-        <legend>{ props.label }</legend>
+        <legend>{ props.label }<RequiredIndicator required={props.required}/></legend>
         { props.canCreateOptions
             ? <CreatableSelect {...selectProps}
                 formatCreateLabel={ ( value: string ) => props.createOptionLabel?.( value ) ?? `Criar "${value}"` }

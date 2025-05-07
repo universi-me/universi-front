@@ -2,6 +2,7 @@ import { type ClassAttributes, type InputHTMLAttributes, useContext, useEffect, 
 
 import { makeClassName } from "@/utils/tsxUtils";
 import { UniversiFormContext } from "../../UniversiFormContext";
+import { RequiredIndicator } from "../../utils";
 
 import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormTextInput.module.less";
@@ -22,7 +23,7 @@ export function UniversiFormTextInput( props: Readonly<UniversiFormTextInputProp
 
     return <fieldset className={ formStyles.fieldset }>
         <legend className={ styles.legend }>
-            { label }
+            { label }<RequiredIndicator required={required} />
             { props.maxLength && !omitCharLimit && <div className={ makeClassName( styles.char_counter, isFull && styles.full_char_counter ) }>
                 { value.length ?? 0 } / { props.maxLength }
             </div> }

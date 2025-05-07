@@ -4,6 +4,8 @@ import MaterialIcon from "@/components/MaterialIcon";
 import { PasswordValidity } from "@/utils/passwordValidation";
 
 import { UniversiFormContext } from "../../UniversiFormContext";
+import { RequiredIndicator } from "../../utils";
+
 import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormPasswordInput.module.less";
 
@@ -28,7 +30,7 @@ export function UniversiFormPasswordInput( props: Readonly<UniversiFormPasswordI
 
     return <UniversiFormPasswordInputContext.Provider value={ passwordContextValue }>
         <fieldset className={ formStyles.fieldset }>
-            <legend>{ props.label }</legend>
+            <legend>{ props.label }<RequiredIndicator required={props.required} /></legend>
             <PasswordField
                 onChange={ p => update( p, confirm ) }
                 placeholder={ props.passwordPlaceholder ?? "Insira sua senha" }
