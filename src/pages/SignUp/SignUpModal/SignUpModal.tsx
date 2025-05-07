@@ -8,7 +8,8 @@ import { isEmail } from "@/utils/regexUtils";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
-import "./SignUpModal.less"
+import styles from "./SignUpModal.module.less";
+import BootstrapIcon from "@/components/BootstrapIcon";
 
 export type SignUpModalProps = {
     toggleModal: (state: boolean) => any;
@@ -99,9 +100,10 @@ export function SignUpModal( props: Readonly<SignUpModalProps> ) {
             onChange={ newEmail => { setEmail( newEmail ) } }
             validations={[ isEmail ]}
         />
-        { emailAvailableChecked && <section className="password-requirements">
-             <p className={`bi fieldset-info ${emailAvailable?'success-validation':'failed-validation'}`}>
-                { emailAvailable ? 'Email Disponível para uso.' : emailUnavailableMessage }
+        { emailAvailableChecked && <section className={ styles.validation_message }>
+            <p className={ emailAvailable ? styles.valid : styles.invalid }>
+                <BootstrapIcon className={ styles.icon } icon={ emailAvailable ? "check-circle-fill" : "x-circle-fill" }/>
+                { emailAvailable ? "Email disponível para uso." : emailUnavailableMessage }
             </p>
         </section> }
         </div>
@@ -118,11 +120,17 @@ export function SignUpModal( props: Readonly<SignUpModalProps> ) {
                 setUsername( filteredUsername );
             } }
         />
-        <section className="password-requirements">
-            { usernameAvailableChecked ? <p className={`bi fieldset-info ${usernameAvailable?'success-validation':'failed-validation'}`}>{usernameAvailable?'Usuário Disponível para uso.':usernameUnavailableMessage}</p> : null }
-            <p className="fieldset-info">
+        <section className={ styles.validation_message }>
+            { usernameAvailableChecked && <p className={ usernameAvailable ? styles.valid : styles.invalid }>
+                <BootstrapIcon className={ styles.icon } icon={ usernameAvailable ? "check-circle-fill" : "x-circle-fill" }/>
+                { usernameAvailable ? "Nome de usuário disponível para uso." : usernameUnavailableMessage }
+            </p> }
+
+            <p>
                 Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).<br/>
-                Todos irão acessar seu perfil em: <span className="profile-url-preview">{location.origin}/profile/{username || "<insira um nome de usuário>"}</span>
+                Todos irão acessar seu perfil em: <span className={ styles.profile_url_preview }>
+                    { location.origin }/profile/{ username || "<insira um nome de usuário>" }
+                </span>
             </p>
         </section>
         </div>
