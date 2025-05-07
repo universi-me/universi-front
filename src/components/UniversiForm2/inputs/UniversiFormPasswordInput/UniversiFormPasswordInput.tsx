@@ -51,7 +51,7 @@ export function UniversiFormPasswordInput( props: Readonly<UniversiFormPasswordI
         </fieldset>
     </UniversiFormPasswordInputContext.Provider>;
 
-    function update( password: string, confirm?: string ) {
+    async function update( password: string, confirm?: string ) {
         let contextValue = password;
         valid.password = password;
         valid.passwordRepeat = confirm;
@@ -62,7 +62,7 @@ export function UniversiFormPasswordInput( props: Readonly<UniversiFormPasswordI
         if ( props.mustConfirm && password !== confirm )
             contextValue = "";
 
-        context?.set( props.param, contextValue );
+        await context?.set( props.param, contextValue );
         props.onCheckValidity?.( valid );
 
         setPassword( old => {

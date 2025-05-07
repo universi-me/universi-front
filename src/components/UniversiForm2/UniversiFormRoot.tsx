@@ -65,12 +65,13 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
             get( key ) {
                 return formBody.get( key );
             },
-            set( key, value ) {
+            async set( key, value ) {
                 formBody.set( key, value );
-                updateValidations( key );
+                await updateValidations( key );
             },
             del( key ) {
-                return formBody.delete( key );
+                formBody.delete( key );
+                validationsMap.delete( key );
             },
             setValidations( key, options ) {
                 const validationFunctions: UniversiFormFieldValidation<any>[] = [];
@@ -83,6 +84,13 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
 
                 validationsMap.set( key, { validations: validationFunctions, valid: true } );
                 updateValidations( key );
+            },
+            getValidation( key ) {
+                if ( !validationsMap.has( key ) || !formBody.get( key ) )
+                    // return undefined if key is not present or value evaluates to false
+                    return undefined;
+
+                return validationsMap.get( key )!.valid;
             },
         }
     }

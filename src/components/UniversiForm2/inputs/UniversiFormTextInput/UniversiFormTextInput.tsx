@@ -2,7 +2,7 @@ import { type ClassAttributes, type InputHTMLAttributes, useContext, useEffect, 
 
 import { makeClassName } from "@/utils/tsxUtils";
 import { UniversiFormContext } from "../../UniversiFormContext";
-import { RequiredIndicator } from "../../utils";
+import { RequiredIndicator, handleValidation } from "../../utils";
 
 import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormTextInput.module.less";
@@ -17,6 +17,7 @@ export function UniversiFormTextInput( props: Readonly<UniversiFormTextInputProp
     }, [ props.required, props.validations ] );
 
     const [ value, setValue ] = useState<string>( props.defaultValue ?? "" );
+    const [ valid, setValid ] = useState<boolean>();
     useEffect( () => { handleOnChange( value ); }, [] );
 
     const isFull = Boolean( props.maxLength && ( value.length >= props.maxLength ) );
@@ -33,6 +34,7 @@ export function UniversiFormTextInput( props: Readonly<UniversiFormTextInputProp
             className={ makeClassName(
                 className,
                 styles.input,
+                handleValidation( valid, styles.valid, styles.invalid ),
             ) }
             { ...inputElementProps }
 
@@ -40,9 +42,10 @@ export function UniversiFormTextInput( props: Readonly<UniversiFormTextInputProp
         />
     </fieldset>
 
-    function handleOnChange( newValue: string ) {
-        context?.set( param, newValue );
+    async function handleOnChange( newValue: string ) {
+        await context?.set( param, newValue );
         setValue( newValue );
+        setValid( context?.getValidation( param ) );
 
         onChange?.( newValue );
     }

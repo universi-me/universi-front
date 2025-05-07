@@ -3,7 +3,7 @@ import Select, { type StylesConfig } from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 import { UniversiFormContext } from "../UniversiFormContext";
-import { RequiredIndicator } from "../utils";
+import { handleValidation, RequiredIndicator } from "../utils";
 
 import formStyles from "../UniversiForm.module.less";
 
@@ -17,6 +17,7 @@ export function UniversiFormSelectInput<T, M extends Optional<boolean>=undefined
     }, [ props.required, props.validations ] );
 
     const [ options, setOptions ] = useState<T[]>( props.options );
+    const [ valid, setValid ] = useState<boolean>();
 
     const selectProps = {
         options: options,
@@ -28,16 +29,25 @@ export function UniversiFormSelectInput<T, M extends Optional<boolean>=undefined
 
         styles: {
             ...props.style,
-            control: props.style?.control ?? ( b => ({
-                ...b,
-                borderRadius: "10px", borderWidth: "2px", borderStyle: "solid",
-                borderColor: "transparent", // todo - set color based on requirements and validation
-            })),
+            control: props.style?.control ?? ( b => {
+                const outlineColor = handleValidation(
+                    valid,
+                    "var(--font-color-success)",
+                    "var(--wrong-invalid-color)"
+                ) ?? "transparent";
+
+                return {
+                    ...b,
+                    borderRadius: "10px",
+                    outline: `solid 2px ${outlineColor} !important`,
+                }
+            }),
         },
 
         menuPosition: "fixed",
-        onChange( newValue: T | readonly T[] ) {
-            context?.set( props.param, newValue )
+        async onChange( newValue: T | readonly T[] ) {
+            await context?.set( props.param, newValue );
+            setValid( context?.getValidation( props.param ) );
 
             // use of `as any` because function type was already validated at component creation
             props.onChange?.( newValue as any );

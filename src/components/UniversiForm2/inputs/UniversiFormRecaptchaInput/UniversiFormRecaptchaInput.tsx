@@ -19,8 +19,8 @@ export function UniversiFormRecaptchaInput( props: Readonly<UniversiFormRecaptch
         <ReCAPTCHA {...recaptchaProps} onChange={ handleOnChange } />
     </fieldset>;
 
-    function handleOnChange( newToken: Nullable<string> ) {
-        context?.set( param, newToken );
+    async function handleOnChange( newToken: Nullable<string> ) {
+        await context?.set( param, newToken );
         props.onChange?.( newToken );
     }
 }

@@ -1,9 +1,10 @@
 import { createContext } from "react";
 
 export type UniversiFormContextType = {
-    set( key: string, value: any ): void;
+    set( key: string, value: any ): Promise<void>;
     get( key: string ): unknown;
     del( key: string ): void;
+    getValidation( key: string ): Optional<boolean>;
     setValidations( key: string, options: {
         validations?: UniversiFormFieldValidation<any>[];
         required?: boolean;
