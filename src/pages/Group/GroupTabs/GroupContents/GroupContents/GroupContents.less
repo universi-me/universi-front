@@ -2,18 +2,6 @@
 @import url(/src/layouts/fonts.less);
 @import url(/src/layouts/spacing.less);
 
-.material-item{
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-}
-
-.title-container{
-    display: flex;
-    flex-direction: row;
-}
-
 
 #group-page #contents {
     .content-list {
@@ -175,58 +163,6 @@
             input {
                 padding: 0 .5em !important;
                 outline: none !important;
-            }
-        }
-    }
-
-    #assign-content-to-profile {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-
-        padding-right: 1rem;
-        max-height: calc(90vh - 20rem);
-        overflow: auto;
-
-        .participant-item {
-            width: 100%;
-            border: solid 1px  @primary-color;
-
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-
-            padding: 1rem;
-            border-radius: 10px;
-
-            @gap: .5rem;
-            @pic-width: 8rem;
-            @check-width: 2rem;
-
-            gap: @gap;
-
-            .profile-picture {
-                width: @pic-width;
-                aspect-ratio: 1;
-                object-fit: cover;
-
-                border-radius: 50%;
-            }
-
-            .profile-data {
-                width: calc(100% - 2 * @gap - @pic-width - @check-width);
-            }
-
-            .assign-profile {
-                background-color: transparent;
-                border: none;
-                cursor: pointer;
-
-                .bi {
-                    width: @check-width;
-                    aspect-ratio: 1;
-                    font-size: @check-width;
-                }
             }
         }
     }

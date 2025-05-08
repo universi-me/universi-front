@@ -1,0 +1,32 @@
+@import url(/src/layouts/colors.less);
+
+.options_list {
+    display: grid;
+    grid-template-columns: repeat( 2, 1fr );
+    gap: 1rem;
+
+    .option {
+        width: 100%;
+        border: solid 2px @primary-color;
+        background-color: @card-item-color;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        padding: 1rem;
+        border-radius: 10px;
+
+        gap: .5rem;
+
+        .check {
+            margin-left: auto;
+
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+
+            font-size: 2rem;
+        }
+    }
+}

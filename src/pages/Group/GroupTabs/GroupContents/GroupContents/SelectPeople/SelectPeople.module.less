@@ -1,0 +1,18 @@
+@import url(/src/layouts/colors.less);
+
+.card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .picture {
+        @size: 5rem;
+        width: @size;
+        height: @size;
+
+        margin-right: 1rem;
+        object-fit: cover;
+
+        border-radius: 50%;
+    }
+}
