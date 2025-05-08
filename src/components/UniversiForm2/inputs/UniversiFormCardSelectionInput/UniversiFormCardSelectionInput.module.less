@@ -1,4 +1,5 @@
 @import url(/src/layouts/colors.less);
+@import url(../styles.module.less);
 
 .options_list {
     display: grid;
@@ -6,6 +7,9 @@
     gap: 1rem;
 
     .option {
+        #UniversiForm.rounded_corners();
+        #UniversiForm.input_padding();
+
         width: 100%;
         border: solid 2px @primary-color;
         background-color: @card-item-color;
@@ -13,9 +17,6 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-
-        padding: 1rem;
-        border-radius: 10px;
 
         gap: .5rem;
 
