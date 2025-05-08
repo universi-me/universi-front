@@ -34,7 +34,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                     <i className="bi bi-x-circle-fill" /> Cancelar
                 </button>
 
-                <button type="button" className={ makeClassName( styles.confirm_button ) } onClick={ handleConfirm } disabled={ !isAllValid || !allowConfirm }>
+                <button type="button" className={ makeClassName( styles.confirm_button ) } onClick={ handleConfirm } disabled={ !isAllValid || allowConfirm === false }>
                     <i className="bi bi-check-circle-fill" /> Confirmar
                 </button>
             </section>
