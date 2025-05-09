@@ -1,8 +1,9 @@
 @import url(/src/layouts/colors.less);
 
 .required_indicator {
-    margin-left: .15em;
-    cursor: help;
-
     color: @font-color-alert;
+
+    &[title] {
+        cursor: help;
+    }
 }

@@ -23,7 +23,7 @@ export function UniversiFormTextInput( props: Readonly<UniversiFormTextInputProp
 
     return <fieldset className={ formStyles.fieldset }>
         <legend className={ styles.legend }>
-            { label }<RequiredIndicator required={required} />
+            { label } <RequiredIndicator required={required} />
             { props.maxLength && !omitCharLimit && <div className={ makeClassName( styles.char_counter, isFull && styles.full_char_counter ) }>
                 { value.length ?? 0 } / { props.maxLength }
             </div> }

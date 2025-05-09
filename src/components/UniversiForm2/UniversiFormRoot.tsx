@@ -6,6 +6,7 @@ import { UniversiFormContext, type UniversiFormContextType } from "./UniversiFor
 import { makeClassName } from "@/utils/tsxUtils";
 
 import styles from "./UniversiForm.module.less";
+import { RequiredIndicator } from "./utils";
 
 
 export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
@@ -14,6 +15,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
 
     const { title, asModal, callback, children, allowConfirm, ...formAttributes } = props;
     const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
+    const hasRequiredField = formData.values().some( d => d.required );
 
     const formRender = <UniversiFormContext.Provider value={ contextValue } >
         <div { ...formAttributes } className={makeClassName( styles.form, formAttributes.className )}>
@@ -23,6 +25,9 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                     <BootstrapIcon icon="x" />
                 </button>
             </div>
+            { hasRequiredField && <p className={ styles.required_explanation }>
+                Campos marcados com <RequiredIndicator required hideTitle/> são obrigatórios.
+            </p> }
 
             <section className={ styles.fields }>
                 { props.children }
@@ -70,6 +75,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
 
                 else formData.set( key, {
                     valid: false,
+                    required: false,
                     validations: [],
                     value,
                 } );
@@ -88,7 +94,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                 if ( formData.has( key ) )
                     value = formData.get( key )!.value;
 
-                formData.set( key, { value, validations, valid: false } );
+                formData.set( key, { value, validations, valid: false, required: validationOptions.required ?? false } );
                 updateValidations( key );
 
                 return () => { this.del( key ) };
@@ -141,4 +147,5 @@ type FormFieldData = {
     value: any;
     validations: UniversiFormFieldValidation<any>[];
     valid: boolean;
+    required: boolean;
 };

@@ -25,7 +25,7 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean>>( 
     }, [ changes.add, changes.remove ] );
 
     return <fieldset className={ formStyles.fieldset }>
-        <legend>{ props.label }<RequiredIndicator required={ props.required }/></legend>
+        <legend>{ props.label } <RequiredIndicator required={ props.required }/></legend>
         <div className={ styles.options_list }>
             { props.options.length === 0
                 ? <p>{ props.noOptionsText ?? "Nenhuma opção disponível" }</p>

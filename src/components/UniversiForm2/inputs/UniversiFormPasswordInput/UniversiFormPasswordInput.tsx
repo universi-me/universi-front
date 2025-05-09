@@ -32,7 +32,7 @@ export function UniversiFormPasswordInput( props: Readonly<UniversiFormPasswordI
 
     return <UniversiFormPasswordInputContext.Provider value={ passwordContextValue }>
         <fieldset className={ formStyles.fieldset }>
-            <legend>{ props.label }<RequiredIndicator required={props.required} /></legend>
+            <legend>{ props.label } <RequiredIndicator required={props.required} /></legend>
             <PasswordField
                 onChange={ p => update( p, confirm ) }
                 placeholder={ props.passwordPlaceholder ?? "Insira sua senha" }
