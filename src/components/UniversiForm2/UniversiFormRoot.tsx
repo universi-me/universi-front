@@ -16,7 +16,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
 
     const formRender = <UniversiFormContext.Provider value={ contextValue } >
-        <form { ...formAttributes } className={makeClassName( styles.form, formAttributes.className )}>
+        <div { ...formAttributes } className={makeClassName( styles.form, formAttributes.className )}>
             <div className={ styles.header }>
                 <h1>{ props.title }</h1>
                 <button type="button" className={ styles.close_button } onClick={ handleCancel } >
@@ -37,7 +37,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                     <i className="bi bi-check-circle-fill" /> Confirmar
                 </button>
             </section>
-        </form>
+        </div>
     </UniversiFormContext.Provider>
 
     return asModal
@@ -127,7 +127,7 @@ export type UniversiFormRootProps = PropsWithChildren<{
 
     callback( formData: UniversiFormData<Record<string, any>> ): any;
     allowConfirm?: boolean;
-}> & FormHTMLAttributes<HTMLFormElement>;
+}> & FormHTMLAttributes<HTMLDivElement>;
 
 export type UniversiFormData<T> = {
     confirmed: true;
