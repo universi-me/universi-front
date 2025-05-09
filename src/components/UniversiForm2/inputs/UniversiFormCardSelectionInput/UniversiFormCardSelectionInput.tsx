@@ -31,7 +31,7 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean>>( 
                 ? <p>{ props.noOptionsText ?? "Nenhuma opção disponível" }</p>
                 : props.options.map( option => <div className={ styles.option } key={ props.getOptionUniqueValue( option ) }>
                     { props.render( option ) }
-                    <button onClick={ () => handleToggle( option ) } className={ styles.check }>
+                    <button type="button" onClick={ () => handleToggle( option ) } className={ styles.check }>
                         <BootstrapIcon icon={ isSelected( option ) ? "check-circle-fill" : "check-circle" }/>
                     </button>
                 </div> ) }
