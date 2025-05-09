@@ -11,14 +11,10 @@ import styles from "./UniversiFormCardSelectionInput.module.less";
 export function UniversiFormCardSelectionInput<T, S extends Optional<boolean>>( props: Readonly<UniversiFormCardSelectionInputProps<T, S>> ) {
     const context = useContext( UniversiFormContext );
     const [ changes, setChanges ] = useState<SelectionChanges<T>>( { add: [], remove: [] } );
-    useEffect( () => {
-        context?.set( props.param, changes );
-        return () => { context?.del( props.param ) };
-    }, [] );
-
-    useEffect( () => {
-        context?.setValidations( props.param, { required: props.required, validations: props.validations } );
-    }, [ props.required, props.validations ] );
+    useEffect(
+        () => context?.initialize( props.param, changes, { functions: props.validations, required: props.required } ),
+        [ props.required, props.validations ]
+    );
 
     useEffect( () => {
         const val = getFinalValue();

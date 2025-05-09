@@ -65,38 +65,33 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                 return formData.get( key )?.value;
             },
             set( key, value ) {
-                let validations: UniversiFormFieldValidation<any>[] = [];
-                let valid = true;
+                if ( formData.has( key ) )
+                    formData.get( key )!.value = value;
 
-                if ( formData.has( key ) ) {
-                    const data = formData.get( key )!;
-                    valid = data.valid;
-                    validations = data.validations;
-                }
+                else formData.set( key, {
+                    valid: false,
+                    validations: [],
+                    value,
+                } );
 
-                formData.set( key, { value, valid, validations } );
                 return updateValidations( key );
             },
             del( key ) {
                 formData.delete( key );
             },
-            setValidations( key, options ) {
-                const validationFunctions: UniversiFormFieldValidation<any>[] = [];
+            initialize( key, value, validationOptions ) {
+                let validations = validationOptions.functions ?? [];
 
-                if ( options.required )
-                    validationFunctions.push( v => !!v );
+                if ( validationOptions.required )
+                    validations.splice( 0, 0, v => !!v );
 
-                if ( options.validations !== undefined )
-                    options.validations.forEach( v => validationFunctions.push( v ) );
+                if ( formData.has( key ) )
+                    value = formData.get( key )!.value;
 
-                const value = formData.get( key )?.value;
-                formData.set( key, {
-                    value,
-                    valid: true,
-                    validations: validationFunctions,
-                } );
+                formData.set( key, { value, validations, valid: false } );
+                updateValidations( key );
 
-                return updateValidations( key );
+                return () => { this.del( key ) };
             },
             getValidation( key ) {
                 if ( !formData.has( key ) || !formData.get( key )?.value )

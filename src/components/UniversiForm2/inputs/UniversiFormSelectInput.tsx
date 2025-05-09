@@ -12,9 +12,10 @@ export function UniversiFormSelectInput<T, M extends Optional<boolean>=undefined
     props: Readonly<UniversiFormSelectInputProps<T, M, C>>
 ) {
     const context = useContext( UniversiFormContext );
-    useEffect( () => {
-        context?.setValidations( props.param, { required: props.required, validations: props.validations } );
-    }, [ props.required, props.validations ] );
+    useEffect(
+        () => context?.initialize( props.param, props.defaultValue, { functions: props.validations, required: props.required } ),
+        [ props.required, props.validations ]
+    );
 
     const [ options, setOptions ] = useState<T[]>( props.options );
     const [ valid, setValid ] = useState<boolean>();

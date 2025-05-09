@@ -14,12 +14,14 @@ const UniversiFormPasswordInputContext = createContext<Optional<UniversiFormPass
 
 export function UniversiFormPasswordInput( props: Readonly<UniversiFormPasswordInputProps> ) {
     const context = useContext( UniversiFormContext );
-    useEffect( () => {
-        context?.setValidations( props.param, { required: props.required, validations: props.validations } );
-    }, [ props.required, props.validations ] );
 
     const [ password, setPassword ] = useState<string>( "" );
     const [ confirm, setConfirm ] = useState<Optional<string>>( props.mustConfirm ? password : undefined );
+
+    useEffect(
+        () => context?.initialize( props.param, password, { functions: props.validations, required: props.required } ),
+        [ props.required, props.validations ]
+    );
 
     const valid = useMemo( () => new PasswordValidity( password, confirm ), [] );
     const passwordContextValue = useMemo<UniversiFormPasswordInputContextType>( () => ({ ...props, valid }), [] );

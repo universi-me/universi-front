@@ -5,10 +5,10 @@ export type UniversiFormContextType = {
     get( key: string ): any;
     del( key: string ): void;
     getValidation( key: string ): Optional<boolean>;
-    setValidations( key: string, options: {
-        validations?: UniversiFormFieldValidation<any>[];
+    initialize( key: string, value: any, validation: {
+        functions?: UniversiFormFieldValidation<any>[];
         required?: boolean;
-    } ): Promise<void>;
+    } ): () => void;
 };
 
 export const UniversiFormContext = createContext<Optional<UniversiFormContextType>>( undefined );
