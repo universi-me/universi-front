@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 
 import AuthContext from "@/contexts/Auth";
 import { UniversimeApi } from "@/services";
-import { UniversiModal } from "@/components/UniversiModal";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import UniversiForm from "@/components/UniversiForm2";
 import { UniversiFormCardSelectionInputValue } from "@/components/UniversiForm2/inputs/UniversiFormCardSelectionInput";
 import ProfileImage from "@/components/ProfileImage";
@@ -40,7 +40,7 @@ export function AssignFolderForm() {
     }, [groupContext?.participants, authContext.profile] );
 
     if ( defaultValue === undefined )
-        return <UniversiModal>Carregando</UniversiModal>
+        return <LoadingSpinner asModal />
 
     else
         return <UniversiForm.Root asModal title="Atribuir Conteúdo" callback={ assignFolder }>

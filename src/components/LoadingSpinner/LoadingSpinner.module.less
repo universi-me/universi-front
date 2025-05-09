@@ -1,0 +1,23 @@
+@import url(/src/layouts/colors.less);
+
+.icon {
+    cursor: default;
+    user-select: none;
+    font-size: 5rem;
+    overflow: hidden;
+
+    width: 5rem;
+    height: 5rem;
+
+    animation: spin 1500ms infinite linear;
+    color: @font-color-v2;
+
+    &.on_modal {
+        color: white;
+    }
+}
+
+@keyframes spin {
+    from { rotate: 0deg; }
+    to { rotate: 360deg; }
+}
