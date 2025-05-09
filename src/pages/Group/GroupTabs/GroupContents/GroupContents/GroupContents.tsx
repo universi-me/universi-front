@@ -6,7 +6,7 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext } from "@/pages/Group";
 import { ManageContent } from "@/components/ManageContent";
 import { type OptionInMenu, renderOption, hasAvailableOption } from "@/utils/dropdownMenuUtils";
-import SelectPeople from "./SelectPeople";
+import AssignFolderForm from "./AssignFolderForm";
 
 import "./GroupContents.less";
 import { Filter } from "@/components/Filter/Filter";
@@ -128,7 +128,7 @@ export function GroupContents() {
             {
                 groupContext.assignFolder !== undefined
                 ?
-                <SelectPeople/>
+                <AssignFolderForm/>
                 :
                 duplicateContentId !== undefined
                 ?

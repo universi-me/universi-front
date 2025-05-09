@@ -10,10 +10,10 @@ import { GroupContext } from "@/pages/Group/GroupContext";
 
 import { ProfileClass } from "@/types/Profile";
 
-import styles from "./SelectPeople.module.less";
+import styles from "./AssignFolderForm.module.less";
 
 
-export function SelectPeople(){
+export function AssignFolderForm() {
     const groupContext = useContext( GroupContext )
     const authContext = useContext( AuthContext )
 
