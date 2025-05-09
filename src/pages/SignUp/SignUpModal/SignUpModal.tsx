@@ -42,9 +42,6 @@ export function SignUpModal( props: Readonly<SignUpModalProps> ) {
     const recaptchaRef = useRef<Nullable<ReCAPTCHA>>(null);
 
     useEffect(() => {
-        if ( usernameRef.current )
-            usernameRef.current.value = username;
-
         setUsernameUnavailableMessage( undefined );
         const delayDebounceFn = setTimeout(async () => {
             if(username.length < 1) {
@@ -117,6 +114,7 @@ export function SignUpModal( props: Readonly<SignUpModalProps> ) {
                     .filter(c => USERNAME_CHAR_REGEX.exec(c) !== null)
                     .join( "" );
 
+                usernameRef.current!.value = filteredUsername;
                 setUsername( filteredUsername );
             } }
         />

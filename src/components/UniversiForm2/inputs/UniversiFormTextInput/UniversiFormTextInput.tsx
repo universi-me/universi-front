@@ -1,4 +1,4 @@
-import { type ClassAttributes, type InputHTMLAttributes, useContext, useEffect, useState } from "react";
+import { type RefAttributes, type InputHTMLAttributes, useContext, useEffect, useState } from "react";
 
 import { makeClassName } from "@/utils/tsxUtils";
 import { UniversiFormContext } from "../../UniversiFormContext";
@@ -51,7 +51,7 @@ export function UniversiFormTextInput( props: Readonly<UniversiFormTextInputProp
 }
 
 export type UniversiFormTextInputProps = UniversiFormFieldPropsMergeWith<string, InputHTMLAttributes<HTMLInputElement>
-    & ClassAttributes<HTMLInputElement>>
+    & RefAttributes<HTMLInputElement>>
     & {
         omitCharLimit?: boolean;
     };
