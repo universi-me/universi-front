@@ -18,7 +18,8 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
 
     const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, ...formAttributes } = props;
     const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
-    const hasRequiredField = formData.values().some( d => d.required );
+
+    const [ hasRequiredField, setHasRequiredField ] = useState( false );
     const [ handlingFormEnd, setHandlingFormEnd ] = useState( false );
 
     const formRender = <UniversiFormContext.Provider value={ contextValue } >
@@ -124,6 +125,8 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                     value = formData.get( key )!.value;
 
                 formData.set( key, { value, validations, valid: false, required: validationOptions.required ?? false } );
+                setHasRequiredField( formData.values().some( d => d.required ) );
+
                 updateValidations( key ).then( () => {
                     validationOptions.setValid?.( this.getValidation( key ) );
                 } );
