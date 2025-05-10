@@ -8,7 +8,7 @@ import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import "./GroupPeople.less";
 import { Filter } from "@/components/Filter/Filter";
 import Select from 'react-select'
-import { LevelToLabel, intToLevel } from "@/types/Competence";
+import { CompetenceLevelObjects, CompetenceLevelObjectsArray, intToLevel } from "@/types/Competence";
 import { UniversimeApi } from "@/services"
 import ActionButton from "@/components/ActionButton";
 import useCanI from "@/hooks/useCanI";
@@ -245,7 +245,7 @@ export function GroupPeople() {
                         if(currentCompetence?.level == undefined || !currentCompetence.label || !currentCompetence.typeId)
                             return;
 
-                        currentCompetence.label += ": " + LevelToLabel[currentCompetence.level]
+                        currentCompetence.label += ": " + CompetenceLevelObjects[currentCompetence.level].label
                         setAddedCompetences([...addedCompetences, currentCompetence]);
 
                         let radio = document.getElementById(`radio${currentCompetence.level}`) as HTMLInputElement
@@ -301,17 +301,16 @@ export function GroupPeople() {
     }
 
     function makeRadioSelectLevel(){
-        const levels = Object.entries(LevelToLabel)
         return (
             <div className="levels-div">
             {
-                levels.map((level)=>(
-                    <label>
+                CompetenceLevelObjectsArray.map(({ level, label })=>(
+                    <label key={ level }>
                         <input
                             type="radio"
                             name="level"
-                            value={level[0]}
-                            id={`radio${level[0]}`}
+                            value={level}
+                            id={`radio${level}`}
                             onChange={(event)=>{
                                 let currentCompetence_old : competenceSearch;
                                 if(currentCompetence){
@@ -323,10 +322,10 @@ export function GroupPeople() {
                                         level: intToLevel(parseInt(event.target.value))
                                     }
                                 setCurrentCompetence(currentCompetence_old)
-                                event.target.checked=currentCompetence?.level != undefined && currentCompetence?.level == parseInt(level[0])
+                                event.target.checked=currentCompetence?.level != undefined && currentCompetence?.level == level
                             }}
                         />
-                        {level[1]}
+                        {label}
                     </label>
                 ))
             }
