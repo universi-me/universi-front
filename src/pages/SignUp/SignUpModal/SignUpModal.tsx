@@ -77,7 +77,7 @@ export function SignUpModal( props: Readonly<SignUpModalProps> ) {
     const ENABLE_RECAPTCHA = organizationEnv.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
     const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
-    return <UniversiForm.Root id="sign-up-modal" title="Cadastro" asModal callback={ createAccount } allowConfirm={ emailAvailable && usernameAvailableChecked && usernameAvailable }>
+    return <UniversiForm.Root id="sign-up-modal" title="Cadastro" callback={ createAccount } allowConfirm={ emailAvailable && usernameAvailableChecked && usernameAvailable }>
         <UniversiForm.Input.Text required param="firstname"
             label="Nome" placeholder="Insira seu nome"
             maxLength={FIRST_NAME_MAX_LENGTH}

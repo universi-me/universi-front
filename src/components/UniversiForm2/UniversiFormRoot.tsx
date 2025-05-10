@@ -13,7 +13,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const formData = useMemo( () => new Map<string, FormFieldData>, [] );
     const contextValue = useMemo<UniversiFormContextType>( makeFormContext, [] );
 
-    const { title, asModal, callback, children, allowConfirm, ...formAttributes } = props;
+    const { title, inline, callback, children, allowConfirm, ...formAttributes } = props;
     const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
     const hasRequiredField = formData.values().some( d => d.required );
 
@@ -45,9 +45,9 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         </div>
     </UniversiFormContext.Provider>
 
-    return asModal
-        ? <UniversiModal>{ formRender }</UniversiModal>
-        : formRender;
+    return inline
+        ? formRender
+        : <UniversiModal>{ formRender }</UniversiModal>;
 
     function handleCancel( e: MouseEvent<HTMLButtonElement> ) {
         e.preventDefault();
@@ -129,7 +129,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
 
 export type UniversiFormRootProps = PropsWithChildren<{
     title: Truthy<ReactNode>;
-    asModal?: boolean;
+    inline?: boolean;
 
     callback( formData: UniversiFormData<Record<string, any>> ): any;
     allowConfirm?: boolean;

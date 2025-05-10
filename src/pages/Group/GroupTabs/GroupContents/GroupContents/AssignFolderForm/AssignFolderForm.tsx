@@ -40,10 +40,10 @@ export function AssignFolderForm() {
     }, [groupContext?.participants, authContext.profile] );
 
     if ( defaultValue === undefined )
-        return <LoadingSpinner asModal />
+        return <LoadingSpinner />
 
     else
-        return <UniversiForm.Root asModal title="Atribuir Conteúdo" callback={ assignFolder }>
+        return <UniversiForm.Root title="Atribuir Conteúdo" callback={ assignFolder }>
             <UniversiForm.Input.CardSelection
                 param="people"
                 label="Participantes do grupo"
