@@ -8,7 +8,7 @@ import { handleValidation, RequiredIndicator } from "../utils";
 import formStyles from "../UniversiForm.module.less";
 
 
-export function UniversiFormSelectInput<T, M extends Optional<boolean>=undefined, C extends Optional<boolean>=undefined>(
+export function UniversiFormSelectInput<T extends Record<string, any>, M extends Optional<boolean>=undefined, C extends Optional<boolean>=undefined>(
     props: Readonly<UniversiFormSelectInputProps<T, M, C>>
 ) {
     const context = useContext( UniversiFormContext );
@@ -60,7 +60,9 @@ export function UniversiFormSelectInput<T, M extends Optional<boolean>=undefined
             return props.optionNotFoundMessage?.( inputValue ) ?? `Não foi possível encontrar ${ inputValue }`;
         },
 
-        getOptionValue: props.getOptionUniqueValue,
+        getOptionValue( option: T ) {
+            return String( props.getOptionUniqueValue( option ) );
+        },
         filterOption: props.filterOption ?? undefined,
     };
 
@@ -74,15 +76,15 @@ export function UniversiFormSelectInput<T, M extends Optional<boolean>=undefined
         }
     </fieldset>
 
-    function handleOptionCreation( value: string ) {
-        const newOptions = props.onCreateOption!( value );
+    async function handleOptionCreation( value: string ) {
+        const newOptions = await props.onCreateOption!( value );
         setOptions( newOptions );
     }
 }
 
-type UniversiFormSelectInputProps<T, Multi extends Optional<boolean>, Clear extends Optional<boolean>> = {
+type UniversiFormSelectInputProps<T extends Record<string, any>, Multi extends Optional<boolean>, Clear extends Optional<boolean>> = {
     options: T[];
-    getOptionUniqueValue( option: T ): string;
+    getOptionUniqueValue( option: T ): string | number;
     getOptionLabel?( option: T ): Truthy<ReactNode>;
     filterOption?( option: T, search: string ): boolean;
 
@@ -105,8 +107,8 @@ type UniversiFormSelectInputProps<T, Multi extends Optional<boolean>, Clear exte
 
 type CreationBasedSelectProperties<T> = {
     canCreateOptions: true;
-    onCreateOption( value: string ): T[];
+    onCreateOption( value: string ): T[] | PromiseLike<T[]>;
 } | {
     canCreateOptions?: false;
-    onCreateOption?( value: string ): T[];
+    onCreateOption?( value: string ): T[] | PromiseLike<T[]>;
 };
