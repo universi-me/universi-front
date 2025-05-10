@@ -1,19 +1,21 @@
 import { type ReactNode, type PropsWithChildren, useMemo, MouseEvent, FormHTMLAttributes, useState } from "react";
+import { type SweetAlertOptions } from "sweetalert2";
 
 import { UniversiModal } from "@/components/UniversiModal";
 import BootstrapIcon from "@/components/BootstrapIcon";
 import { UniversiFormContext, type UniversiFormContextType } from "./UniversiFormContext";
 import { makeClassName } from "@/utils/tsxUtils";
+import { RequiredIndicator } from "./utils";
+import * as SwalUtils from "@/utils/sweetalertUtils";
 
 import styles from "./UniversiForm.module.less";
-import { RequiredIndicator } from "./utils";
 
 
 export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const formData = useMemo( () => new Map<string, FormFieldData>, [] );
     const contextValue = useMemo<UniversiFormContextType>( makeFormContext, [] );
 
-    const { title, inline, callback, children, allowConfirm, ...formAttributes } = props;
+    const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, ...formAttributes } = props;
     const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
     const hasRequiredField = formData.values().some( d => d.required );
 
@@ -49,9 +51,26 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         ? formRender
         : <UniversiModal>{ formRender }</UniversiModal>;
 
-    function handleCancel( e: MouseEvent<HTMLButtonElement> ) {
+    async function handleCancel( e: MouseEvent<HTMLButtonElement> ) {
         e.preventDefault();
-        callback( { confirmed: false, body: undefined } );
+        let shouldCancel = true;
+
+        if ( !skipCancelConfirmation ) {
+            const res = await SwalUtils.fireAreYouSure({
+                title: "Deseja cancelar esta ação?",
+                text: "Todos os campos preenchidos serão perdidos.",
+                confirmButtonText: "Continuar cancelamento",
+                confirmButtonColor: "var(--wrong-invalid-color)",
+                cancelButtonText: "Voltar ao formulário",
+
+                ...cancelPopup,
+            });
+
+            shouldCancel = res.isConfirmed;
+        }
+
+        if ( shouldCancel )
+            callback( { confirmed: false } );
     }
 
     function handleConfirm( e: MouseEvent<HTMLButtonElement> ) {
@@ -132,6 +151,9 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
 export type UniversiFormRootProps = PropsWithChildren<{
     title: Truthy<ReactNode>;
     inline?: boolean;
+
+    skipCancelConfirmation?: boolean;
+    cancelPopup?: SweetAlertOptions;
 
     callback( formData: UniversiFormData<Record<string, any>> ): any;
     allowConfirm?: boolean;
