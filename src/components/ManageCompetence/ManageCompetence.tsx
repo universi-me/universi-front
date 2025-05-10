@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { UniversimeApi } from "@/services";
-import UniversiForm, { FormInputs } from "@/components/UniversiForm";
-import { compareCompetenceTypes, LevelToDescription, LevelToLabel } from "@/types/Competence";
+import UniversiForm from "@/components/UniversiForm2";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { compareCompetenceTypes, CompetenceLevelArrayObject, CompetenceLevelObjectsArray, getCompetenceLevelObject } from "@/types/Competence";
+import { ApiResponse } from "@/utils/apiUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
+
+import styles from "./ManageCompetence.module.less";
 
 export function ManageCompetence( props: Readonly<ManageCompetenceProps> ) {
     const { competence, removeTypes, callback } = props;
@@ -14,52 +18,52 @@ export function ManageCompetence( props: Readonly<ManageCompetenceProps> ) {
         updateCompetenceTypes();
     }, [] );
 
-    const competenceTypeOptions = useMemo( () => {
-        if ( competenceTypes === undefined ) return undefined;
+    const [ level, setLevel ] = useState( getCompetenceLevelObject( competence?.level ) );
 
+    const competenceTypeOptions = useMemo( () => {
         return competenceTypes
-            .filter( c => !removeTypes?.some( r => c.id === r || r.toLocaleUpperCase() === c.name.toLocaleUpperCase() ) )
-            .sort( compareCompetenceTypes )
-            .map( makeTypeOption );
+            ?.filter( c => !removeTypes?.some( r => c.id === r || r.toLocaleUpperCase() === c.name.toLocaleUpperCase() ) )
+            .sort( compareCompetenceTypes );
     }, [ competenceTypes ] )
 
     if ( competenceTypeOptions === undefined )
-        return null;
+        return <LoadingSpinner />;
 
-    return <UniversiForm
-        formTitle={ isCreating ? "Adicionar competência" : "Editar competência" }
-        objects={[
-            {
-                DTOName: "competenceTypeId", label: "Tipo de Competência", type: FormInputs.SELECT_SINGLE,
-                value: competence?.competenceType ? competence.competenceType.id : undefined,
-                options: competenceTypeOptions,
-                required: true,
-                canCreate: true,
-                async onCreate( name ) {
-                    const createRes = await UniversimeApi.CompetenceType.create( { name } );
-                    if ( createRes.isSuccess() ) {
-                        const listRes = await updateCompetenceTypes();
-                        return listRes?.map( makeTypeOption );
-                    }
-                }
-            },
-            {
-                DTOName: "level", label: "Nível de Experiência", type: FormInputs.RADIO,
-                value: competence?.level,
-                options: LEVEL_OPTIONS, required: true
-            },
-            {
-                DTOName: "description", label: "description", type: FormInputs.HIDDEN,
-                value: competence?.description ?? ""
-            },
-            {
-                DTOName: "competenceId", label: "competenceId", type: FormInputs.HIDDEN,
-                value: competence?.id
-            }
-        ]}
-        requisition={ requisition}
-        callback={ callback }
-    />
+    const formTitle = isCreating ? "Adicionar Competência" : "Editar Competência";
+
+    return <UniversiForm.Root title={ formTitle } callback={ handleForm }>
+        <UniversiForm.Input.Select
+            param="competenceType"
+            label="Tipo da Competência"
+            required
+            isSearchable
+            defaultValue={ competence?.competenceType }
+            options={ competenceTypeOptions }
+            getOptionUniqueValue={ ct => ct.id }
+            getOptionLabel={ ct => ct.name }
+            canCreateOptions
+            onCreateOption={ async name => {
+                await UniversimeApi.CompetenceType.create( { name } );
+                return await updateCompetenceTypes() ?? [];
+            } }
+        />
+
+        <div>
+            <UniversiForm.Input.Select
+                param="level"
+                label="Nível de Experiência"
+                required
+                defaultValue={ getCompetenceLevelObject( competence?.level ) }
+                options={ CompetenceLevelObjectsArray }
+                getOptionLabel={ l => l.label }
+                getOptionUniqueValue={ l => l.level }
+                onChange={ setLevel }
+            />
+            <p className={ styles.level_description }>
+                { level !== undefined ? level.description : "Selecione um nível de experiência" }
+            </p>
+        </div>
+    </UniversiForm.Root>
 
     async function updateCompetenceTypes() {
         const res = await UniversimeApi.CompetenceType.list();
@@ -78,49 +82,34 @@ export function ManageCompetence( props: Readonly<ManageCompetenceProps> ) {
                 confirmButtonText: "Fechar",
                 confirmButtonColor: "var(--wrong-invalid-color)",
             });
-            callback?.();
+            callback?.( undefined );
         }
     }
 
-    function requisition( form: CompetenceForm ) {
+    async function handleForm( form: CompetenceForm ) {
+        if ( !form.confirmed )
+            return callback?.( undefined );
+
         const body = {
-            competenceTypeId: form.competenceTypeId,
-            description: form.description,
-            level: form.level,
+            competenceTypeId: form.body.competenceType.id,
+            level: form.body.level.level,
         };
 
-        if ( form.competenceId )
-            return UniversimeApi.Competence.update( form.competenceId, body );
+        const res = competence
+            ? await UniversimeApi.Competence.update( competence.id, body )
+            : await UniversimeApi.Competence.create( body );
 
-        else
-            return UniversimeApi.Competence.create( body )
-    }
-}
-
-const LEVEL_OPTIONS = Object.entries( LevelToLabel ).map(([ lvStr ]) => {
-    const level = parseInt( lvStr ) as Competence.Level;
-    return {
-        value: level,
-        label: `${ LevelToLabel[ level ] }: ${ LevelToDescription[ level ] }`,
-    };
-});
-
-function makeTypeOption( ct: Competence.Type ) {
-    return {
-        value: ct.id,
-        label: ct.name,
+        return callback?.( res );
     }
 }
 
 export type ManageCompetenceProps = {
     competence: Competence | null;
     removeTypes?: string[];
-    callback?: () => any;
+    callback?: ( response: Optional<ApiResponse<Competence.DTO>> ) => any;
 };
 
-type CompetenceForm = {
-    competenceId: Optional<string>;
-    competenceTypeId: string;
-    description: string;
-    level: CompetenceLevel;
-};
+type CompetenceForm = UniversiForm.Data<{
+    competenceType: Competence.Type;
+    level: CompetenceLevelArrayObject;
+}>;
