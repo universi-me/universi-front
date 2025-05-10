@@ -8,6 +8,7 @@ export type UniversiFormContextType = {
     initialize( key: string, value: any, validation: {
         functions?: UniversiFormFieldValidation<any>[];
         required?: boolean;
+        setValid?: ( valid: Optional<boolean> ) => any;
     } ): () => void;
 };
 

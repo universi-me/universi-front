@@ -12,13 +12,13 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
     props: Readonly<UniversiFormSelectInputProps<T, M, C>>
 ) {
     const context = useContext( UniversiFormContext );
-    useEffect(
-        () => context?.initialize( props.param, props.defaultValue, { functions: props.validations, required: props.required } ),
-        [ props.required, props.validations ]
-    );
 
     const [ options, setOptions ] = useState<T[]>( props.options );
     const [ valid, setValid ] = useState<boolean>();
+    useEffect(
+        () => context?.initialize( props.param, props.defaultValue, { functions: props.validations, required: props.required, setValid } ),
+        [ props.required, props.validations ]
+    );
 
     const selectProps = {
         options: options,

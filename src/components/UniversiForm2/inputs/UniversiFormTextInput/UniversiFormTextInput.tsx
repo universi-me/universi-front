@@ -15,7 +15,7 @@ export function UniversiFormTextInput( props: Readonly<UniversiFormTextInputProp
     const [ value, setValue ] = useState<string>( props.defaultValue ?? "" );
     const [ valid, setValid ] = useState<boolean>();
     useEffect(
-        () => context?.initialize( props.param, value, { functions: props.validations, required: props.required } ),
+        () => context?.initialize( props.param, value, { functions: props.validations, required: props.required, setValid } ),
         [ props.required, props.validations ]
     );
 

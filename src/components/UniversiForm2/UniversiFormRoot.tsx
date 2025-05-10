@@ -95,7 +95,9 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                     value = formData.get( key )!.value;
 
                 formData.set( key, { value, validations, valid: false, required: validationOptions.required ?? false } );
-                updateValidations( key );
+                updateValidations( key ).then( () => {
+                    validationOptions.setValid?.( this.getValidation( key ) );
+                } );
 
                 return () => { this.del( key ) };
             },
