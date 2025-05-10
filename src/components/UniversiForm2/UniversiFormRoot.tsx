@@ -3,6 +3,7 @@ import { type SweetAlertOptions } from "sweetalert2";
 
 import { UniversiModal } from "@/components/UniversiModal";
 import BootstrapIcon from "@/components/BootstrapIcon";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { UniversiFormContext, type UniversiFormContextType } from "./UniversiFormContext";
 import { makeClassName } from "@/utils/tsxUtils";
 import { RequiredIndicator } from "./utils";
@@ -18,6 +19,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, ...formAttributes } = props;
     const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
     const hasRequiredField = formData.values().some( d => d.required );
+    const [ handlingFormEnd, setHandlingFormEnd ] = useState( false );
 
     const formRender = <UniversiFormContext.Provider value={ contextValue } >
         <div { ...formAttributes } className={makeClassName( styles.form, formAttributes.className )}>
@@ -47,6 +49,9 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         </div>
     </UniversiFormContext.Provider>
 
+    if ( handlingFormEnd )
+        return <LoadingSpinner />;
+
     return inline
         ? formRender
         : <UniversiModal>{ formRender }</UniversiModal>;
@@ -69,18 +74,23 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
             shouldCancel = res.isConfirmed;
         }
 
-        if ( shouldCancel )
-            callback( { confirmed: false } );
+        if ( shouldCancel ) {
+            setHandlingFormEnd( true );
+            await callback( { confirmed: false } );
+            setHandlingFormEnd( false );
+        }
     }
 
-    function handleConfirm( e: MouseEvent<HTMLButtonElement> ) {
+    async function handleConfirm( e: MouseEvent<HTMLButtonElement> ) {
         e.preventDefault();
 
         const body: Record<string, any> = {};
         for ( const key of formData.keys() )
             body[ key ] = contextValue.get( key );
 
-        callback( { confirmed: true, body } );
+        setHandlingFormEnd( true );
+        await callback( { confirmed: true, body } );
+        setHandlingFormEnd( false );
     }
 
     function makeFormContext(): UniversiFormContextType {
