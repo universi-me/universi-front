@@ -12,6 +12,3 @@ type UniversiFormFieldProps<T> = {
 };
 
 type UniversiFormFieldValidation<T> = ( v: T ) => boolean | PromiseLike<boolean>;
-
-type UniversiFormFieldPropsMergeWith<T, E> = UniversiFormFieldProps<T>
-    & Omit<E, keyof UniversiFormFieldProps<T>>;
