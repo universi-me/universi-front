@@ -2,7 +2,7 @@ import { MouseEvent, useContext, useState } from "react";
 import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 
 import { UniversimeApi } from "@/services"
-import { ManageProfileLinks, ManageProfileLoaderResponse, ManageProfilePassword, ManageProfileImage, getManageLinks } from "@/pages/ManageProfile";
+import { ManageProfileLinks, ManageProfileLoaderResponse, ManageProfilePassword, ManageProfileImage, getManageLinks, ManageProfileAccount } from "@/pages/ManageProfile";
 import { setStateAsValue } from "@/utils/tsxUtils";
 import { AuthContext } from "@/contexts/Auth";
 import * as SwalUtils from "@/utils/sweetalertUtils";
@@ -105,6 +105,7 @@ export function ManageProfilePage() {
                     </section>
                 </form>
 
+                <ManageProfileAccount />
                 <ManageProfilePassword />
             </div>
             <div id="right-side">
@@ -126,7 +127,7 @@ export function ManageProfilePage() {
             }
         }
 
-        let hasPassword = authContext.user?.hasPassword ?? false;
+        let hasPassword = authContext.profile!.user.hasPassword ?? false;
         const { value: password, isConfirmed } = !hasPassword ? {value: null, isConfirmed: true} : await SwalUtils.fireModal({
             title: "Edição de perfil",
             input: "password",
