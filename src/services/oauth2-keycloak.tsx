@@ -13,18 +13,17 @@ export function KeyCloakOAuth2Element() {
     // https://react.dev/reference/react/StrictMode
     const loggingIn = useRef( false );
 
-    const params = new URLSearchParams(window.location.href);
-    const code = params.get("code")!;
-
     useEffect(() => {
         handleKeycloakLogin();
-    }, [code])
+    }, [])
 
     return <></>
 
     async function handleKeycloakLogin() {
         if ( loggingIn.current ) return;
         loggingIn.current = true;
+
+        const code = new URLSearchParams( window.location.href ).get( "code" )!;
 
         const res = await UniversimeApi.Auth.login_keycloak( { code } );
         if ( res.isSuccess() ) {
