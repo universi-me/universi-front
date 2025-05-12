@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         />
 
     return (
-        <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser, organization, profileGroups, profileLinks  }}>
+        <AuthContext.Provider value={{ user, signin, signout, profile, updateLoggedUser, organization, profileGroups, profileLinks  }}>
         { children }
         </AuthContext.Provider>
     );
@@ -61,16 +61,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         return await updateLoggedUser();
     }
-
-    async function signinGoogle() {
-        const profile = await updateLoggedUser();
-
-        if (profile === null) {
-            goTo("login");
-        }
-
-        return profile;
-    };
 
     async function signout() {
         await UniversimeApi.Auth.logout();
