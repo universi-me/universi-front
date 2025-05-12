@@ -123,7 +123,13 @@ export function GroupContents() {
 
             {
                 groupContext.editContent !== undefined &&
-                <ManageContent content={groupContext.editContent} group={groupContext.group} afterSave={()=>{groupContext.setEditContent(undefined); groupContext.refreshData() }} />
+                <ManageContent content={groupContext.editContent} group={groupContext.group} afterSave={ async res => {
+                    let newContext = groupContext;
+                    if ( res?.isSuccess() )
+                        newContext = await groupContext.refreshData();
+
+                    newContext.setEditContent( undefined );
+                } } />
             }
             {
                 groupContext.assignFolder !== undefined

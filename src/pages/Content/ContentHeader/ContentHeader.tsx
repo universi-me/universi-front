@@ -98,18 +98,18 @@ export function ContentHeader() {
             </div>
         }
         { context.editingSettings?.content &&
-            <ManageContent content={context.content} afterSave={afterSaveContent} />
+            <ManageContent content={context.content} afterSave={ async res => {
+                let newContext = context;
+                if ( res?.isSuccess() )
+                    newContext = await context.refreshContent();
+
+                newContext.setEditingSettings( undefined );
+            } } />
         }
         { context.editingSettings?.material !== undefined &&
             <ManageMaterial material={context.editingSettings.material} content={context.content} afterSave={afterSaveMaterials} />
         }
     </div>
-
-    function afterSaveContent() {
-        context!.refreshContent().then(context => {
-            context.setEditingSettings(undefined);
-        });
-    }
 
     function afterSaveMaterials() {
         context!.refreshMaterials().then(context => {

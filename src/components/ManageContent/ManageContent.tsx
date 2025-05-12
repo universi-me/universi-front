@@ -1,14 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { UniversimeApi } from "@/services"
-import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
-
-import { contentImageUrl } from "@/utils/apiUtils";
-import { IMG_DEFAULT_CONTENT } from "@/utils/assets";
+import UniversiForm from "@/components/UniversiForm2";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { ApiResponse, contentImageUrl } from "@/utils/apiUtils";
 
 import "./ManageContent.less";
-import { GroupContext } from "@/pages/Group";
-import { FolderCreate_RequestDTO } from "@/services/UniversimeApi/Capacity/Folder";
 
 export type ManageContentProps = {
     /** A null `content` means a content is being created, while a value means
@@ -20,7 +17,7 @@ export type ManageContentProps = {
     group?: Group;
 
     /** A callback to be called after the content is saved */
-    afterSave?: () => any;
+    afterSave?: ( res: Optional<ApiResponse<Capacity.Folder.DTO>> ) => any;
 };
 
 export function ManageContent(props: Readonly<ManageContentProps>) {
@@ -29,8 +26,6 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
 
     const [availableCategories, setAvailableCategories] = useState<Category[]>();
     const [availableCompetenceTypes, setAvailableCompetenceTypes] = useState<CompetenceType[]>();
-
-    const groupContext = useContext(GroupContext)
 
     useEffect(() => {
         setContent(props.content);
@@ -41,99 +36,93 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
     }, [props]);
 
     if (availableCategories === undefined || availableCompetenceTypes === undefined)
-        return null;
+        return <LoadingSpinner />;
 
     const isNewContent = content === null;
-    const availableCategoriesOptions = availableCategories.map(c => ({ label: c.name, value: c.id }));
-    const availableCompetenceTypeOptions = availableCompetenceTypes.map(c => ({ label: c.name, value: c.id }));
 
-    return <UniversiForm
-        formTitle = { isNewContent ? "Criar conteúdo" : "Editar conteúdo" }
-        objects = {[
-            {
-                DTOName: "name", label: "Nome do conteúdo", type: FormInputs.TEXT, value: content?.name, required: true, charLimit: 100, 
-            }, {
-                DTOName: "description", label: "Descrição do conteúdo", type: FormInputs.LONG_TEXT, value: content?.description ?? undefined, required: false, charLimit: 200,
-            }, {
-                DTOName: "image", label: "Imagem do conteúdo", type: FormInputs.IMAGE, value: undefined, required: false,
-                defaultImageUrl: content?.image
-                    ? contentImageUrl(content)
-                    : IMG_DEFAULT_CONTENT,
-            }, {
-                DTOName: "addCategoriesByIds", label: "Categorias do conteúdo", type: FormInputs.SELECT_MULTI,
-                value: content?.categories.map(t => ({ label: t.name, value: t.id })) ?? [],
-                options: availableCategoriesOptions,
-                canCreate: true, required: false, onCreate: handleCreateCategory,
-            }, {
-                DTOName: "addCompetenceTypeBadgeIds", label: "Selos de Competência", type: FormInputs.SELECT_MULTI,
-                value: content?.grantsBadgeToCompetences.map(ct => ({ label: ct.name, value: ct.id })) ?? [],
-                options: availableCompetenceTypeOptions,
-                canCreate: true, required: false, onCreate: handleCreateCompetenceType
-            }, {
-                DTOName: "groupId", label: "Id do grupo", type: FormInputs.HIDDEN, value: group?.id,
-            }, {
-                DTOName: "id", label: "Id do conteúdo", type: FormInputs.HIDDEN, value: content?.id,
-            }, {
-                DTOName: "groupPath", label: "Path do grupo", type: FormInputs.HIDDEN, value: group?.path
-            }
-        ]}
-        requisition = { (data: ManageContentForm) => {
-            const body = {
-                name: data.name,
-                rating: 1 as const,
-                categoriesIds: data.addCategoriesByIds,
-                competenceTypeBadgeIds: data.addCompetenceTypeBadgeIds,
-                description: data.description,
-                image: data.image,
-                publicFolder: true,
-            };
+    return <UniversiForm.Root title={ isNewContent ? "Criar Conteúdo" : "Editar Conteúdo" } callback={ handleForm }>
+        <UniversiForm.Input.Text
+            param="name"
+            label="Nome do Conteúdo"
+            defaultValue={ content?.name }
+            required
+            maxLength={ 100 }
+        />
 
-            if ( isNewContent )
-                return UniversimeApi.Capacity.Folder.create( {
-                    ...body,
-                    grantedAccessGroupsIds: group ? [ group.id! ] : undefined,
-                } );
+        <UniversiForm.Input.Text
+            param="description"
+            label="Descrição do Conteúdo"
+            isLongText
+            defaultValue={ content?.description ?? undefined }
+            maxLength={ 200 }
+        />
 
-            else
-                return UniversimeApi.Capacity.Folder.update( content.id, body );
-        } }
-        callback = {() => { props.afterSave?.();}}
-    />;
+        <UniversiForm.Input.Image
+            param="image"
+            label="Imagem do Conteúdo"
+            defaultValue={ content ? contentImageUrl( content ) : undefined }
+            aspectRatio={ 1 }
+        />
 
-    
-    function handleCreateNewContent(dto : FolderCreate_RequestDTO){
+        <UniversiForm.Input.Select
+            param="categories"
+            label="Categorias do Conteúdo"
+            getOptionLabel={ c => c.name }
+            getOptionUniqueValue={ c => c.id }
+            isMultiSelection
+            defaultValue={ content?.categories }
+            options={ availableCategories }
+            canCreateOptions
+            onCreateOption={ async name => {
+                await UniversimeApi.Capacity.Category.create( { name } );
+                const res = await updateCategories()
+                return res.body ?? [];
+            } }
+        />
 
-        if(groupContext == undefined || group == undefined)
-            return;
+        <UniversiForm.Input.Select
+            param="badges"
+            label="Selos de Competência"
+            getOptionLabel={ c => c.name }
+            getOptionUniqueValue={ c => c.id }
+            isMultiSelection
+            defaultValue={ content?.grantsBadgeToCompetences }
+            options={ availableCompetenceTypes }
+            canCreateOptions
+            onCreateOption={ async name => {
+                await UniversimeApi.CompetenceType.create( { name } );
+                const res = await updateCompetenceTypes()
+                return res.body ?? [];
+            } }
+        />
+    </UniversiForm.Root>
 
-        const canPost = (
-        (groupContext.group.everyoneCanPost) ||
-        (!groupContext.group.everyoneCanPost && groupContext.group.admin!.id == groupContext.loggedData.profile.id)
-        )
+    async function handleForm( form: ManageContentForm ) {
+        if ( !form.confirmed )
+            return props.afterSave?.( undefined );
 
-        UniversimeApi.Capacity.Folder.create(dto)
-            .then(()=>{groupContext.refreshData()})
+        const imageUploadResponse = form.body.image instanceof File
+            ? await UniversimeApi.Image.upload( { image: form.body.image, isPublic: true } )
+            : undefined;
 
-    }
+        const body = {
+            name: form.body.name,
+            rating: 1 as const,
+            categoriesIds: form.body.categories.map( c => c.id ),
+            competenceTypeBadgeIds: form.body.badges.map( b => b.id ),
+            description: form.body.description,
+            image: imageUploadResponse?.body,
+            publicFolder: true, // todo - switch field
+            grantedAccessGroupsIds: isNewContent && group?.id
+                ? [ group.id ]
+                : undefined,
+        };
 
-    async function handleCreateCategory(value: string){
-        const createResponse = await UniversimeApi.Capacity.Category.create({ name: value });
-        if (!createResponse.isSuccess()) return [];
+        const res = isNewContent
+            ? await UniversimeApi.Capacity.Folder.create( body )
+            : await UniversimeApi.Capacity.Folder.update( content.id, body );
 
-        const response = await updateCategories();
-        if (!response.isSuccess()) return [];
-
-        return response.data.map(t => ({ value: t.id, label: t.name }));
-    }
-
-    async function handleCreateCompetenceType(value: string){
-        const createResponse = await UniversimeApi.CompetenceType.create({ name: value });
-        if (!createResponse.isSuccess()) return [];
-
-        const response = await updateCompetenceTypes();
-        if (!response.isSuccess()) return [];
-
-        return response.data.map(t => ({ value: t.id, label: t.name }));
+        return props.afterSave?.( res );
     }
 
     async function updateCategories() {
@@ -152,13 +141,10 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
     }
 }
 
-type ManageContentForm = {
+type ManageContentForm = UniversiForm.Data<{
     name: string;
     description?: string;
-    image?: string;
-    addCategoriesByIds: string[];
-    addCompetenceTypeBadgeIds: string[];
-    groupId?: string;
-    id?: string;
-    groupPath?: string;
-};
+    image?: File | string;
+    categories: Capacity.Category.DTO[];
+    badges: Competence.Type[];
+}>;
