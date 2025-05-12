@@ -80,10 +80,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 updateLinks(profile),
                 updateGroups(profile),
             ]);
-
-            setProfile(profile);
         }
 
+        setProfile(profile);
         return profile;
     }
 
