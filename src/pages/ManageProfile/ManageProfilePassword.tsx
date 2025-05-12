@@ -29,9 +29,9 @@ export function ManageProfilePassword() {
     return (
         <section id="card-password" className="card">
             <fieldset id="fieldset-password">
-                <legend>Alterar minha senha</legend>
+                <legend>Minha senha</legend>
 
-                <div className="password-container">
+                <div className="password-container" hidden={!authContext.user?.hasPassword}>
                     <input name="old-password" id="old-password" onChange={setStateAsValue(setOldPassword)}
                         type={showOldPassword ? "text" : "password"} placeholder="Insira sua senha atual"
                     />
