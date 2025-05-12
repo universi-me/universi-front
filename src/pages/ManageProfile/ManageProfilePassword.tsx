@@ -1,4 +1,4 @@
-import { useState, MouseEvent, useContext } from "react";
+import { useState, MouseEvent, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { UniversimeApi } from "@/services"
@@ -10,6 +10,8 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 export function ManageProfilePassword() {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
+
+    const [hasPassword, setHasPassword] = useState<boolean>(false);
 
     const [oldPassword, setOldPassword] = useState<string>("");
     const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
@@ -24,21 +26,27 @@ export function ManageProfilePassword() {
     const isCase = upperAndLowerCase(newPassword);
     const isSpecial = numberOrSpecialChar(newPassword);
     const validNewPassword = isMinLength && isCase && isSpecial;
-    const enableChangePassword = !!oldPassword && validNewPassword;
+    const enableChangePassword = (!!oldPassword || !hasPassword) && validNewPassword;
+
+    useEffect(() => {
+        setHasPassword(!!authContext.profile?.user.hasPassword);
+    }, [authContext.profile?.user.hasPassword]);
 
     return (
         <section id="card-password" className="card">
             <fieldset id="fieldset-password">
                 <legend>Minha senha</legend>
 
-                <div className="password-container" hidden={!authContext.user?.hasPassword}>
-                    <input name="old-password" id="old-password" onChange={setStateAsValue(setOldPassword)}
-                        type={showOldPassword ? "text" : "password"} placeholder="Insira sua senha atual"
-                    />
-                    <button type="button" onClick={toggleOldPassword} className="toggle-password-visibility" title="Alterar visibilidade da senha">
-                        <span className={`bi ${showOldPassword ? "bi-eye-fill" : "bi-eye-slash-fill"}`} />
-                    </button>
-                </div>
+                {
+                    ( hasPassword ) && <div className="password-container">
+                        <input name="old-password" id="old-password" onChange={setStateAsValue(setOldPassword)}
+                            type={showOldPassword ? "text" : "password"} placeholder="Insira sua senha atual"
+                        />
+                        <button type="button" onClick={toggleOldPassword} className="toggle-password-visibility" title="Alterar visibilidade da senha">
+                            <span className={`bi ${showOldPassword ? "bi-eye-fill" : "bi-eye-slash-fill"}`} />
+                        </button>
+                    </div>
+                }
 
                 <div className="password-container">
                     <input name="new-password" id="new-password" onChange={setStateAsValue(setNewPassword)}
@@ -68,12 +76,13 @@ export function ManageProfilePassword() {
 
     function changePassword(e: MouseEvent<HTMLButtonElement>) {
         UniversimeApi.User.changePassword({
-            password: oldPassword,
+            password: (hasPassword ? oldPassword : newPassword),
             newPassword,
         }).then(res => {
-            if (!res.isSuccess())
+            if (!res.isSuccess()) {
                 throw new Error(res.errorMessage);
-
+            }
+            authContext.updateLoggedUser();
             navigate(`/profile/${authContext.profile!.user.name}`);
         }).catch((reason: Error) => {
             SwalUtils.fireModal({
