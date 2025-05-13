@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import type { RefAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import type { RefAttributes, InputHTMLAttributes, TextareaHTMLAttributes, ChangeEvent } from "react";
 
 import { makeClassName } from "@/utils/tsxUtils";
 import { UniversiFormContext } from "../../UniversiFormContext";
@@ -9,7 +9,7 @@ import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormTextInput.module.less";
 
 
-export function UniversiFormTextInput<L extends Optional<boolean>>( props: Readonly<UniversiFormTextInputProps<L>> ) {
+export function UniversiFormTextInput<L extends Optional<boolean> = undefined>( props: Readonly<UniversiFormTextInputProps<L>> ) {
     const { param, label, omitCharLimit, onChange, className, required, validations, isLongText, ...fieldElementProps } = props;
     const context = useContext( UniversiFormContext );
 
@@ -21,17 +21,17 @@ export function UniversiFormTextInput<L extends Optional<boolean>>( props: Reado
     );
 
     const isFull = Boolean( props.maxLength && ( value.length >= props.maxLength ) );
-    const fieldProps: UniversiFormTextInputFieldProps<L> = {
+    const fieldProps = {
         name: param,
+        rows: isLongText ? 5 : undefined,
+        ...fieldElementProps,
         className: makeClassName(
             className,
             styles.input,
             isLongText && styles.long_text,
             handleValidation( valid, styles.valid, styles.invalid ),
         ),
-        rows: isLongText ? 5 : undefined,
-        ...fieldElementProps,
-        onChange: ( e: any ) => {
+        onChange: ( e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement> ) => {
             handleOnChange( e.currentTarget.value );
         }
     };
@@ -45,7 +45,7 @@ export function UniversiFormTextInput<L extends Optional<boolean>>( props: Reado
         </legend>
         { isLongText
             ? <textarea { ...fieldProps as UniversiFormTextInputFieldProps<true> } />
-            : <input { ...fieldProps as UniversiFormTextInputFieldProps<false | undefined> } type="text" />
+            : <input { ...fieldProps as UniversiFormTextInputFieldProps<false | undefined> } />
         }
     </fieldset>
 
@@ -71,5 +71,7 @@ export type UniversiFormTextInputProps<LongText extends Optional<boolean>> = Mer
 };
 
 type UniversiFormTextInputFieldProps<L extends Optional<boolean>> = L extends true
-    ? TextareaHTMLAttributes<HTMLTextAreaElement>
-    : Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
+    ? Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "defaultChecked" | "onChange">
+    : Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "checked" | "defaultChecked" | "onChange"> & {
+        type?: "text" | "email" | "search" | "url";
+    };
