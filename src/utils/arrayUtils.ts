@@ -24,3 +24,56 @@ export function groupArray<T, Label extends string>(arr: T[], grouper: (v: T)=> 
 
     return groups;
 }
+
+export class ArrayChanges<T> {
+    private readonly _added: T[] = [];
+    private readonly _removed: T[] = [];
+
+    constructor(
+        private readonly initial: T[],
+        private readonly match: ( v1: T, v2: T ) => boolean,
+    ) {}
+
+    add( val: T ) {
+        const i = this._removed.findIndex( v => this.match( v, val ) );
+        if ( i !== -1 )
+            this._removed.splice( i, 1 );
+
+        if ( !this.inInitial( val ) && !this.inAdded( val ) )
+            this._added.push( val );
+    }
+
+    remove( val: T ) {
+        const i = this._added.findIndex( v => this.match( v, val ) );
+        if( i !== -1 )
+            this._added.splice( i, 1 );
+
+        if ( this.inInitial( val ) && !this.inRemoved( val ) )
+            this._removed.push( val );
+    }
+
+    final() {
+        return this.initial
+            .filter( v => !this._removed.some( r => this.match( v, r ) ) )
+            .concat( this._added );
+    }
+
+    inFinal( val: T ) {
+        return this.inAdded( val ) || ( this.inInitial( val ) && !this.inRemoved( val ) );
+    }
+
+    inInitial( val: T ): boolean {
+        return this.initial.some( v => this.match( val, v ) );
+    }
+
+    private inAdded( val: T ): boolean {
+        return this._added.some( v => this.match( val, v ) );
+    }
+
+    private inRemoved( val: T ): boolean {
+        return this._removed.some( v => this.match( val, v ) );
+    }
+
+    get added() { return [ ...this._added ]; }
+    get removed() { return [ ...this._removed ]; }
+}

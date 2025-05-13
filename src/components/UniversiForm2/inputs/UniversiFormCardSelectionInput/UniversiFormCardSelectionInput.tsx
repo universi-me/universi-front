@@ -2,6 +2,8 @@ import { useContext, useEffect, type ReactNode, useState, useMemo } from "react"
 
 import BootstrapIcon from "@/components/BootstrapIcon";
 import Filter from "@/components/Filter";
+import useRefreshComponent from "@/hooks/useRefreshComponent";
+import { ArrayChanges } from "@/utils/arrayUtils";
 import { UniversiFormContext } from "../../UniversiFormContext";
 import { RequiredIndicator } from "../../utils";
 
@@ -11,9 +13,17 @@ import styles from "./UniversiFormCardSelectionInput.module.less";
 
 export function UniversiFormCardSelectionInput<T, S extends Optional<boolean>>( props: Readonly<UniversiFormCardSelectionInputProps<T, S>> ) {
     const context = useContext( UniversiFormContext );
-    const [ changes, setChanges ] = useState<SelectionChanges<T>>( { add: [], remove: [] } );
+    const refreshComponent = useRefreshComponent();
+
+    const changes = useMemo( () => {
+        return new ArrayChanges(
+            props.defaultValue ?? [],
+            ( o1, o2 ) => props.getOptionUniqueValue( o1 ) === props.getOptionUniqueValue( o2 ),
+        );
+    }, [ props.options, props.defaultValue ] );
+
     useEffect(
-        () => context?.initialize( props.param, changes, { functions: props.validations, required: props.required } ),
+        () => context?.initialize( props.param, getFinalValue(), { functions: props.validations, required: props.required } ),
         [ props.required, props.validations ]
     );
 
@@ -22,14 +32,6 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean>>( 
         return props.options
             .filter( o => !props.isSearchable || props.searchFilter( textFilter, o ) );
     }, [ textFilter, props.options ] );
-
-    useEffect( () => {
-        const val = getFinalValue();
-
-        context?.set( props.param, val ).then( () => {
-            props.onChange?.( val );
-        } );
-    }, [ changes.add, changes.remove ] );
 
     return <fieldset className={ formStyles.fieldset }>
         <div className={ styles.legend }>
@@ -51,56 +53,36 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean>>( 
             { filteredOptions.map( option => <div className={ styles.option } key={ props.getOptionUniqueValue( option ) }>
                 { props.render( option ) }
                 <button type="button" onClick={ () => handleToggle( option ) } className={ styles.check }>
-                    <BootstrapIcon icon={ isSelected( option ) ? "check-circle-fill" : "check-circle" }/>
+                    <BootstrapIcon icon={ changes.inFinal( option ) ? "check-circle-fill" : "check-circle" }/>
                 </button>
             </div> ) }
         </div>
     </fieldset>
 
-    function isOptionInArray( arr: Optional<T[]>, option: T ): boolean {
-        const optionValue = props.getOptionUniqueValue( option );
-        return undefined !== ( arr ?? [] ).find( o => props.getOptionUniqueValue( o ) === optionValue );
-    }
-
-    function isSelected( option: T ): boolean {
-        return ( isOptionInArray( changes.add, option ) )
-            || ( isOptionInArray( props.defaultValue, option ) && !isOptionInArray( changes.remove, option ) );
-    }
-
     function getFinalValue(): UniversiFormCardSelectionInputValue<T, S> {
         if ( props.isSeparate === true )
             return {
-                add: [ ...changes.add ],
-                remove: [ ...changes.remove ],
+                added: changes.added,
+                removed: changes.removed,
             } as UniversiFormCardSelectionInputValue<T, S>;
 
         else
-            return ( props.defaultValue ?? [] )
-                .filter( o => !isOptionInArray( changes.remove, o ) )
-                .concat( changes.add ) as UniversiFormCardSelectionInputValue<T, S>;
+            return changes.final() as UniversiFormCardSelectionInputValue<T, S>;
     }
 
     function handleToggle( option: T ) {
-        const optionValue = props.getOptionUniqueValue( option );
-        const inDefault = isOptionInArray( props.defaultValue, option );
+        if ( changes.inFinal( option ) )
+            changes.remove( option );
+        else
+            changes.add( option );
 
-        if ( isSelected( option ) ) { // remove
-            setChanges( changes => ({
-                add: changes.add.filter( o => props.getOptionUniqueValue( o ) !== optionValue ),
-                remove: inDefault
-                    ? [ ...changes.remove, option ]
-                    : changes.remove.filter( o => props.getOptionUniqueValue( o ) !== optionValue )
-            }) );
-        }
+        const val = getFinalValue();
 
-        else { // add
-            setChanges( changes => ({
-                remove: changes.remove.filter( o => props.getOptionUniqueValue( o ) !== optionValue ),
-                add: inDefault
-                    ? [ ...changes.add ]
-                    : [ ...changes.add, option ],
-            }) );
-        }
+        context?.set( props.param, val ).then( () => {
+            props.onChange?.( val );
+        } );
+
+        refreshComponent();
     }
 }
 
@@ -124,8 +106,8 @@ export type UniversiFormCardSelectionInputValue<T, S extends Optional<boolean>> 
     : T[];
 
 type SelectionChanges<T> = {
-    add: T[];
-    remove: T[];
+    added: T[];
+    removed: T[];
 };
 
 type SearchOptions<T> = {

@@ -59,7 +59,7 @@ export function AssignFolderForm() {
                     <h2>{ p.fullname }</h2>
                 </div> }
                 validations={[
-                    d => ( d.add.length > 0 ) || ( d.remove.length > 0 ),
+                    d => ( d.added.length > 0 ) || ( d.removed.length > 0 ),
                 ]}
             />
         </UniversiForm.Root>
@@ -72,8 +72,8 @@ export function AssignFolderForm() {
 
         else {
             const res = await UniversimeApi.Capacity.Folder.changeAssignments( groupContext.assignFolder.id, {
-                addProfileIds: form.body.people.add.map( p => p.id ),
-                removeProfileIds: form.body.people.remove.map( p => p.id ),
+                addProfileIds: form.body.people.added.map( p => p.id ),
+                removeProfileIds: form.body.people.removed.map( p => p.id ),
             });
 
             if ( res.isSuccess() ) {
