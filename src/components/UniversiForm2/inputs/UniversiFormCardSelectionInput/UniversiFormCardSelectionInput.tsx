@@ -1,6 +1,7 @@
-import { useContext, useEffect, type ReactNode, useState } from "react";
+import { useContext, useEffect, type ReactNode, useState, useMemo } from "react";
 
 import BootstrapIcon from "@/components/BootstrapIcon";
+import Filter from "@/components/Filter";
 import { UniversiFormContext } from "../../UniversiFormContext";
 import { RequiredIndicator } from "../../utils";
 
@@ -16,6 +17,12 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean>>( 
         [ props.required, props.validations ]
     );
 
+    const [ textFilter, setTextFilter ] = useState( "" );
+    const filteredOptions = useMemo( () => {
+        return props.options
+            .filter( o => !props.isSearchable || props.searchFilter( textFilter, o ) );
+    }, [ textFilter, props.options ] );
+
     useEffect( () => {
         const val = getFinalValue();
 
@@ -25,16 +32,28 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean>>( 
     }, [ changes.add, changes.remove ] );
 
     return <fieldset className={ formStyles.fieldset }>
-        <legend>{ props.label } <RequiredIndicator required={ props.required }/></legend>
+        <div className={ styles.legend }>
+            <legend>{ props.label } <RequiredIndicator required={ props.required }/></legend>
+            { props.isSearchable !== false && <Filter
+                className={ styles.filter }
+                setter={ setTextFilter }
+                placeholderMessage={ props.searchPlaceholder ?? `Buscar por ${ props.label }` }
+            /> }
+        </div>
+
+        { props.options.length === 0
+            ? <p className={ styles.no_result }>{ props.noOptionsText ?? "Nenhuma opção disponível" }</p>
+        : filteredOptions.length === 0
+            ? <p className={ styles.no_result }>{ props.searchNotFound ?? "Nenhuma opção encontrada" }</p>
+        : null }
+
         <div className={ styles.options_list }>
-            { props.options.length === 0
-                ? <p>{ props.noOptionsText ?? "Nenhuma opção disponível" }</p>
-                : props.options.map( option => <div className={ styles.option } key={ props.getOptionUniqueValue( option ) }>
-                    { props.render( option ) }
-                    <button type="button" onClick={ () => handleToggle( option ) } className={ styles.check }>
-                        <BootstrapIcon icon={ isSelected( option ) ? "check-circle-fill" : "check-circle" }/>
-                    </button>
-                </div> ) }
+            { filteredOptions.map( option => <div className={ styles.option } key={ props.getOptionUniqueValue( option ) }>
+                { props.render( option ) }
+                <button type="button" onClick={ () => handleToggle( option ) } className={ styles.check }>
+                    <BootstrapIcon icon={ isSelected( option ) ? "check-circle-fill" : "check-circle" }/>
+                </button>
+            </div> ) }
         </div>
     </fieldset>
 
@@ -93,12 +112,12 @@ export type UniversiFormCardSelectionInputProps<T, Separate extends Optional<boo
 
     isSeparate?: Separate;
 
-    // todo - add search
-    // isSearchable?: boolean;
-    // searchPlaceholder?: string;
+    searchPlaceholder?: string;
+    searchNotFound?: string;
 
     noOptionsText?: string;
-} & Omit<UniversiFormFieldProps<UniversiFormCardSelectionInputValue<T, Separate>>, "defaultValue">;
+} & Omit<UniversiFormFieldProps<UniversiFormCardSelectionInputValue<T, Separate>>, "defaultValue">
+& SearchOptions<T>;
 
 export type UniversiFormCardSelectionInputValue<T, S extends Optional<boolean>> = S extends true
     ? SelectionChanges<T>
@@ -108,3 +127,11 @@ type SelectionChanges<T> = {
     add: T[];
     remove: T[];
 };
+
+type SearchOptions<T> = {
+    isSearchable: true;
+    searchFilter( text: string, option: T ): boolean;
+} | {
+    isSearchable?: false;
+    searchFilter?( text: string, option: T ): boolean;
+}

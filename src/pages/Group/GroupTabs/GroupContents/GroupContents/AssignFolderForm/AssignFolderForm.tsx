@@ -11,6 +11,7 @@ import { GroupContext } from "@/pages/Group/GroupContext";
 import { ProfileClass } from "@/types/Profile";
 
 import styles from "./AssignFolderForm.module.less";
+import stringUtils from "@/utils/stringUtils";
 
 
 export function AssignFolderForm() {
@@ -48,6 +49,8 @@ export function AssignFolderForm() {
                 param="people"
                 label="Participantes do grupo"
                 isSeparate
+                isSearchable
+                searchFilter={ ( t, p ) => stringUtils.includesIgnoreCase( p.fullname!, t ) }
                 getOptionUniqueValue={ p => p.id }
                 defaultValue={ defaultValue }
                 options={ possibleAssignments }
