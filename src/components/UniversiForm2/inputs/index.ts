@@ -4,3 +4,4 @@ export { UniversiFormPasswordInput as Password } from "./UniversiFormPasswordInp
 export { UniversiFormRecaptchaInput as ReCaptcha } from "./UniversiFormRecaptchaInput";
 export { UniversiFormCardSelectionInput as CardSelection } from "./UniversiFormCardSelectionInput";
 export { UniversiFormImageInput as Image } from "./UniversiFormImageInput";
+export { UniversiFormSwitchInput as Switch } from "./UniversiFormSwitchInput";

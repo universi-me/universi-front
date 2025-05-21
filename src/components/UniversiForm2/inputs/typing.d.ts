@@ -1,6 +1,6 @@
 type UniversiFormFieldProps<T> = {
     param: string;
-    label?: ReactNode;
+    label?: React.ReactNode;
 
     disabled?: boolean;
     required?: boolean;
