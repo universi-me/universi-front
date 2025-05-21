@@ -60,34 +60,30 @@ export function roles( id: string ) {
 }
 
 export type GroupCreate_RequestDTO = {
-    groupRoot: boolean;
-    groupId: Optional<string>;
-    groupPath: Optional<string>;
+    parentGroup?: string;
     nickname: string;
     name: string;
-    image: Optional<string>;
-    bannerImage: Optional<string>;
-    headerImage: Optional<string>;
-    description: Optional<string>;
-    type: Group.Type;
-    canCreateGroup: boolean;
-    publicGroup: boolean;
-    canEnter: boolean;
+    image?: string;
+    bannerImage?: string;
+    headerImage?: string;
+    description: string;
+    groupType: string;
+    canCreateSubgroup: boolean;
+    isPublic: boolean;
+    canJoin: boolean;
+    everyoneCanPost: boolean;
 };
 
 export type GroupUpdate_RequestDTO = {
-    groupRoot: boolean;
-    groupId: Optional<string>;
-    groupPath: Optional<string>;
-    nickname: string;
-    name: string;
-    image: Optional<string>;
-    bannerImage: Optional<string>;
-    headerImage: Optional<string>;
-    description: Optional<string>;
-    type: Group.Type;
-    canCreateGroup: Optional<boolean>;
-    publicGroup: Optional<boolean>;
-    canEnter: Optional<boolean>;
-    everyoneCanPost: Optional<boolean>;
+    group: string;
+    name?: string;
+    image?: string;
+    bannerImage?: string;
+    headerImage?: string;
+    description?: string;
+    groupType?: string;
+    canCreateSubgroup?: boolean;
+    isPublic?: boolean;
+    canJoin?: boolean;
+    everyoneCanPost?: boolean;
 };
