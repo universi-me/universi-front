@@ -1,3 +1,6 @@
+import UniversiForm from "@/components/UniversiForm2";
+import { type UniversiFormSelectInputProps } from "@/components/UniversiForm2/inputs/UniversiFormSelectInput";
+
 export const MaterialTypeObjects: { [k in Capacity.Content.Type]: MaterialTypeObject } = {
     VIDEO: {
         label: "Vídeo",
@@ -39,4 +42,24 @@ export type MaterialTypeObject = {
 
 export type MaterialTypeArrayObject = MaterialTypeObject & {
     type: Capacity.Content.Type;
+};
+
+export function MaterialTypeSelect<C extends Optional<boolean> = undefined>( props: Readonly<MaterialSelectorProps<C>> ) {
+    return <UniversiForm.Input.Select
+        { ...props }
+        options={ MaterialTypeObjectsArray }
+        defaultValue={ getMaterialTypeObject( props.defaultValue ) }
+        getOptionUniqueValue={ t => t.type }
+        getOptionLabel={ t => t.label }
+        isMultiSelection={ false }
+        canCreateOptions={ false }
+        onCreateOption={ undefined }
+    />
+}
+
+export type MaterialSelectorProps<Clearable extends Optional<boolean>> = Omit<
+    UniversiFormSelectInputProps<MaterialTypeArrayObject, false, Clearable>,
+    "options" | "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "isMultiSelection" | "onCreateOption" | "defaultValue"
+> & {
+    defaultValue?: Capacity.Content.Type;
 };

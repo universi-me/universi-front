@@ -4,7 +4,7 @@ import { UniversimeApi } from "@/services"
 import UniversiForm from "@/components/UniversiForm2";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
-import { getMaterialTypeObject, type MaterialTypeArrayObject, MaterialTypeObjectsArray } from "@/types/Capacity";
+import { type MaterialTypeArrayObject, MaterialTypeSelect } from "@/types/Capacity";
 import "./ManageMaterial.less";
 import { ApiResponse } from "@/utils/apiUtils";
 
@@ -58,13 +58,10 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
             maxLength={ 200 }
         />
 
-        <UniversiForm.Input.Select
+        <MaterialTypeSelect
             param="type"
             label="Tipo do Material"
-            options={ MaterialTypeObjectsArray }
-            defaultValue={ getMaterialTypeObject( material?.type ) }
-            getOptionUniqueValue={ t => t.type }
-            getOptionLabel={ t => t.type }
+            defaultValue={ material?.type }
             required
         />
 

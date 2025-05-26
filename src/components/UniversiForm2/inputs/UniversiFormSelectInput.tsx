@@ -82,7 +82,7 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
     }
 }
 
-type UniversiFormSelectInputProps<T extends Record<string, any>, Multi extends Optional<boolean>, Clear extends Optional<boolean>> = {
+export type UniversiFormSelectInputProps<T extends Record<string, any>, Multi extends Optional<boolean>, Clear extends Optional<boolean>> = {
     options: T[];
     getOptionUniqueValue( option: T ): string | number;
     getOptionLabel?( option: T ): Truthy<ReactNode>;
