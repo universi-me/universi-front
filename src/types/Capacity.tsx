@@ -23,7 +23,8 @@ export const MaterialTypeObjectsArray: MaterialTypeArrayObject[] = Object.entrie
     .map( ([ type, data ]) => ({
         ...data,
         type: type as Capacity.Content.Type,
-    }) );
+    }) )
+    .sort( ( t1, t2 ) => t1.label.localeCompare( t2.label ) );
 
 export function getMaterialTypeObject( type: undefined ): undefined;
 export function getMaterialTypeObject( type: Capacity.Content.Type ): MaterialTypeArrayObject;
@@ -44,7 +45,7 @@ export type MaterialTypeArrayObject = MaterialTypeObject & {
     type: Capacity.Content.Type;
 };
 
-export function MaterialTypeSelect<C extends Optional<boolean> = undefined>( props: Readonly<MaterialSelectorProps<C>> ) {
+export function MaterialTypeSelect<C extends Optional<boolean> = undefined>( props: Readonly<MaterialTypeSelectProps<C>> ) {
     return <UniversiForm.Input.Select
         { ...props }
         options={ MaterialTypeObjectsArray }
@@ -57,7 +58,7 @@ export function MaterialTypeSelect<C extends Optional<boolean> = undefined>( pro
     />
 }
 
-export type MaterialSelectorProps<Clearable extends Optional<boolean>> = Omit<
+export type MaterialTypeSelectProps<Clearable extends Optional<boolean>> = Omit<
     UniversiFormSelectInputProps<MaterialTypeArrayObject, false, Clearable>,
     "options" | "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "isMultiSelection" | "onCreateOption" | "defaultValue"
 > & {
