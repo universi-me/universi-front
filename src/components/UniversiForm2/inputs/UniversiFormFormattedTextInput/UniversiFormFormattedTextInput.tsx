@@ -19,7 +19,7 @@ export function UniversiFormFormattedTextInput( props: Readonly<UniversiFormForm
     return <fieldset className={ formStyles.fieldset }>
         <legend>{ props.label } <RequiredIndicator required={ props.required } /></legend>
         <TextboxFormatted
-            defaultValue={ props.defaultValue }
+            value={ props.defaultValue }
             className={ styles.input }
             onChange={ handleChange }
         />

@@ -17,7 +17,6 @@ Quill.register('modules/blotFormatter', BlotFormatter);
 
 interface TextboxFormattedProps {
   value?: string;
-  defaultValue?: string;
   imageUploadPublic?: boolean;
   onChange: (value: string) => void;
   theme?: string;
