@@ -107,13 +107,12 @@ export function ContentHeader() {
             } } />
         }
         { context.editingSettings?.material !== undefined &&
-            <ManageMaterial material={context.editingSettings.material} content={context.content} afterSave={afterSaveMaterials} />
+            <ManageMaterial material={context.editingSettings.material} content={context.content} callback={ async res => {
+                let newContext = context;
+                if ( res?.isSuccess() )
+                    newContext = await context.refreshMaterials()
+                newContext.setEditingSettings( undefined );
+            } } />
         }
     </div>
-
-    function afterSaveMaterials() {
-        context!.refreshMaterials().then(context => {
-            context.setEditingSettings(undefined);
-        });
-    }
 }

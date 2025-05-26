@@ -76,7 +76,13 @@ export function GroupContentMaterials() {
 
             <MaterialsList materials={materials} filter={filterMaterials} />
             { groupContext.editMaterial !== undefined &&
-                <ManageMaterial material={groupContext.editMaterial} content={groupContext.currentContent} afterSave={()=>{ refreshMaterials(); groupContext.setEditMaterial(undefined) }} />
+                <ManageMaterial material={groupContext.editMaterial} content={groupContext.currentContent}
+                    callback={ res => {
+                        if ( res?.isSuccess() )
+                            refreshMaterials();
+                        groupContext.setEditMaterial( undefined );
+                    } }
+                />
             }
         </section>
     );
