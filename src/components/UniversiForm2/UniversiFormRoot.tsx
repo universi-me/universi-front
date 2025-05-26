@@ -16,7 +16,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const formData = useMemo( () => new Map<string, FormFieldData>, [] );
     const contextValue = useMemo<UniversiFormContextType>( makeFormContext, [] );
 
-    const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, confirmButtonText, ...formAttributes } = props;
+    const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, confirmButtonText, cancelButtonText, ...formAttributes } = props;
     const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
 
     const [ hasRequiredField, setHasRequiredField ] = useState( false );
@@ -40,7 +40,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
 
             <section className={ styles.actions }>
                 <button type="button" className={ makeClassName( styles.cancel_button ) } onClick={ handleCancel }>
-                    <i className="bi bi-x-circle-fill" /> Cancelar
+                    <i className="bi bi-x-circle-fill" /> { cancelButtonText ?? "Cancelar" }
                 </button>
 
                 <button type="button" className={ makeClassName( styles.confirm_button ) } onClick={ handleConfirm } disabled={ !isAllValid || allowConfirm === false }>
@@ -176,6 +176,7 @@ export type UniversiFormRootProps = PropsWithChildren<{
     callback( formData: UniversiFormData<Record<string, any>> ): any;
     allowConfirm?: boolean;
     confirmButtonText?: string;
+    cancelButtonText?: string;
 }> & FormHTMLAttributes<HTMLDivElement>;
 
 export type UniversiFormData<T> = {
