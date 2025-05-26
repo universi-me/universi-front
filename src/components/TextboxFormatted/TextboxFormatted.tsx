@@ -16,13 +16,15 @@ Quill.register('modules/blotFormatter', BlotFormatter);
 
 
 interface TextboxFormattedProps {
-  value: string;
+  value?: string;
+  defaultValue?: string;
   imageUploadPublic?: boolean;
   onChange: (value: string) => void;
   theme?: string;
   modules?: object;
   formats?: string[];
   toolbar?: any;
+  className?: string;
 }
 
 const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModules, formats: customFormats, toolbar: customtToolbar, ...props }: TextboxFormattedProps) => {
