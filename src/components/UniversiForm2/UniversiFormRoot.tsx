@@ -119,7 +119,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                 let validations = validationOptions.functions ?? [];
 
                 if ( validationOptions.required )
-                    validations.splice( 0, 0, v => !!v );
+                    validations.splice( 0, 0, validateRequired );
 
                 if ( formData.has( key ) )
                     value = formData.get( key )!.value;
@@ -158,6 +158,11 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         const allValid = formData.values().every( v => v.valid );
 
         setIsAllValid( allValid );
+    }
+
+    function validateRequired( value: any ): boolean {
+        return !!value
+            && ( !Array.isArray( value ) || value.length > 0 );
     }
 }
 
