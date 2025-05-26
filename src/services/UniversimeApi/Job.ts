@@ -36,7 +36,6 @@ export type JobUpdate_RequestDTO = {
     title: Optional<string>;
     shortDescription: Optional<string>;
     longDescription: Optional<string>;
-    institutionId: Optional<string>;
     requiredCompetencesIds: Optional<string[]>;
 };
 
