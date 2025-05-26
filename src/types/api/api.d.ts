@@ -10,7 +10,7 @@ namespace Api {
             code: number;
             description: string;
         };
-        errors: string[];
+        errors: Nullable<string[]>;
     };
 
     type Response<T> = ResponseSuccess<T> | ResponseError;

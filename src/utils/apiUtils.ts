@@ -48,15 +48,16 @@ export function contentImageUrl(content: Capacity.Folder.DTO) {
         : import.meta.env.VITE_UNIVERSIME_API + content.image;
 }
 
-export function isApiError( data: any ): data is Api.ResponseError {
+export function isApiError( data: unknown ): data is Api.ResponseError {
     return typeof data === "object"
+        && data !== null
         && "timestamp" in data
         && typeof data.timestamp === "string"
         && "errors" in data
-        && Array.isArray( data.errors )
-        && data.errors.every( ( e: any ) => typeof e === "string" )
+        && ( data.errors === null || ( Array.isArray( data.errors ) && data.errors.every( e => typeof e === "string" ) ) )
         && "status" in data
         && typeof data.status === "object"
+        && data.status !== null
         && "code" in data.status
         && typeof data.status.code === "number"
         && "description" in data.status
@@ -106,7 +107,7 @@ export class ApiResponse<T> {
         if ( err === undefined )
             return undefined;
 
-        return err.errors.join( "\n" )
+        return err.errors?.join( "\n" ) ?? "";
     }
 }
 
