@@ -11,7 +11,7 @@ import AssignFolderForm from "./AssignFolderForm";
 import "./GroupContents.less";
 import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
-import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
+import UniversiForm from "@/components/UniversiForm2";
 import useCanI from "@/hooks/useCanI";
 import { Permission } from "@/utils/roles/rolesUtils";
 
@@ -138,39 +138,26 @@ export function GroupContents() {
                 :
                 duplicateContentId !== undefined
                 ?
-                <UniversiForm
-                callback={async () => {setDuplicateContentId(undefined); await groupContext.refreshData()}}
-                formTitle="Criar uma cópia"
-                objects={[
-                    {
-                        DTOName : "targetGroupId", 
-                        label : "Copiar para: ",
-                        type: FormInputs.SELECT_SINGLE,
-                        value: {value : groupContext.group.id, label: groupContext.group.name},
-                        options : groupContext.loggedData.groups.filter(g => g.canEdit).map((g) => ({value: g.id, label: g.name}))
-                    },
-                    {
-                        DTOName: "contentId",
-                        label: "",
-                        value: duplicateContentId,
-                        type: FormInputs.HIDDEN
-                    }
-                ]}
-                requisition={UniversimeApi.Capacity.Folder.duplicate}
-                saveButtonText="Copiar"
-                />
-                : moveContentReference !== undefined ? <UniversiForm formTitle="Mover conteúdo" objects={[
-                    { DTOName: "folderReference", label: "", type: FormInputs.HIDDEN, value: moveContentReference },
-                    { DTOName: "originalGroupPath", label: "", type: FormInputs.HIDDEN, value: groupContext.group.path },
-                    {
-                        DTOName: "newGroupPath", label: "Mover para:",
-                        type: FormInputs.SELECT_SINGLE, required: true,
-                        options: groupContext.loggedData.groups
-                            .filter(g => g.id !== groupContext.group.id && canI("GROUP", Permission.READ_WRITE, g))
-                            .map(g => ({value: g.path, label: g.name}))
-                    },
-                ]} callback={async () => { await groupContext.refreshData().then(() => setMoveContentReference(undefined)) }} requisition={UniversimeApi.Capacity.Folder.move}
-                saveButtonText="Mover" cancelButtonText="Cancelar" />
+                <UniversiForm.Root title="Criar uma cópia" callback={ handleDuplicate } confirmButtonText="Copiar">
+                    <UniversiForm.Input.Select
+                        param="targetGroup"
+                        label="Copiar para:"
+                        options={ groupContext.loggedData.groups.filter( g => g.canEdit ) }
+                        getOptionUniqueValue={ g => g.id! }
+                        getOptionLabel={ g => g.name }
+                        required
+                    />
+                </UniversiForm.Root>
+                : moveContentReference !== undefined ? <UniversiForm.Root title="Mover conteúdo" callback={ handleMove } confirmButtonText="Mover">
+                    <UniversiForm.Input.Select
+                        param="targetGroup"
+                        label="Mover para:"
+                        options={ groupContext.loggedData.groups.filter( g => g.id !== groupContext.group.id && canI("GROUP", Permission.READ_WRITE, g ) ) }
+                        getOptionUniqueValue={ g => g.id! }
+                        getOptionLabel={ g => g.name }
+                        required
+                    />
+                </UniversiForm.Root>
                 :
                 <></>
             }
@@ -294,6 +281,31 @@ export function GroupContents() {
             })
         }
     }
+
+    async function handleDuplicate( form: UniversiForm.Data<{ targetGroup: Group.DTO }> ) {
+        if ( !form.confirmed ) {
+            setDuplicateContentId( undefined );
+            return;
+        }
+
+        await UniversimeApi.Capacity.Folder.duplicate( duplicateContentId!, { groups: [ form.body.targetGroup.id! ] } );
+        await groupContext?.refreshData();
+        setDuplicateContentId( undefined );
+    }
+
+    async function handleMove( form: UniversiForm.Data<{ targetGroup: Group.DTO }> ) {
+        if ( !form.confirmed ) {
+            setMoveContentReference( undefined );
+            return;
+        }
+
+        await UniversimeApi.Capacity.Folder.move( moveContentReference!, {
+            originalGroupId: groupContext!.group.id!,
+            newGroupId: form.body.targetGroup.id!,
+        } );
+        await groupContext!.refreshData();
+        setMoveContentReference( undefined );
+    }
 }
 
 type ImportContentProps = {
@@ -309,30 +321,34 @@ function ImportContent(props: Readonly<ImportContentProps>) {
             // filter - not already in group
             .filter(c => !groupContext?.folders.find(groupContent => groupContent.id === c.id))
 
-            .map(c => ({label: c.name, value: c.id}))
-            .sort((c1, c2) => c1.label.localeCompare(c2.label));
+            .sort( ( c1, c2 ) => c1.name.localeCompare( c2.name ) );
     }, availableContents)
 
-    return <UniversiForm
-        formTitle="Importar conteúdos"
-        objects={[
-        {
-            label: "Conteúdos disponíveis", DTOName: "contentIds", type: FormInputs.SELECT_MULTI,
-            canCreate: false, required: true,
-            options: importOptions
-        },
-        ]}
-        requisition={handleImport}
-        callback={async () => await resetContents()}
-    />;
+    return <UniversiForm.Root title="Importar Conteúdos" callback={ handleImport }>
+        <UniversiForm.Input.Select
+            param="contents"
+            label="Conteúdos disponíveis"
+            required
+            isMultiSelection
+            options={ importOptions }
+            getOptionUniqueValue={ c => c.id }
+            getOptionLabel={ c => c.name }
+        />
+    </UniversiForm.Root>
 
-    async function handleImport(formData: {contentIds: string[]}) {
-        const { contentIds } = formData;
+    async function handleImport( form: UniversiForm.Data<{ contents: Capacity.Folder.DTO[] }> ) {
+        if ( !form.confirmed ) {
+            await resetContents();
+            return;
+        }
+
+        const contentIds = form.body.contents.map( c => c.id );
 
         await Promise.all(contentIds.map( cId => UniversimeApi.Capacity.Folder.update( cId, {
             addGrantedAccessGroups: [ groupContext!.group.id! ],
         })));
 
         await groupContext!.refreshData();
+        await resetContents();
     }
 }
