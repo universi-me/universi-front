@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { UniversimeApi } from "@/services";
 import UniversiForm from "@/components/UniversiForm2";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { compareCompetenceTypes, CompetenceLevelArrayObject, CompetenceLevelObjectsArray, getCompetenceLevelObject } from "@/types/Competence";
+import { compareCompetenceTypes, CompetenceLevelArrayObject, CompetenceLevelSelect, getCompetenceLevelObject } from "@/types/Competence";
 import { ApiResponse } from "@/utils/apiUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
@@ -49,14 +49,11 @@ export function ManageCompetence( props: Readonly<ManageCompetenceProps> ) {
         />
 
         <div>
-            <UniversiForm.Input.Select
+            <CompetenceLevelSelect
                 param="level"
                 label="Nível de Experiência"
                 required
-                defaultValue={ getCompetenceLevelObject( competence?.level ) }
-                options={ CompetenceLevelObjectsArray }
-                getOptionLabel={ l => l.label }
-                getOptionUniqueValue={ l => l.level }
+                defaultValue={ competence?.level }
                 onChange={ setLevel }
             />
             <p className={ styles.level_description }>

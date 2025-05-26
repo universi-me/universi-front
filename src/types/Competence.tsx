@@ -1,3 +1,6 @@
+import UniversiForm from "@/components/UniversiForm2";
+import { UniversiFormSelectInputProps } from "@/components/UniversiForm2/inputs/UniversiFormSelectInput";
+
 export function intToLevel(int: number): Competence.Level {
     return int % 4 as Competence.Level;
 }
@@ -54,3 +57,22 @@ export type CompetenceLevelArrayObject = CompetenceLevelObject & {
     level: Competence.Level;
 };
 
+export function CompetenceLevelSelect<C extends Optional<boolean> = undefined>( props: Readonly<CompetenceLevelSelectProps<C>> ) {
+    return <UniversiForm.Input.Select
+        { ...props }
+        options={ CompetenceLevelObjectsArray }
+        defaultValue={ getCompetenceLevelObject( props.defaultValue ) }
+        getOptionUniqueValue={ t => t.level }
+        getOptionLabel={ t => t.label }
+        isMultiSelection={ false }
+        canCreateOptions={ false }
+        onCreateOption={ undefined }
+    />
+}
+
+export type CompetenceLevelSelectProps<Clearable extends Optional<boolean>> = Omit<
+    UniversiFormSelectInputProps<CompetenceLevelArrayObject, false, Clearable>,
+    "options" | "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "isMultiSelection" | "onCreateOption" | "defaultValue"
+> & {
+    defaultValue?: Competence.Level;
+};
