@@ -37,7 +37,10 @@ export function JobPage() {
                 <JobLongDescription />
 
                 { context.editing &&
-                    <ManageJob job={context.job} callback={ async () => refreshJobData() } />
+                    <ManageJob job={context.job} callback={ res => res?.isSuccess()
+                        ? refreshJobData()
+                        : context.setEditing( false )
+                    } />
                 }
             </section>
         </ProfileInfo>

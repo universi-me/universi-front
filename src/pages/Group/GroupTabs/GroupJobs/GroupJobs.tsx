@@ -69,7 +69,10 @@ export function GroupJobs() {
         </div>
 
         { groupContext.editJob !== undefined &&
-            <ManageJob job={groupContext.editJob} callback={groupContext.refreshData} />
+            <ManageJob job={groupContext.editJob} callback={ res => res?.isSuccess()
+                ? groupContext.refreshData().then( refreshJobs )
+                : groupContext.setEditJob( undefined )
+             } />
         }
 
         { renderFilterForm &&
@@ -92,7 +95,7 @@ export function GroupJobs() {
         filterCompetenceTypes.current = form.competences.map(
             ctId => groupContext!.competenceTypes
                 .find(ct => ct.id === ctId))
-                .filter(ct => ct !== undefined) as Competence.Type[];
+                .filter(ct => ct !== undefined);
 
         await refreshJobs();
     }
