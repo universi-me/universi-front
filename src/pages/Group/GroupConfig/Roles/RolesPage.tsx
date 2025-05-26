@@ -6,9 +6,7 @@ import { AuthContext } from "@/contexts/Auth";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { UniversimeApi } from "@/services"
 
-import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
-import { TextValidation } from "@/components/UniversiForm/Validation/TextValidation";
-import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
+import UniversiForm from "@/components/UniversiForm2";
 
 import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 
@@ -78,29 +76,23 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     return <div id="roles-settings">
 
             { showRolesForm &&
-                <UniversiForm
-                    formTitle={rolesEdit == null ? "Criar Papel" : "Editar Papel"}
-                    objects={[
-                        {
-                            DTOName: "name", label: "Nome", type: FormInputs.TEXT, value: rolesEdit?.name, required: true,
-                            charLimit: 30,
-                            validation: new ValidationComposite<string>().addValidation(new TextValidation())
-                        }, {
-                            DTOName: "description", label: "Descrição", type: FormInputs.LONG_TEXT, value: rolesEdit?.description, required: false,
-                            charLimit: 130
-                        },
-                        {
-                            DTOName: "group", label: "id", type: FormInputs.HIDDEN,
-                            value: group?.id
-                        },
-                        {
-                            DTOName: "rolesId", label: "id", type: FormInputs.HIDDEN,
-                            value: rolesEdit?.id
-                        },
-                    ]}
-                    requisition={rolesEdit ? UniversimeApi.Role.update : UniversimeApi.Role.create}
-                    callback={async () => {setRolesEdit(null); setShowRolesForm(false); await refreshPage()}}
-                />
+                <UniversiForm.Root title={ rolesEdit == null ? "Criar Papel" : "Editar Papel" } callback={ handleForm }>
+                    <UniversiForm.Input.Text
+                        param="name"
+                        label="Nome"
+                        defaultValue={ rolesEdit?.name }
+                        required
+                        maxLength={ 30 }
+                    />
+
+                    <UniversiForm.Input.Text
+                        param="description"
+                        label="Descrição"
+                        defaultValue={ rolesEdit?.description }
+                        isLongText
+                        maxLength={ 130 }
+                    />
+                </UniversiForm.Root>
             }
 
         { manageRolesMode ? <div>
@@ -239,6 +231,36 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
             }) ?? []
         );
     }
+
+    async function handleForm( form: RolesForm ) {
+        if ( !form.confirmed ) {
+            close();
+            return;
+        }
+
+        const body = {
+            name: form.body.name,
+            description: form.body.description,
+        };
+
+        if ( rolesEdit )
+            await UniversimeApi.Role.update( { ...body, rolesId: rolesEdit.id } );
+        else
+            await UniversimeApi.Role.create( { ...body, group: group!.id! } );
+
+        await refreshPage();
+        close();
+
+        function close() {
+            setRolesEdit( null );
+            setShowRolesForm( false );
+        }
+    }
 }
 
 export default RolesPage;
+
+type RolesForm = UniversiForm.Data<{
+    name: string;
+    description: string;
+}>;
