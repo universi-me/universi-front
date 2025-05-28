@@ -3,7 +3,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 
 import { UniversimeApi } from "@/services"
 import { Filter } from "@/components/Filter/Filter";
-import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
+import UniversiForm from "@/components/UniversiForm2";
 import { type CompetencesSettingsLoaderResponse, SettingsDescription, SettingsTitle, CompetenceTypeEditor } from "@/pages/Settings";
 
 import * as SwalUtils from "@/utils/sweetalertUtils";
@@ -101,13 +101,17 @@ export function CompetencesSettingsPage() {
             </div>
         </section>
 
-        { renderSelectMerge && 
-            <UniversiForm formTitle="Fundir competência" objects={[
-                {
-                    DTOName: "remainingCompetenceTypeId", label: `Substituir "${mergeCompetence.name}" por:`, type: FormInputs.SELECT_SINGLE,
-                    canCreate: false, options: reviewedCompetenceTypes.map(ct => ({ label: ct.name, value: ct.id })), required: true,
-                }
-            ]} requisition={mergeCompetences} callback={async() => {setMergeCompetence(undefined); await refreshCompetenceTypes()}}/>
+        { renderSelectMerge &&
+            <UniversiForm.Root title="Fundir Competência" callback={ mergeCompetences }>
+                <UniversiForm.Input.Select
+                    param="remainingCompetenceType"
+                    label={ `Substituir "${mergeCompetence.name}" por:` }
+                    options={ reviewedCompetenceTypes }
+                    required
+                    getOptionUniqueValue={ ct => ct.id }
+                    getOptionLabel={ ct => ct.name }
+                />
+            </UniversiForm.Root>
         }
     </div>;
 
@@ -116,18 +120,21 @@ export function CompetencesSettingsPage() {
         setCompetenceTypes(competenceTypes.data ?? []);
     }
 
-    type MergeCompetencesProps = {
-        remainingCompetenceTypeId: string;
-    }
+    type MergeCompetencesProps = UniversiForm.Data<{ remainingCompetenceType: Competence.Type }>
     async function mergeCompetences(props: MergeCompetencesProps) {
-        if (mergeCompetence === undefined)
+        if (mergeCompetence === undefined || !props.confirmed ) {
+            setMergeCompetence( undefined );
             return;
+        }
 
-        const { remainingCompetenceTypeId } = props;
+        const { remainingCompetenceType } = props.body;
 
         await UniversimeApi.CompetenceType.merge({
-            remainingCompetenceType: remainingCompetenceTypeId,
+            remainingCompetenceType: remainingCompetenceType.id,
             removedCompetenceType: mergeCompetence.id,
         });
+
+        await refreshCompetenceTypes();
+        setMergeCompetence(undefined);
     }
 }
