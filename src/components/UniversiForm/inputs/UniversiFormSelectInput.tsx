@@ -13,7 +13,7 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
 ) {
     const context = useContext( UniversiFormContext );
 
-    const [ options, setOptions ] = useState<T[]>( props.options );
+    const [ options, setOptions ] = useState<T[]>( [ ...props.options ].sort( props.sortOptions ) );
     const [ valid, setValid ] = useState<boolean>();
     useInitialize( { props, value: props.defaultValue, setValid } );
 
@@ -74,8 +74,14 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
     </fieldset>
 
     async function handleOptionCreation( value: string ) {
-        const newOptions = await props.onCreateOption!( value );
-        setOptions( newOptions );
+        const createdOption = await props.onCreateOption!( value );
+
+        const newOptions = [ ...options ];
+        if ( createdOption ) newOptions.push( createdOption );
+
+        const handledNewOptions = await props.onUpdateOptions?.( newOptions );
+
+        setOptions( ( handledNewOptions ?? newOptions ).sort( props.sortOptions ) );
     }
 }
 
@@ -84,6 +90,8 @@ export type UniversiFormSelectInputProps<T extends Record<string, any>, Multi ex
     getOptionUniqueValue( option: T ): string | number;
     getOptionLabel?( option: T ): Truthy<ReactNode>;
     filterOption?( option: T, search: string ): boolean;
+    onUpdateOptions?( options: T[] ): Optional<T[] | Promise<T[]>>;
+    sortOptions?( o1: T, o2: T ): number;
 
     isSearchable?: boolean;
     optionNotFoundMessage?( search: string ): Truthy<ReactNode>;
@@ -104,8 +112,8 @@ export type UniversiFormSelectInputProps<T extends Record<string, any>, Multi ex
 
 type CreationBasedSelectProperties<T> = {
     canCreateOptions: true;
-    onCreateOption( value: string ): T[] | PromiseLike<T[]>;
+    onCreateOption( value: string ): Optional<T> | PromiseLike<Optional<T>>;
 } | {
     canCreateOptions?: false;
-    onCreateOption?( value: string ): T[] | PromiseLike<T[]>;
+    onCreateOption?( value: string ): Optional<T> | PromiseLike<Optional<T>>;
 };

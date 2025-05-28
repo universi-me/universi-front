@@ -75,17 +75,14 @@ export function CompetenceLevelSelect<C extends Optional<boolean> = undefined>( 
 export function CompetenceTypeSelect<C extends Optional<boolean>, M extends Optional<boolean>>( props: Readonly<CompetenceTypeSelectProps<C, M>> ) {
     return <UniversiForm.Input.Select
         { ...props }
-        options={ [ ...props.options ].sort( compareCompetenceTypes ) }
+        options={ props.options }
         getOptionLabel={ c => c.name }
         getOptionUniqueValue={ c => c.id }
         canCreateOptions
+        sortOptions={ compareCompetenceTypes }
         onCreateOption={ async name => {
-            await UniversimeApi.CompetenceType.create( { name } );
-            const res = await UniversimeApi.CompetenceType.list();
-            const options = res.body?.sort( compareCompetenceTypes ) ?? [];
-
-            props.onUpdateOptions?.( options );
-            return options;
+            const res = await UniversimeApi.CompetenceType.create( { name } );
+            return res.body;
         } }
         createOptionLabel={ props.createOptionLabel ?? ( name => `Criar Tipo de Competência "${ name }"` ) }
     />
@@ -100,7 +97,5 @@ export type CompetenceLevelSelectProps<Clearable extends Optional<boolean>> = Om
 
 export type CompetenceTypeSelectProps<Clearable extends Optional<boolean>, Multi extends Optional<boolean>> = Omit<
     UniversiFormSelectInputProps<Competence.Type, Multi, Clearable>,
-    "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "onCreateOption"
-> & {
-    onUpdateOptions?( options: Competence.Type[] ): any;
-};
+    "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "onCreateOption" | "sortOptions"
+>;

@@ -9,26 +9,21 @@ export function compareEducationTypes( et1: Education.Type, et2: Education.Type 
 
 export function EducationTypeSelect<C extends Optional<boolean>>( props: Readonly<EducationTypeSelectProps<C>> ) {
     return <UniversiForm.Input.Select
-            { ...props }
-            options={ [ ...props.options ].sort( compareEducationTypes ) }
-            getOptionLabel={ c => c.name }
-            getOptionUniqueValue={ c => c.id }
-            canCreateOptions
-            onCreateOption={ async name => {
-                await UniversimeApi.EducationType.create( { name } );
-                const res = await UniversimeApi.EducationType.list();
-                const options = res.body?.sort( compareEducationTypes ) ?? [];
-
-                props.onUpdateOptions?.( options );
-                return options;
-            } }
-            createOptionLabel={ props.createOptionLabel ?? ( name => `Criar Tipo de Competência "${ name }"` ) }
-        />
+        { ...props }
+        options={ props.options }
+        sortOptions={ compareEducationTypes }
+        getOptionLabel={ c => c.name }
+        getOptionUniqueValue={ c => c.id }
+        canCreateOptions
+        onCreateOption={ async name => {
+            const res = await UniversimeApi.EducationType.create( { name } );
+            return res.body;
+        } }
+        createOptionLabel={ props.createOptionLabel ?? ( name => `Criar Tipo de Competência "${ name }"` ) }
+    />
 }
 
 export type EducationTypeSelectProps<Clearable extends Optional<boolean>> = Omit<
     UniversiFormSelectInputProps<Education.Type, false, Clearable>,
-    "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "onCreateOption"
-> & {
-    onUpdateOptions?( options: Education.Type[] ): any;
-};
+    "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "onCreateOption" | "sortOptions"
+>;

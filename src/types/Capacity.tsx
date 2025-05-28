@@ -66,17 +66,14 @@ export function MaterialTypeSelect<C extends Optional<boolean> = undefined>( pro
 export function CategorySelect<C extends Optional<boolean>, M extends Optional<boolean>>( props: Readonly<CategorySelectProps<C, M>> ) {
     return <UniversiForm.Input.Select
         { ...props }
-        options={ [ ...props.options ].sort( compareCategories ) }
+        options={ props.options }
         getOptionUniqueValue={ c => c.id }
         getOptionLabel={ c => c.name }
         canCreateOptions
+        sortOptions={ compareCategories }
         onCreateOption={ async name => {
-                await UniversimeApi.Capacity.Category.create( { name } );
-                const res = await UniversimeApi.Capacity.Category.list();
-                const options = res.body?.sort( compareCategories ) ?? [];
-
-                props.onUpdateOptions?.( options );
-                return options;
+            const res = await UniversimeApi.Capacity.Category.create( { name } );
+            return res.body;
         } }
     />
 }
@@ -90,7 +87,5 @@ export type MaterialTypeSelectProps<Clearable extends Optional<boolean>> = Omit<
 
 export type CategorySelectProps<Clearable extends Optional<boolean>, Multi extends Optional<boolean>> = Omit<
     UniversiFormSelectInputProps<Capacity.Category.DTO, Multi, Clearable>,
-    "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "onCreateOption"
-> & {
-    onUpdateOptions?( options: Capacity.Category.DTO[] ): any;
-};
+    "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "onCreateOption" | "sortOptions"
+>;
