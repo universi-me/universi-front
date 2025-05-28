@@ -16,14 +16,14 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const formData = useMemo( () => new Map<string, FormFieldData>, [] );
     const contextValue = useMemo<UniversiFormContextType>( makeFormContext, [] );
 
-    const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, confirmButtonText, cancelButtonText, ...formAttributes } = props;
+    const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, confirmButtonText, cancelButtonText, style, ...formAttributes } = props;
     const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
 
     const [ hasRequiredField, setHasRequiredField ] = useState( false );
     const [ handlingFormEnd, setHandlingFormEnd ] = useState( false );
 
     const formRender = <UniversiFormContext.Provider value={ contextValue } >
-        <div { ...formAttributes } className={makeClassName( styles.form, formAttributes.className )}>
+        <div { ...formAttributes } className={makeClassName( styles.form, formAttributes.className )} style={ { ...style, display: handlingFormEnd ? "none" : style?.display } }>
             <div className={ styles.header }>
                 <h1>{ props.title }</h1>
                 <button type="button" className={ styles.close_button } onClick={ handleCancel } >
@@ -48,10 +48,8 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                 </button>
             </section>
         </div>
+        { handlingFormEnd && <LoadingSpinner inline={ inline } /> }
     </UniversiFormContext.Provider>
-
-    if ( handlingFormEnd )
-        return <LoadingSpinner />;
 
     return inline
         ? formRender
