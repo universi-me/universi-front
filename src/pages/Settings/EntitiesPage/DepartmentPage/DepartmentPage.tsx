@@ -19,7 +19,7 @@ export function DepartmentPage() {
     const [ departments, setDepartments ] = useState( loaderData.departments );
     const [ textFilter, setTextFilter ] = useState<string>( "" );
 
-    const [ creatingDepartment, setCreatingDepartment ] = useState( false );
+    const [ editDepartment, setEditDepartment ] = useState<Possibly<Department.DTO>>();
     const filteredDepartments = useMemo( () => {
         return departments === null
             ? []
@@ -30,7 +30,7 @@ export function DepartmentPage() {
         setDepartments( loaderData.departments );
     }, [ loaderData ]);
 
-    return <DepartmentPageContext.Provider value={{ departments, refreshDepartments }}>
+    return <DepartmentPageContext.Provider value={{ departments, setEditDepartment, refreshDepartments }}>
         <div id="departments-settings-page">
             <SettingsTitle>Órgãos/Áreas</SettingsTitle>
             <SettingsDescription>Aqui você pode configurar os órgãos/áreas disponíveis na plataforma.</SettingsDescription>
@@ -48,22 +48,26 @@ export function DepartmentPage() {
                 : filteredDepartments.map( d => <DepartmentItem department={ d } key={ d.id } /> )
                 }
             </section>
-            { departments !== null && !creatingDepartment && <ActionButton name="Criar órgão/área" buttonProps={{ onClick: () => setCreatingDepartment( true ) }} /> }
+            { departments !== null && <ActionButton name="Criar órgão/área" buttonProps={{ onClick: () => setEditDepartment( null ) }} /> }
 
-            { creatingDepartment && <UniversiForm.Root title="Criar órgão/área" confirmButtonText="Criar" callback={ createDepartment }>
+            { editDepartment !== undefined && <UniversiForm.Root
+                title={ editDepartment ? "Editar Órgão/Área" : "Criar Órgão/Área" }
+                callback={ handleForm }
+            >
                 <UniversiForm.Input.Text
                     param="acronym"
                     label="Sigla"
+                    defaultValue={ editDepartment?.acronym }
                     required
                 />
 
                 <UniversiForm.Input.Text
                     param="name"
                     label="Nome"
+                    defaultValue={ editDepartment?.name }
                     required
                 />
-            </UniversiForm.Root>
-            }
+            </UniversiForm.Root> }
         </div>
     </DepartmentPageContext.Provider>
 
@@ -72,15 +76,18 @@ export function DepartmentPage() {
         setDepartments( res.body ?? null );
     }
 
-    async function createDepartment( form: CreateDepartmentForm ) {
+    async function handleForm( form: CreateDepartmentForm ) {
         if ( !form.confirmed ) {
-            setCreatingDepartment( false );
+            setEditDepartment( undefined );
             return;
         }
 
-        const res = await UniversimeApi.Department.create( form.body );
+        const res = editDepartment
+            ? await UniversimeApi.Department.update( editDepartment.id, form.body )
+            : await UniversimeApi.Department.create( form.body );
+
         await refreshDepartments();
-        setCreatingDepartment( false );
+        setEditDepartment( undefined );
     }
 }
 

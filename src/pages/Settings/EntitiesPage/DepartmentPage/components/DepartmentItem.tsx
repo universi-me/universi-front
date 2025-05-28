@@ -1,5 +1,5 @@
 import { UniversimeApi } from "@/services";
-import { MouseEvent, useContext, useRef, useState } from "react";
+import { MouseEvent, useContext } from "react";
 import { DepartmentPageContext } from "../DepartmentPageContext";
 
 import * as SwalUtils from "@/utils/sweetalertUtils";
@@ -8,79 +8,41 @@ export function DepartmentItem( props: Readonly<DepartmentItemProps> ) {
     const { department } = props;
     const context = useContext( DepartmentPageContext )!;
 
-    const [ editMode, setEditMode ] = useState<boolean>( false );
-
-    const editAcronymRef = useRef<HTMLInputElement>( null );
-    const editNameRef = useRef<HTMLInputElement>( null );
-
     return <div className="department-item">
         <form className="department-form">
             <div className="edit-buttons">
-                { editMode ? <SaveDepartment /> : <EditDepartmentButton /> }
+                <button type="button" title="Alterar nome do órgão/área" onClick={ () => context.setEditDepartment( department ) }>
+                    <i className="bi bi-pencil-square"/>
+                </button>
             </div>
-            { editMode ? <InputDepartmentData /> : <p className="department-name">{ `${department.acronym} – ${department.name}` }</p> }
+            <p className="department-name">{ `${department.acronym} – ${department.name}` }</p>
 
             <div className="settings-buttons">
-                <DeleteDepartment />
+                <button type="button" title="Excluir órgão/área" onClick={ deleteDepartment } className="delete-department">
+                    <i className="bi bi-trash-fill"/>
+                </button>
             </div>
         </form>
     </div>
 
-    function SaveDepartment() {
-        return <>
-            <button title="Salvar mudanças" type="submit" onClick={save}>
-                <i className="bi bi-floppy-fill"/>
-            </button>
-            <button title="Cancelar alterações" type="button" onClick={ () => setEditMode( false ) }>
-                <i className="bi bi-x-circle"/>
-            </button>
-        </>
-
-        async function save( e: MouseEvent<HTMLButtonElement> ) {
-            e.preventDefault();
-            const res = await UniversimeApi.Department.update( department.id, { acronym: editAcronymRef.current!.value, name: editNameRef.current!.value } );
-            if ( res.isSuccess() )
-                await refresh();
-        }
-    }
-
-    function EditDepartmentButton() {
-        return <button type="button" title="Alterar nome do órgão/área" onClick={ () => setEditMode( true ) }>
-            <i className="bi bi-pencil-square"/>
-        </button>
-    }
-
-    function InputDepartmentData() {
-        return <div className="form-inputs">
-            <input type="text" name="acronym" id="acronym" defaultValue={ department.acronym } placeholder="Sigla" ref={ editAcronymRef } />
-            <input type="text" name="name" id="name" defaultValue={ department.name } placeholder="Nome" ref={ editNameRef } />
-        </div >
-    }
-
-    function DeleteDepartment() {
-        return <button type="button" title="Excluir órgão/área" onClick={ deleteDepartment } className="delete-department">
-            <i className="bi bi-trash-fill"/>
-        </button>
-
-        async function deleteDepartment( e: MouseEvent<HTMLButtonElement> ) {
-            e.preventDefault();
-            const modalRes = await SwalUtils.fireAreYouSure({
-                title: `Deseja excluir o órgão/área "${department.acronym} - ${department.name}"?`,
-
-                confirmButtonText: "Excluir",
-                confirmButtonColor: "var(--font-color-alert)",
-            });
-
-            if ( modalRes.isConfirmed ) {
-                await UniversimeApi.Department.remove( department.id );
-                await refresh();
-            }
-        }
-    }
-
     async function refresh() {
         await context.refreshDepartments();
-        setEditMode( false );
+        context.setEditDepartment( undefined );
+    }
+
+    async function deleteDepartment( e: MouseEvent<HTMLButtonElement> ) {
+        e.preventDefault();
+        const modalRes = await SwalUtils.fireAreYouSure({
+            title: `Deseja excluir o órgão/área "${department.acronym} - ${department.name}"?`,
+
+            confirmButtonText: "Excluir",
+            confirmButtonColor: "var(--font-color-alert)",
+        });
+
+        if ( modalRes.isConfirmed ) {
+            await UniversimeApi.Department.remove( department.id );
+            await refresh();
+        }
     }
 }
 
