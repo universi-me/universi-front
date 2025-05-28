@@ -27,13 +27,13 @@ export async function remove( educationId: string ) {
 export type EducationUpdate_RequestDTO = {
     educationType: Optional<string>;
     institution: Optional<string>;
-    startDate: Optional<string>;
-    endDate: Possibly<string>;
+    startDate: Optional<number | string>;
+    endDate: Possibly<number | string>;
 };
 
 export type EducationCreate_RequestDTO = {
     educationType: string;
     institution: string;
-    startDate: string;
-    endDate: Possibly<string>;
+    startDate: number | string;
+    endDate: Possibly<number | string>;
 };
