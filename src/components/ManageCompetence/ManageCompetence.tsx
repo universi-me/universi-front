@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { UniversimeApi } from "@/services";
 import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { compareCompetenceTypes, CompetenceLevelArrayObject, CompetenceLevelSelect, getCompetenceLevelObject } from "@/types/Competence";
+import { compareCompetenceTypes, CompetenceLevelArrayObject, CompetenceLevelSelect, CompetenceTypeSelect, getCompetenceLevelObject } from "@/types/Competence";
 import { ApiResponse } from "@/utils/apiUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
@@ -32,20 +32,14 @@ export function ManageCompetence( props: Readonly<ManageCompetenceProps> ) {
     const formTitle = isCreating ? "Adicionar Competência" : "Editar Competência";
 
     return <UniversiForm.Root title={ formTitle } callback={ handleForm }>
-        <UniversiForm.Input.Select
+        <CompetenceTypeSelect
             param="competenceType"
             label="Tipo da Competência"
             required
             isSearchable
             defaultValue={ competence?.competenceType }
             options={ competenceTypeOptions }
-            getOptionUniqueValue={ ct => ct.id }
-            getOptionLabel={ ct => ct.name }
-            canCreateOptions
-            onCreateOption={ async name => {
-                await UniversimeApi.CompetenceType.create( { name } );
-                return await updateCompetenceTypes() ?? [];
-            } }
+            onUpdateOptions={ setCompetenceTypes }
         />
 
         <div>

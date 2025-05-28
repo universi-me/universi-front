@@ -4,6 +4,7 @@ import { UniversimeApi } from "@/services"
 import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { ApiResponse, contentImageUrl } from "@/utils/apiUtils";
+import { CompetenceTypeSelect } from "@/types/Competence";
 
 import "./ManageContent.less";
 
@@ -80,20 +81,13 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
             } }
         />
 
-        <UniversiForm.Input.Select
+        <CompetenceTypeSelect
             param="badges"
             label="Selos de Competência"
-            getOptionLabel={ c => c.name }
-            getOptionUniqueValue={ c => c.id }
             isMultiSelection
             defaultValue={ content?.grantsBadgeToCompetences }
             options={ availableCompetenceTypes }
-            canCreateOptions
-            onCreateOption={ async name => {
-                await UniversimeApi.CompetenceType.create( { name } );
-                const res = await updateCompetenceTypes()
-                return res.body ?? [];
-            } }
+            onUpdateOptions={ setAvailableCompetenceTypes }
         />
     </UniversiForm.Root>
 

@@ -3,6 +3,7 @@ import { UniversimeApi } from "@/services"
 import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { type ApiResponse } from "@/utils/apiUtils";
+import { CompetenceTypeSelect } from "@/types/Competence";
 
 export type ManageJobsProps = {
     job: Job | null;
@@ -68,21 +69,14 @@ export function ManageJob(props: Readonly<ManageJobsProps>) {
             } }
         />
 
-        <UniversiForm.Input.Select
+        <CompetenceTypeSelect
             param="requiredCompetences"
             label="Competências necessárias"
             options={ competenceTypes }
-            getOptionLabel={ ct => ct.name }
-            getOptionUniqueValue={ ct => ct.id }
             defaultValue={ job?.requiredCompetences }
             required
             isMultiSelection
-            canCreateOptions
-            onCreateOption={ async name => {
-                const res = await UniversimeApi.CompetenceType.create({ name });
-                if (!res.isSuccess()) return [];
-                return await updateCompetenceTypes() ?? [];
-            } }
+            onUpdateOptions={ setCompetenceTypes }
         />
     </UniversiForm.Root>
 

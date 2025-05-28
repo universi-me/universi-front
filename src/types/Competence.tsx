@@ -1,5 +1,6 @@
 import UniversiForm from "@/components/UniversiForm";
 import { UniversiFormSelectInputProps } from "@/components/UniversiForm/inputs/UniversiFormSelectInput";
+import { UniversimeApi } from "@/services";
 
 export function intToLevel(int: number): Competence.Level {
     return int % 4 as Competence.Level;
@@ -35,7 +36,8 @@ export const CompetenceLevelObjectsArray: CompetenceLevelArrayObject[] = Object.
     .map( ( [ level, data ] ) => ({
         ...data,
         level: strToLevel( level ),
-    }) );
+    }) )
+    .sort( ( l1, l2 ) => l1.level - l2.level );
 
 export function getCompetenceLevelObject( level: undefined ): undefined;
 export function getCompetenceLevelObject( level: Competence.Level ): CompetenceLevelArrayObject;
@@ -70,9 +72,35 @@ export function CompetenceLevelSelect<C extends Optional<boolean> = undefined>( 
     />
 }
 
+export function CompetenceTypeSelect<C extends Optional<boolean>, M extends Optional<boolean>>( props: Readonly<CompetenceTypeSelectProps<C, M>> ) {
+    return <UniversiForm.Input.Select
+        { ...props }
+        options={ [ ...props.options ].sort( compareCompetenceTypes ) }
+        getOptionLabel={ c => c.name }
+        getOptionUniqueValue={ c => c.id }
+        canCreateOptions
+        onCreateOption={ async name => {
+            await UniversimeApi.CompetenceType.create( { name } );
+            const res = await UniversimeApi.CompetenceType.list();
+            const options = res.body?.sort( compareCompetenceTypes ) ?? [];
+
+            props.onUpdateOptions?.( options );
+            return options;
+        } }
+        createOptionLabel={ props.createOptionLabel ?? ( name => `Criar Tipo de Competência "${ name }"` ) }
+    />
+}
+
 export type CompetenceLevelSelectProps<Clearable extends Optional<boolean>> = Omit<
     UniversiFormSelectInputProps<CompetenceLevelArrayObject, false, Clearable>,
     "options" | "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "isMultiSelection" | "onCreateOption" | "defaultValue"
 > & {
     defaultValue?: Competence.Level;
+};
+
+export type CompetenceTypeSelectProps<Clearable extends Optional<boolean>, Multi extends Optional<boolean>> = Omit<
+    UniversiFormSelectInputProps<Competence.Type, Multi, Clearable>,
+    "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "onCreateOption"
+> & {
+    onUpdateOptions?( options: Competence.Type[] ): any;
 };
