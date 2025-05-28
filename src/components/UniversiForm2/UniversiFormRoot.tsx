@@ -80,15 +80,18 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         }
     }
 
-    async function handleConfirm( e: MouseEvent<HTMLButtonElement> ) {
-        e.preventDefault();
-
+    function getFormBody() {
         const body: Record<string, any> = {};
         for ( const key of formData.keys() )
             body[ key ] = contextValue.get( key );
+        return body;
+    }
+
+    async function handleConfirm( e: MouseEvent<HTMLButtonElement> ) {
+        e.preventDefault();
 
         setHandlingFormEnd( true );
-        await callback( { confirmed: true, body } );
+        await callback( { confirmed: true, body: getFormBody() } );
         setHandlingFormEnd( false );
     }
 
@@ -147,9 +150,10 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         const value = formData.get( key )!.value;
 
         setIsAllValid( false );
+        const body = getFormBody();
         const responses = await Promise.all(
             formData.get( key )!.validations
-                .map( validate => validate( value ) )
+                .map( validate => validate( value, body ) )
         );
 
         formData.get( key )!.valid = responses.every( r => r );
