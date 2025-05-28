@@ -115,6 +115,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
             },
             del( key ) {
                 formData.delete( key );
+                updateIsAllValid();
             },
             initialize( key, value, validationOptions ) {
                 let validations = validationOptions.functions ?? [];
@@ -144,6 +145,10 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         }
     }
 
+    function updateIsAllValid() {
+        setIsAllValid( formData.values().every( v => v.valid ) );
+    }
+
     async function updateValidations( key: string ) {
         if ( !formData.has( key ) ) return;
 
@@ -157,9 +162,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         );
 
         formData.get( key )!.valid = responses.every( r => r );
-        const allValid = formData.values().every( v => v.valid );
-
-        setIsAllValid( allValid );
+        updateIsAllValid();
     }
 
     function validateRequired( value: any ): boolean {
