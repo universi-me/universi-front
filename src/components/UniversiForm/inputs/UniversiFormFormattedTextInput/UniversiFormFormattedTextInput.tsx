@@ -1,8 +1,8 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 import TextboxFormatted from "@/components/TextboxFormatted";
 
-import { RequiredIndicator } from "../../utils";
+import { RequiredIndicator, useInitialize } from "../../utils";
 import { UniversiFormContext } from "../../UniversiFormContext";
 
 import styles from "./UniversiFormFormattedTextInput.module.less";
@@ -11,10 +11,7 @@ import formStyles from "../../UniversiForm.module.less";
 
 export function UniversiFormFormattedTextInput( props: Readonly<UniversiFormFormattedTextInputProps> ) {
     const context = useContext( UniversiFormContext );
-    useEffect(
-        () => context?.initialize( props.param, props.defaultValue, { functions: props.validations, required: props.required } ),
-        [ props.required, props.validations ]
-    );
+    useInitialize( { props, value: props.defaultValue } );
 
     return <fieldset className={ formStyles.fieldset }>
         <legend>{ props.label } <RequiredIndicator required={ props.required } /></legend>

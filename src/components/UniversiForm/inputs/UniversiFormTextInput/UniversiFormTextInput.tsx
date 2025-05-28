@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import type { RefAttributes, InputHTMLAttributes, TextareaHTMLAttributes, ChangeEvent } from "react";
 
 import { makeClassName } from "@/utils/tsxUtils";
 import { UniversiFormContext } from "../../UniversiFormContext";
-import { RequiredIndicator, handleValidation } from "../../utils";
+import { RequiredIndicator, handleValidation, useInitialize } from "../../utils";
 
 import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormTextInput.module.less";
@@ -15,10 +15,7 @@ export function UniversiFormTextInput<L extends Optional<boolean> = undefined>( 
 
     const [ value, setValue ] = useState<string>( props.defaultValue ?? "" );
     const [ valid, setValid ] = useState<boolean>();
-    useEffect(
-        () => context?.initialize( props.param, value, { functions: props.validations, required: props.required, setValid } ),
-        [ props.required, props.validations ]
-    );
+    useInitialize( { props, value, setValid } );
 
     const isFull = Boolean( props.maxLength && ( value.length >= props.maxLength ) );
     const fieldProps = {

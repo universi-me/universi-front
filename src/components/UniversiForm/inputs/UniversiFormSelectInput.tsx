@@ -1,9 +1,9 @@
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { ReactNode, useContext, useState } from "react";
 import Select, { type StylesConfig } from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 import { UniversiFormContext } from "../UniversiFormContext";
-import { handleValidation, RequiredIndicator } from "../utils";
+import { handleValidation, RequiredIndicator, useInitialize } from "../utils";
 
 import formStyles from "../UniversiForm.module.less";
 
@@ -15,10 +15,7 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
 
     const [ options, setOptions ] = useState<T[]>( props.options );
     const [ valid, setValid ] = useState<boolean>();
-    useEffect(
-        () => context?.initialize( props.param, props.defaultValue, { functions: props.validations, required: props.required, setValid } ),
-        [ props.required, props.validations ]
-    );
+    useInitialize( { props, value: props.defaultValue, setValid } );
 
     const selectProps = {
         options: options,

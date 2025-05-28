@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import * as Switch from "@radix-ui/react-switch";
 
-import { RequiredIndicator } from "../../utils";
+import { RequiredIndicator, useInitialize } from "../../utils";
 import { UniversiFormContext } from "../../UniversiFormContext";
 
 import formStyles from "../../UniversiForm.module.less";
@@ -12,10 +12,7 @@ export function UniversiFormSwitchInput( props: Readonly<UniversiFormSwitchInput
     const context = useContext( UniversiFormContext );
 
     const [ value, setValue ] = useState( props.defaultValue ?? false );
-    useEffect(
-        () => context?.initialize( props.param, value, { functions: props.validations, required: props.required } ),
-        [ props.required, props.validations ]
-    );
+    useInitialize( { props, value } );
 
     return <fieldset className={ `${formStyles.fieldset} ${styles.fieldset}` }>
         <div className={ `${styles.legend} ${formStyles.legend}` }>

@@ -1,4 +1,4 @@
-import { useContext, useEffect, type RefAttributes } from "react"
+import { useContext, type RefAttributes } from "react"
 import ReCAPTCHA, { ReCAPTCHAProps } from "react-google-recaptcha-enterprise"
 
 import { makeClassName } from "@/utils/tsxUtils";
@@ -6,15 +6,13 @@ import { UniversiFormContext } from "../../UniversiFormContext";
 
 import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormRecaptchaInput.module.less";
+import { useInitialize } from "../../utils";
 
 
 export function UniversiFormRecaptchaInput( props: Readonly<UniversiFormRecaptchaInputProps> ) {
     const { param, disabled, required, validations, onChange, ...recaptchaProps } = props;
     const context = useContext( UniversiFormContext );
-    useEffect(
-        () => context?.initialize( props.param, null, { functions: props.validations, required: props.required } ),
-        [ props.required, props.validations ]
-    );
+    useInitialize( { props, value: null } );
 
     return <fieldset className={ makeClassName( formStyles.fieldset, styles.fieldset ) }>
         <ReCAPTCHA {...recaptchaProps} onChange={ handleOnChange } />

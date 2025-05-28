@@ -1,11 +1,11 @@
-import { useContext, useEffect, type ReactNode, useState, useMemo } from "react";
+import { useContext, type ReactNode, useState, useMemo } from "react";
 
 import BootstrapIcon from "@/components/BootstrapIcon";
 import Filter from "@/components/Filter";
 import useRefreshComponent from "@/hooks/useRefreshComponent";
 import { ArrayChanges } from "@/utils/arrayUtils";
 import { UniversiFormContext } from "../../UniversiFormContext";
-import { RequiredIndicator } from "../../utils";
+import { RequiredIndicator, useInitialize } from "../../utils";
 
 import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormCardSelectionInput.module.less";
@@ -22,10 +22,7 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean>>( 
         );
     }, [ props.options, props.defaultValue ] );
 
-    useEffect(
-        () => context?.initialize( props.param, getFinalValue(), { functions: props.validations, required: props.required } ),
-        [ props.required, props.validations ]
-    );
+    useInitialize({ props, value: getFinalValue() });
 
     const [ textFilter, setTextFilter ] = useState( "" );
     const filteredOptions = useMemo( () => {

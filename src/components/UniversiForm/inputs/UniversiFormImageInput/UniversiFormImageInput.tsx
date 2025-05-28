@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { type ReactCropperProps } from "react-cropper";
 
 import CropperComponent from "@/components/ImageCropper/ImageCropper";
@@ -6,24 +6,21 @@ import MaterialIcon from "@/components/MaterialIcon";
 import { arrayBufferToBase64 } from "@/utils/fileUtils";
 
 import { UniversiFormContext } from "../../UniversiFormContext";
-import { RequiredIndicator } from "../../utils";
+import { RequiredIndicator, useInitialize } from "../../utils";
 
 import styles from "./UniversiFormImageInput.module.less";
 import formStyles from "../../UniversiForm.module.less";
 
 
 export function UniversiFormImageInput( props: Readonly<UniversiFormImageInputProps> ) {
-    const { param, validations, required, defaultValue, label, aspectRatio, onChange } = props;
+    const { param, required, defaultValue, label, aspectRatio, onChange } = props;
     const context = useContext( UniversiFormContext );
 
     const [ value, setValue ] = useState<Optional<string | File>>( defaultValue );
     const [ imageToCrop, setImageToCrop ] = useState<string>();
     const [ imageSrc, setImageSrc ] = useState( typeof defaultValue === "string" ? defaultValue : undefined );
 
-    useEffect(
-        () => context?.initialize( param, value, { functions: validations, required: required } ),
-        [ required, validations ]
-    );
+    useInitialize( { props, value } );
 
     return <fieldset className={ formStyles.fieldset }>
         <legend>{ label } <RequiredIndicator required={ required } /></legend>

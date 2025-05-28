@@ -4,7 +4,7 @@ import MaterialIcon from "@/components/MaterialIcon";
 import { PasswordValidity } from "@/utils/passwordValidation";
 
 import { UniversiFormContext } from "../../UniversiFormContext";
-import { RequiredIndicator } from "../../utils";
+import { RequiredIndicator, useInitialize } from "../../utils";
 
 import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormPasswordInput.module.less";
@@ -18,10 +18,7 @@ export function UniversiFormPasswordInput( props: Readonly<UniversiFormPasswordI
     const [ password, setPassword ] = useState<string>( "" );
     const [ confirm, setConfirm ] = useState<Optional<string>>( props.mustConfirm ? password : undefined );
 
-    useEffect(
-        () => context?.initialize( props.param, password, { functions: props.validations, required: props.required } ),
-        [ props.required, props.validations ]
-    );
+    useInitialize( { props, value: password } );
 
     const valid = useMemo( () => new PasswordValidity( password, confirm ), [] );
     const passwordContextValue = useMemo<UniversiFormPasswordInputContextType>( () => ({ ...props, valid }), [] );

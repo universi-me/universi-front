@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { UniversiFormContext } from "../../UniversiFormContext";
-import { handleValidation, RequiredIndicator } from "../../utils";
+import { handleValidation, RequiredIndicator, useInitialize } from "../../utils";
 
 import styles from "./UniversiFormDateInput.module.less";
 import formStyles from "../../UniversiForm.module.less";
@@ -12,15 +12,15 @@ export function UniversiFormDateInput( props: Readonly<UniversiFormDateInputProp
     const context = useContext( UniversiFormContext );
     const [ valid, setValid ] = useState<boolean>();
 
-    const defaultDate = props.defaultValue instanceof Date
-        ? props.defaultValue
-        : props.defaultValue !== undefined
-            ? dateWithoutTimezone( props.defaultValue )
-            : undefined;
+    const defaultDate = useMemo( () => {
+        return props.defaultValue instanceof Date
+            ? props.defaultValue
+            : props.defaultValue !== undefined
+                ? dateWithoutTimezone( props.defaultValue )
+                : undefined;
+    }, [] );
 
-    useEffect( () =>
-        context?.initialize( props.param, defaultDate, { functions: props.validations, required: props.required, setValid } )
-    , [ props.required, props.validations ] );
+    useInitialize( { props, value: defaultDate, setValid } );
 
     return <fieldset className={ formStyles.fieldset }>
         <legend className={ formStyles.legend }>{ props.label } <RequiredIndicator required={ props.required }/></legend>
