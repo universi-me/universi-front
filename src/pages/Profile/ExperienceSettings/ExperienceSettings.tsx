@@ -5,6 +5,7 @@ import { UniversimeApi } from "@/services"
 
 import UniversiForm from "@/components/UniversiForm";
 import { InstitutionSelect } from "@/types/Institution";
+import { ExperienceTypeSelect } from "@/types/Experience";
 
 export function ExperienceSettings() {
     const profileContext = useContext(ProfileContext)
@@ -16,22 +17,12 @@ export function ExperienceSettings() {
     return (
         profileContext &&
         <UniversiForm.Root title={ experience?.id ? "Editar Experiência" : "Adicionar Experiência" } callback={ handleForm }>
-            <UniversiForm.Input.Select
+            <ExperienceTypeSelect
                 param="experienceType"
                 label="Tipo de Experiência"
                 defaultValue={ experience?.experienceType }
                 options={ profileContext.allTypeExperience }
-                getOptionUniqueValue={ te => te.id }
-                getOptionLabel={ te => te.name }
                 required
-                canCreateOptions
-                onCreateOption={ async name => {
-                    const res = await UniversimeApi.ExperienceType.create({ name });
-                    if ( !res.isSuccess() ) return [];
-
-                    const list = await UniversimeApi.ExperienceType.list();
-                    return list.body ?? [];
-                } }
             />
 
             <UniversiForm.Input.Text
