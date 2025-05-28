@@ -1,5 +1,6 @@
 import UniversiForm from "@/components/UniversiForm";
 import { type UniversiFormSelectInputProps } from "@/components/UniversiForm/inputs/UniversiFormSelectInput";
+import { UniversimeApi } from "@/services";
 
 export const MaterialTypeObjects: { [k in Capacity.Content.Type]: MaterialTypeObject } = {
     VIDEO: {
@@ -37,6 +38,10 @@ export function compareContents( c1: Capacity.Folder.DTO, c2: Capacity.Folder.DT
     return c1.name.localeCompare( c2.name );
 }
 
+export function compareCategories( c1: Capacity.Category.DTO, c2: Capacity.Category.DTO ) {
+    return c1.name.localeCompare( c2.name );
+}
+
 export type MaterialTypeObject = {
     label: string;
 };
@@ -58,9 +63,34 @@ export function MaterialTypeSelect<C extends Optional<boolean> = undefined>( pro
     />
 }
 
+export function CategorySelect<C extends Optional<boolean>, M extends Optional<boolean>>( props: Readonly<CategorySelectProps<C, M>> ) {
+    return <UniversiForm.Input.Select
+        { ...props }
+        options={ [ ...props.options ].sort( compareCategories ) }
+        getOptionUniqueValue={ c => c.id }
+        getOptionLabel={ c => c.name }
+        canCreateOptions
+        onCreateOption={ async name => {
+                await UniversimeApi.Capacity.Category.create( { name } );
+                const res = await UniversimeApi.Capacity.Category.list();
+                const options = res.body?.sort( compareCategories ) ?? [];
+
+                props.onUpdateOptions?.( options );
+                return options;
+        } }
+    />
+}
+
 export type MaterialTypeSelectProps<Clearable extends Optional<boolean>> = Omit<
     UniversiFormSelectInputProps<MaterialTypeArrayObject, false, Clearable>,
     "options" | "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "isMultiSelection" | "onCreateOption" | "defaultValue"
 > & {
     defaultValue?: Capacity.Content.Type;
+};
+
+export type CategorySelectProps<Clearable extends Optional<boolean>, Multi extends Optional<boolean>> = Omit<
+    UniversiFormSelectInputProps<Capacity.Category.DTO, Multi, Clearable>,
+    "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "onCreateOption"
+> & {
+    onUpdateOptions?( options: Capacity.Category.DTO[] ): any;
 };

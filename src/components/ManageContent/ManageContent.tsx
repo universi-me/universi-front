@@ -7,6 +7,7 @@ import { ApiResponse, contentImageUrl } from "@/utils/apiUtils";
 import { CompetenceTypeSelect } from "@/types/Competence";
 
 import "./ManageContent.less";
+import { CategorySelect } from "@/types/Capacity";
 
 export type ManageContentProps = {
     /** A null `content` means a content is being created, while a value means
@@ -65,20 +66,13 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
             aspectRatio={ 1 }
         />
 
-        <UniversiForm.Input.Select
+        <CategorySelect
             param="categories"
             label="Categorias do Conteúdo"
-            getOptionLabel={ c => c.name }
-            getOptionUniqueValue={ c => c.id }
             isMultiSelection
             defaultValue={ content?.categories }
             options={ availableCategories }
-            canCreateOptions
-            onCreateOption={ async name => {
-                await UniversimeApi.Capacity.Category.create( { name } );
-                const res = await updateCategories()
-                return res.body ?? [];
-            } }
+            onUpdateOptions={ setAvailableCategories }
         />
 
         <CompetenceTypeSelect

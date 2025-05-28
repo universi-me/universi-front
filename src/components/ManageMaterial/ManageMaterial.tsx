@@ -4,7 +4,7 @@ import { UniversimeApi } from "@/services"
 import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
-import { type MaterialTypeArrayObject, MaterialTypeSelect } from "@/types/Capacity";
+import { CategorySelect, type MaterialTypeArrayObject, MaterialTypeSelect } from "@/types/Capacity";
 import "./ManageMaterial.less";
 import { ApiResponse } from "@/utils/apiUtils";
 
@@ -65,20 +65,14 @@ export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
             required
         />
 
-        <UniversiForm.Input.Select
+        <CategorySelect
             param="categories"
             label="Categorias do Material"
             isMultiSelection
             required
             options={ availableCategories }
             defaultValue={ material?.categories }
-            getOptionUniqueValue={ c => c.id }
-            getOptionLabel={ c => c.name }
-            canCreateOptions
-            onCreateOption={ async name => {
-                await UniversimeApi.Capacity.Category.create({ name });
-                return updateCategories();
-            } }
+            onUpdateOptions={ setAvailableCategories }
         />
     </UniversiForm.Root>
 
