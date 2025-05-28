@@ -6,3 +6,4 @@ export { UniversiFormCardSelectionInput as CardSelection } from "./UniversiFormC
 export { UniversiFormImageInput as Image } from "./UniversiFormImageInput";
 export { UniversiFormSwitchInput as Switch } from "./UniversiFormSwitchInput";
 export { UniversiFormFormattedTextInput as FormattedText } from "./UniversiFormFormattedTextInput";
+export { UniversiFormDateInput as Date } from "./UniversiFormDateInput";
