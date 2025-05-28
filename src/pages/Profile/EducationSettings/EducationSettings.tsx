@@ -5,6 +5,7 @@ import { UniversimeApi } from "@/services";
 
 import UniversiForm from "@/components/UniversiForm";
 import { InstitutionSelect } from "@/types/Institution";
+import { EducationTypeSelect } from "@/types/Education";
 
 export function EducationSettings() {
     const profileContext = useContext(ProfileContext)
@@ -23,22 +24,12 @@ export function EducationSettings() {
                 required
             />
 
-            <UniversiForm.Input.Select
+            <EducationTypeSelect
                 param="educationType"
                 label="Tipo de Formação"
                 defaultValue={ profileContext?.editEducation?.educationType }
                 options={ profileContext.allTypeEducation }
-                getOptionUniqueValue={ et => et.id }
-                getOptionLabel={ et => et.name }
                 required
-                canCreateOptions
-                onCreateOption={ async name => {
-                    const res = await UniversimeApi.EducationType.create({ name });
-                    if ( !res.isSuccess() ) return [];
-
-                    const list = await UniversimeApi.EducationType.list();
-                    return list.body ?? [];
-                } }
             />
 
             <UniversiForm.Input.Date
