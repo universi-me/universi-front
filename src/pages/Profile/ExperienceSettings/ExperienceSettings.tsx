@@ -4,6 +4,7 @@ import { ProfileContext } from "@/pages/Profile";
 import { UniversimeApi } from "@/services"
 
 import UniversiForm from "@/components/UniversiForm";
+import { InstitutionSelect } from "@/types/Institution";
 
 export function ExperienceSettings() {
     const profileContext = useContext(ProfileContext)
@@ -42,22 +43,12 @@ export function ExperienceSettings() {
                 required
             />
 
-            <UniversiForm.Input.Select
+            <InstitutionSelect
                 param="institution"
                 label="Instituição"
                 defaultValue={ experience?.institution }
                 options={ profileContext.allInstitution }
-                getOptionUniqueValue={ te => te.id }
-                getOptionLabel={ te => te.name }
                 required
-                canCreateOptions
-                onCreateOption={ async name => {
-                    const res = await UniversimeApi.Institution.create({ name });
-                    if ( !res.isSuccess() ) return [];
-
-                    const list = await UniversimeApi.Institution.list();
-                    return list.body ?? [];
-                } }
             />
 
             <UniversiForm.Input.Date

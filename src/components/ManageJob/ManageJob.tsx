@@ -4,6 +4,7 @@ import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { type ApiResponse } from "@/utils/apiUtils";
 import { CompetenceTypeSelect } from "@/types/Competence";
+import { InstitutionSelect } from "@/types/Institution";
 
 export type ManageJobsProps = {
     job: Job | null;
@@ -51,22 +52,14 @@ export function ManageJob(props: Readonly<ManageJobsProps>) {
             required
         />
 
-        <UniversiForm.Input.Select
+        <InstitutionSelect
             param="institution"
             label="Instituição ofertante"
             options={ institutions }
-            getOptionUniqueValue={ i => i.id }
-            getOptionLabel={ i => i.name }
             required
             isSearchable
             defaultValue={ job?.institution }
             disabled={ isCreating }
-            canCreateOptions
-            onCreateOption={ async name => {
-                const res = await UniversimeApi.Institution.create( { name } );
-                if ( !res.isSuccess() ) return [];
-                return await updateInstitutions() ?? [];
-            } }
         />
 
         <CompetenceTypeSelect

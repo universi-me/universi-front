@@ -4,6 +4,7 @@ import { ProfileContext } from "@/pages/Profile";
 import { UniversimeApi } from "@/services";
 
 import UniversiForm from "@/components/UniversiForm";
+import { InstitutionSelect } from "@/types/Institution";
 
 export function EducationSettings() {
     const profileContext = useContext(ProfileContext)
@@ -14,22 +15,12 @@ export function EducationSettings() {
     return (
         profileContext &&
         <UniversiForm.Root title={ profileContext?.editEducation?.id ? "Editar Formação" : "Adicionar Formação" } callback={ handleForm }>
-            <UniversiForm.Input.Select
+            <InstitutionSelect
                 param="institution"
                 label="Instituição"
                 defaultValue={ profileContext?.editEducation?.institution }
                 options={ profileContext.allInstitution }
-                getOptionUniqueValue={ i => i.id }
-                getOptionLabel={ i => i.name }
                 required
-                canCreateOptions
-                onCreateOption={ async name => {
-                    const res = await UniversimeApi.Institution.create({ name });
-                    if ( !res.isSuccess() ) return [];
-
-                    const list = await UniversimeApi.Institution.list();
-                    return list.body ?? [];
-                } }
             />
 
             <UniversiForm.Input.Select
