@@ -11,7 +11,7 @@ import AssignFolderForm from "./AssignFolderForm";
 import "./GroupContents.less";
 import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 import useCanI from "@/hooks/useCanI";
 import { Permission } from "@/utils/roles/rolesUtils";
 

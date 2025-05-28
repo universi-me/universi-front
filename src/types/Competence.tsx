@@ -1,5 +1,5 @@
-import UniversiForm from "@/components/UniversiForm2";
-import { UniversiFormSelectInputProps } from "@/components/UniversiForm2/inputs/UniversiFormSelectInput";
+import UniversiForm from "@/components/UniversiForm";
+import { UniversiFormSelectInputProps } from "@/components/UniversiForm/inputs/UniversiFormSelectInput";
 
 export function intToLevel(int: number): Competence.Level {
     return int % 4 as Competence.Level;

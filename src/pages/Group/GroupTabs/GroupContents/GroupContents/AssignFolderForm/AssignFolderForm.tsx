@@ -3,8 +3,8 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import AuthContext from "@/contexts/Auth";
 import { UniversimeApi } from "@/services";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import UniversiForm from "@/components/UniversiForm2";
-import { UniversiFormCardSelectionInputValue } from "@/components/UniversiForm2/inputs/UniversiFormCardSelectionInput";
+import UniversiForm from "@/components/UniversiForm";
+import { UniversiFormCardSelectionInputValue } from "@/components/UniversiForm/inputs/UniversiFormCardSelectionInput";
 import ProfileImage from "@/components/ProfileImage";
 import { GroupContext } from "@/pages/Group/GroupContext";
 

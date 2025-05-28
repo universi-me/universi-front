@@ -14,7 +14,7 @@ import useCanI from "@/hooks/useCanI";
 import { Permission } from "@/utils/roles/rolesUtils";
 
 import { ICON_LIKE, ICON_CLAP, ICON_HEART, ICON_SUPPORT, ICON_GENIUS, ICON_HAPPY, ICON_COMMENT } from '@/utils/assets';
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
 export type GroupFeedPostProps<C extends boolean = boolean> = Readonly<{

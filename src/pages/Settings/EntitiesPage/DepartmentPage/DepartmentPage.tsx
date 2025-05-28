@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import { DepartmentPageContext } from "./DepartmentPageContext";
 import { UniversimeApi } from "@/services";
 import ActionButton from "@/components/ActionButton";
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 import stringUtils from "@/utils/stringUtils";
 
 import "./DepartmentPage.less";

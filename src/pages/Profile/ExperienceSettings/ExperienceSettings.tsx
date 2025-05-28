@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { ProfileContext } from "@/pages/Profile";
 import { UniversimeApi } from "@/services"
 
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 
 export function ExperienceSettings() {
     const profileContext = useContext(ProfileContext)

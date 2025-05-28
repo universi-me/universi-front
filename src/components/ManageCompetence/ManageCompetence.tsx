@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { UniversimeApi } from "@/services";
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { compareCompetenceTypes, CompetenceLevelArrayObject, CompetenceLevelSelect, getCompetenceLevelObject } from "@/types/Competence";
 import { ApiResponse } from "@/utils/apiUtils";

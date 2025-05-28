@@ -6,7 +6,7 @@ import { AuthContext } from "@/contexts/Auth";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { UniversimeApi } from "@/services"
 
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 
 import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 

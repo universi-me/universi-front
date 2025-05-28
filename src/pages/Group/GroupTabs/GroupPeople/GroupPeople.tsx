@@ -13,7 +13,7 @@ import { UniversimeApi } from "@/services"
 import ActionButton from "@/components/ActionButton";
 import useCanI from "@/hooks/useCanI";
 import { Permission } from "@/utils/roles/rolesUtils";
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 import { AuthContext } from "@/contexts/Auth";
 
 type competenceSearch = {

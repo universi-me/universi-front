@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router";
 import type ReCAPTCHA from "react-google-recaptcha-enterprise";
 
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 import { UniversimeApi } from "@/services"
 import { isEmail } from "@/utils/regexUtils";
 import { AuthContext } from "@/contexts/Auth/AuthContext";

@@ -1,6 +1,6 @@
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { Filter } from "@/components/Filter/Filter";
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 import { UniversimeApi } from "@/services"
 import { useContext, useState } from "react";
 import { GroupContext, GroupFeedPost } from "@/pages/Group";

@@ -3,7 +3,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 
 import { UniversimeApi } from "@/services"
 import { Filter } from "@/components/Filter/Filter";
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 import { type CompetencesSettingsLoaderResponse, SettingsDescription, SettingsTitle, CompetenceTypeEditor } from "@/pages/Settings";
 
 import * as SwalUtils from "@/utils/sweetalertUtils";

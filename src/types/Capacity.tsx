@@ -1,5 +1,5 @@
-import UniversiForm from "@/components/UniversiForm2";
-import { type UniversiFormSelectInputProps } from "@/components/UniversiForm2/inputs/UniversiFormSelectInput";
+import UniversiForm from "@/components/UniversiForm";
+import { type UniversiFormSelectInputProps } from "@/components/UniversiForm/inputs/UniversiFormSelectInput";
 
 export const MaterialTypeObjects: { [k in Capacity.Content.Type]: MaterialTypeObject } = {
     VIDEO: {

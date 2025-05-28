@@ -1,4 +1,4 @@
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 import { UniversimeApi } from "@/services"
 
 import { getGroupTypeObject, type GroupTypeArrayObject, GroupTypeObjectsArray } from "@/types/Group";

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { UniversimeApi } from "@/services"
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { type ApiResponse } from "@/utils/apiUtils";
 

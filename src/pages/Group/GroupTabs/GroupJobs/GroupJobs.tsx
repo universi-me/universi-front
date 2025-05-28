@@ -17,7 +17,7 @@ import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdown
 import { Permission } from "@/utils/roles/rolesUtils";
 
 import "./GroupJobs.less";
-import UniversiForm from "@/components/UniversiForm2";
+import UniversiForm from "@/components/UniversiForm";
 
 export function GroupJobs() {
     const groupContext = useContext(GroupContext);
