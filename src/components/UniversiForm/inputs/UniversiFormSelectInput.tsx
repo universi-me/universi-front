@@ -18,8 +18,8 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
     useInitialize( { props, value: props.defaultValue, setValid } );
 
     const selectProps = {
-        options: options,
-        defaultValue: props.defaultValue,
+        options: makeOption( options ),
+        defaultValue: makeOption( props.defaultValue ),
 
         isClearable: props.isClearable,
         isMulti: props.isMultiSelection,
@@ -43,22 +43,22 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
         },
 
         menuPosition: "fixed",
-        async onChange( newValue: T | readonly T[] ) {
-            await context?.set( props.param, newValue );
+        async onChange( newValue: SelectOption | SelectOption[] ) {
+            const newValueData = Array.isArray( newValue )
+                ? newValue.map( o => o.data )
+                : newValue.data;
+
+            await context?.set( props.param, newValueData );
             setValid( context?.getValidation( props.param ) );
 
             // use of `as any` because function type was already validated at component creation
-            props.onChange?.( newValue as any );
+            props.onChange?.( newValueData as any );
         },
-        getOptionLabel: props.getOptionLabel,
         noOptionsMessage( { inputValue }: { inputValue: string } ) {
             return props.optionNotFoundMessage?.( inputValue ) ?? `Não foi possível encontrar ${ inputValue }`;
         },
 
-        getOptionValue( option: T ) {
-            return String( props.getOptionUniqueValue( option ) );
-        },
-        filterOption: props.filterOption ?? undefined,
+        filterOption: props.filterOption,
     };
 
     return <fieldset className={ formStyles.fieldset }>
@@ -81,12 +81,36 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
 
         setOptions( ( handledNewOptions ?? newOptions ).sort( props.sortOptions ) );
     }
+
+    function makeOption( data: undefined | null ): undefined;
+    function makeOption( data: T ): SelectOption;
+    function makeOption( data: T[] ): SelectOption[];
+    function makeOption( data: Optional<T> | T[] | null ): SelectOption | SelectOption[] | undefined;
+    function makeOption( data: Optional<T> | T[] | null ): SelectOption | SelectOption[] | undefined {
+        if ( data === undefined || data === null )
+            return undefined;
+
+        if ( Array.isArray( data ) )
+            return data.map( d => makeOption( d ) );
+
+        return {
+            data,
+            label: props.getOptionLabel( data ),
+            value: String( props.getOptionUniqueValue( data ) ),
+        };
+    }
+
+    type SelectOption = {
+        value: string;
+        label: React.ReactNode;
+        data: T;
+    };
 }
 
 export type UniversiFormSelectInputProps<T extends Record<string, any>, Multi extends Optional<boolean>, Clear extends Optional<boolean>> = {
     options: T[];
     getOptionUniqueValue( option: T ): string | number;
-    getOptionLabel( option: T ): Truthy<ReactNode>;
+    getOptionLabel( option: T ): string;
     filterOption?( option: T, search: string ): boolean;
     onUpdateOptions?( options: T[] ): Awaitable<Optional<T[]> | void>;
     sortOptions?( o1: T, o2: T ): number;
