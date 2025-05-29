@@ -2,10 +2,10 @@ import { IMG_DEFAULT_BANNER, IMG_DEFAULT_CONTENT, IMG_DEFAULT_GROUP } from "@/ut
 import { isAbsoluteUrl } from "./regexUtils";
 
 export function groupBannerUrl(group: Group.DTO) {
-    if(!group.bannerImage)
+    if(!group?.bannerImage)
         return IMG_DEFAULT_BANNER;
 
-    if (group.bannerImage.startsWith("/")) {
+    if (group?.bannerImage.startsWith("/")) {
         return import.meta.env.VITE_UNIVERSIME_API + group.bannerImage;
     }
 
@@ -14,25 +14,25 @@ export function groupBannerUrl(group: Group.DTO) {
 
 export function groupHeaderUrl(group: Group.DTO): Optional<string> {
 
-    if (group.headerImage?.startsWith("/")) {
+    if (group?.headerImage?.startsWith("/")) {
         return import.meta.env.VITE_UNIVERSIME_API + group.headerImage;
     }
 
-    if(group.headerImage) {
+    if(group?.headerImage) {
         return `${import.meta.env.VITE_UNIVERSIME_API}/group/header/${group.id}`;
     }
 
-    if (group.organization)
+    if (group?.organization)
         return groupHeaderUrl(group.organization);
 
     return undefined;
 }
 
 export function groupImageUrl(group: Group.DTO) {
-    if(!group.image)
+    if(!group?.image)
         return IMG_DEFAULT_GROUP;
 
-    if (group.image.startsWith("/")) {
+    if (group?.image.startsWith("/")) {
         return import.meta.env.VITE_UNIVERSIME_API + group.image;
     }
 
@@ -40,7 +40,7 @@ export function groupImageUrl(group: Group.DTO) {
 }
 
 export function contentImageUrl(content: Capacity.Folder.DTO) {
-    if (!content.image)
+    if (!content?.image)
         return IMG_DEFAULT_CONTENT;
 
     return isAbsoluteUrl(content.image)
