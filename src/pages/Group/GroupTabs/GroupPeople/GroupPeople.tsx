@@ -385,6 +385,7 @@ function renderPerson(person: ProfileClass) {
 
             <div className="info">
                 <Link to={linkToProfile} className="person-name">{person.fullname}</Link>
+                { person.department && <p className="person-department">{person.department.acronym} – {person.department.name}</p> }
                 <p className="person-bio">{person.bio}</p>
             </div>
         </div>
