@@ -1,5 +1,5 @@
 import { ReactNode, useContext, useState } from "react";
-import Select, { type StylesConfig } from "react-select";
+import Select, { ActionMeta, type StylesConfig } from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 import { UniversiFormContext } from "../UniversiFormContext";
@@ -43,16 +43,18 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
         },
 
         menuPosition: "fixed",
-        async onChange( newValue: SelectOption | SelectOption[] ) {
-            const newValueData = Array.isArray( newValue )
-                ? newValue.map( o => o.data )
-                : newValue.data;
+        async onChange( newValue: SelectOption | SelectOption[], actionMeta: ActionMeta<SelectOption> ) {
+            if ( actionMeta.action === "create-option" ) {
+                const option = await handleOptionCreation( actionMeta.option.value );
+                if ( option ) {
+                    newValue = Array.isArray( newValue )
+                        ? [ ...newValue.filter( o => o.value !== actionMeta.option.value), makeOption( option ) ]
+                        : makeOption( option );
+                }
+            }
 
-            await context?.set( props.param, newValueData );
-            setValid( context?.getValidation( props.param ) );
-
-            // use of `as any` because function type was already validated at component creation
-            props.onChange?.( newValueData as any );
+            if ( [ "clear", "select-option", "deselect-option", "create-option" ].includes( actionMeta.action ) )
+                await handleOptionSelection( newValue );
         },
         noOptionsMessage( { inputValue }: { inputValue: string } ) {
             return props.optionNotFoundMessage?.( inputValue ) ?? `Não foi possível encontrar ${ inputValue }`;
@@ -66,13 +68,26 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
         { props.canCreateOptions
             ? <CreatableSelect {...selectProps}
                 formatCreateLabel={ ( value: string ) => props.createOptionLabel?.( value ) ?? `Criar "${value}"` }
-                onCreateOption={ handleOptionCreation }/>
+            />
             : <Select {...selectProps} />
         }
     </fieldset>
 
+    async function handleOptionSelection( value: SelectOption | SelectOption[] ) {
+        const data = Array.isArray( value )
+            ? value.map( o => o.data )
+            : value.data;
+
+        await context?.set( props.param, data );
+        setValid( context?.getValidation( props.param ) );
+
+        // use of `as any` because function type was already validated at component creation
+        props.onChange?.( data as any );
+    }
+
     async function handleOptionCreation( value: string ) {
         const createdOption = await props.onCreateOption!( value );
+        if ( !createdOption ) return;
 
         const newOptions = [ ...options ];
         if ( createdOption ) newOptions.push( createdOption );
@@ -80,11 +95,13 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
         const handledNewOptions = await props.onUpdateOptions?.( newOptions );
 
         setOptions( ( handledNewOptions ?? newOptions ).sort( props.sortOptions ) );
+        return createdOption;
     }
 
     function makeOption( data: undefined | null ): undefined;
     function makeOption( data: T ): SelectOption;
     function makeOption( data: T[] ): SelectOption[];
+    function makeOption( data: T | T[] ): SelectOption | SelectOption[];
     function makeOption( data: Optional<T> | T[] | null ): SelectOption | SelectOption[] | undefined;
     function makeOption( data: Optional<T> | T[] | null ): SelectOption | SelectOption[] | undefined {
         if ( data === undefined || data === null )
