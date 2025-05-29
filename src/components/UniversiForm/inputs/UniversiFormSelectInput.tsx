@@ -50,9 +50,7 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
             // use of `as any` because function type was already validated at component creation
             props.onChange?.( newValue as any );
         },
-        getOptionLabel( option: T ) {
-            return props.getOptionLabel?.( option ) ?? String( option );
-        },
+        getOptionLabel: props.getOptionLabel,
         noOptionsMessage( { inputValue }: { inputValue: string } ) {
             return props.optionNotFoundMessage?.( inputValue ) ?? `Não foi possível encontrar ${ inputValue }`;
         },
@@ -88,7 +86,7 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
 export type UniversiFormSelectInputProps<T extends Record<string, any>, Multi extends Optional<boolean>, Clear extends Optional<boolean>> = {
     options: T[];
     getOptionUniqueValue( option: T ): string | number;
-    getOptionLabel?( option: T ): Truthy<ReactNode>;
+    getOptionLabel( option: T ): Truthy<ReactNode>;
     filterOption?( option: T, search: string ): boolean;
     onUpdateOptions?( options: T[] ): Awaitable<Optional<T[]> | void>;
     sortOptions?( o1: T, o2: T ): number;
