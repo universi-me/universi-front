@@ -83,6 +83,12 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
             options={ availableCompetenceTypes }
             onUpdateOptions={ setAvailableCompetenceTypes }
         />
+
+        <UniversiForm.Input.Switch
+            param="public"
+            label="O conteúdo é público?"
+            defaultValue={ content?.publicFolder }
+        />
     </UniversiForm.Root>
 
     async function handleForm( form: ManageContentForm ) {
@@ -100,7 +106,7 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
             competenceTypeBadgeIds: form.body.badges.map( b => b.id ),
             description: form.body.description,
             image: imageUploadResponse?.body,
-            publicFolder: true, // todo - switch field
+            publicFolder: form.body.public,
             grantedAccessGroupsIds: isNewContent && group?.id
                 ? [ group.id ]
                 : undefined,
@@ -135,4 +141,5 @@ type ManageContentForm = UniversiForm.Data<{
     image?: File | string;
     categories: Capacity.Category.DTO[];
     badges: Competence.Type[];
+    public: boolean;
 }>;
