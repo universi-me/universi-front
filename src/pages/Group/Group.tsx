@@ -75,9 +75,13 @@ export function GroupPage() {
 
         { context.editGroup !== undefined &&
             <ManageGroup group={context.editGroup} parentGroup={context.group}
-                callback={ async () => {
-                    await context.refreshData().then( newContext => newContext.setEditGroup(undefined) )
-                }}
+                callback={ async res => {
+                    let c = context;
+                    if ( res?.isSuccess() )
+                        c = await context.refreshData();
+
+                    c.setEditGroup( undefined );
+                } }
             />
         }
         </GroupContext.Provider>

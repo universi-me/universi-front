@@ -48,7 +48,7 @@ export type UserChangePassword_ResponseDTO = {
 };
 
 export type UserSignup_RequestDTO = {
-    recaptchaToken: Optional<string>;
+    recaptchaToken: Possibly<string>;
     username: string;
     email: string;
     password: string;

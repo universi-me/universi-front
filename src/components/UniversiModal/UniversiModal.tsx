@@ -1,5 +1,7 @@
-import { MouseEventHandler, ReactNode } from "react";
+import { type HTMLAttributes, type MouseEventHandler, ReactNode } from "react";
 import { Portal } from "react-portal"
+
+import { makeClassName } from "@/utils/tsxUtils";
 
 import './UniversiModal.less'
 
@@ -13,6 +15,8 @@ export type UniversiModalProps = {
      * Executed when the overlay is clicked
      */
     onClickOutside?: MouseEventHandler<HTMLDivElement>;
+
+    contentProps?: HTMLAttributes<HTMLDivElement>;
 };
 
 /**
@@ -20,7 +24,7 @@ export type UniversiModalProps = {
  * 
  * @returns The JSX.Element of the modal to be drawn if `props.children` evaluates to `true`. Otherwise returns `null`.
  */
-export function UniversiModal(props: UniversiModalProps) {
+export function UniversiModal( props: Readonly<UniversiModalProps> ) {
     if (!props.children)
         return null;
 
@@ -28,7 +32,7 @@ export function UniversiModal(props: UniversiModalProps) {
         <Portal node={document.getElementById("modal-container")}>
             <div className="universi-modal" >
                 <div className="universi-modal-overlay" onClick={props.onClickOutside} />
-                <div className="universi-modal-content">
+                <div { ...props.contentProps } className={ makeClassName( "universi-modal-content", props.contentProps?.className ) }>
                     { props.children }
                 </div>
             </div>

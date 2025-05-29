@@ -1,110 +1,159 @@
-import { FormInputs, TextValidation, UniversiForm, ValidationComposite } from "@/components/UniversiForm";
+import UniversiForm from "@/components/UniversiForm";
 import { UniversimeApi } from "@/services"
 
-import { groupBannerUrl, groupHeaderUrl, groupImageUrl } from "@/utils/apiUtils";
-import { GroupTypeToLabel } from "@/types/Group";
+import { getGroupTypeObject, type GroupTypeArrayObject, GroupTypeObjectsArray } from "@/types/Group";
+import { type ApiResponse } from "@/utils/apiUtils";
 
 export type ManageGroupProps = {
     group: Group | null;
     parentGroup: Group;
 
-    callback: () => any;
+    callback?: ( response: Optional<ApiResponse<Group.DTO>> ) => any;
 };
 
 export function ManageGroup(props: Readonly<ManageGroupProps>) {
     const { group, parentGroup, callback } = props;
+
     const isCreating = group === null;
     const isOrganization = group?.rootGroup ?? false;
 
-    const formTitle = isCreating ? "Criar Grupo" : isOrganization ? "Editar Organização" : "Editar Grupo";
-    const requisition = isCreating ? UniversimeApi.Group.create : UniversimeApi.Group.update;
+    return <UniversiForm.Root title={ isCreating ? "Criar Grupo" : isOrganization ? "Editar Organização" : "Editar Grupo" } callback={ handleForm }>
+        <UniversiForm.Input.Text
+            param="nickname"
+            label={ isOrganization ? "Apelido da Organização" : "Apelido do Grupo" }
+            defaultValue={ group?.nickname }
+            disabled={ !isCreating }
+            required={ isCreating }
+            title={ isCreating ? undefined : "O apelido do grupo não pode ser alterado após criado" }
+        />
 
-    return <UniversiForm formTitle={ formTitle }
-        objects={[
-            {
-                DTOName: "nickname", label: isOrganization ? "Apelido da Organização" : "Apelido do Grupo",
-                type: isCreating ? FormInputs.TEXT : FormInputs.HIDDEN,
-                value: undefined,
-                required: isCreating,
-                validation: isCreating ? new ValidationComposite<string>().addValidation(new TextValidation()) : undefined
-            }, {
-                DTOName: "name", label: isOrganization ? "Nome da Organização" : "Nome do Grupo",
-                type: FormInputs.TEXT,
-                value: group?.name,
-                required: true, 
-                validation: new ValidationComposite<string>().addValidation(new TextValidation())
-            }, {
-                DTOName: "description", label: isOrganization ? "Descrição da Organização" : "Descrição do Grupo",
-                type: FormInputs.LONG_TEXT,
-                value: group?.description,
-                required: true,
-                charLimit: 200,
-                validation: new ValidationComposite<string>().addValidation(new TextValidation())
-            }, {
-                DTOName: "image", label: isOrganization ? "Imagem da Organização" : "Imagem do Grupo",
-                type: FormInputs.IMAGE,
-                value:undefined, 
-                defaultImageUrl: group ? groupImageUrl(group) : undefined,
-                crop: true,
-                aspectRatio: 1,
-                required: false
-            }, {
-                DTOName: "bannerImage", label: isOrganization ? "Banner da Organização" : "Banner do Grupo",
-                type: FormInputs.IMAGE,
-                value:undefined, 
-                defaultImageUrl: group ? groupBannerUrl(group) : undefined,
-                crop: true,
-                aspectRatio: 2.5,
-                required: false
-            }, {
-                DTOName: "headerImage", label: "Logo da Organização",
-                type: isOrganization ? FormInputs.IMAGE : FormInputs.HIDDEN,
-                value:undefined,
-                defaultImageUrl: group ? groupHeaderUrl(group) : undefined,
-                crop: true,
-                isPublic: isOrganization,
-                required: false
-            }, {
-                DTOName: "groupType", label: isOrganization ? "Tipo da Organização" : "Tipo do Grupo",
-                type: FormInputs.SELECT_SINGLE,
-                value: group ? { value : group.type, label : group.type } : undefined,
-                options: OPTIONS_GROUP_TYPES,
-                required: true
-            }, {
-                DTOName: "canHaveSubgroup", label: "Permitir Criação de Subgrupos",
-                type: FormInputs.BOOLEAN,
-                value: group?.canCreateGroup
-            }, {
-                DTOName: "isPublic", label: "Grupo Público",
-                type: FormInputs.BOOLEAN,
-                value: group?.publicGroup ?? true
-            }, {
-                DTOName: "canJoin", label: "Permitir Entradas de Usuários",
-                type: FormInputs.BOOLEAN,
-                value: group?.canEnter
-            }, {
-                DTOName: "isRootGroup", label: "Grupo raiz",
-                type: FormInputs.HIDDEN,
-                value: group?.rootGroup ?? false
-            }, {
-                DTOName: "parentGroupId", label: "Id do grupo pai (grupo atual)",
-                type: FormInputs.HIDDEN,
-                value: parentGroup.id
-            }, {
-                DTOName: "everyoneCanPost", label: "Permitir Publicações para Todos os Usuários",
-                type: FormInputs.BOOLEAN,
-                value: group?.everyoneCanPost
-            }, {
-                DTOName: "groupPath", label: "path",
-                type: FormInputs.HIDDEN,
-                value: group?.path
-            },
-        ]}
-        requisition={requisition}
-        callback={callback}
-    />
+        <UniversiForm.Input.Text
+            param="name"
+            label={ isOrganization ? "Nome da Organização" : "Nome do Grupo" }
+            defaultValue={ group?.name }
+            required
+        />
+
+        <UniversiForm.Input.Text
+            param="description"
+            label={ isOrganization ? "Descrição da Organização" : "Descrição do Grupo" }
+            isLongText
+            defaultValue={ group?.description }
+            required
+            maxLength={ 200 }
+        />
+
+        <UniversiForm.Input.Image
+            param="image"
+            label={ isOrganization ? "Imagem da Organização" : "Imagem do Grupo" }
+            defaultValue={ group?.image ?? undefined }
+            aspectRatio={ 1 }
+        />
+
+        <UniversiForm.Input.Image
+            param="bannerImage"
+            label={ isOrganization ? "Banner da Organização" : "Banner do Grupo" }
+            defaultValue={ group?.bannerImage ?? undefined }
+            aspectRatio={ 2.5 }
+        />
+
+        { isOrganization && <UniversiForm.Input.Image
+            param="headerImage"
+            label="Logo da Organização"
+            defaultValue={ group?.headerImage ?? undefined }
+        /> }
+
+        <UniversiForm.Input.Select
+            param="groupType"
+            label={ isOrganization ? "Tipo da Organização" : "Tipo do Grupo" }
+            defaultValue={ getGroupTypeObject( group?.type ) }
+            options={ GroupTypeObjectsArray }
+            getOptionUniqueValue={ o => o.type }
+            getOptionLabel={ o => o.label }
+            isSearchable
+            required
+        />
+
+        <UniversiForm.Input.Switch
+            param="canCreateSubgroup"
+            label="Permitir Criação de Subgrupos"
+            defaultValue={ group?.canCreateGroup }
+        />
+
+        { !isOrganization && <UniversiForm.Input.Switch
+            param="isPublic"
+            label="Grupo Público"
+            defaultValue={ isOrganization ? true : group?.publicGroup ?? true }
+            disabled={ isOrganization }
+        /> }
+
+        { !isOrganization && <UniversiForm.Input.Switch
+            param="canJoin"
+            label="Permitir Entrada de Usuários"
+            defaultValue={ group?.canEnter }
+        /> }
+
+        <UniversiForm.Input.Switch
+            param="everyoneCanPost"
+            label="Permitir Publicações para Todos os Usuários"
+            defaultValue={ group?.everyoneCanPost }
+        />
+    </UniversiForm.Root>
+
+    async function handleForm( form: ManageGroupForm ) {
+        if ( !form.confirmed )
+            return callback?.( undefined );
+
+        const image = form.body.image instanceof File
+            ? await UniversimeApi.Image.upload( { isPublic: true, image: form.body.image } )
+            : undefined;
+
+        const bannerImage = form.body.bannerImage instanceof File
+            ? await UniversimeApi.Image.upload( { isPublic: true, image: form.body.bannerImage } )
+            : undefined;
+
+        const headerImage = form.body.headerImage instanceof File
+            ? await UniversimeApi.Image.upload( { isPublic: true, image: form.body.headerImage } )
+            : undefined;
+
+        const body = {
+                name: form.body.name,
+                description: form.body.description,
+                canCreateSubgroup: form.body.canCreateSubgroup,
+                canJoin: form.body.canJoin,
+                everyoneCanPost: form.body.everyoneCanPost,
+                groupType: form.body.groupType.type,
+                isPublic: form.body.isPublic,
+                image: image?.body,
+                bannerImage: bannerImage?.body,
+                headerImage: headerImage?.body,
+        };
+
+        const res = isCreating
+            ? await UniversimeApi.Group.create( {
+                ...body,
+                parentGroup: parentGroup.id,
+                nickname: form.body.nickname,
+            } )
+            : await UniversimeApi.Group.update( {
+                ...body,
+                group: group.id!,
+            } );
+
+        await callback?.( res );
+    }
 }
 
-const OPTIONS_GROUP_TYPES = Object.entries(GroupTypeToLabel)
-    .sort((a, b) => a[1].localeCompare(b[1]))
-    .map((t) => ({ value: t[0] as GroupType, label: t[1] }));
+type ManageGroupForm = UniversiForm.Data<{
+    nickname: string;
+    name: string;
+    description: string;
+    image?: File | string;
+    bannerImage?: File | string;
+    headerImage?: File | string;
+    groupType: GroupTypeArrayObject;
+    canCreateSubgroup: boolean;
+    isPublic: boolean;
+    canJoin: boolean;
+    everyoneCanPost: boolean;
+}>;

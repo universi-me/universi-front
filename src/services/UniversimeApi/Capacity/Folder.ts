@@ -60,7 +60,7 @@ export function duplicate( folderId: string, body: FolderDuplicate_RequestDTO ) 
 }
 
 export function move( folderId: string, body: FolderMove_RequestDTO ) {
-    return api.post<Capacity.Folder.DTO>( `/${folderId}/move`, body ).then( ApiResponse.new );
+    return api.patch<Capacity.Folder.DTO>( `/${folderId}/move`, body ).then( ApiResponse.new );
 }
 
 export type FolderCreate_RequestDTO = {

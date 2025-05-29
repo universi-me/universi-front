@@ -1,0 +1,49 @@
+@import url(/src/layouts/colors.less);
+@import url(../styles.module.less);
+
+.legend {
+    display: flex;
+    align-items: end;
+    margin-bottom: .25rem;
+
+    .filter {
+        margin-left: auto;
+    }
+}
+
+.no_result {
+    width: 100%;
+    text-align: center;
+    font-style: italic;
+}
+
+.options_list {
+    display: grid;
+    grid-template-columns: repeat( 2, 1fr );
+    gap: 1rem;
+
+    .option {
+        #UniversiForm.rounded_corners();
+        #UniversiForm.input_padding();
+
+        width: 100%;
+        border: solid 2px @primary-color;
+        background-color: @card-item-color;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        gap: .5rem;
+
+        .check {
+            margin-left: auto;
+
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+
+            font-size: 2rem;
+        }
+    }
+}

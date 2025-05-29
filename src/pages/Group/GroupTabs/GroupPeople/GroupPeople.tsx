@@ -8,12 +8,12 @@ import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import "./GroupPeople.less";
 import { Filter } from "@/components/Filter/Filter";
 import Select from 'react-select'
-import { LevelToLabel, intToLevel } from "@/types/Competence";
+import { CompetenceLevelObjects, CompetenceLevelObjectsArray, intToLevel } from "@/types/Competence";
 import { UniversimeApi } from "@/services"
 import ActionButton from "@/components/ActionButton";
 import useCanI from "@/hooks/useCanI";
 import { Permission } from "@/utils/roles/rolesUtils";
-import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
+import UniversiForm from "@/components/UniversiForm";
 import { AuthContext } from "@/contexts/Auth";
 
 type competenceSearch = {
@@ -84,8 +84,8 @@ export function GroupPeople() {
     if (!groupContext)
         return null;
 
-    const [participantsOrganization, setParticipantsOrganization] = useState([]);
-    const [loadingParticipantsOrganization, setLoadingParticipantsOrganization] = useState(true);
+    const [participantsOrganization, setParticipantsOrganization] = useState<ProfileClass[]>();
+    const loadingParticipantsOrganization = participantsOrganization === undefined;
 
     function handleShowAddPeople(){
         return () => {
@@ -95,16 +95,15 @@ export function GroupPeople() {
 
     useEffect(() => {
         const fetchParticipants = () => {
-            setLoadingParticipantsOrganization(true);
+            setParticipantsOrganization( undefined );
             UniversimeApi.GroupParticipant.get(authContext.organization.id as string).then((response) => {
                 if (response.isSuccess() && Array.isArray(response.data)) {
-                    const formattedUsers = response.data.map((profile: Profile) => ({
-                        value: profile.user.name,
-                        label: new ProfileClass(profile).fullname
-                    }));
-                    setParticipantsOrganization(formattedUsers as []);
+                    setParticipantsOrganization(
+                        response.data
+                        .filter( p => undefined === groupContext.participants.find( gp => gp.id === p.id ) )
+                        .map( ProfileClass.new )
+                    );
                 }
-                setLoadingParticipantsOrganization(false);
             });
         }
         if (showAddPeopleModal) {
@@ -134,27 +133,16 @@ export function GroupPeople() {
 
                     {
                         showAddPeopleModal && !loadingParticipantsOrganization &&
-                            <UniversiForm
-                                formTitle="Adicionar Participante"
-                                objects={[
-                                {
-                                    label: "Usuário", DTOName: "participant", type: FormInputs.SELECT_SINGLE,
-                                    canCreate: false, required: true,
-                                    options: participantsOrganization,
-                                },
-                                {
-                                    label: "groupId", DTOName: "groupId", type: FormInputs.HIDDEN, required: true,
-                                    value: groupContext.group.id
-                                }
-                                ]}
-                                saveButtonText="Adicionar"
-                                requisition={UniversimeApi.GroupParticipant.add}
-                                callback={() => {
-                                    setShowAddPeopleModal(false);
-                                    groupContext.refreshData();
-                                }}
-                                
-                            />
+                            <UniversiForm.Root title="Adicionar participante" callback={ handleForm } confirmButtonText="Adicionar">
+                                <UniversiForm.Input.Select
+                                    param="participant"
+                                    label="Usuário"
+                                    required
+                                    options={ participantsOrganization }
+                                    getOptionUniqueValue={ p => p.id }
+                                    getOptionLabel={ p => p.fullname! }
+                                />
+                            </UniversiForm.Root>
                     }
 
                 </div>
@@ -245,7 +233,7 @@ export function GroupPeople() {
                         if(currentCompetence?.level == undefined || !currentCompetence.label || !currentCompetence.typeId)
                             return;
 
-                        currentCompetence.label += ": " + LevelToLabel[currentCompetence.level]
+                        currentCompetence.label += ": " + CompetenceLevelObjects[currentCompetence.level].label
                         setAddedCompetences([...addedCompetences, currentCompetence]);
 
                         let radio = document.getElementById(`radio${currentCompetence.level}`) as HTMLInputElement
@@ -301,17 +289,16 @@ export function GroupPeople() {
     }
 
     function makeRadioSelectLevel(){
-        const levels = Object.entries(LevelToLabel)
         return (
             <div className="levels-div">
             {
-                levels.map((level)=>(
-                    <label>
+                CompetenceLevelObjectsArray.map(({ level, label })=>(
+                    <label key={ level }>
                         <input
                             type="radio"
                             name="level"
-                            value={level[0]}
-                            id={`radio${level[0]}`}
+                            value={level}
+                            id={`radio${level}`}
                             onChange={(event)=>{
                                 let currentCompetence_old : competenceSearch;
                                 if(currentCompetence){
@@ -323,17 +310,36 @@ export function GroupPeople() {
                                         level: intToLevel(parseInt(event.target.value))
                                     }
                                 setCurrentCompetence(currentCompetence_old)
-                                event.target.checked=currentCompetence?.level != undefined && currentCompetence?.level == parseInt(level[0])
+                                event.target.checked=currentCompetence?.level != undefined && currentCompetence?.level == level
                             }}
                         />
-                        {level[1]}
+                        {label}
                     </label>
                 ))
             }
             </div>
         )
     }
+
+    async function handleForm( form: GroupPeopleForm ) {
+        if ( !form.confirmed ) {
+            setShowAddPeopleModal( false );
+            return;
+        }
+
+        await UniversimeApi.GroupParticipant.add({
+            groupId: groupContext!.group.id!,
+            participant: form.body.participant.id,
+        });
+
+        await groupContext!.refreshData();
+        setShowAddPeopleModal( false );
+    }
 }
+
+type GroupPeopleForm = UniversiForm.Data<{
+    participant: ProfileClass;
+}>;
 
 
 // function toggleAdvancedSearch(){

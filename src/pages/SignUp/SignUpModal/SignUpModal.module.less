@@ -1,0 +1,33 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+@import url(/src/layouts/transitions.less);
+
+
+.validation_message {
+    color: @font-color-v2;
+    font-weight: @font-weight-semibold;
+    font-size: 0.875rem;
+
+    margin-top: .15em;
+
+    .icon {
+        margin-right: .25em;
+    }
+
+    .valid {
+        color: @font-color-success;
+    }
+
+    .invalid {
+        color: @font-color-alert;
+    }
+}
+
+.profile_url_preview {
+    font-weight: @font-weight-bold;
+    cursor: default;
+
+    &:hover {
+        text-decoration: underline dotted;
+    }
+}

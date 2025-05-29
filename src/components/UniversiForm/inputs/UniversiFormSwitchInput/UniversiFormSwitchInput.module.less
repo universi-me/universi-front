@@ -1,0 +1,62 @@
+@import url(/src/layouts/colors.less);
+
+.fieldset {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .legend {
+        width: fit-content;
+    }
+
+    .switch_root {
+        @radix-switch-width: 2.5rem;
+        @radix-switch-height: 1.5rem;
+
+        cursor: pointer;
+
+        width: @radix-switch-width;
+        height: @radix-switch-height;
+
+        border-radius: 9999px;
+        border: none;
+        outline: 2px solid @primary-color;
+        background-color: @card-background-color;
+
+        &:hover {
+            outline: 2px solid @secondary-color;
+
+            .thumb {
+                outline-color: @secondary-color;
+            }
+        }
+
+        &[data-state="checked"] {
+            background-color: @card-item-color;
+
+            .thumb {
+                transform: translateX( calc( @radix-switch-width - @radix-switch-height ) );
+                background-color: @primary-color;
+            }
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+
+            filter: grayscale( 1 );
+        }
+
+        .thumb {
+            display: block;
+            width: @radix-switch-height;
+            height: @radix-switch-height;
+            background-color: #FFF;
+            border-radius: 50%;
+            outline: 2px solid @primary-color;
+
+            transition: transform 100ms;
+            will-change: transform;
+        }
+    }
+}

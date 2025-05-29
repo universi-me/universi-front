@@ -28,8 +28,8 @@ export type ExperienceCreate_RequestDTO = {
     experienceType: string;
     institution: string;
     description: string;
-    startDate: string;
-    endDate: Optional<string>;
+    startDate: string | number;
+    endDate: Possibly<string | number>;
 };
 
 export type ExperienceUpdate_RequestDTO = {
@@ -37,6 +37,6 @@ export type ExperienceUpdate_RequestDTO = {
     experienceType: Optional<string>;
     institution: Optional<string>;
     description: Optional<string>;
-    startDate: Optional<string>;
-    endDate: Optional<string>;
+    startDate: Optional<string | number>;
+    endDate: Possibly<string | number>;
 };

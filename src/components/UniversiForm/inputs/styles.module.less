@@ -1,0 +1,27 @@
+@import url(/src/layouts/colors.less);
+
+
+#UniversiForm() {
+    .input_padding {
+        padding: .5rem .5rem;
+    }
+
+    .rounded_corners {
+        border: none;
+        border-radius: .625rem;
+    }
+
+    .focus_outline {
+        &:focus {
+            outline: solid 2px @primary-color !important;
+        }
+    }
+
+    .invalid_input_outline {
+        outline: solid 2px @wrong-invalid-color;
+    }
+
+    .valid_input_outline {
+        outline: solid 2px @font-color-success;
+    }
+}

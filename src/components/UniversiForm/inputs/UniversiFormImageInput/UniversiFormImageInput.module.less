@@ -1,0 +1,67 @@
+@import url(/src/layouts/colors.less);
+@import url(../styles.module.less);
+
+.img_wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.preview_label {
+    cursor: pointer;
+}
+
+.preview {
+    height: 10rem;
+    width: auto;
+    object-fit: cover;
+
+    background-color: @card-item-color;
+
+    #UniversiForm.rounded_corners();
+}
+
+.no_image {
+    background-color: @card-item-color;
+
+    #UniversiForm.rounded_corners();
+
+    .icon {
+        cursor: pointer;
+        font-size: 10rem;
+    }
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+
+    margin-left: auto;
+    gap: .25rem;
+
+    .select_image, .remove_image {
+        cursor: pointer;
+        text-align: center;
+
+        font-size: 1rem;
+
+        #UniversiForm.input_padding();
+        #UniversiForm.rounded_corners();
+    }
+
+    .select_image {
+        background-color: @primary-color;
+        color: @font-color-v1;
+    }
+
+    .remove_image {
+        background-color: @wrong-invalid-color;
+        color: @font-color-v1;
+
+        &:disabled {
+            background-color: @font-color-disabled;
+            cursor: not-allowed;
+        }
+    }
+}

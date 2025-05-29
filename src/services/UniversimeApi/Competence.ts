@@ -26,7 +26,7 @@ export async function list() {
 
 export type CompetenceCreate_RequestDTO = {
     competenceTypeId: string;
-    description: string;
+    description?: string;
     level: Competence.Level;
 };
 

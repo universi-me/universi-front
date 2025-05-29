@@ -1,0 +1,131 @@
+@import url(/src/layouts/spacing.less);
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+.form {
+    display: flex;
+    flex-direction: column;
+
+    max-height: 90vh;
+    width: min(80vw, 60rem);
+    overflow: hidden;
+
+    border-radius: 1.25rem;
+    background: @card-background-color;
+
+    @form-padding: 1rem;
+    @title-font-size: 1.25rem;
+    @close-icon-size: 2.5rem;
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        padding: @form-padding @form-padding 0 @form-padding;
+
+        background-color: @primary-color;
+        color: @font-color-v1;
+        font-size: @title-font-size;
+        font-variant: small-caps;
+
+        border-bottom: 2px solid @secondary-color;
+
+        .close_button {
+            margin-left: auto;
+            border: none;
+            background: none;
+
+            color: inherit;
+            font-size: @close-icon-size;
+            cursor: pointer;
+
+            &:hover {
+                color: @font-color-v3;
+            }
+        }
+    }
+
+    .required_explanation {
+        padding-left: @form-padding;
+        padding-right: @form-padding;
+        padding-bottom: .25rem;
+    }
+
+    .fields {
+        display: flex;
+        flex-direction: column;
+
+        overflow: scroll;
+        max-height: calc( @modal-max-height - ( @form-padding * 2 ) - max( @title-font-size, @close-icon-size ) );
+
+        gap: 1rem;
+        padding: @form-padding;
+
+        .fieldset {
+            border: none;
+
+            > legend, > .legend {
+                width: 100%;
+
+                font-size: 1.25rem;
+                padding-bottom: .25rem;
+            }
+        }
+    }
+
+    .actions {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+
+        gap: .5rem;
+
+        padding: 0 @form-padding @form-padding 0;
+
+        .cancel_button, .confirm_button {
+            display: flex;
+            align-items: center;
+
+            cursor: pointer;
+            border: none;
+            border-radius: .625em;
+
+            min-width: 7.5rem;
+            padding: .75rem;
+            gap: .25em;
+
+            font-size: 1rem;
+            text-align: center;
+            color: @font-color-v1;
+            font-weight: @font-weight-bold;
+
+            i {
+                font-size: 1rem;
+                margin-right: .2em;
+            }
+
+            &:disabled {
+                cursor: not-allowed;
+            }
+        }
+
+        .cancel_button {
+            background-color: @secondary-color;
+        }
+
+        .confirm_button {
+            &:not(:disabled) {
+                background-color: @primary-color;
+                &:hover {
+                    background-color: @secondary-color;
+                }
+            }
+
+            &:disabled {
+                background-color: @font-color-v3;
+            }
+        }
+    }
+}

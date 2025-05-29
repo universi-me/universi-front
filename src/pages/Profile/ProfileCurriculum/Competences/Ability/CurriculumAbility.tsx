@@ -1,6 +1,6 @@
 import { useContext, MouseEvent, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
-import { LevelToLabel } from '@/types/Competence';
+import { CompetenceLevelObjects } from '@/types/Competence';
 import { ICON_DELETE_BLACK } from '@/utils/assets';
 import './CurriculumAbility.css';
 import { UniversimeApi } from "@/services"
@@ -112,7 +112,7 @@ export function CurriculumAbility() {
                                     }
                                 </div>
                                 <div className="level-container">
-                                    <h2 className="level-label">{(LevelToLabel)[competence.level]}</h2>
+                                    <h2 className="level-label">{CompetenceLevelObjects[competence.level].label}</h2>
                                     <div className="level-bar">
                                         <div className="bar" style={{ width: `${calculateWidth(competence.level)}%` }}></div>
                                     </div>

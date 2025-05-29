@@ -14,7 +14,7 @@ import useCanI from "@/hooks/useCanI";
 import { Permission } from "@/utils/roles/rolesUtils";
 
 import { ICON_LIKE, ICON_CLAP, ICON_HEART, ICON_SUPPORT, ICON_GENIUS, ICON_HAPPY, ICON_COMMENT } from '@/utils/assets';
-import UniversiForm, { FormInputs, RequiredValidation, TextValidation, ValidationComposite } from "@/components/UniversiForm";
+import UniversiForm from "@/components/UniversiForm";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
 export type GroupFeedPostProps<C extends boolean = boolean> = Readonly<{
@@ -249,36 +249,14 @@ export function GroupFeedPost({ post, isComment, commentPostId }: GroupFeedPostP
 
             {isCommentExpanded && <div className="comment-area-input">
                 <div>
-                    <UniversiForm
-                        formTitle={"Criar comentário"}
-                        cancelProps = {
-                            {
-                                title : "Descartar comentário?",
-                                message: "Tem certeza? Esta ação é irreversível", 
-                                confirmButtonMessage: "Sim",
-                                cancelButtonMessage: "Não"
-                            }
-                        }
-                        objects={[
-                            {
-                                DTOName: "content", label: "Comentário", type: FormInputs.FORMATED_TEXT,
-                                charLimit: 2000,
-                                value: commentText ?? "",
-                                validation: new ValidationComposite<string>().addValidation(new RequiredValidation()).addValidation(new TextValidation())
-                            }, {
-                                DTOName : "groupPostId", label : "", type : FormInputs.HIDDEN, value : isComment ? commentPostId : post.postId
-                            }
-                        ]}
-                        requisition={(data: any) => {
-                            return UniversimeApi.FeedComment.create( data.groupPostId, { content: data.content } );
-                        }}
-                        callback={async() => {
-                            groupContext!.refreshData();
-                            setCommentText("");
-                            setIsCommentExpanded(false);
-                            setIsShowComments(true);
-                        }}
-                    />
+                    <UniversiForm.Root title="Criar comentário" callback={ handleForm }>
+                        <UniversiForm.Input.FormattedText
+                            param="content"
+                            label="Comentário"
+                            defaultValue={ commentText }
+                            required
+                        />
+                    </UniversiForm.Root>
                 </div>
             </div>}
 
@@ -326,7 +304,6 @@ export function GroupFeedPost({ post, isComment, commentPostId }: GroupFeedPostP
 
     function toggleComment() {
         setIsCommentExpanded(!isCommentExpanded);
-        setIsShowComments(false);
     }
 
     function toggleShowComments() {
@@ -394,6 +371,31 @@ export function GroupFeedPost({ post, isComment, commentPostId }: GroupFeedPostP
         return (post.reactions ?? ([] as Feed.Reaction[])).some(r => r.reaction === reaction && r.authorId === groupContext!.loggedData.profile.id);
     }
 
+    async function handleForm( form: FeedPostForm ) {
+        if ( !form.confirmed ) {
+            close();
+            return;
+        }
+
+        await UniversimeApi.FeedComment.create(
+            isComment ? commentPostId : post.postId,
+            {
+                content: form.body.content,
+            }
+        );
+
+        await groupContext!.refreshData();
+        close();
+
+        function close() {
+            setCommentText( "" );
+            setIsCommentExpanded( false );
+        }
+    }
 }
 
 const EXPANDED_CLASS = "show-full-text";
+
+type FeedPostForm = UniversiForm.Data<{
+    content: string;
+}>;

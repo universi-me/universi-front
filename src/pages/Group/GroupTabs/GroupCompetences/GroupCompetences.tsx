@@ -1,5 +1,5 @@
 import { UniversimeApi } from "@/services"
-import { LevelToLabel} from "@/types/Competence"
+import { CompetenceLevelObjectsArray, strToLevel } from "@/types/Competence"
 import { useContext, useEffect, useState } from "react"
 import { GroupContext } from "../../GroupContext"
 import "./GroupCompetence.less"
@@ -19,7 +19,7 @@ export function GroupCompetences(){
         competencePeople: Profile.DTO[],
         competenceTypeId: string,
         competenceLevelInfo: {
-            level: string,
+            level: Competence.Level,
             people: Profile.DTO[]
         }[]
     }
@@ -45,19 +45,14 @@ export function GroupCompetences(){
         groupCompetences.forEach((competence)=>{
 
             let people : Profile.DTO[] = [];
-            let levelInfo : {
-                level: string,
-                people: Profile.DTO[]
-            }[] = [];
+            let levelInfo = CompetenceLevelObjectsArray.map( lv => ({
+                level: lv.level,
+                people: [] as Profile.DTO[],
+            }) );
 
-            Object.entries(LevelToLabel).forEach((level)=>{
-                levelInfo.push({level: level[0], people: []})
-            })
-
-            Object.entries(competence.levelInfo).forEach(([level, profiles])=>{
-                profiles.forEach((profile)=>{
-                    people.push(profile)
-                })
+            Object.entries(competence.levelInfo).forEach(([lv, profiles])=>{
+                const level = strToLevel( lv );
+                people.push( ...profiles );
                 levelInfo.forEach((infoLevel)=>{
                     infoLevel.level == level ? infoLevel.people = profiles : null;
                 })
@@ -178,13 +173,13 @@ export function GroupCompetences(){
                         }
                     </div>
                     {
-                        Object.entries(LevelToLabel).map((level)=>(
-                            <div className="label" onClick={() => {orderByLevel(parseInt(level[0]))}}>
-                                {level[1]}
+                        CompetenceLevelObjectsArray.map(({level, label})=>(
+                            <div className="label" onClick={() => {orderByLevel(level)}} key={level}>
+                                {label}
                                 {
-                                    orderedByLevel?.level == parseInt(level[0]) && orderedByLevel.inOrder?
+                                    orderedByLevel?.level == level && orderedByLevel.inOrder?
                                     <i className="bi bi-caret-up-fill"></i>
-                                    : orderedByLevel?.level == parseInt(level[0]) && !orderedByLevel.inOrder?
+                                    : orderedByLevel?.level == level && !orderedByLevel.inOrder?
                                     <i className="bi bi-caret-down-fill"></i>
                                     :
                                     <></>
@@ -197,12 +192,12 @@ export function GroupCompetences(){
                 {
                     !competencesInfo ? <></> :
                     competencesInfo.map((competence)=>(
-                        <div className="competence">
+                        <div className="competence" key={ competence.competenceTypeId }>
                             <div className="competence-name">{competence.competenceName}</div>
                             <div className="amount-people">{competence.competencePeople.length}</div>
                                 {
                                     competence.competenceLevelInfo.map((level)=>(
-                                    <div className="competence-level-container">
+                                    <div className="competence-level-container" key={ level.level }>
                                         <div className="competence-level">
                                             <div className="bar-container">
                                                 <div className="bar" style={

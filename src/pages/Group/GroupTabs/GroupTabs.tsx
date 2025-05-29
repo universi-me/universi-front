@@ -157,10 +157,12 @@ const TABS: GroupTabDefinition[] = [
         value: "jobs",
         renderer: GroupJobs,
         condition(context, canI) {
-            return canI("JOBS", Permission.READ, context.group) && (
-                (context.jobs && context.jobs.length > 0)
-                || canI("JOBS", Permission.READ_WRITE, context.group)
-            );
+            return !!context.jobs
+                && canI("JOBS", Permission.READ, context.group)
+                && (
+                    context.jobs.length > 0
+                    || canI( "JOBS", Permission.READ_WRITE, context.group )
+                );
         },
     },
 ];

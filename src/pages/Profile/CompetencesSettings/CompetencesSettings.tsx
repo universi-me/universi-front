@@ -16,6 +16,9 @@ export function CompetencesSettings() {
     return profileContext && <ManageCompetence
         competence={ editCompetence }
         removeTypes={ removedCompetenceTypes }
-        callback={ profileContext.reloadPage }
+        callback={ res => res?.isSuccess()
+            ? profileContext.reloadPage()
+            : profileContext.setEditCompetence( undefined )
+        }
     />;
 }
