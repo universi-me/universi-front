@@ -2,7 +2,7 @@ import UniversiForm from "@/components/UniversiForm";
 import { UniversimeApi } from "@/services"
 
 import { getGroupTypeObject, type GroupTypeArrayObject, GroupTypeObjectsArray } from "@/types/Group";
-import { type ApiResponse } from "@/utils/apiUtils";
+import { type ApiResponse, groupBannerUrl, groupHeaderUrl, groupImageUrl } from "@/utils/apiUtils";
 
 export type ManageGroupProps = {
     group: Group | null;
@@ -46,21 +46,21 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
         <UniversiForm.Input.Image
             param="image"
             label={ isOrganization ? "Imagem da Organização" : "Imagem do Grupo" }
-            defaultValue={ group?.image ?? undefined }
+            defaultValue={ groupImageUrl(group!) }
             aspectRatio={ 1 }
         />
 
         <UniversiForm.Input.Image
             param="bannerImage"
             label={ isOrganization ? "Banner da Organização" : "Banner do Grupo" }
-            defaultValue={ group?.bannerImage ?? undefined }
+            defaultValue={ groupBannerUrl(group!) }
             aspectRatio={ 2.5 }
         />
 
         { isOrganization && <UniversiForm.Input.Image
             param="headerImage"
             label="Logo da Organização"
-            defaultValue={ group?.headerImage ?? undefined }
+            defaultValue={ groupHeaderUrl(group!) }
         /> }
 
         <UniversiForm.Input.Select
