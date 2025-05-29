@@ -11,4 +11,4 @@ type UniversiFormFieldProps<T> = {
     validations?: UniversiFormFieldValidation<T>[];
 };
 
-type UniversiFormFieldValidation<T> = ( v: T, form: Record<string, any> ) => boolean | PromiseLike<boolean>;
+type UniversiFormFieldValidation<T> = ( v: T, form: Record<string, any> ) => Awaitable<boolean>;

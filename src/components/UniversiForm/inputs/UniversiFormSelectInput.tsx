@@ -90,7 +90,7 @@ export type UniversiFormSelectInputProps<T extends Record<string, any>, Multi ex
     getOptionUniqueValue( option: T ): string | number;
     getOptionLabel?( option: T ): Truthy<ReactNode>;
     filterOption?( option: T, search: string ): boolean;
-    onUpdateOptions?( options: T[] ): Optional<T[] | Promise<T[]>>;
+    onUpdateOptions?( options: T[] ): Awaitable<Optional<T[]> | void>;
     sortOptions?( o1: T, o2: T ): number;
 
     isSearchable?: boolean;
@@ -112,8 +112,8 @@ export type UniversiFormSelectInputProps<T extends Record<string, any>, Multi ex
 
 type CreationBasedSelectProperties<T> = {
     canCreateOptions: true;
-    onCreateOption( value: string ): Optional<T> | PromiseLike<Optional<T>>;
+    onCreateOption( value: string ): Awaitable<Optional<T> | void>;
 } | {
     canCreateOptions?: false;
-    onCreateOption?( value: string ): Optional<T> | PromiseLike<Optional<T>>;
+    onCreateOption?( value: string ): Awaitable<Optional<T> | void>;
 };
