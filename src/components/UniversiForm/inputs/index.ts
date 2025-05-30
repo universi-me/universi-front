@@ -7,3 +7,4 @@ export { UniversiFormImageInput as Image } from "./UniversiFormImageInput";
 export { UniversiFormSwitchInput as Switch } from "./UniversiFormSwitchInput";
 export { UniversiFormFormattedTextInput as FormattedText } from "./UniversiFormFormattedTextInput";
 export { UniversiFormDateInput as Date } from "./UniversiFormDateInput";
+export { UniversiFormNumberInput as Number } from "./UniversiFormNumberInput";
