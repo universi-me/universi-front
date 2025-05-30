@@ -9,6 +9,7 @@ export type GroupContextType = null | {
     folders:       Capacity.Folder.DTO[];
     posts:         Feed.GroupPost[];
     jobs:          Job.DTO[] | undefined;
+    activities:    Activity.DTO[] | undefined;
 
     competenceTypes: Competence.Type[];
 
