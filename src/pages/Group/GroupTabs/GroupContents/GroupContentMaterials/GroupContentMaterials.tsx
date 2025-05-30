@@ -60,7 +60,7 @@ export function GroupContentMaterials() {
         <section id="materials" className="group-tab">
             <div className="heading top-container">
                 <div id="back-name-wrapper">
-                    <button type="button" id="back-to-contents" onClick={() => groupContext.setCurrentContent(undefined)} title="Voltar para conteúdos">
+                    <button type="button" id="back-to-contents" onClick={() => backToContentList() } title="Voltar para conteúdos">
                         <i className="bi bi-arrow-left-circle"/>
                     </button>
                     <div className="content-title">{groupContext.currentContent.name}</div>
@@ -86,6 +86,16 @@ export function GroupContentMaterials() {
             }
         </section>
     );
+
+    function backToContentList() {
+        // update link hash
+        let seg = window.location.hash.slice(1).split('/');
+        seg.pop();
+        window.location.hash = seg.join('');
+        
+        groupContext?.setCurrentContent(undefined);
+        refreshMaterials()
+    }
 
     function refreshMaterials() {
         const contentId = groupContext?.currentContent?.id;
