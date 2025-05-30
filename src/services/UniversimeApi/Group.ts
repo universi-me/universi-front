@@ -59,6 +59,10 @@ export function roles( id: string ) {
     return api.get<Role.DTO[]>( `/${id}/roles` ).then( ApiResponse.new );
 }
 
+export function activities( id: string ) {
+    return api.get<Activity.DTO[]>( `/${id}/activities` ).then( ApiResponse.new );
+}
+
 export type GroupCreate_RequestDTO = {
     parentGroup?: string;
     nickname: string;
