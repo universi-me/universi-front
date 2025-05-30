@@ -1,0 +1,44 @@
+@import url(/src/layouts/border-radius.less);
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+.card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &.bordered {
+        border: solid 2px @primary-color;
+        border-radius: @border-radius;
+        background-color: @card-item-color;
+        padding: 0.6rem;
+    }
+
+    .picture {
+        @size: 5rem;
+        width: @size;
+        height: @size;
+
+        margin-right: 1rem;
+        object-fit: cover;
+
+        border-radius: 50%;
+    }
+
+    .name {
+        color: inherit;
+        text-decoration: none;
+        font-weight: @font-weight-semibold;
+        font-size: 1.3rem;
+    }
+
+    .department {
+        font-weight: @font-weight-semibold;
+        font-size: 1rem;
+        margin: .3rem 0;
+    }
+
+    .bio {
+        font-size: .9rem;
+    }
+}
