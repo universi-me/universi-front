@@ -39,10 +39,41 @@ export function GroupTabs(props: Readonly<GroupTabsProps>) {
         const tabDefinition = renderedTabs
             .find(t => t.value === context.currentTab);
 
-        if (tabDefinition === undefined)
-            context.setCurrentTab( renderedTabs[0].value );
+        context.setCurrentTab( tabDefinition ? tabDefinition.value : renderedTabs[0].value );
 
-    }, [ context?.currentTab ])
+    }, [ context?.currentTab, renderedTabs ]);
+
+    // Set the initial tab when the group changes
+    useEffect(() => {
+        if (!context || !context.group || renderedTabs.length === 0)
+            return;
+
+        let tabNameSplit : string[] = window.location.hash.substring(1).split('/') ?? [];
+        let tabName = tabNameSplit.length > 0 ? tabNameSplit[0] : null;
+        let useDefaultTab = true;
+
+        if(tabName) {
+            const tab = asTabAvailable(tabName);
+
+            if (tab) {
+                useDefaultTab = false;
+                context?.setCurrentTab(tabName as AvailableTabs);
+            }
+
+            // This is useful for when the user navigates directly to a content page with ID
+            if(tab === "contents" && tabNameSplit.length > 1) {
+                useDefaultTab = false;
+                context!
+                    .refreshData({ currentContentId: tabNameSplit[1] })
+                    .then( c => c.setCurrentTab(tab));
+            }
+        }
+
+        if (useDefaultTab) {
+            context?.setCurrentTab(renderedTabs[0]?.value ?? "feed" as AvailableTabs);
+        }
+
+    }, [ context?.group?.id ]);
 
     async function join(){
         if(!context?.group.canEnter || context.group.id == null)
