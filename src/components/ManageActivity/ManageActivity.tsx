@@ -4,23 +4,33 @@ import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { ApiResponse } from "@/utils/apiUtils";
 import { ActivityTypeSelect } from "@/types/Activity";
+import { CompetenceTypeSelect } from "@/types/Competence";
 
 export function ManageActivity( props: Readonly<ManageActivityProps> ) {
     const { activity, group, callback } = props;
 
-    const [ availableTypes, setAvailableTypes ] = useState<Activity.Type[]>();
+    const [ availableActivityTypes, setAvailableActivityTypes ] = useState<Activity.Type[]>();
     useEffect( () => {
         UniversimeApi.ActivityType.list()
         .then( res => {
             if ( res.isSuccess() )
-                setAvailableTypes( res.body );
+                setAvailableActivityTypes( res.body );
+        } )
+    }, [] );
+
+    const [ availableCompetenceTypes, setAvailableCompetenceTypes ] = useState<Competence.Type[]>();
+    useEffect( () => {
+        UniversimeApi.CompetenceType.list()
+        .then( res => {
+            if ( res.isSuccess() )
+                setAvailableCompetenceTypes( res.body );
         } )
     }, [] );
 
     const isCreating = props.activity === null;
     const title = isCreating ? "Criar Atividade" : "Editar Atividade";
 
-    if ( availableTypes === undefined )
+    if ( availableActivityTypes === undefined || availableCompetenceTypes === undefined )
         return <LoadingSpinner />
 
     return <UniversiForm.Root title={ title } callback={ handleForm }>
@@ -42,7 +52,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             param="type"
             label="Tipo"
             defaultValue={ activity?.type }
-            options={ availableTypes }
+            options={ availableActivityTypes }
             required
         />
 
@@ -58,6 +68,14 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             label="Carga Horária"
             defaultValue={ activity?.workload }
             required
+        />
+
+        <CompetenceTypeSelect
+            param="badges"
+            label="Selos"
+            options={ availableCompetenceTypes }
+            defaultValue={ activity?.badges }
+            isMultiSelection
         />
 
         <UniversiForm.Input.Date
@@ -93,6 +111,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             workload: form.body.workload,
             startDate: form.body.startDate.getTime(),
             endDate: form.body.endDate.getTime(),
+            badges: form.body.badges.map( ct => ct.id ),
         };
 
         const res = isCreating
@@ -117,4 +136,5 @@ type ManageActivityForm = {
     workload: number;
     startDate: Date;
     endDate: Date;
+    badges: Competence.Type[];
 };
