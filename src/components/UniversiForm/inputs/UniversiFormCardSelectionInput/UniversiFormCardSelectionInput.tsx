@@ -11,7 +11,7 @@ import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormCardSelectionInput.module.less";
 
 
-export function UniversiFormCardSelectionInput<T, S extends Optional<boolean>>( props: Readonly<UniversiFormCardSelectionInputProps<T, S>> ) {
+export function UniversiFormCardSelectionInput<T, S extends Optional<boolean> = undefined>( props: Readonly<UniversiFormCardSelectionInputProps<T, S>> ) {
     const context = useContext( UniversiFormContext );
     const refreshComponent = useRefreshComponent();
 
@@ -102,7 +102,7 @@ export type UniversiFormCardSelectionInputValue<T, S extends Optional<boolean>> 
     ? SelectionChanges<T>
     : T[];
 
-type SelectionChanges<T> = {
+export type SelectionChanges<T> = {
     added: T[];
     removed: T[];
 };
