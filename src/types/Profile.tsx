@@ -1,11 +1,43 @@
+import ProfileCard, { ProfileCardProps } from "@/components/ProfileCard";
+import { UniversiFormCardSelectionInput, UniversiFormCardSelectionInputProps } from "@/components/UniversiForm/inputs/UniversiFormCardSelectionInput";
 import { compareAccessLevel } from "@/types/User";
-import { IMG_DEFAULT_PROFILE } from "@/utils/assets";
+import { stringIncludesIgnoreCase } from "@/utils/stringUtils";
 
 export const GENDER_OPTIONS: {[k in Profile.Gender]: string} = {
     M: "Masculino",
     F: "Feminino",
     O: "Outro",
 };
+
+export function ProfileSelect<S extends Optional<boolean>>( props: Readonly<ProfileSelectProps<S>> ) {
+    const { options, renderBio, renderDepartment, useLink, defaultValue, ...selectProps } = props;
+
+    return <UniversiFormCardSelectionInput
+        { ...selectProps }
+        defaultValue={ defaultValue?.map( ProfileClass.new ) }
+        options={ options.map( ProfileClass.new ) }
+        getOptionUniqueValue={ p => p.id }
+        isSearchable
+        searchFilter={ searchFilter }
+        // todo: add custom filters next to text filter
+        // eg.: department selector
+        render={ p => <ProfileCard
+            profile={ p }
+            renderDepartment
+            inline
+        /> }
+    />
+
+    function searchFilter( text: string, profile: ProfileClass ): boolean {
+        return stringIncludesIgnoreCase( profile.fullname!, text )
+            || Boolean( profile.department
+                && (
+                    stringIncludesIgnoreCase( profile.department.acronym, text )
+                    || stringIncludesIgnoreCase( profile.department.name, text )
+                )
+            );
+    }
+}
 
 export class ProfileClass implements Profile.DTO {
     constructor(private readonly profile: Profile.DTO) {}
@@ -143,3 +175,14 @@ export class ProfileClass implements Profile.DTO {
     get department() { return this.profile.department; }
     set department( department: Nullable<Department.DTO> ) { this.profile.department = department; }
 }
+
+export type ProfileSelectProps<Separate extends Optional<boolean>> = Omit<
+    UniversiFormCardSelectionInputProps<ProfileClass, Separate>,
+    "getOptionUniqueValue" | "options" | "render" | "defaultValue" | "searchFilter"
+> & Omit<
+    ProfileCardProps,
+    "profile"
+> & {
+    options: Profile.DTO[];
+    defaultValue?: Profile.DTO[];
+};
