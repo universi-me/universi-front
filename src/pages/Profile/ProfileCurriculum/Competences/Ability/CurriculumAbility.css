@@ -196,6 +196,10 @@
     color:  var(--primary-color);
 }
 
+#item-competence .level-container .competence-badge  {
+    color:  var(--primary-color);
+}
+
 #item-competence .competence .edit-button.active {
     background-color: var(--primary-color);
 }

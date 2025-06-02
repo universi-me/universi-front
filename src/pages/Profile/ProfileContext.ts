@@ -28,6 +28,7 @@ export type ProfileContextType = null | {
         folders:                 Nullable<Folder[]>;
         favorites:               Folder[];
         assignedByMe:            FolderProfile[];
+        activities:              Activity.DTO[];
     };
 
     setEditCompetence(competence: Competence | null | undefined): any;

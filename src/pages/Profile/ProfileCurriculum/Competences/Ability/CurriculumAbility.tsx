@@ -15,7 +15,32 @@ export function CurriculumAbility() {
     return null;
   }
 
-  const sortedCompetences = [...profileContext.profileListData.competences]
+  // get list badges earned list unique from all profileContext.activities.badges
+  function getBadgedCompetences(): Competence.DTO[] | undefined {
+    if (profileContext === null || profileContext.profileListData?.activities == null || profileContext.profileListData.activities.length === 0)
+        return [];
+
+    return profileContext.profileListData.activities
+        .flatMap(activity => 
+            (activity.badges ?? [])
+            .map(badge => ({ activity, badge })))
+            .filter((item, index, self) => self.findIndex(b => b.badge.id === item.badge.id) === index)
+            .map(({ activity, badge }) => ({
+                id: activity.id,
+                description: activity.name,
+                creationDate: activity.startDate,
+                hasBadge: true,
+                competenceType: {
+                    id: badge.id,
+                    name: badge.name,
+                    reviewed: true,
+                },
+                level: 0,
+                } as Competence.DTO)
+            );
+}
+
+  const sortedCompetences = [...profileContext.profileListData.competences ?? [], ...getBadgedCompetences() ?? []]
     .sort((c1, c2) => c1.competenceType.name.localeCompare(c2.competenceType.name));
 
   const toggleEditing = () => {
@@ -97,7 +122,7 @@ export function CurriculumAbility() {
                 </div>
             </div>
             <div className="competence-list">
-                    {profileContext.profileListData.competences.length > 0
+                    {sortedCompetences.length > 0
                         ? sortedCompetences.map((competence) => {
                             return (
                                 <div className="competence-item" key={competence.id}>
@@ -111,13 +136,22 @@ export function CurriculumAbility() {
                                         <i className="bi bi-exclamation-diamond-fill unreviewed-competence-warning" title="Esta competência não foi revisada por um administrador e não é visível publicamente"/>
                                     }
                                 </div>
-                                <div className="level-container">
-                                    <h2 className="level-label">{CompetenceLevelObjects[competence.level].label}</h2>
-                                    <div className="level-bar">
-                                        <div className="bar" style={{ width: `${calculateWidth(competence.level)}%` }}></div>
+                                { competence.hasBadge ?
+                                    <div className="level-container">
+                                        <h2 className="level-label"><i className="bi bi-award-fill competence-badge"></i>Competência Conquistada</h2>
+                                        <div >
+                                            <div className="level-label">{ competence.description }</div>
+                                        </div>
                                     </div>
-                                </div>
-                    {isEditing ? (
+                                :
+                                    <div className="level-container">
+                                        <h2 className="level-label">{CompetenceLevelObjects[competence.level].label}</h2>
+                                        <div className="level-bar">
+                                            <div className="bar" style={{ width: `${calculateWidth(competence.level)}%` }}></div>
+                                        </div>
+                                    </div>
+                                }
+                    {isEditing && !competence.hasBadge ? (
                         <div className="config-button-ability">
                             <button
                                 className="config-button-icon"
