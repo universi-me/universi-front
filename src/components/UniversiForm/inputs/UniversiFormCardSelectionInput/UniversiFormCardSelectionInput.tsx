@@ -9,11 +9,13 @@ import { RequiredIndicator, useInitialize } from "../../utils";
 
 import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormCardSelectionInput.module.less";
-
+import UniversiForm from "@/components/UniversiForm";
+import { UniversiFormData } from "@/components/UniversiForm/UniversiFormRoot";
 
 export function UniversiFormCardSelectionInput<T, S extends Optional<boolean> = undefined>( props: Readonly<UniversiFormCardSelectionInputProps<T, S>> ) {
     const context = useContext( UniversiFormContext );
     const refreshComponent = useRefreshComponent();
+    const [renderFilterForm, setRenderFilterForm] = useState(false);
 
     const changes = useMemo( () => {
         return new ArrayChanges(
@@ -27,7 +29,7 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean> = 
     const [ textFilter, setTextFilter ] = useState( "" );
     const filteredOptions = useMemo( () => {
         return props.options
-            .filter( o => !props.isSearchable || props.searchFilter( textFilter, o ) );
+            .filter( o => (!props.isSearchable || props.searchFilter( textFilter, o )) && (props.advancedSearchFilter?.( o )) );
     }, [ textFilter, props.options ] );
 
     return <fieldset className={ formStyles.fieldset }>
@@ -38,7 +40,22 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean> = 
                 setter={ setTextFilter }
                 placeholderMessage={ props.searchPlaceholder ?? `Buscar por ${ props.label }` }
             /> }
+            { !props.useAdvancedSearch || <button type="button" className={ styles.filter_card } id="filter-card-button" onClick={ () => setRenderFilterForm( true ) } title="Filtrar Resultados">
+                <span className="bi bi-filter-circle-fill" />
+            </button> }
         </div>
+
+        { props.useAdvancedSearch && renderFilterForm &&
+            <UniversiForm.Root
+                    title={ props.advancedSearchFilterTitle ?? "Filtrar Resultados" }
+                    callback={ handleFilter }
+                    skipCancelConfirmation={true}
+                    
+                    confirmButtonText="Filtrar"
+                    cancelButtonText="Limpar Filtro" >
+                { props.advancedSearchFilterOptions?.() }
+            </UniversiForm.Root>
+        }
 
         { props.options.length === 0
             ? <p className={ styles.no_result }>{ props.noOptionsText ?? "Nenhuma opção disponível" }</p>
@@ -55,6 +72,12 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean> = 
             </div> ) }
         </div>
     </fieldset>
+
+     function handleFilter( filterForm: UniversiFormData<Record<string, any>> ):any {
+        setRenderFilterForm( false );
+        props.handleAdvancedSearch?.( filterForm );
+        refreshComponent();
+    }
 
     function getFinalValue(): UniversiFormCardSelectionInputValue<T, S> {
         if ( props.isSeparate === true )
@@ -110,7 +133,19 @@ export type SelectionChanges<T> = {
 type SearchOptions<T> = {
     isSearchable: true;
     searchFilter( text: string, option: T ): boolean;
+
+    useAdvancedSearch?: false | true;
+    advancedSearchFilterTitle?: string;
+    advancedSearchFilter?( option: T ): boolean;
+    advancedSearchFilterOptions?(): ReactNode[];
+    handleAdvancedSearch?( form: UniversiFormData<Record<string, any>> ): void;
 } | {
     isSearchable?: false;
     searchFilter?( text: string, option: T ): boolean;
+
+    useAdvancedSearch?: false;
+    advancedSearchFilterTitle?: string;
+    advancedSearchFilter?( option: T ): boolean;
+    advancedSearchFilterOptions?(): ReactNode[];
+    handleAdvancedSearch?( form : UniversiFormData<Record<string, any>> ): void;
 }

@@ -2,6 +2,8 @@ import ProfileCard, { ProfileCardProps } from "@/components/ProfileCard";
 import { UniversiFormCardSelectionInput, UniversiFormCardSelectionInputProps } from "@/components/UniversiForm/inputs/UniversiFormCardSelectionInput";
 import { compareAccessLevel } from "@/types/User";
 import { stringIncludesIgnoreCase } from "@/utils/stringUtils";
+import UniversiForm from "@/components/UniversiForm";
+import { useState } from "react";
 
 export const GENDER_OPTIONS: {[k in Profile.Gender]: string} = {
     M: "Masculino",
@@ -12,6 +14,8 @@ export const GENDER_OPTIONS: {[k in Profile.Gender]: string} = {
 export function ProfileSelect<S extends Optional<boolean>>( props: Readonly<ProfileSelectProps<S>> ) {
     const { options, renderBio, renderDepartment, useLink, defaultValue, ...selectProps } = props;
 
+    const [departmentsFilters, setDepartmentsFilters] = useState([]);
+
     return <UniversiFormCardSelectionInput
         { ...selectProps }
         defaultValue={ defaultValue?.map( ProfileClass.new ) }
@@ -19,8 +23,10 @@ export function ProfileSelect<S extends Optional<boolean>>( props: Readonly<Prof
         getOptionUniqueValue={ p => p.id }
         isSearchable
         searchFilter={ searchFilter }
-        // todo: add custom filters next to text filter
-        // eg.: department selector
+        useAdvancedSearch={ availableDepartmentsInOptions().length > 0 }
+        advancedSearchFilter={ advancedSearchFilter }
+        advancedSearchFilterOptions={ advancedSearchFilterOptions }
+        handleAdvancedSearch={ handleAdvancedSearch }
         render={ p => <ProfileCard
             profile={ p }
             renderDepartment
@@ -36,6 +42,53 @@ export function ProfileSelect<S extends Optional<boolean>>( props: Readonly<Prof
                     || stringIncludesIgnoreCase( profile.department.name, text )
                 )
             );
+    }
+
+    function advancedSearchFilter( profile: ProfileClass ): boolean {
+        // check if the profile department is in the filters
+        if (departmentsFilters?.length === 0) {
+            return true; // no filters, show all
+        }
+        if (!profile.department) {
+            return false; // no department, cannot match
+        }
+        if (departmentsFilters?.map( (d : any) => d.value ).includes(profile.department.id)) {
+            return true; // department matches one of the filters
+        }
+        // department does not match any filter
+        return false;
+    }
+
+    function handleAdvancedSearch(form: UniversiForm.Data<Record<string, any>>) {
+        if (!form.confirmed) {
+            //clean filtrers
+            setDepartmentsFilters([]);
+            return;
+        }
+        //set filters
+        setDepartmentsFilters(form.body.department ?? []);
+    }
+
+    function advancedSearchFilterOptions () {
+        return [
+            <UniversiForm.Input.Select
+                    param="department"
+                    label="Filtrar por Órgão/Área"
+                    options={ availableDepartmentsInOptions().map( d => ({ value: d.id, label: d.acronym + ' – ' + d.name, })) }
+                    defaultValue={ departmentsFilters }
+                    getOptionUniqueValue={ t => t.value }
+                    getOptionLabel={ t => t.label }
+                    isMultiSelection
+            />,
+        ];
+    }
+
+    // Returns a list of available departments in the options, removing duplicates.
+    function availableDepartmentsInOptions() {
+        return options?.map( p => p.department )
+            .filter( d => d !== null )
+            .filter((item, index, self) => self.findIndex(d => d.id === item.id) === index)
+            .sort( (a, b) => a.name.localeCompare(b.name) );
     }
 }
 
