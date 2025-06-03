@@ -29,7 +29,7 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean> = 
     const [ textFilter, setTextFilter ] = useState( "" );
     const filteredOptions = useMemo( () => {
         return props.options
-            .filter( o => (!props.isSearchable || props.searchFilter( textFilter, o )) && (props.advancedSearchFilter?.( o )) );
+            .filter( o => (!props.isSearchable || props.searchFilter( textFilter, o )) && (props.advancedSearchFilter?.( o ) ?? true) )
     }, [ textFilter, props.options ] );
 
     return <fieldset className={ formStyles.fieldset }>
