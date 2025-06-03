@@ -19,7 +19,7 @@ export type ProfilePageLoaderResponse = {
         folders:                 Nullable<Folder[]>;
         favorites:               Folder[];
         assignedByMe:            FolderProfile[];
-        activities:              Activity.DTO[];
+        activities:              Activity.DTO[] | undefined;
     };
 };
 
