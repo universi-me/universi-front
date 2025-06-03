@@ -151,6 +151,9 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
             }, {
                 text: "Alterar participantes",
                 biIcon: "people-fill",
+                hidden( activity ) {
+                    return !canI( "ACTIVITY", Permission.READ_WRITE, activity.group );
+                },
                 onSelect(){
                     setIsChangingParticipants( true );
                 }
