@@ -18,31 +18,6 @@ export function CurriculumAbility() {
     return null;
   }
 
-  // get list badges earned list unique from all profileContext.activities.badges
-  function getBadgedCompetences(): Competence.DTO[] | undefined {
-    if (profileContext === null || profileContext.profileListData?.activities == null || profileContext.profileListData.activities.length === 0)
-        return [];
-
-    return profileContext.profileListData.activities
-        .flatMap(activity => 
-            (activity.badges ?? [])
-            .map(badge => ({ activity, badge })))
-            .filter((item, index, self) => self.findIndex(b => b.badge.id === item.badge.id) === index)
-            .map(({ activity, badge }) => ({
-                id: activity.id,
-                description: activity.name,
-                creationDate: activity.startDate,
-                hasBadge: true,
-                competenceType: {
-                    id: badge.id,
-                    name: badge.name,
-                    reviewed: true,
-                },
-                level: 0,
-                } as Competence.DTO)
-            );
-}
-
   const sortedCompetences = [ ...profileContext.profileListData.competences ]
     .sort( compareCompetences );
 
@@ -154,21 +129,12 @@ export function CurriculumAbility() {
                                         </Tooltip.Root>
                                     </Tooltip.Provider> }
                                 </div>
-                                { competence.hasBadge ?
-                                    <div className="level-container">
-                                        <h2 className="level-label"><i className="bi bi-award-fill competence-badge"></i>Competência Conquistada</h2>
-                                        <div >
-                                            <div className="level-label">{ competence.description }</div>
-                                        </div>
+                                <div className="level-container">
+                                    <h2 className="level-label">{CompetenceLevelObjects[competence.level].label}</h2>
+                                    <div className="level-bar">
+                                        <div className="bar" style={{ width: `${calculateWidth(competence.level)}%` }}></div>
                                     </div>
-                                :
-                                    <div className="level-container">
-                                        <h2 className="level-label">{CompetenceLevelObjects[competence.level].label}</h2>
-                                        <div className="level-bar">
-                                            <div className="bar" style={{ width: `${calculateWidth(competence.level)}%` }}></div>
-                                        </div>
-                                    </div>
-                                }
+                                </div>
                     {isEditing && !competence.hasBadge ? (
                         <div className="config-button-ability">
                             <button
