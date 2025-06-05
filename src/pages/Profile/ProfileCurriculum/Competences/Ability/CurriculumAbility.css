@@ -86,11 +86,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: .25rem;
 }
 
 #item-competence .competence .competence-list .competence-item .competence-type {
     font-size: 0.95rem;
-    margin-right: .5em;
     text-transform: uppercase;
     font-weight: var(--font-weight-bold);
 }

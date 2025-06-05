@@ -50,6 +50,12 @@ export function compareCompetenceTypes( c1: Competence.Type, c2: Competence.Type
     return c1.name.localeCompare( c2.name );
 }
 
+export function compareCompetences( c1: Competence.DTO, c2: Competence.DTO ): number {
+    return compareCompetenceTypes( c1.competenceType, c2.competenceType )
+        || c1.level - c2.level
+        || new Date( c1.creationDate ).getTime() - new Date( c2.creationDate).getTime() ;
+}
+
 export type CompetenceLevelObject = {
     description: string;
     label: string;

@@ -1,11 +1,14 @@
 import { useContext, MouseEvent, useState } from 'react';
+import * as Tooltip from '@radix-ui/react-tooltip';
 import { ProfileContext } from '@/pages/Profile';
-import { CompetenceLevelObjects } from '@/types/Competence';
+import { compareCompetences, CompetenceLevelObjects } from '@/types/Competence';
 import { ICON_DELETE_BLACK } from '@/utils/assets';
 import './CurriculumAbility.css';
 import { UniversimeApi } from "@/services"
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { IconVerificated } from '@/components/UniversiSvg';
+import BootstrapIcon from '@/components/BootstrapIcon';
+import styles from "./CurriculumAbility.module.less";
 
 export function CurriculumAbility() {
   const profileContext = useContext(ProfileContext);
@@ -40,8 +43,8 @@ export function CurriculumAbility() {
             );
 }
 
-  const sortedCompetences = [...profileContext.profileListData.competences ?? [], ...getBadgedCompetences() ?? []]
-    .sort((c1, c2) => c1.competenceType.name.localeCompare(c2.competenceType.name));
+  const sortedCompetences = [ ...profileContext.profileListData.competences ]
+    .sort( compareCompetences );
 
   const toggleEditing = () => {
     setIsEditing((prevEditing) => !prevEditing);
@@ -135,6 +138,21 @@ export function CurriculumAbility() {
                                     { competence.competenceType.reviewed ||
                                         <i className="bi bi-exclamation-diamond-fill unreviewed-competence-warning" title="Esta competência não foi revisada por um administrador e não é visível publicamente"/>
                                     }
+                                    { competence.activities.length > 0 && <Tooltip.Provider>
+                                        <Tooltip.Root>
+                                            <Tooltip.Trigger asChild>
+                                                <BootstrapIcon icon="award-fill" className={styles.activity_trigger}/>
+                                            </Tooltip.Trigger>
+                                            <Tooltip.Portal>
+                                                <Tooltip.Content className={styles.activity_tooltip}>
+                                                    <span className={ styles.activity_header }>Atividades relacionadas</span>
+                                                    <ul className={styles.activity_list}>
+                                                        { competence.activities.map( a => <li key={ a.id } className={ styles.activity_name }>{ a.name }</li> ) }
+                                                    </ul>
+                                                </Tooltip.Content>
+                                            </Tooltip.Portal>
+                                        </Tooltip.Root>
+                                    </Tooltip.Provider> }
                                 </div>
                                 { competence.hasBadge ?
                                     <div className="level-container">
