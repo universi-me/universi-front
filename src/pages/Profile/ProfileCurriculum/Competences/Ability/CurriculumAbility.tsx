@@ -135,7 +135,7 @@ export function CurriculumAbility() {
                                         <div className="bar" style={{ width: `${calculateWidth(competence.level)}%` }}></div>
                                     </div>
                                 </div>
-                    {isEditing && !competence.hasBadge ? (
+                    {isEditing ? (
                         <div className="config-button-ability">
                             <button
                                 className="config-button-icon"
