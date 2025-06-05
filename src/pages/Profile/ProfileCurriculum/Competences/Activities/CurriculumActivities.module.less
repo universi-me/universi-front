@@ -1,0 +1,22 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+.group_link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .25em;
+
+    text-decoration: none;
+    color: @primary-color;
+    font-weight: @font-weight-semibold;
+    font-size: 1rem;
+
+    .image {
+        @side: 2.5rem;
+        width: @side;
+        height: @side;
+        aspect-ratio: 1;
+        border-radius: calc( @side * .2 );
+    }
+}

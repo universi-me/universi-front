@@ -5,6 +5,10 @@ export function compareActivityTypes( at1: Activity.Type, at2: Activity.Type ) {
     return at1.name.localeCompare( at2.name );
 }
 
+export function compareActivities( a1: Activity.DTO, a2: Activity.DTO ): number {
+    return a1.name.localeCompare( a2.name );
+}
+
 export function ActivityTypeSelect<C extends Optional<boolean>>( props: Readonly<ActivityTypeSelectProps<C>> ) {
     return <UniversiFormSelectInput
         { ...props }

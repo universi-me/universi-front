@@ -6,6 +6,7 @@ import { UniversiModal } from "@/components/UniversiModal";
 import { CompetencesSettings } from "../CompetencesSettings/CompetencesSettings";
 import { ProfileDiscardChanges } from "../ProfileDiscard/ProfileDiscard";
 import { CurriculumExperience } from "./Competences/Experience/CurriculumExperience";
+import CurriculumActivities from "./Competences/Activities";
 import "./ProfileCurriculum.css";
 import { EducationSettings } from "../EducationSettings/EducationSettings";
 import { ExperienceSettings } from "../ExperienceSettings/ExperienceSettings";
@@ -38,6 +39,10 @@ export function ProfileCurriculum() {
 
                 <div id="item-competence">
                     <CurriculumEducation />
+                </div>
+
+                <div id="item-competence">
+                    <CurriculumActivities />
                 </div>
             </div>
 
