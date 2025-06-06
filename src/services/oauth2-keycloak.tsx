@@ -34,7 +34,7 @@ export function KeyCloakOAuth2Element() {
             await SweetAlertUtils.fireModal( {
                 title: "Erro ao fazer login com Keycloak",
                 text: res.errorMessage
-                    ?? "Não foi possível efetuar o login com Google.\nTente novamente em alguns minutos ou entre em contato com o suporte.",
+                    ?? "Não foi possível efetuar o login com Keycloak.\nTente novamente em alguns minutos ou entre em contato com o suporte.",
                 confirmButtonText: "Voltar para o login",
             } );
         }

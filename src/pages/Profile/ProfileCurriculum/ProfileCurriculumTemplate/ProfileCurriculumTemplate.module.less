@@ -1,0 +1,107 @@
+@import url(/src/layouts/colors.less);
+
+.card {
+    width: 100%;
+    height: fit-content;
+    padding: 1.5rem;
+
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+
+    border: solid 1px;
+    border-color: #e2e2e2;
+
+    .heading {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        border-radius: 20px 20px 0px 0px;
+        margin-bottom: 1rem;
+        font-size: 1.2em;
+        font-weight: 600;
+
+        .card_title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            .edit_button {
+                background-color: transparent;
+                border: solid 2px;
+                border-color: @primary-color;
+                color: @primary-color;
+                border-radius: 10px;
+                padding: 5px 10px 5px 10px;
+                cursor: pointer;
+
+                &.active {
+                    background-color: @primary-color;
+                    color: @font-color-v1;
+                }
+            }
+        }
+
+        .add_button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            color: @primary-color;
+            font-size: 1rem;
+
+            border: solid 2px;
+            border-radius: 20px;
+            padding: 5px 10px 5px 10px;
+
+            background-color: transparent;
+            cursor: pointer;
+
+            transition: background-color 0.3s, color 0.3s;
+            &:hover {
+                background-color: @primary-color;
+                color: @font-color-v1;
+            }
+
+            .add_icon {
+                font-size: 1.2rem;
+            }
+        }
+    }
+
+    .list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            padding: .5rem 1rem;
+            min-height: 4.125rem;
+
+            background: @card-item-color;
+            border-radius: 20px;
+
+            .edit_buttons {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+
+                .delete_item_button, .edit_item_button {
+                    cursor: pointer;
+                    border: none;
+                    background-color: transparent;
+
+                    font-size: 1.15rem;
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
+}

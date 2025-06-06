@@ -1,6 +1,10 @@
 import { UniversiFormSelectInput, UniversiFormSelectInputProps } from "@/components/UniversiForm/inputs/UniversiFormSelectInput";
 import { UniversimeApi } from "@/services";
 
+export function compareExperiences( e1: Experience.DTO, e2: Experience.DTO ): number {
+    return new Date( e1.creationDate ).getTime() - new Date( e2.creationDate ).getTime();
+}
+
 export function compareExperienceTypes( c1: Experience.Type, c2: Experience.Type ) {
     return c1.name.localeCompare( c2.name );
 }

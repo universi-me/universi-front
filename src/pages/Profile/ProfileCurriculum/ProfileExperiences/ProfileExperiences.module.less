@@ -1,0 +1,66 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: initial;
+    width: 100%;
+
+    padding: .75em 1em;
+    gap: 1rem;
+
+    background: @card-item-color;
+    border-radius: 20px;
+
+    .info {
+        display: flex;
+        flex-direction: row;
+        align-items: start;
+        gap: 1rem;
+
+        .presentation {
+            margin-right: auto;
+
+            .title {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: .5rem;
+
+                .icon {
+                    @size: 1.5rem;
+                    width: @size;
+                    height: @size;
+                    aspect-ratio: 1;
+                }
+
+                .type {
+                    text-transform: uppercase;
+                }
+            }
+        }
+
+        .date_wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+
+    .info .presentation .type,
+    .info .date_wrapper .date_title,
+    .description_wrapper .title {
+        font-size: 1rem;
+        font-weight: @font-weight-bold;
+        word-break: normal;
+    }
+
+    .info .presentation .institution,
+    .info .date_wrapper .date,
+    .description_wrapper .description {
+        color: @font-color-v2;
+        font-size: .875rem;
+        font-weight: @font-weight-default;
+    }
+}

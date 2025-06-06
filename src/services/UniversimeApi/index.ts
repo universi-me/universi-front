@@ -1,3 +1,5 @@
+export * as Activity from "./Activity";
+export * as ActivityType from "./ActivityType";
 export * as Auth from "./Auth";
 export * as Capacity from "./Capacity";
 export * as Competence from "./Competence";

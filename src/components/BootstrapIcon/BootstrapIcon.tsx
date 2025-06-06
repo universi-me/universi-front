@@ -3,9 +3,12 @@ import { HTMLAttributes } from "react";
 import { makeClassName } from "@/utils/tsxUtils";
 
 export function BootstrapIcon(props : Readonly<BootstrapIconProps>) {
-    const className = makeClassName("bi", `bi-${props.icon}`, props.className);
+    let { icon, className, ...spanProps } = props;
 
-    return <span {...props} className={className} />
+    if ( icon.startsWith( "bi-" ) )
+        icon = icon.slice( 3 );
+
+    return <span {...spanProps} className={ makeClassName( "bi", `bi-${icon}`, className ) } />
 }
 
 export type BootstrapIconProps = {

@@ -15,6 +15,7 @@ import useCanI from "@/hooks/useCanI";
 import { Permission } from "@/utils/roles/rolesUtils";
 import UniversiForm from "@/components/UniversiForm";
 import { AuthContext } from "@/contexts/Auth";
+import ProfileCard from "@/components/ProfileCard";
 
 type competenceSearch = {
     typeId?: string,
@@ -366,28 +367,12 @@ function makePeopleList(people: ProfileClass[], filter: string) {
 
     return filteredPeople
         .filter(p => !p.user.needProfile)
-        .map(renderPerson);
-    
-}
-
-function renderPerson(person: ProfileClass) {
-    const linkToProfile = `/profile/${person.user.name}`;
-
-    const imageUrl = person.image?.startsWith("/")
-        ? `${import.meta.env.VITE_UNIVERSIME_API}${person.image}`
-        : person.image;
-
-    return (
-        <div className="person-item tab-item" key={person.id} id={person.id}>
-            <Link to={linkToProfile} className="person-image-info">
-                <ProfileImage imageUrl={imageUrl} name={person.fullname} className="person-image" />
-            </Link>
-
-            <div className="info">
-                <Link to={linkToProfile} className="person-name">{person.fullname}</Link>
-                { person.department && <p className="person-department">{person.department.acronym} – {person.department.name}</p> }
-                <p className="person-bio">{person.bio}</p>
-            </div>
-        </div>
-    );
+        .map( p => <ProfileCard
+            profile={ p }
+            key={ p.id }
+            useLink
+            renderBio
+            renderDepartment
+            className="person-item"
+        /> );
 }

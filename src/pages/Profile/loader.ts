@@ -19,6 +19,7 @@ export type ProfilePageLoaderResponse = {
         folders:                 Nullable<Folder[]>;
         favorites:               Folder[];
         assignedByMe:            FolderProfile[];
+        activities:              Activity.DTO[] | undefined;
     };
 };
 
@@ -39,7 +40,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
 
     const isOwnProfile = fetchProfile.data.user.ownerOfSession;
 
-    const [fetchGroups, fetchCompetences, fetchLinks, fetchFavorites, fetchAssignements, fetchEducations, fetchExperiences, fetchAssignedByMe] = await Promise.all([
+    const [fetchGroups, fetchCompetences, fetchLinks, fetchFavorites, fetchAssignements, fetchEducations, fetchExperiences, fetchAssignedByMe, fetchActivities] = await Promise.all([
         UniversimeApi.Profile.groups( username ),
         UniversimeApi.Profile.competences( username ),
         UniversimeApi.Profile.links( username ),
@@ -48,6 +49,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
         UniversimeApi.Profile.educations( username ),
         UniversimeApi.Profile.experiences( username ),
         isOwnProfile ? UniversimeApi.Capacity.Folder.assignments({ assignedBy: username }) : Promise.resolve(undefined),
+        UniversimeApi.Profile.activities( username ),
     ]);
 
     return {
@@ -76,6 +78,7 @@ export async function fetchProfilePageData(username: string | undefined): Promis
             }) ?? [],
             links: fetchLinks.data ?? [],
             assignedByMe: fetchAssignedByMe?.data ?? [],
+            activities: fetchActivities.data ?? [],
         },
     };
 }
@@ -101,5 +104,6 @@ const FAILED_TO_LOAD: ProfilePageLoaderResponse = {
         groups: [],
         links: [],
         assignedByMe: [],
+        activities: [],
     },
 };

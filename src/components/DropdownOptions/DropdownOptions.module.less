@@ -1,0 +1,40 @@
+@import url(/src/layouts/colors.less);
+
+.content {
+    background-color: @card-background-color;
+    border-radius: .625rem;
+    min-width: 8rem;
+
+    overflow: hidden;
+    border: @primary-color solid 1px;
+
+    .arrow {
+        fill: @primary-color;
+    }
+
+    .option_item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        cursor: pointer;
+
+        padding: .5rem .5rem;
+
+        font-size: .9rem;
+
+        &:hover {
+            background-color: @button-hover-color;
+            outline: none;
+        }
+
+        &[data-disabled] {
+            color: @font-color-disabled;
+
+            &:hover {
+                background-color: transparent;
+            }
+        }
+    }
+}

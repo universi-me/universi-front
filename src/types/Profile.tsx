@@ -1,11 +1,96 @@
+import ProfileCard, { ProfileCardProps } from "@/components/ProfileCard";
+import { UniversiFormCardSelectionInput, UniversiFormCardSelectionInputProps } from "@/components/UniversiForm/inputs/UniversiFormCardSelectionInput";
 import { compareAccessLevel } from "@/types/User";
-import { IMG_DEFAULT_PROFILE } from "@/utils/assets";
+import { stringIncludesIgnoreCase } from "@/utils/stringUtils";
+import UniversiForm from "@/components/UniversiForm";
+import { useState } from "react";
 
 export const GENDER_OPTIONS: {[k in Profile.Gender]: string} = {
     M: "Masculino",
     F: "Feminino",
     O: "Outro",
 };
+
+export function ProfileSelect<S extends Optional<boolean>>( props: Readonly<ProfileSelectProps<S>> ) {
+    const { options, renderBio, renderDepartment, useLink, defaultValue, ...selectProps } = props;
+
+    const [departmentsFilters, setDepartmentsFilters] = useState([]);
+
+    return <UniversiFormCardSelectionInput
+        { ...selectProps }
+        defaultValue={ defaultValue?.map( ProfileClass.new ) }
+        options={ options.map( ProfileClass.new ) }
+        getOptionUniqueValue={ p => p.id }
+        isSearchable
+        searchFilter={ searchFilter }
+        useAdvancedSearch={ availableDepartmentsInOptions().length > 0 }
+        advancedSearchFilter={ advancedSearchFilter }
+        advancedSearchFilterOptions={ advancedSearchFilterOptions }
+        handleAdvancedSearch={ handleAdvancedSearch }
+        render={ p => <ProfileCard
+            profile={ p }
+            renderDepartment
+            inline
+        /> }
+    />
+
+    function searchFilter( text: string, profile: ProfileClass ): boolean {
+        return stringIncludesIgnoreCase( profile.fullname!, text )
+            || Boolean( profile.department
+                && (
+                    stringIncludesIgnoreCase( profile.department.acronym, text )
+                    || stringIncludesIgnoreCase( profile.department.name, text )
+                )
+            );
+    }
+
+    function advancedSearchFilter( profile: ProfileClass ): boolean {
+        // check if the profile department is in the filters
+        if (departmentsFilters?.length === 0) {
+            return true; // no filters, show all
+        }
+        if (!profile.department) {
+            return false; // no department, cannot match
+        }
+        if (departmentsFilters?.map( (d : any) => d.value ).includes(profile.department.id)) {
+            return true; // department matches one of the filters
+        }
+        // department does not match any filter
+        return false;
+    }
+
+    function handleAdvancedSearch(form: UniversiForm.Data<Record<string, any>>) {
+        if (!form.confirmed) {
+            //clean filtrers
+            setDepartmentsFilters([]);
+            return;
+        }
+        //set filters
+        setDepartmentsFilters(form.body.department ?? []);
+    }
+
+    function advancedSearchFilterOptions () {
+        return [
+            <UniversiForm.Input.Select
+                    param="department"
+                    label="Filtrar por Órgão/Área"
+                    options={ availableDepartmentsInOptions().map( d => ({ value: d.id, label: d.acronym + ' – ' + d.name, })) }
+                    defaultValue={ departmentsFilters }
+                    getOptionUniqueValue={ t => t.value }
+                    getOptionLabel={ t => t.label }
+                    isMultiSelection
+            />,
+        ];
+    }
+
+    // Returns a list of available departments in the options, removing duplicates.
+    function availableDepartmentsInOptions() {
+        return options?.map( p => p.department )
+            .filter( d => d !== null )
+            .filter((item, index, self) => self.findIndex(d => d.id === item.id) === index)
+            .sort( (a, b) => a.name.localeCompare(b.name) );
+    }
+}
 
 export class ProfileClass implements Profile.DTO {
     constructor(private readonly profile: Profile.DTO) {}
@@ -143,3 +228,14 @@ export class ProfileClass implements Profile.DTO {
     get department() { return this.profile.department; }
     set department( department: Nullable<Department.DTO> ) { this.profile.department = department; }
 }
+
+export type ProfileSelectProps<Separate extends Optional<boolean>> = Omit<
+    UniversiFormCardSelectionInputProps<ProfileClass, Separate>,
+    "getOptionUniqueValue" | "options" | "render" | "defaultValue" | "searchFilter"
+> & Omit<
+    ProfileCardProps,
+    "profile"
+> & {
+    options: Profile.DTO[];
+    defaultValue?: Profile.DTO[];
+};

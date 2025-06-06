@@ -7,6 +7,7 @@ namespace Competence {
         level: Level;
         creationDate: string;
         hasBadge: boolean;
+        activities: Activity.DTO[];
     };
 
     type Type = {

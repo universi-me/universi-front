@@ -45,6 +45,10 @@ export function links( idOrUsername: string ) {
     return api.get<Link.DTO[]>( `/${idOrUsername}/links` ).then( ApiResponse.new );
 }
 
+export function activities( idOrUsername: string ) {
+    return api.get<Activity.DTO[]>( `/${idOrUsername}/activities` ).then( ApiResponse.new );
+}
+
 export function folders( idOrUsername: string ) {
     return api.get<ProfileFoldersResponseDTO>( `/${idOrUsername}/folders` ).then( ApiResponse.new );
 }

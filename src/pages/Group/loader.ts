@@ -10,6 +10,7 @@ export type GroupPageLoaderResponse = {
     folders: Capacity.Folder.DTO[];
     posts: Feed.GroupPost[];
     jobs: Job.DTO[] | undefined;
+    activities: Activity.DTO[] | undefined;
 
     competenceTypes: Competence.Type[];
 
@@ -41,14 +42,15 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     if ( group.id === undefined )
         return FAILED_TO_LOAD;
 
-    const [ canISubgroups, canIParticipants, canIFolders, canIFeed ] = await Promise.all([
+    const [ canISubgroups, canIParticipants, canIFolders, canIFeed, canIActivity ] = await Promise.all([
         canI_API('GROUP',   Permission.READ, group),
         canI_API('PEOPLE',  Permission.READ, group),
         canI_API('CONTENT', Permission.READ, group),
         canI_API('FEED',    Permission.READ, group),
+        canI_API('ACTIVITY', Permission.READ, group),
     ]);
 
-    const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes, groupPostsRes, jobsRes, competenceTypesRes] = await Promise.all([
+    const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes, groupPostsRes, jobsRes, competenceTypesRes, activitiesRes] = await Promise.all([
         canISubgroups ? UniversimeApi.Group.subgroups(group.id)       : undefined,
         canIParticipants ? UniversimeApi.GroupParticipant.get(group.id) : undefined,
         canIFolders ? UniversimeApi.Group.folders(group.id)           : undefined,
@@ -56,7 +58,8 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
         UniversimeApi.Profile.links( profile.id ),
         canIFeed ? UniversimeApi.Feed.listGroup(group.id) : undefined,
         group.rootGroup ? UniversimeApi.Job.list({}) : undefined,
-        UniversimeApi.CompetenceType.list()
+        UniversimeApi.CompetenceType.list(),
+        canIActivity ? UniversimeApi.Group.activities( group.id ) : undefined,
     ]);
 
     return {
@@ -67,6 +70,7 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
         posts: groupPostsRes?.data ?? [],
         jobs: jobsRes?.body,
         competenceTypes: competenceTypesRes.body ?? [],
+        activities: activitiesRes?.body ?? [],
         loggedData: {
             profile: profile,
             groups: profileGroupsRes.body ?? [],
@@ -91,4 +95,5 @@ const FAILED_TO_LOAD: GroupPageLoaderResponse = {
     posts: [],
     jobs: [],
     competenceTypes: [],
+    activities: [],
 };

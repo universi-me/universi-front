@@ -64,4 +64,5 @@ export const FeatureTypesToLabel: { [k in Role.Feature]: string } = {
     "PEOPLE":       "Pessoas",
     "COMPETENCE":   "Competência",
     "JOBS":         "Vagas",
+    "ACTIVITY":     "Atividades",
 };
