@@ -1,15 +1,14 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { ProfileContext } from "../ProfileContext";
-import { CurriculumAbility } from "./Competences/Ability/CurriculumAbility";
-import { CurriculumEducation } from "./Competences/Education/CurriculumEducation";
-import { UniversiModal } from "@/components/UniversiModal";
 import { CompetencesSettings } from "../CompetencesSettings/CompetencesSettings";
-import { ProfileDiscardChanges } from "../ProfileDiscard/ProfileDiscard";
-import { CurriculumExperience } from "./Competences/Experience/CurriculumExperience";
-import CurriculumActivities from "./Competences/Activities";
-import "./ProfileCurriculum.css";
+import ProfileActivities from "./ProfileActivities";
 import { EducationSettings } from "../EducationSettings/EducationSettings";
 import { ExperienceSettings } from "../ExperienceSettings/ExperienceSettings";
+import ProfileCompetences from "./ProfileCompetences";
+import ProfileEducations from "./ProfileEducations";
+import ProfileExperiences from "./ProfileExperiences";
+
+import styles from "./ProfileCurriculum.module.less";
 
 
 export function ProfileCurriculum() {
@@ -24,26 +23,15 @@ export function ProfileCurriculum() {
 
     return (
         <>
-            <div className="curriculum-panel">
-                <div className="curriculum-title">
-                    <h1 className="curriculum-name">Informações Profissionais</h1>
+            <div className={ styles.panel }>
+                <div>
+                    <h1 className={ styles.name }>Informações Profissionais</h1>
                 </div>
 
-                <div id="item-competence">
-                    <CurriculumAbility />
-                </div>
-
-                <div id="item-competence">
-                    <CurriculumExperience />
-                </div>
-
-                <div id="item-competence">
-                    <CurriculumEducation />
-                </div>
-
-                <div id="item-competence">
-                    <CurriculumActivities />
-                </div>
+                <ProfileCompetences />
+                <ProfileExperiences />
+                <ProfileEducations />
+                <ProfileActivities />
             </div>
 
         {
