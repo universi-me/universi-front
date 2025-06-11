@@ -15,7 +15,6 @@ export function ActivityTypeSelect<C extends Optional<boolean>>( props: Readonly
         getOptionLabel={ at => at.name }
         getOptionUniqueValue={ at => at.id }
         sortOptions={ compareActivityTypes }
-        canCreateOptions
         onCreateOption={ async name => {
             const res = await UniversimeApi.ActivityType.create( { name } );
             return res.body;
@@ -25,5 +24,5 @@ export function ActivityTypeSelect<C extends Optional<boolean>>( props: Readonly
 
 export type ActivityTypeSelectProps<Clearable extends Optional<boolean>> = Omit<
     UniversiFormSelectInputProps<ActivityType, false, Clearable>,
-    "getOptionUniqueValue" | "canCreateOptions" | "getOptionLabel" | "onCreateOption" | "sortOptions"
+    "getOptionUniqueValue" | "getOptionLabel" | "onCreateOption" | "sortOptions"
 >;
