@@ -77,7 +77,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
 
         <CompetenceTypeSelect
             param="badges"
-            label="Selos"
+            label="Competências Relacionadas"
             options={ availableCompetenceTypes }
             defaultValue={ activity?.badges }
             isMultiSelection
