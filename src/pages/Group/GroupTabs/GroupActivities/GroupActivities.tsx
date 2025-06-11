@@ -28,10 +28,12 @@ export function GroupActivities() {
     const canI = useCanI();
 
     const [ editActivity, setEditActivity ] = useState<Possibly<Activity.DTO>>();
+    const [ isDeleting, setIsDeleting ] = useState( false );
 
     const contextValue: GroupActivitiesContextType = useMemo( () => ({
         editActivity,
         setEditActivity,
+        setIsDeleting
     }), [ editActivity ] );
 
     if ( groupContext?.activities === undefined )
@@ -68,6 +70,8 @@ export function GroupActivities() {
                 } }
             /> }
         </section>
+
+        { isDeleting && <LoadingSpinner /> }
     </GroupActivitiesContext.Provider>;
 }
 
@@ -176,9 +180,11 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
                     });
                     if ( !isSure.isConfirmed ) return;
 
+                    context?.setIsDeleting( true );
                     const res = await UniversimeApi.Activity.remove( activity.id );
                     if ( res.isSuccess() )
-                        groupContext?.refreshData();
+                        await groupContext?.refreshData();
+                    context?.setIsDeleting( false );
                 },
             }
         ];
@@ -220,6 +226,7 @@ type RenderActivityProps = {
 type GroupActivitiesContextType = {
     editActivity: Possibly<Activity.DTO>;
     setEditActivity( action: React.SetStateAction<Possibly<Activity.DTO>> ): unknown;
+    setIsDeleting( action: React.SetStateAction<boolean> ): unknown;
 };
 
 type ChangeActivityParticipantsProps = {
