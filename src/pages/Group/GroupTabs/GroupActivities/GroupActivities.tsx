@@ -88,7 +88,7 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
     return <div className={ styles.item }>
         <div className={ styles.info }>
             <div>
-                <h3 className={ styles.title }>{ activity.name }</h3>
+                <h3 className={ styles.title }>{ activity.group.name }</h3>
                 <h4 className={ styles.location }>{ activity.location } ({ activity.workload }h)</h4>
 
                 { activity.badges.length >0 && <p className={ styles.badges_wrapper }>
@@ -118,15 +118,15 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
 
         { isExpanded && <div
             className={ styles.description }
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( activity.description ) }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( activity.group.description ?? "" ) }}
         /> }
 
         { isChangingParticipants && <ChangeActivityParticipants
             activity={ activity }
             callback={ async form => {
                 if ( form.confirmed ) {
-                    await UniversimeApi.Activity.changeParticipants( activity.id, {
-                        add: form.body.participants.added.map( p => p.id ),
+                    await UniversimeApi.GroupParticipant.changeParticipants( activity.group.id!, {
+                        add: form.body.participants.added.map( p => ( { profile: p.id } ) ),
                         remove: form.body.participants.removed.map( p => p.id ),
                     } );
                 }
@@ -143,7 +143,7 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
                 text: "Editar",
                 biIcon: "pencil-fill",
                 hidden( activity ) {
-                    return !canI( "ACTIVITY", Permission.READ_WRITE, activity.group );
+                    return !activity.group.canEdit;
                 },
                 onSelect( activity ) {
                     context?.setEditActivity( activity );
@@ -152,7 +152,7 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
                 text: "Alterar participantes",
                 biIcon: "people-fill",
                 hidden( activity ) {
-                    return !canI( "ACTIVITY", Permission.READ_WRITE, activity.group );
+                    return !canI( "PEOPLE", Permission.READ_WRITE_DELETE, activity.group );
                 },
                 onSelect(){
                     setIsChangingParticipants( true );
@@ -189,7 +189,7 @@ function ChangeActivityParticipants( props: Readonly<ChangeActivityParticipantsP
     const groupContext = useContext( GroupContext );
     const [ participants, setParticipants ] = useState<Profile.DTO[]>();
     useEffect( () => {
-        UniversimeApi.Activity.listParticipants( props.activity.id )
+        UniversimeApi.GroupParticipant.filter( { groupId: props.activity.group.id, competences: [], matchEveryCompetence: false } )
         .then( participants => {
             setParticipants( participants.body ?? [] );
         } )
@@ -206,6 +206,9 @@ function ChangeActivityParticipants( props: Readonly<ChangeActivityParticipantsP
             isSearchable
             defaultValue={ participants }
             options={ groupContext!.participants }
+            validations={ [
+                changes => changes.added.length !== 0 || changes.removed.length !== 0
+            ] }
         />
     </UniversiForm.Root>;
 }

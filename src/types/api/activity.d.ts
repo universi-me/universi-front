@@ -1,15 +1,12 @@
 namespace Activity {
     type DTO = {
         id: string;
-        name: string;
-        description: string;
-        author: Profile.DTO;
         type: Type;
         location: string;
         workload: number;
         startDate: string;
         endDate: string;
-        group: Group.DTO;
+        group: Omit<Group.DTO, "activity">;
         badges: Competence.Type[];
     };
 

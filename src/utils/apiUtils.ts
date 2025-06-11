@@ -28,7 +28,7 @@ export function groupHeaderUrl(group: Group.DTO): Optional<string> {
     return undefined;
 }
 
-export function groupImageUrl(group: Group.DTO) {
+export function groupImageUrl(group: Pick<Group.DTO, "image" | "id">) {
     if(!group?.image)
         return IMG_DEFAULT_GROUP;
 

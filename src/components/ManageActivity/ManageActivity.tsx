@@ -37,14 +37,14 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         <UniversiForm.Input.Text
             param="name"
             label="Título"
-            defaultValue={ activity?.name }
+            defaultValue={ activity?.group.name }
             required
         />
 
         <UniversiForm.Input.FormattedText
             param="description"
             label="Descrição"
-            defaultValue={ activity?.description }
+            defaultValue={ activity?.group.description }
             required
         />
 

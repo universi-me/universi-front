@@ -22,6 +22,8 @@ export function GroupGroups() {
     if(groupContext == null)
         return <></>
 
+    const regularGroups = groupContext.subgroups.filter( g => g.regularGroup );
+
     const OPTIONS_DEFINITION: OptionInMenu<Group.DTO>[] = [
         {
             text: "Editar",
@@ -78,7 +80,7 @@ export function GroupGroups() {
                 </div>
             </div>
 
-            <div className="group-list tab-list"> { makeGroupList(groupContext.subgroups, filterGroups) } </div>
+            <div className="group-list tab-list"> { makeGroupList(regularGroups, filterGroups) } </div>
         </section>
     );
     function makeGroupList(groups: Group.DTO[], filter: string) {

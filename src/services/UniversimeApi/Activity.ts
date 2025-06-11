@@ -24,14 +24,6 @@ export function remove( activityId: string ) {
     return api.delete<void>( `/${activityId}` ).then( ApiResponse.new );
 }
 
-export function listParticipants( activityId: string ) {
-    return api.get<Profile.DTO[]>( `/${activityId}/participants` ).then( ApiResponse.new );
-}
-
-export function changeParticipants( activityId: string, body: ActivityChangeParticipants_RequestDTO ) {
-    return api.patch<void>( `/${activityId}/participants`, body ).then( ApiResponse.new );
-}
-
 export type ActivityCreate_RequestDTO = {
     name: string;
     description: string;
@@ -42,11 +34,15 @@ export type ActivityCreate_RequestDTO = {
     group: string;
     startDate: string | number;
     endDate: string | number;
+
+    nickname: string;
+    groupType: string;
+    image?: string;
+    bannerImage?: string;
+    headerImage?: string;
 };
 
 export type ActivityUpdate_RequestDTO = {
-    name?: string;
-    description?: string;
     type?: string;
     location?: string;
     workload?: number,

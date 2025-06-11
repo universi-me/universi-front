@@ -26,7 +26,13 @@ namespace Group {
         permissions: {
             [ k in Role.Feature ]: Role.Permission;
         };
-    };
+    } & ({
+        regularGroup: true;
+        activity: null;
+    } | {
+        regularGroup: false;
+        activity: Omit<Activity.DTO, "group">;
+    });
 
     type Settings = {
         theme: Nullable<Theme>;
