@@ -6,7 +6,8 @@ export function compareActivityTypes( at1: Activity.Type, at2: Activity.Type ) {
 }
 
 export function compareActivities( a1: Activity.DTO, a2: Activity.DTO ): number {
-    return a1.group.name.localeCompare( a2.group.name );
+    return ( new Date( a1.startDate ).getTime() - new Date( a2.startDate ).getTime() )
+        || a1.group.name.localeCompare( a2.group.name );
 }
 
 export function ActivityTypeSelect<C extends Optional<boolean>>( props: Readonly<ActivityTypeSelectProps<C>> ) {
