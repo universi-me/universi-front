@@ -173,7 +173,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             workload: form.body.workload,
             startDate: form.body.startDate.getTime(),
             endDate: form.body.endDate.getTime(),
-            badges: form.body.badges.map( ct => ct.id ),
+            badges: form.body.badges?.map( ct => ct.id ),
         };
 
         const res = isCreating
@@ -205,7 +205,7 @@ type ManageActivityForm<IsCreating extends boolean> = {
     workload: number;
     startDate: Date;
     endDate: Date;
-    badges: Competence.Type[];
+    badges: Optional<Competence.Type[]>;
 
     nickname: IsCreating extends true ? string : undefined;
     groupType: IsCreating extends true ? GroupTypeArrayObject : undefined;
