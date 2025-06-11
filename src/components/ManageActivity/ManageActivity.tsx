@@ -39,6 +39,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         <UniversiForm.Input.Text
             param="name"
             label="Título"
+            placeholder="Título da Atividade"
             defaultValue={ activity?.group.name }
             required
         />
@@ -46,6 +47,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         <UniversiForm.Input.FormattedText
             param="description"
             label="Descrição"
+            placeholder="Descrição da Atividade"
             defaultValue={ activity?.group.description }
             required
         />
@@ -55,6 +57,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             label="Tipo"
             defaultValue={ activity?.type }
             options={ availableActivityTypes }
+            placeholder="Selecione o Tipo da Atividade"
             required
         />
 
@@ -62,6 +65,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             param="location"
             label="Local"
             defaultValue={ activity?.location }
+            placeholder="Local onde ocorrerá a Atividade"
             required
         />
 
@@ -70,6 +74,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             label="Carga Horária"
             defaultValue={ activity?.workload }
             required
+            placeholder="Carga horária da Atividade"
             validations={ [
                 workload => workload > 0,
             ] }
@@ -117,8 +122,9 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             <div>
                 <UniversiForm.Input.Text
                     param="nickname"
-                    label="Apelido do Grupo"
+                    label="Apelido"
                     required
+                    placeholder="Apelido do Grupo"
                     validations={ [
                         isValidUsernamePattern
                     ] }
@@ -128,7 +134,8 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
 
             <GroupTypeSelect
                 param="groupType"
-                label="Tipo do Grupo"
+                label="Tipo"
+                placeholder="Tipo do Grupo"
                 required
             />
 

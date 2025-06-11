@@ -24,6 +24,7 @@ interface TextboxFormattedProps {
   formats?: string[];
   toolbar?: any;
   className?: string;
+  placeholder?: string;
 }
 
 const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModules, formats: customFormats, toolbar: customtToolbar, ...props }: TextboxFormattedProps) => {

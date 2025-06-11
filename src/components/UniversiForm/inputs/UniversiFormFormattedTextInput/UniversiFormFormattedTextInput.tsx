@@ -19,6 +19,7 @@ export function UniversiFormFormattedTextInput( props: Readonly<UniversiFormForm
             value={ props.defaultValue }
             className={ styles.input }
             onChange={ handleChange }
+            placeholder={ props.placeholder }
         />
     </fieldset>
 
@@ -48,4 +49,6 @@ export function UniversiFormFormattedTextInput( props: Readonly<UniversiFormForm
 }
 const HTML_REGEX = /(<p[^>]*>)([\s\S]*?)(<\/p>)/g;
 
-export type UniversiFormFormattedTextInputProps = UniversiFormFieldProps<string>;
+export type UniversiFormFormattedTextInputProps = UniversiFormFieldProps<string> & {
+    placeholder?: string;
+};
