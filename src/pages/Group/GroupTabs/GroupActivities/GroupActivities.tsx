@@ -15,6 +15,7 @@ import useCanI from "@/hooks/useCanI";
 import { OptionInMenu } from "@/utils/dropdownMenuUtils";
 import { Permission } from "@/utils/roles/rolesUtils";
 import { makeClassName } from "@/utils/tsxUtils";
+import { dateWithoutTimezone } from "@/utils/dateUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ProfileSelect } from "@/types/Profile";
 
@@ -92,8 +93,10 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
     return <div className={ styles.item }>
         <div className={ styles.info }>
             <div>
-                <h3 className={ styles.title }>{ activity.group.name }</h3>
-                <h4 className={ styles.location }>{ activity.location } ({ activity.workload }h)</h4>
+                <h3 className={ styles.title }>{ activity.group.name } ({ activity.workload }h)</h3>
+                <p className={ styles.type }>{ activity.type.name }</p>
+                <p className={ styles.location }>Local: { activity.location }</p>
+                <p className={ styles.date }>Data: { formatDate( activity.startDate, activity.endDate ) }</p>
 
                 { activity.badges.length >0 && <p className={ styles.badges_wrapper }>
                     { activity.badges.map( ct => <RenderCompetenceType
@@ -139,6 +142,14 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
             } }
         /> }
     </div>
+
+    function formatDate( start: string, end?: string ): string {
+        if ( end === undefined || start === end )
+            return dateWithoutTimezone( start ).toLocaleDateString( "pt-BR" );
+
+        else
+            return `${ formatDate( start ) } – ${ formatDate( end ) }`
+    }
 
     function toggleExpansion() { setIsExpanded( e => !e ); }
     function makeOptions(): OptionInMenu<Activity.DTO>[] {
