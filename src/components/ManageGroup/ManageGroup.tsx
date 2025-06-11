@@ -92,12 +92,6 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
             label="Permitir Entrada de Usuários"
             defaultValue={ group?.canEnter }
         /> }
-
-        <UniversiForm.Input.Switch
-            param="everyoneCanPost"
-            label="Permitir Publicações para Todos os Usuários"
-            defaultValue={ group?.everyoneCanPost }
-        />
     </UniversiForm.Root>
 
     async function handleForm( form: ManageGroupForm ) {
@@ -121,7 +115,6 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
                 description: form.body.description,
                 canCreateSubgroup: form.body.canCreateSubgroup,
                 canJoin: form.body.canJoin,
-                everyoneCanPost: form.body.everyoneCanPost,
                 groupType: form.body.groupType.type,
                 isPublic: form.body.isPublic,
                 image: image?.body,
@@ -155,5 +148,4 @@ type ManageGroupForm = UniversiForm.Data<{
     canCreateSubgroup: boolean;
     isPublic: boolean;
     canJoin: boolean;
-    everyoneCanPost: boolean;
 }>;

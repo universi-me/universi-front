@@ -75,7 +75,6 @@ export type GroupCreate_RequestDTO = {
     canCreateSubgroup: boolean;
     isPublic: boolean;
     canJoin: boolean;
-    everyoneCanPost: boolean;
 };
 
 export type GroupUpdate_RequestDTO = {
@@ -89,5 +88,4 @@ export type GroupUpdate_RequestDTO = {
     canCreateSubgroup?: boolean;
     isPublic?: boolean;
     canJoin?: boolean;
-    everyoneCanPost?: boolean;
 };
