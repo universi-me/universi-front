@@ -100,6 +100,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             label="Data de Término"
             defaultValue={ activity?.endDate }
             required
+            help="Para Atividades que durem apenas um dia, coloque a mesma data que pôs no campo anterior."
             validations={ [
                 ( endDate, form ) => {
                     const startDate = form.startDate as Optional<Date>;
@@ -119,18 +120,16 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
                 </p>
             </div>
 
-            <div>
-                <UniversiForm.Input.Text
-                    param="nickname"
-                    label="Apelido"
-                    required
-                    placeholder="Apelido do Grupo"
-                    validations={ [
-                        isValidUsernamePattern
-                    ] }
-                />
-                <p>Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).</p>
-            </div>
+            <UniversiForm.Input.Text
+                param="nickname"
+                label="Apelido"
+                required
+                placeholder="Apelido do Grupo"
+                help="Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.)."
+                validations={ [
+                    isValidUsernamePattern
+                ] }
+            />
 
             <GroupTypeSelect
                 param="groupType"

@@ -5,7 +5,7 @@ import Filter from "@/components/Filter";
 import useRefreshComponent from "@/hooks/useRefreshComponent";
 import { ArrayChanges } from "@/utils/arrayUtils";
 import { UniversiFormContext } from "../../UniversiFormContext";
-import { RequiredIndicator, useInitialize } from "../../utils";
+import { FieldHelp, RequiredIndicator, useInitialize } from "../../utils";
 
 import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormCardSelectionInput.module.less";
@@ -56,6 +56,7 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean> = 
                 { props.advancedSearchFilterOptions?.() }
             </UniversiForm.Root>
         }
+        <FieldHelp>{ props.help }</FieldHelp>
 
         { props.options.length === 0
             ? <p className={ styles.no_result }>{ props.noOptionsText ?? "Nenhuma opção disponível" }</p>

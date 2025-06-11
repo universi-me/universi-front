@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import TextboxFormatted from "@/components/TextboxFormatted";
 
-import { RequiredIndicator, useInitialize } from "../../utils";
+import { FieldHelp, RequiredIndicator, useInitialize } from "../../utils";
 import { UniversiFormContext } from "../../UniversiFormContext";
 
 import styles from "./UniversiFormFormattedTextInput.module.less";
@@ -21,6 +21,7 @@ export function UniversiFormFormattedTextInput( props: Readonly<UniversiFormForm
             onChange={ handleChange }
             placeholder={ props.placeholder }
         />
+        <FieldHelp>{ props.help }</FieldHelp>
     </fieldset>
 
     async function handleChange( value: string ) {

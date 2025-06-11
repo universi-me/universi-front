@@ -109,6 +109,7 @@ export function SignUpModal( props: Readonly<SignUpModalProps> ) {
             label="Nome de usuário" ref={ usernameRef }
             placeholder="nome_sobrenome" maxLength={USERNAME_MAX_LENGTH} omitCharLimit
             validations={ [ isValidUsernamePattern ] }
+            help="Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.)."
             onChange={ newUsername => {
                 const filteredUsername = Array.from( newUsername )
                     .filter(c => USERNAME_CHAR_REGEX.exec(c) !== null)
@@ -125,7 +126,6 @@ export function SignUpModal( props: Readonly<SignUpModalProps> ) {
             </p> }
 
             <p>
-                Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).<br/>
                 Todos irão acessar seu perfil em: <span className={ styles.profile_url_preview }>
                     { location.origin }/profile/{ username || "<insira um nome de usuário>" }
                 </span>

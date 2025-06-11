@@ -6,7 +6,7 @@ import { UniversiFormContext } from "../../UniversiFormContext";
 
 import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormRecaptchaInput.module.less";
-import { useInitialize } from "../../utils";
+import { FieldHelp, useInitialize } from "../../utils";
 
 
 export function UniversiFormRecaptchaInput( props: Readonly<UniversiFormRecaptchaInputProps> ) {
@@ -16,6 +16,7 @@ export function UniversiFormRecaptchaInput( props: Readonly<UniversiFormRecaptch
 
     return <fieldset className={ makeClassName( formStyles.fieldset, styles.fieldset ) }>
         <ReCAPTCHA {...recaptchaProps} onChange={ handleOnChange } />
+        <FieldHelp>{ props.help }</FieldHelp>
     </fieldset>;
 
     async function handleOnChange( newToken: Nullable<string> ) {
