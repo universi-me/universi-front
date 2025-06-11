@@ -39,7 +39,6 @@ export type ActivityCreate_RequestDTO = {
     groupType: string;
     image?: string;
     bannerImage?: string;
-    headerImage?: string;
 };
 
 export type ActivityUpdate_RequestDTO = {

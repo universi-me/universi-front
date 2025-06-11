@@ -92,6 +92,12 @@ export function ProfileSelect<S extends Optional<boolean>>( props: Readonly<Prof
     }
 }
 
+export const USERNAME_CHAR_REGEX = /[a-z0-9_.-]/
+export const USERNAME_REGEX = RegExp( "^" + String( USERNAME_CHAR_REGEX ).slice( 1, -1 ) + "+$" )
+export function isValidUsernamePattern( username: string ): boolean {
+    return USERNAME_REGEX.test( username );
+}
+
 export class ProfileClass implements Profile.DTO {
     constructor(private readonly profile: Profile.DTO) {}
 

@@ -1,7 +1,7 @@
 import UniversiForm from "@/components/UniversiForm";
 import { UniversimeApi } from "@/services"
 
-import { getGroupTypeObject, type GroupTypeArrayObject, GroupTypeObjectsArray } from "@/types/Group";
+import { getGroupTypeObject, type GroupTypeArrayObject, GroupTypeSelect } from "@/types/Group";
 import { type ApiResponse, groupBannerUrl, groupHeaderUrl, groupImageUrl } from "@/utils/apiUtils";
 
 export type ManageGroupProps = {
@@ -63,14 +63,10 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
             defaultValue={ groupHeaderUrl(group!) }
         /> }
 
-        <UniversiForm.Input.Select
+        <GroupTypeSelect
             param="groupType"
             label={ isOrganization ? "Tipo da Organização" : "Tipo do Grupo" }
             defaultValue={ getGroupTypeObject( group?.type ) }
-            options={ GroupTypeObjectsArray }
-            getOptionUniqueValue={ o => o.type }
-            getOptionLabel={ o => o.label }
-            isSearchable
             required
         />
 

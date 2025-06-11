@@ -1,3 +1,5 @@
+import { UniversiFormSelectInput, UniversiFormSelectInputProps } from "@/components/UniversiForm/inputs/UniversiFormSelectInput";
+
 export const GroupEmailFilterTypeToLabel = {
     "END_WITH":     "Terminando em",
     "START_WITH":   "Começando com",
@@ -98,6 +100,17 @@ export function getGroupTypeObject( type: Optional<Group.Type> ): Optional<Group
     return GroupTypeObjectsArray.find( l => l.type === type );
 }
 
+export function GroupTypeSelect<C extends Optional<boolean>>( props: Readonly<GroupTypeSelectProps<C>> ) {
+    return <UniversiFormSelectInput
+        isSearchable
+        { ...props }
+        options={ GroupTypeObjectsArray }
+        getOptionUniqueValue={ o => o.type }
+        getOptionLabel={ o => o.label }
+        canCreateOptions={ false }
+    />
+}
+
 export type GroupTypeObject = {
     label: string;
 };
@@ -105,3 +118,8 @@ export type GroupTypeObject = {
 export type GroupTypeArrayObject = GroupTypeObject & {
     type: Group.Type;
 };
+
+export type GroupTypeSelectProps<Clearable extends Optional<boolean>> = Omit<
+    UniversiFormSelectInputProps<GroupTypeArrayObject, false, Clearable>,
+    "canCreateOptions" | "options" | "getOptionUniqueValue" | "getOptionLabel"
+>

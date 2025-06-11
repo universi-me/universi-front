@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { UniversimeApi } from "@/services";
-import UniversiForm from "@/components/UniversiForm";
+import UniversiForm, { UniversiFormStyles } from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { ApiResponse } from "@/utils/apiUtils";
 import { ActivityTypeSelect } from "@/types/Activity";
 import { CompetenceTypeSelect } from "@/types/Competence";
+import { GroupTypeArrayObject, GroupTypeSelect } from "@/types/Group";
+import { isValidUsernamePattern } from "@/types/Profile";
 
 export function ManageActivity( props: Readonly<ManageActivityProps> ) {
     const { activity, group, callback } = props;
@@ -68,6 +70,9 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             label="Carga Horária"
             defaultValue={ activity?.workload }
             required
+            validations={ [
+                workload => workload > 0,
+            ] }
         />
 
         <CompetenceTypeSelect
@@ -97,11 +102,62 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
                 }
             ] }
         />
+
+        { isCreating && <>
+            <hr/>
+            <div className={ UniversiFormStyles.fieldset }>
+                <legend className={ UniversiFormStyles.legend }>Dados do grupo</legend>
+                <p>
+                    Ao criar uma atividade será criado junto a ela um grupo associado,
+                    que será usado para gerenciar os participantes, conteúdos, feed entre outros.
+                    Preencha os dados necessários para o grupo.
+                </p>
+            </div>
+
+            <div>
+                <UniversiForm.Input.Text
+                    param="nickname"
+                    label="Apelido do Grupo"
+                    required
+                    validations={ [
+                        isValidUsernamePattern
+                    ] }
+                />
+                <p>Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.).</p>
+            </div>
+
+            <GroupTypeSelect
+                param="groupType"
+                label="Tipo do Grupo"
+                required
+            />
+
+            <UniversiForm.Input.Image
+                param="image"
+                label={ "Imagem do Grupo" }
+                aspectRatio={ 1 }
+            />
+
+            <UniversiForm.Input.Image
+                param="bannerImage"
+                label={ "Banner do Grupo" }
+                aspectRatio={ 2.5 }
+            />
+        </> }
+
     </UniversiForm.Root>
 
-    async function handleForm( form: UniversiForm.Data<ManageActivityForm> ) {
+    async function handleForm( form: UniversiForm.Data<ManageActivityForm<typeof isCreating>> ) {
         if ( !form.confirmed )
             return callback();
+
+        const image = form.body.image instanceof File
+            ? await UniversimeApi.Image.upload( { isPublic: true, image: form.body.image } )
+            : undefined;
+
+        const bannerImage = form.body.bannerImage instanceof File
+            ? await UniversimeApi.Image.upload( { isPublic: true, image: form.body.bannerImage } )
+            : undefined;
 
         const body = {
             name: form.body.name,
@@ -115,7 +171,14 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         };
 
         const res = isCreating
-            ? await UniversimeApi.Activity.create( { ...body, group: group.id! } )
+            ? await UniversimeApi.Activity.create( {
+                ...body,
+                group: group.id!,
+                groupType: form.body.groupType!.type,
+                nickname: form.body.nickname!,
+                image: image?.body,
+                bannerImage: bannerImage?.body,
+            } )
             : await UniversimeApi.Activity.update( activity!.id, body );
 
         return callback?.( res );
@@ -128,7 +191,7 @@ export type ManageActivityProps = {
     callback( res?: ApiResponse<Activity.DTO> ): unknown;
 };
 
-type ManageActivityForm = {
+type ManageActivityForm<IsCreating extends boolean> = {
     name: string;
     description: string;
     type: Activity.Type;
@@ -137,4 +200,9 @@ type ManageActivityForm = {
     startDate: Date;
     endDate: Date;
     badges: Competence.Type[];
+
+    nickname: IsCreating extends true ? string : undefined;
+    groupType: IsCreating extends true ? GroupTypeArrayObject : undefined;
+    image: IsCreating extends true ? Optional<File | string> : undefined;
+    bannerImage: IsCreating extends true ? Optional<File | string> : undefined;
 };
