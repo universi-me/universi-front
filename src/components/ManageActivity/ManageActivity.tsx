@@ -44,20 +44,20 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             required
         />
 
+        <ActivityTypeSelect
+            param="type"
+            label="Tipo da Atividade"
+            defaultValue={ activity?.type }
+            options={ availableActivityTypes }
+            placeholder="Selecione o Tipo da Atividade"
+            required
+        />
+
         <UniversiForm.Input.FormattedText
             param="description"
             label="Descrição"
             placeholder="Descrição da Atividade"
             defaultValue={ activity?.group.description }
-            required
-        />
-
-        <ActivityTypeSelect
-            param="type"
-            label="Tipo"
-            defaultValue={ activity?.type }
-            options={ availableActivityTypes }
-            placeholder="Selecione o Tipo da Atividade"
             required
         />
 
