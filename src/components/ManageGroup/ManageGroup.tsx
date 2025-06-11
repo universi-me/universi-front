@@ -34,13 +34,11 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
             required
         />
 
-        <UniversiForm.Input.Text
+        <UniversiForm.Input.FormattedText
             param="description"
             label={ isOrganization ? "Descrição da Organização" : "Descrição do Grupo" }
-            isLongText
             defaultValue={ group?.description }
             required
-            maxLength={ 200 }
         />
 
         <UniversiForm.Input.Image
