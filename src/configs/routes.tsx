@@ -21,7 +21,7 @@ import HealthCheckPage from "@/pages/HealthCheckPage";
 // Import services
 import { OAuth2Element } from '@/services/oauth2-google';
 import { KeyCloakOAuth2Element } from "@/services/oauth2-keycloak";
-import EntitiesPage from '@/pages/Settings/EntitiesPage';
+import EntitiesPage, { ActivitiesPage, ActivitiesPageLoaderFetch } from '@/pages/Settings/EntitiesPage';
 import DepartmentPage, { DepartmentPageLoaderFetch } from '@/pages/Settings/EntitiesPage/DepartmentPage';
 
 // Configure pages routing
@@ -106,6 +106,12 @@ export const router = createBrowserRouter([{
                             path: "departments",
                             element: <DepartmentPage />,
                             loader: DepartmentPageLoaderFetch,
+                        },
+                        {
+                            path: "activities",
+                            element: <ActivitiesPage />,
+                            loader: ActivitiesPageLoaderFetch,
+                            
                         },
                     ]
                 },
