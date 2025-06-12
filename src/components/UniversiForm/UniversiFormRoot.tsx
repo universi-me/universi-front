@@ -16,7 +16,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const formData = useMemo( () => new Map<string, FormFieldData>, [] );
     const contextValue = useMemo<UniversiFormContextType>( makeFormContext, [] );
 
-    const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, confirmButtonText, cancelButtonText, style, ...formAttributes } = props;
+    const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, confirmButtonText, cancelButtonText, allowDelete, deleteAction, deleteButtonText, style, ...formAttributes } = props;
     const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
 
     const [ hasRequiredField, setHasRequiredField ] = useState( false );
@@ -39,6 +39,10 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
             </section>
 
             <section className={ styles.actions }>
+                { allowDelete && <button type="button" className={ styles.delete_button } onClick={ handleDelete }>
+                    <BootstrapIcon icon="trash-fill" /> { deleteButtonText ?? "Excluir" }
+                </button> }
+
                 <button type="button" className={ makeClassName( styles.cancel_button ) } onClick={ handleCancel }>
                     <i className="bi bi-x-circle-fill" /> { cancelButtonText ?? "Cancelar" }
                 </button>
@@ -75,7 +79,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
 
         if ( shouldCancel ) {
             setHandlingFormEnd( true );
-            await callback( { confirmed: false } );
+            await callback( { confirmed: false, action: "CANCELED" } );
             setHandlingFormEnd( false );
         }
     }
@@ -91,7 +95,25 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         e.preventDefault();
 
         setHandlingFormEnd( true );
-        await callback( { confirmed: true, body: getFormBody() } );
+        await callback( { confirmed: true, action: "CONFIRMED", body: getFormBody() } );
+        setHandlingFormEnd( false );
+    }
+
+    async function handleDelete( e: MouseEvent<HTMLButtonElement> ) {
+        e.preventDefault();
+
+        if ( !allowDelete ) return;
+        const res = await SwalUtils.fireAreYouSure({
+            title: `Deseja excluir?`,
+            confirmButtonText: "Excluir",
+            confirmButtonColor: "var(--font-color-alert)",
+        });
+
+        if ( !res.isConfirmed ) return;
+
+        setHandlingFormEnd( true );
+        await deleteAction();
+        await callback( { confirmed: false, action: "DELETED" } );
         setHandlingFormEnd( false );
     }
 
@@ -182,13 +204,22 @@ export type UniversiFormRootProps = PropsWithChildren<{
     allowConfirm?: boolean;
     confirmButtonText?: string;
     cancelButtonText?: string;
-}> & FormHTMLAttributes<HTMLDivElement>;
+    deleteButtonText?: string;
+}> & ({
+    allowDelete?: false;
+    deleteAction?(): unknown;
+} | {
+    allowDelete: true;
+    deleteAction(): unknown;
+}) & FormHTMLAttributes<HTMLDivElement>;
 
 export type UniversiFormData<T> = {
     confirmed: true;
+    action: "CONFIRMED";
     body: T;
 } | {
     confirmed: false;
+    action: "CANCELED" | "DELETED";
     body?: undefined;
 };
 
