@@ -85,7 +85,7 @@ export class ApiResponse<T> {
     }
 
     get data(): T | undefined {
-        return "data" in this.response && !isApiError( this.response.data )
+        return typeof this.response === "object" && "data" in this.response && !isApiError( this.response.data )
             ? this.response.data
             : undefined;
     }
