@@ -21,7 +21,7 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
         options: makeOption( options ),
         defaultValue: makeOption( props.defaultValue ),
 
-        isClearable: props.isClearable,
+        isClearable: props.isClearable ?? !props.required,
         isMulti: props.isMultiSelection,
         placeholder: props.placeholder ?? `Selecionar ${ props.label ?? "campo" }`,
 
