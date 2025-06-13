@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router";
 import DOMPurify from "dompurify";
 
 import { UniversimeApi } from "@/services";
@@ -11,6 +12,7 @@ import DropdownOptions from "@/components/DropdownOptions";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { SelectionChanges } from "@/components/UniversiForm/inputs/UniversiFormCardSelectionInput";
 import useCanI from "@/hooks/useCanI";
+import { groupImageUrl } from "@/utils/apiUtils";
 import { groupArray } from "@/utils/arrayUtils";
 import { OptionInMenu } from "@/utils/dropdownMenuUtils";
 import { Permission } from "@/utils/roles/rolesUtils";
@@ -168,10 +170,18 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
     if ( !groupContext || !context )
         return null;
 
+    const groupHref = `/group${activity.group.path}`;
+
     return <div className={ styles.item }>
         <div className={ styles.info }>
+            <Link to={ groupHref } className={ styles.image }>
+                <img src={ groupImageUrl( activity.group ) } alt=""/>
+            </Link>
+
             <div>
-                <h3 className={ styles.title }>{ activity.group.name } ({ activity.workload }h)</h3>
+                <Link to={ groupHref } className={ styles.link }>
+                    <h3 className={ styles.title }>{ activity.group.name } ({ activity.workload }h)</h3>
+                </Link>
                 <p className={ styles.type }>{ activity.type.name }</p>
                 <p className={ styles.location }>Local: { activity.location }</p>
                 <p className={ styles.date }>Data: { formatDate( activity.startDate, activity.endDate ) }</p>
