@@ -11,13 +11,14 @@ import DropdownOptions from "@/components/DropdownOptions";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { SelectionChanges } from "@/components/UniversiForm/inputs/UniversiFormCardSelectionInput";
 import useCanI from "@/hooks/useCanI";
+import { groupArray } from "@/utils/arrayUtils";
 import { OptionInMenu } from "@/utils/dropdownMenuUtils";
 import { Permission } from "@/utils/roles/rolesUtils";
 import { makeClassName } from "@/utils/tsxUtils";
 import { dateWithoutTimezone } from "@/utils/dateUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ProfileSelect } from "@/types/Profile";
-import { ActivityTypeSelect } from "@/types/Activity";
+import { ActivityStatusObjects, ActivityTypeSelect } from "@/types/Activity";
 
 import { GroupContext } from "../../GroupContext";
 import styles from "./GroupActivities.module.less";
@@ -50,6 +51,8 @@ export function GroupActivities() {
     if ( !groupContext || activities === undefined || activityTypes === undefined )
         return null;
 
+    const groupedActivities = groupArray( activities, a => a.status );
+
     return <GroupActivitiesContext.Provider value={ contextValue }>
         <section id="activities" className="group-tab">
             <div className="heading top-container">
@@ -65,10 +68,14 @@ export function GroupActivities() {
                 </div>
             </div>
 
-            <div id="activities-list" className={`tab-list ${styles.list}`}>
+            <div id="activities-list" className={`tab-list ${ styles.groups }`}>
                 { activities.length === 0
                     ? <p className="empty-list">Nenhuma atividade encontrada</p>
-                    : activities.map( a => <RenderActivity activity={ a } key={ a.id } /> )
+                    : <>
+                        <RenderActivityGroup activities={ groupedActivities.get( "STARTED" ) } group="STARTED" />
+                        <RenderActivityGroup activities={ groupedActivities.get( "NOT_STARTED" ) } group="NOT_STARTED" />
+                        <RenderActivityGroup activities={ groupedActivities.get( "ENDED" ) } group="ENDED" />
+                    </>
                 }
             </div>
 
@@ -125,6 +132,18 @@ export function GroupActivities() {
 
         setShowFilterForm( false );
     }
+}
+
+function RenderActivityGroup( props: Readonly<RenderActivityGroupProps> ) {
+    if ( props.activities === undefined )
+        return null;
+
+    return <div>
+        <h3 className={ styles.group_title }>{ ActivityStatusObjects[ props.group ].label }</h3>
+        <div className={ styles.list }>
+            { props.activities.map( a => <RenderActivity activity={ a } key={ a.id } /> ) }
+        </div>
+    </div>;
 }
 
 function RenderActivity( props: Readonly<RenderActivityProps> ) {
@@ -284,6 +303,11 @@ function ChangeActivityParticipants( props: Readonly<ChangeActivityParticipantsP
 type FilterActivitiesForm = UniversiForm.Data<{
     type?: Activity.Type;
 }>;
+
+type RenderActivityGroupProps = {
+    activities: Optional<Activity.DTO[]>;
+    group: Activity.Status;
+};
 
 type RenderActivityProps = {
     activity: Activity.DTO;

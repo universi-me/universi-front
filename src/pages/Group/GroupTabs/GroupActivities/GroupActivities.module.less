@@ -1,5 +1,6 @@
 @import url(/src/layouts/border-radius.less);
 @import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
 
 .filter_button {
     background-color: transparent;
@@ -9,67 +10,79 @@
     cursor: pointer;
 }
 
-.list {
+.groups {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: .75rem;
 
-    .item {
-        width: 100%;
-        border-radius: @border-radius;
-        background-color: @card-item-color;
-        padding: 1rem .5rem;
+    .group_title {
+        font-size: 1.5rem;
+        font-weight: @font-weight-bold;
+        font-variant: small-caps;
+    }
 
-        .info {
-            display: flex;
-            flex-direction: row;
-            align-items: start;
+    .list {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
 
-            .badges_wrapper {
+        .item {
+            width: 100%;
+            border-radius: @border-radius;
+            background-color: @card-item-color;
+            padding: 1rem .5rem;
+
+            .info {
                 display: flex;
                 flex-direction: row;
-                align-items: center;
-                gap: .25rem;
+                align-items: start;
 
-                .badge_item {
+                .badges_wrapper {
                     display: flex;
                     flex-direction: row;
-                    width: fit-content;
                     align-items: center;
-                    background-color: @primary-color;
-                    color: @font-color-v1;
-                    gap: .35em;
-                    padding: .1em .35em;
-                    border-radius: 5px;
-                }
-            }
+                    gap: .25rem;
 
-            .interactions {
-                margin-left: auto;
-                display: flex;
-                gap: 1rem;
-
-                .expand_button, .options_button {
-                    background-color: transparent;
-                    border: none;
-                    font-size: 1.5rem;
-                    cursor: pointer;
+                    .badge_item {
+                        display: flex;
+                        flex-direction: row;
+                        width: fit-content;
+                        align-items: center;
+                        background-color: @primary-color;
+                        color: @font-color-v1;
+                        gap: .35em;
+                        padding: .1em .35em;
+                        border-radius: 5px;
+                    }
                 }
 
-                .expand_button {
-                    will-change: rotate;
-                    transition: 150ms rotate ease-in;
+                .interactions {
+                    margin-left: auto;
+                    display: flex;
+                    gap: 1rem;
 
-                    &.expanded {
-                        transition-timing-function: ease-out;
-                        rotate: 180deg;
+                    .expand_button, .options_button {
+                        background-color: transparent;
+                        border: none;
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                    }
+
+                    .expand_button {
+                        will-change: rotate;
+                        transition: 150ms rotate ease-in;
+
+                        &.expanded {
+                            transition-timing-function: ease-out;
+                            rotate: 180deg;
+                        }
                     }
                 }
             }
         }
-    }
 
-    .description {
-        margin-top: .5rem;
+        .description {
+            margin-top: .5rem;
+        }
     }
 }

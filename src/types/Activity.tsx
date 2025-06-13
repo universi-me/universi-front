@@ -10,6 +10,33 @@ export function compareActivities( a1: Activity.DTO, a2: Activity.DTO ): number 
         || a1.group.name.localeCompare( a2.group.name );
 }
 
+export const ActivityStatusObjects: { [ s in Activity.Status ]: ActivityStatusObject } = {
+    STARTED: {
+        label: "Em Andamento",
+    },
+
+    NOT_STARTED: {
+        label: "Em Breve",
+    },
+
+    ENDED: {
+        label: "Encerradas",
+    },
+};
+
+export const ActivityStatusObjectsArray: ActivityStatusArrayObject[] = Object.entries( ActivityStatusObjects )
+    .map( ( [ status, data ] ) => ( {
+        ...data,
+        status: status as Activity.Status,
+    } ) );
+
+export function getActivityStatusObject( status: undefined ): undefined;
+export function getActivityStatusObject( status: Activity.Status ): ActivityStatusArrayObject;
+export function getActivityStatusObject( status: Optional<Activity.Status> ): Optional<ActivityStatusArrayObject>;
+export function getActivityStatusObject( status: Optional<Activity.Status> ): Optional<ActivityStatusArrayObject> {
+    return ActivityStatusObjectsArray.find( s => s.status === status );
+}
+
 export function ActivityTypeSelect<C extends Optional<boolean>>( props: Readonly<ActivityTypeSelectProps<C>> ) {
     return <UniversiFormSelectInput
         { ...props }
@@ -27,3 +54,11 @@ export type ActivityTypeSelectProps<Clearable extends Optional<boolean>> = Omit<
     UniversiFormSelectInputProps<ActivityType, false, Clearable>,
     "getOptionUniqueValue" | "getOptionLabel" | "onCreateOption" | "sortOptions"
 >;
+
+export type ActivityStatusObject = {
+    label: string;
+};
+
+export type ActivityStatusArrayObject = ActivityStatusObject & {
+    status: Activity.Status;
+};
