@@ -1,5 +1,6 @@
 import { UniversimeApi } from "@/services";
 import { UniversiFormSelectInput, UniversiFormSelectInputProps } from "@/components/UniversiForm/inputs/UniversiFormSelectInput";
+import { stringIncludesIgnoreCase } from "@/utils/stringUtils";
 
 export function compareActivityTypes( at1: Activity.Type, at2: Activity.Type ) {
     return at1.name.localeCompare( at2.name );
@@ -50,10 +51,27 @@ export function ActivityTypeSelect<C extends Optional<boolean>>( props: Readonly
     />
 }
 
+export function ActivityStatusSelect<C extends Optional<boolean>, M extends Optional<boolean>>( props: Readonly<ActivityStatusSelectProps<C, M>> ) {
+    return <UniversiFormSelectInput
+        { ...props }
+        options={ ActivityStatusObjectsArray }
+        getOptionLabel={ s => s.label }
+        getOptionUniqueValue={ s => s.status }
+        canCreateOptions={ false }
+        filterOption={ ( status, text ) => stringIncludesIgnoreCase( status.label, text ) }
+        sortOptions={ ( s1, s2 ) => ActivityStatusObjectsArray.indexOf( s1 ) - ActivityStatusObjectsArray.indexOf( s2 ) }
+    />;
+}
+
 export type ActivityTypeSelectProps<Clearable extends Optional<boolean>> = Omit<
     UniversiFormSelectInputProps<ActivityType, false, Clearable>,
     "getOptionUniqueValue" | "getOptionLabel" | "onCreateOption" | "sortOptions"
 >;
+
+export type ActivityStatusSelectProps<Clearable extends Optional<boolean>, Multi extends Optional<boolean>> = Omit<
+    UniversiFormSelectInputProps<ActivityStatusArrayObject, Multi, Clearable>,
+    "options" | "getOptionUniqueValue" | "getOptionLabel" | "canCreateOptions" | "filterOption" | "sortOptions" | "createOptionLabel" | "onCreateOption"
+>
 
 export type ActivityStatusObject = {
     label: string;

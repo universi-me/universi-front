@@ -27,6 +27,7 @@ export function remove( activityId: string ) {
 export type ActivityFilter_RequestDTO = {
     type?: string;
     group?: string;
+    status?: Activity.Status;
 };
 
 export type ActivityCreate_RequestDTO = {

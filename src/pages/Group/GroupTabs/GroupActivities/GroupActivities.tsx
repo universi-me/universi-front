@@ -18,7 +18,7 @@ import { makeClassName } from "@/utils/tsxUtils";
 import { dateWithoutTimezone } from "@/utils/dateUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ProfileSelect } from "@/types/Profile";
-import { ActivityStatusObjects, ActivityTypeSelect } from "@/types/Activity";
+import { ActivityStatusArrayObject, ActivityStatusObjects, ActivityStatusSelect, ActivityTypeSelect } from "@/types/Activity";
 
 import { GroupContext } from "../../GroupContext";
 import styles from "./GroupActivities.module.less";
@@ -100,6 +100,12 @@ export function GroupActivities() {
                 defaultValue={ filter.current?.type }
                 isClearable
             />
+
+            <ActivityStatusSelect
+                param="status"
+                label="Estado Atual"
+                defaultValue={ filter.current?.status }
+            />
         </UniversiForm.Root> }
     </GroupActivitiesContext.Provider>;
 
@@ -117,11 +123,13 @@ export function GroupActivities() {
 
             filter.current = {
                 type: form.body.type,
+                status: form.body.status,
             };
 
             const res = await UniversimeApi.Activity.list( {
                 group: groupContext!.group.id!,
                 type: form.body.type?.id,
+                status: form.body.status?.status,
             } );
 
             if ( res.isSuccess() )
@@ -302,6 +310,7 @@ function ChangeActivityParticipants( props: Readonly<ChangeActivityParticipantsP
 
 type FilterActivitiesForm = UniversiForm.Data<{
     type?: Activity.Type;
+    status?: ActivityStatusArrayObject;
 }>;
 
 type RenderActivityGroupProps = {
