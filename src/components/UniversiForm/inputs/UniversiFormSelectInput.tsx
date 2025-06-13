@@ -43,7 +43,7 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
         },
 
         menuPosition: "fixed",
-        async onChange( newValue: SelectOption | SelectOption[], actionMeta: ActionMeta<SelectOption> ) {
+        async onChange( newValue: Nullable<SelectOption | SelectOption[]>, actionMeta: ActionMeta<SelectOption> ) {
             if ( actionMeta.action === "create-option" ) {
                 const option = await handleOptionCreation( actionMeta.option.value );
                 if ( option ) {
@@ -73,10 +73,10 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
         }
     </fieldset>
 
-    async function handleOptionSelection( value: SelectOption | SelectOption[] ) {
+    async function handleOptionSelection( value: Nullable<SelectOption | SelectOption[]> ) {
         const data = Array.isArray( value )
             ? value.map( o => o.data )
-            : value.data;
+            : value?.data;
 
         await context?.set( props.param, data );
         setValid( context?.getValidation( props.param ) );
