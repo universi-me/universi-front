@@ -111,6 +111,19 @@ export class ApiResponse<T> {
     }
 }
 
+export function URLSearchParamsIgnoreUndefined( ...body: ConstructorParameters<typeof URLSearchParams> ) {
+    const params = new URLSearchParams();
+
+    if ( body[0] ) {
+        Object.entries( body[ 0 ] ).forEach( ( [ key, value ] ) => {
+            if ( value !== undefined )
+                params.set( key, value );
+        } );
+    }
+
+    return params;
+}
+
 interface SuccessfulApiResponse<T> {
     data: T;
     body: T;

@@ -1,8 +1,7 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 
 import { UniversimeApi } from "@/services";
-import { GroupContext } from "../../GroupContext";
 import UniversiForm from "@/components/UniversiForm";
 import ActionButton from "@/components/ActionButton";
 import RenderCompetenceType from "@/components/RenderCompetenceType";
@@ -18,7 +17,9 @@ import { makeClassName } from "@/utils/tsxUtils";
 import { dateWithoutTimezone } from "@/utils/dateUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ProfileSelect } from "@/types/Profile";
+import { ActivityTypeSelect } from "@/types/Activity";
 
+import { GroupContext } from "../../GroupContext";
 import styles from "./GroupActivities.module.less";
 
 
@@ -28,24 +29,35 @@ export function GroupActivities() {
     const groupContext = useContext( GroupContext );
     const canI = useCanI();
 
+    const [ activities, setActivities ] = useState( groupContext?.activities );
+    const [ activityTypes, setActivityTypes ] = useState<Activity.Type[]>();
+
     const [ editActivity, setEditActivity ] = useState<Possibly<Activity.DTO>>();
-    const [ isDeleting, setIsDeleting ] = useState( false );
+    const [ isLoading, setIsLoading ] = useState( false );
+
+    const [ showFilterForm, setShowFilterForm ] = useState( false );
+    const filter = useRef<FilterActivitiesForm["body"]>();
 
     const contextValue: GroupActivitiesContextType = useMemo( () => ({
-        editActivity,
         setEditActivity,
-        setIsDeleting
-    }), [ editActivity ] );
+        setIsLoading,
+    }), [ ] );
 
-    if ( groupContext?.activities === undefined )
+    useEffect( () => {
+        loadActivityTypes();
+    }, [] );
+
+    if ( !groupContext || activities === undefined || activityTypes === undefined )
         return null;
-
-    const activities = groupContext.activities;
 
     return <GroupActivitiesContext.Provider value={ contextValue }>
         <section id="activities" className="group-tab">
             <div className="heading top-container">
                 <div className="go-right">
+                    <button className={ styles.filter_button } onClick={ () => setShowFilterForm( true ) }>
+                        <BootstrapIcon icon="filter-circle-fill" />
+                    </button>
+
                     { canI( "ACTIVITY", Permission.READ_WRITE, groupContext.group ) && <ActionButton
                         name="Criar"
                         buttonProps={{ onClick(){ setEditActivity( null ) } }}
@@ -72,8 +84,47 @@ export function GroupActivities() {
             /> }
         </section>
 
-        { isDeleting && <LoadingSpinner /> }
+        { isLoading && <LoadingSpinner /> }
+        { showFilterForm && <UniversiForm.Root title="Filtrar Atividades" callback={ handleFilterForm }>
+            <ActivityTypeSelect
+                param="type"
+                label="Tipo da Atividade"
+                options={ activityTypes }
+                defaultValue={ filter.current?.type }
+                isClearable
+            />
+        </UniversiForm.Root> }
     </GroupActivitiesContext.Provider>;
+
+    async function loadActivityTypes() {
+        if ( !groupContext ) return;
+
+        const res = await UniversimeApi.ActivityType.list();
+        if ( res.isSuccess() )
+            setActivityTypes( res.body );
+    }
+
+    async function handleFilterForm( form: FilterActivitiesForm ) {
+        if ( form.confirmed ) {
+            setIsLoading( true );
+
+            filter.current = {
+                type: form.body.type,
+            };
+
+            const res = await UniversimeApi.Activity.list( {
+                group: groupContext!.group.id!,
+                type: form.body.type?.id,
+            } );
+
+            if ( res.isSuccess() )
+                setActivities( res.body );
+
+            setIsLoading( false );
+        }
+
+        setShowFilterForm( false );
+    }
 }
 
 function RenderActivity( props: Readonly<RenderActivityProps> ) {
@@ -191,11 +242,11 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
                     });
                     if ( !isSure.isConfirmed ) return;
 
-                    context?.setIsDeleting( true );
+                    context?.setIsLoading( true );
                     const res = await UniversimeApi.Activity.remove( activity.id );
                     if ( res.isSuccess() )
                         await groupContext?.refreshData();
-                    context?.setIsDeleting( false );
+                    context?.setIsLoading( false );
                 },
             }
         ];
@@ -230,14 +281,17 @@ function ChangeActivityParticipants( props: Readonly<ChangeActivityParticipantsP
     </UniversiForm.Root>;
 }
 
+type FilterActivitiesForm = UniversiForm.Data<{
+    type?: Activity.Type;
+}>;
+
 type RenderActivityProps = {
     activity: Activity.DTO;
 };
 
 type GroupActivitiesContextType = {
-    editActivity: Possibly<Activity.DTO>;
     setEditActivity( action: React.SetStateAction<Possibly<Activity.DTO>> ): unknown;
-    setIsDeleting( action: React.SetStateAction<boolean> ): unknown;
+    setIsLoading( action: React.SetStateAction<boolean> ): unknown;
 };
 
 type ChangeActivityParticipantsProps = {

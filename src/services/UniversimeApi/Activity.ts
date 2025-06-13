@@ -1,4 +1,4 @@
-import { ApiResponse } from "@/utils/apiUtils";
+import { ApiResponse, URLSearchParamsIgnoreUndefined } from "@/utils/apiUtils";
 import { createApiInstance } from "./api";
 
 const api = createApiInstance( "/activities" );
@@ -8,8 +8,8 @@ export function get( activityId: string ) {
     return api.get<Activity.DTO>( `/${activityId}` ).then( ApiResponse.new );
 }
 
-export function list() {
-    return api.get<Activity.DTO[]>( "" ).then( ApiResponse.new );
+export function list( body?: ActivityFilter_RequestDTO ) {
+    return api.get<Activity.DTO[]>( "", { params: URLSearchParamsIgnoreUndefined( body ) } ).then( ApiResponse.new );
 }
 
 export function create( body: ActivityCreate_RequestDTO ) {
@@ -23,6 +23,11 @@ export function update( activityId: string, body: ActivityUpdate_RequestDTO ) {
 export function remove( activityId: string ) {
     return api.delete<void>( `/${activityId}` ).then( ApiResponse.new );
 }
+
+export type ActivityFilter_RequestDTO = {
+    type?: string;
+    group?: string;
+};
 
 export type ActivityCreate_RequestDTO = {
     name: string;
