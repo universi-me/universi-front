@@ -4,6 +4,7 @@ import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import SignInWithGoogle from "@/components/SignInWithGoogle/SignInWithGoogle";
+import styles from "@/components/SignInWithGoogle/SignInWithGoogle.module.less";
 
 import "./SignInForm.less";
 
@@ -25,7 +26,7 @@ export default function SinginForm() {
 
   const disableSignInButton = !email.length || !password.length || ( ENABLE_RECAPTCHA && !recaptchaToken );
 
-  return <div className="container">
+  return <div id="signin-form-container">
       <form action="/login" method="post" className="form-container">
         <div className="form-group">
           <div className="label-form">
@@ -104,7 +105,7 @@ export default function SinginForm() {
             </div>
 
             <button
-                className="btn_form_dcx"
+                className={styles.signInWithGoogle}
                 type="button"
                 onClick={handleAuthLoginKeycloak}
             >

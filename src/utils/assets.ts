@@ -9,6 +9,7 @@ export const ICON_CHEVRON_UP_BLACK = "/assets/icons/chevron-up-black.svg";
 export const ICON_EDIT_WHITE =       "/assets/icons/edit-1.svg"
 export const ICON_EDIT_BLACK =       "/assets/icons/edit-2.svg"
 export const ICON_VERIFIED =         "/assets/icons/icon-verificated.svg"
+export const ICON_EXPERIENCE =       "/assets/icons/experience-black.svg"
 
 export const ICON_GITHUB_BLACK =    "/assets/icons/github-black.svg"
 export const ICON_GITHUB_WHITE =    "/assets/icons/githubwhite.svg"

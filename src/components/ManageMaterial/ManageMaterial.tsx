@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 
-import UniversimeApi from "@/services/UniversimeApi";
-import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
+import { UniversimeApi } from "@/services"
+import UniversiForm from "@/components/UniversiForm";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
-import { AVAILABLE_MATERIAL_TYPES, MATERIAL_TYPES_TEXT, type Category, type Content, type Folder } from "@/types/Capacity";
+import { CategorySelect, type MaterialTypeArrayObject, MaterialTypeSelect } from "@/types/Capacity";
 import "./ManageMaterial.less";
+import { ApiResponse } from "@/utils/apiUtils";
 
 export type ManageMaterialProps = {
     /** A null `material` means a material is being created, while a value means
@@ -16,69 +18,99 @@ export type ManageMaterialProps = {
     content?: Folder;
 
     /** Callback executed after the material is saved */
-    afterSave?: () => any;
+    callback?: ( res: Optional<ApiResponse<Capacity.Content.DTO>> ) => any;
 }
 
 export function ManageMaterial(props: Readonly<ManageMaterialProps>) {
-    const [material, setMaterial] = useState(props.material);
-    const [content, setContent] = useState(props.content);
-
+    const { material, callback, content } = props;
     const [availableCategories, setAvailableCategories] = useState<Category[]>();
 
     useEffect(() => {
-        setMaterial(props.material);
-        setContent(props.content);
-
         updateCategories();
     }, [props]);
 
-    if (availableCategories === undefined) return null;
+    if (availableCategories === undefined) return <LoadingSpinner />;
 
     const isNewMaterial = material === null;
-    const availableOptions = availableCategories.map(c => ({ label: c.name, value: c.id }));
 
-    return <UniversiForm
-            formTitle={ isNewMaterial ? "Criar material" : "Editar material"}
-            objects={[
-                {
-                    DTOName: "title", label: "Nome do material", type: FormInputs.TEXT, value: material?.title, required: true
-                }, {
-                    DTOName: "description", label: "Descrição do material", type: FormInputs.LONG_TEXT, value: material?.description ?? "", required: false, charLimit: 200,
-                }, {
-                    DTOName: "rating", label: "Rating do material", type: FormInputs.HIDDEN, value: material ? material?.rating : 1
-                }, {
-                    DTOName: "url", label: "Link do material", type: FormInputs.URL, value: material?.url, required: true
-                }, {
-                    DTOName: "type", label: "Tipo do material", type: FormInputs.SELECT_SINGLE, 
-                    options: AVAILABLE_MATERIAL_TYPES.map(t => ({ label: MATERIAL_TYPES_TEXT[t], value: t })), required: true,
-                    value: material?.type ? { value: material.type, label: material.type } : undefined,
-                }, {
-                    DTOName: "addCategoriesByIds", label: "Categorias", type: FormInputs.SELECT_MULTI, 
-                    value: material?.categories.map((t)=>({value: t.id, label: t.name})) ?? [],
-                    options: availableOptions, canCreate: true, onCreate: handleCreateOption
-                }, {
-                    DTOName: "addFoldersByIds", label: "", type: FormInputs.HIDDEN, value: material ? material?.folders.map(t=>(t.id)) : content?.id
-                }, {
-                    DTOName: "id", label: "", type: FormInputs.HIDDEN, value: material?.id
-                }
-            ]}  requisition={ !isNewMaterial ? UniversimeApi.Capacity.editContent : UniversimeApi.Capacity.createContent}
-                callback={() => { props.afterSave?.(); }}
-    />
+    return <UniversiForm.Root title={ isNewMaterial ? "Criar material" : "Editar material" } callback={ handleForm }>
+        <UniversiForm.Input.Text
+            param="title"
+            label="Nome do Material"
+            defaultValue={ material?.title }
+            required
+        />
 
-    async function handleCreateOption(value: string){
-        const createResponse = await UniversimeApi.Capacity.createCategory({ name: value, image: "" });
-        if (!createResponse.success) return [];
+        <UniversiForm.Input.Text
+            param="description"
+            label="Descrição do Material"
+            defaultValue={ material?.description ?? undefined }
+            isLongText
+            maxLength={ 200 }
+        />
 
-        const response = await updateCategories();
-        if (!response.success) return [];
+        <UniversiForm.Input.Text
+            param="url"
+            label="Link do Material"
+            defaultValue={ material?.url }
+            required
+            type="url"
+            maxLength={ 200 }
+        />
 
-        return response.body.categories.map(t => ({ value: t.id, label: t.name }));
+        <MaterialTypeSelect
+            param="type"
+            label="Tipo do Material"
+            defaultValue={ material?.type }
+            required
+        />
+
+        <CategorySelect
+            param="categories"
+            label="Categorias do Material"
+            isMultiSelection
+            required
+            options={ availableCategories }
+            defaultValue={ material?.categories }
+            onUpdateOptions={ setAvailableCategories }
+        />
+    </UniversiForm.Root>
+
+    async function handleForm( form: ManageMaterialForm ) {
+        if ( !form.confirmed )
+            return callback?.( undefined );
+
+        const body = {
+            categoriesIds: form.body.categories.map( c => c.id ),
+            description: form.body.description,
+            rating: 1 as const,
+            title: form.body.title,
+            type: form.body.type.type,
+            url: form.body.url,
+        };
+
+        const res = isNewMaterial
+            ? await UniversimeApi.Capacity.Content.create( {
+                ...body,
+                folders: content && [ content.id ],
+            } )
+            : await UniversimeApi.Capacity.Content.update( material.id, body );
+
+        return callback?.( res );
     }
 
     async function updateCategories() {
-        const res = await UniversimeApi.Capacity.categoryList();
-        if (res.success) setAvailableCategories(res.body.categories);
+        const res = await UniversimeApi.Capacity.Category.list();
+        if (res.isSuccess()) setAvailableCategories(res.data);
 
-        return res;
+        return res.data ?? [];
     }
 }
+
+type ManageMaterialForm = UniversiForm.Data<{
+    title: string;
+    description: string;
+    url: string;
+    type: MaterialTypeArrayObject;
+    categories: Capacity.Category.DTO[];
+}>;

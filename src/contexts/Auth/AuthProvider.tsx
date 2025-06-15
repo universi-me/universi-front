@@ -1,18 +1,15 @@
 import { ReactNode, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { ProfileClass } from "@/types/Profile";
-import { UniversimeApi } from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services";
 import { goTo } from "@/configs/routes";
-import type { Group } from "@/types/Group";
-import type { Link } from "@/types/Link";
-import { Nullable, Possibly } from "@/types/utils";
 import ErrorPage from "@/components/ErrorPage";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [profile, setProfile] = useState<Possibly<ProfileClass>>();
-    const [profileLinks, setProfileLinks] = useState<Link[]>([]);
-    const [profileGroups, setProfileGroups] = useState<Group[]>([]);
-    const [organization, setOrganization] = useState<Possibly<Group>>();
+    const [profileLinks, setProfileLinks] = useState<Link.DTO[]>([]);
+    const [profileGroups, setProfileGroups] = useState<Group.DTO[]>([]);
+    const [organization, setOrganization] = useState<Possibly<Group.DTO>>();
     const [isHealthy, setIsHealthy] = useState<boolean>();
     const user = profile?.user ?? null;
 
@@ -49,7 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         />
 
     return (
-        <AuthContext.Provider value={{ user, signin, signout, signinGoogle, profile, updateLoggedUser, organization, profileGroups, profileLinks  }}>
+        <AuthContext.Provider value={{ user, signin, signout, profile, updateLoggedUser, organization, profileGroups, profileLinks  }}>
         { children }
         </AuthContext.Provider>
     );
@@ -57,23 +54,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     async function signin(email: string, password: string, recaptchaToken: string | null) {
         const response = await UniversimeApi.Auth.signin({ username: email, password, recaptchaToken });
 
-        if (!response.success || response.body === undefined) {
+        if (!response.isSuccess() || response.data === undefined) {
             goTo("login");
             return null;
         }
 
         return await updateLoggedUser();
     }
-
-    async function signinGoogle() {
-        const profile = await updateLoggedUser();
-
-        if (profile === null) {
-            goTo("login");
-        }
-
-        return profile;
-    };
 
     async function signout() {
         await UniversimeApi.Auth.logout();
@@ -82,7 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         goTo("");
     };
 
-    async function updateLoggedUser() {
+    async function updateLoggedUser(): Promise<Nullable<ProfileClass>> {
         let profile: Nullable<ProfileClass> = null;
         const organization = await updateOrganization();
 
@@ -93,44 +80,43 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 updateLinks(profile),
                 updateGroups(profile),
             ]);
-
-            setProfile(profile);
         }
 
+        setProfile(profile);
         return profile;
     }
 
-    async function updateOrganization() {
-        const currentOrganization = await UniversimeApi.User.organization()
+    async function updateOrganization(): Promise<Nullable<Group.DTO>> {
+        const currentOrganization = await UniversimeApi.Group.currentOrganization()
             .catch(err => null);
 
-        const usedOrganization = currentOrganization?.body?.organization ?? null;
+        const usedOrganization = currentOrganization?.body ?? null;
 
         setOrganization(usedOrganization);
         return usedOrganization;
     }
 
-    async function updateLinks( profile: Possibly<ProfileClass> ) {
+    async function updateLinks( profile: Possibly<ProfileClass> ): Promise<Link.DTO[]> {
         if (!profile) {
             setProfileLinks([]);
             return [];
         }
 
-        const fetchLinks = await UniversimeApi.Profile.links({ username: profile.user.name });
-        const links = fetchLinks.success ? fetchLinks.body.links : [];
+        const fetchLinks = await UniversimeApi.Profile.links( profile.user.name );
+        const links = fetchLinks.data ?? [];
 
         setProfileLinks(links);
         return links;
     }
 
-    async function updateGroups( profile: Possibly<ProfileClass> ) {
+    async function updateGroups( profile: Possibly<ProfileClass> ): Promise<Group.DTO[]> {
         if (!profile) {
             setProfileGroups([]);
             return [];
         }
 
-        const fetchGroups = await UniversimeApi.Profile.groups({ username: profile.user.name });
-        const groups = fetchGroups.success ? fetchGroups.body.groups : [];
+        const fetchGroups = await UniversimeApi.Profile.groups( profile.user.name );
+        const groups = fetchGroups.data ?? [];
 
         setProfileGroups(groups);
         return groups;
@@ -138,17 +124,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     async function updateHealth() {
         const health = await UniversimeApi.Health.checkHealthAll();
-        setIsHealthy( health.success );
+        setIsHealthy( health.isSuccess() );
     }
 };
 
-async function getLoggedProfile() {
-    if(!await UniversimeApi.Auth.validateToken()) {
+async function getLoggedProfile(): Promise<Nullable<ProfileClass>> {
+    const account = await UniversimeApi.User.account();
+
+    if( !account.isSuccess() ) {
         return null;
     }
 
-    const responseProfile = (await UniversimeApi.Profile.profile()).body?.profile;
-    return responseProfile
-        ? new ProfileClass(responseProfile)
+    const res = await UniversimeApi.Profile.profile();
+    return res.isSuccess()
+        ? new ProfileClass( res.data )
         : null;
 }

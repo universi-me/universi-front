@@ -1,0 +1,61 @@
+import { ApiResponse } from "@/utils/apiUtils";
+import { createApiInstance } from "./api";
+
+const api = createApiInstance( "/activities" );
+
+
+export function get( activityId: string ) {
+    return api.get<Activity.DTO>( `/${activityId}` ).then( ApiResponse.new );
+}
+
+export function list() {
+    return api.get<Activity.DTO[]>( "" ).then( ApiResponse.new );
+}
+
+export function create( body: ActivityCreate_RequestDTO ) {
+    return api.post<Activity.DTO>( "", body ).then( ApiResponse.new );
+}
+
+export function update( activityId: string, body: ActivityUpdate_RequestDTO ) {
+    return api.patch<Activity.DTO>( `/${activityId}`, body ).then( ApiResponse.new );
+}
+
+export function remove( activityId: string ) {
+    return api.delete<void>( `/${activityId}` ).then( ApiResponse.new );
+}
+
+export function listParticipants( activityId: string ) {
+    return api.get<Profile.DTO[]>( `/${activityId}/participants` ).then( ApiResponse.new );
+}
+
+export function changeParticipants( activityId: string, body: ActivityChangeParticipants_RequestDTO ) {
+    return api.patch<void>( `/${activityId}/participants`, body ).then( ApiResponse.new );
+}
+
+export type ActivityCreate_RequestDTO = {
+    name: string;
+    description: string;
+    type: string;
+    location: string;
+    workload: number,
+    badges?: string[],
+    group: string;
+    startDate: string | number;
+    endDate: string | number;
+};
+
+export type ActivityUpdate_RequestDTO = {
+    name?: string;
+    description?: string;
+    type?: string;
+    location?: string;
+    workload?: number,
+    badges?: string[],
+    startDate?: string | number;
+    endDate?: string | number;
+};
+
+export type ActivityChangeParticipants_RequestDTO = {
+    add?: string[];
+    remove?: string[];
+};

@@ -8,29 +8,38 @@ import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import "./GroupPeople.less";
 import { Filter } from "@/components/Filter/Filter";
 import Select from 'react-select'
-import { CompetenceType, LevelToLabel, Level, intToLevel } from "@/types/Competence";
-import UniversimeApi from "@/services/UniversimeApi";
+import { CompetenceLevelObjects, CompetenceLevelObjectsArray, intToLevel } from "@/types/Competence";
+import { UniversimeApi } from "@/services"
 import ActionButton from "@/components/ActionButton";
+import useCanI from "@/hooks/useCanI";
+import { Permission } from "@/utils/roles/rolesUtils";
+import UniversiForm from "@/components/UniversiForm";
+import { AuthContext } from "@/contexts/Auth";
+import ProfileCard from "@/components/ProfileCard";
 
 type competenceSearch = {
     typeId?: string,
-    level?: Level,
+    level?: Competence.Level,
     label?: string
 }
 
 export function GroupPeople() {
     const groupContext = useContext(GroupContext);
+    const authContext = useContext(AuthContext);
     const [filterPeople, setFilterPeople] = useState<string>("");
-    const [allTypeCompetence, setAllTypeCompetence] = useState<CompetenceType[] | undefined>()
+    const [allTypeCompetence, setAllTypeCompetence] = useState<Competence.Type[] | undefined>()
     const [currentCompetence, setCurrentCompetence] = useState<competenceSearch>()
     const [addedCompetences, setAddedCompetences] = useState<competenceSearch[]>([])
     const [matchEveryCompetence, setMatchEveryCompetence] = useState<boolean>(false)
     const [showAdvancedSearch, setShowAdvancedSearch] = useState<boolean>(false)
+    const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
+
+    const canI = useCanI();
 
     useEffect(()=>{
         UniversimeApi.CompetenceType.list().then((response)=>{
-            if(response.success)
-                return response.body.list
+            if(response.isSuccess())
+                return response.data
         })
         .then((list)=>{
             setAllTypeCompetence(list)
@@ -53,14 +62,14 @@ export function GroupPeople() {
         return orderByName(allTypeCompetence ?? [])
     }, [allTypeCompetence]);
 
-    function orderByName(competences : CompetenceType[]){
+    function orderByName(competences : Competence.Type[]){
         return competences
             .slice()
             .sort((c1,c2) => c1.name.localeCompare(c2.name))
             .map((t)=> ({value: t.id, label: t.name})) ?? [];
     }
 
-    function removeAddedCompetence(typeId: string, level: Level){
+    function removeAddedCompetence(typeId: string, level: Competence.Level){
         setAddedCompetences((addedCompetences) => addedCompetences.filter((element) => !(element.typeId === typeId && element.level === level)))
     }
 
@@ -76,6 +85,33 @@ export function GroupPeople() {
     if (!groupContext)
         return null;
 
+    const [participantsOrganization, setParticipantsOrganization] = useState<ProfileClass[]>();
+    const loadingParticipantsOrganization = participantsOrganization === undefined;
+
+    function handleShowAddPeople(){
+        return () => {
+            setShowAddPeopleModal(true);
+        }
+    }
+
+    useEffect(() => {
+        const fetchParticipants = () => {
+            setParticipantsOrganization( undefined );
+            UniversimeApi.GroupParticipant.get(authContext.organization.id as string).then((response) => {
+                if (response.isSuccess() && Array.isArray(response.data)) {
+                    setParticipantsOrganization(
+                        response.data
+                        .filter( p => undefined === groupContext.participants.find( gp => gp.id === p.id ) )
+                        .map( ProfileClass.new )
+                    );
+                }
+            });
+        }
+        if (showAddPeopleModal) {
+            fetchParticipants();
+        }
+    }, [showAddPeopleModal, authContext.organization.id]);
+
     return (
         <section id="people" className="group-tab">
             <div className="heading top-container">
@@ -89,6 +125,25 @@ export function GroupPeople() {
                         showAdvancedSearch 
                         ? renderAdvancedSearch()
                         : <></>
+                    }
+
+                    {
+                        canI("PEOPLE", Permission.READ_WRITE, groupContext.group) &&
+                            <ActionButton name="Adicionar" buttonProps={{ onClick: handleShowAddPeople() }} />
+                    }
+
+                    {
+                        showAddPeopleModal && !loadingParticipantsOrganization &&
+                            <UniversiForm.Root title="Adicionar participante" callback={ handleForm } confirmButtonText="Adicionar">
+                                <UniversiForm.Input.Select
+                                    param="participant"
+                                    label="Usuário"
+                                    required
+                                    options={ participantsOrganization }
+                                    getOptionUniqueValue={ p => p.id }
+                                    getOptionLabel={ p => p.fullname! }
+                                />
+                            </UniversiForm.Root>
                     }
 
                 </div>
@@ -154,7 +209,7 @@ export function GroupPeople() {
                 <Select
                     options={competenceTypeOptions}
                     value={{value: currentCompetence?.typeId?.toString(), label : currentCompetence?.label}}
-                    onChange={(option)=>{
+                    onChange={(option:any)=>{
                         if(!option || !option.value) return
                         let newCompetence : competenceSearch;
                         newCompetence = {
@@ -179,7 +234,7 @@ export function GroupPeople() {
                         if(currentCompetence?.level == undefined || !currentCompetence.label || !currentCompetence.typeId)
                             return;
 
-                        currentCompetence.label += ": " + LevelToLabel[currentCompetence.level]
+                        currentCompetence.label += ": " + CompetenceLevelObjects[currentCompetence.level].label
                         setAddedCompetences([...addedCompetences, currentCompetence]);
 
                         let radio = document.getElementById(`radio${currentCompetence.level}`) as HTMLInputElement
@@ -199,14 +254,14 @@ export function GroupPeople() {
     }
 
     function showOnlyFilteredPeople(searchCompetence : competenceSearch[], matchEveryCompetence : boolean){
-            UniversimeApi.Group.filterParticipants({
+            UniversimeApi.GroupParticipant.filter({
                 competences: searchCompetence.map((c) => ({ id: c.typeId ?? "", level: c.level ?? 0 })),
                 matchEveryCompetence: matchEveryCompetence,
                 groupId: groupContext?.group.id,
                 groupPath: groupContext?.group.path
             }).then((response) => {
-                if (response.data.success) {
-                    return response.data.body?.filteredParticipants;
+                if (response.isSuccess()) {
+                    return response.data;
                 } 
             }).then((participants) => {
                 if (participants) {
@@ -235,17 +290,16 @@ export function GroupPeople() {
     }
 
     function makeRadioSelectLevel(){
-        const levels = Object.entries(LevelToLabel)
         return (
             <div className="levels-div">
             {
-                levels.map((level)=>(
-                    <label>
+                CompetenceLevelObjectsArray.map(({ level, label })=>(
+                    <label key={ level }>
                         <input
                             type="radio"
                             name="level"
-                            value={level[0]}
-                            id={`radio${level[0]}`}
+                            value={level}
+                            id={`radio${level}`}
                             onChange={(event)=>{
                                 let currentCompetence_old : competenceSearch;
                                 if(currentCompetence){
@@ -257,17 +311,36 @@ export function GroupPeople() {
                                         level: intToLevel(parseInt(event.target.value))
                                     }
                                 setCurrentCompetence(currentCompetence_old)
-                                event.target.checked=currentCompetence?.level != undefined && currentCompetence?.level == parseInt(level[0])
+                                event.target.checked=currentCompetence?.level != undefined && currentCompetence?.level == level
                             }}
                         />
-                        {level[1]}
+                        {label}
                     </label>
                 ))
             }
             </div>
         )
     }
+
+    async function handleForm( form: GroupPeopleForm ) {
+        if ( !form.confirmed ) {
+            setShowAddPeopleModal( false );
+            return;
+        }
+
+        await UniversimeApi.GroupParticipant.add({
+            groupId: groupContext!.group.id!,
+            participant: form.body.participant.id,
+        });
+
+        await groupContext!.refreshData();
+        setShowAddPeopleModal( false );
+    }
 }
+
+type GroupPeopleForm = UniversiForm.Data<{
+    participant: ProfileClass;
+}>;
 
 
 // function toggleAdvancedSearch(){
@@ -294,27 +367,12 @@ function makePeopleList(people: ProfileClass[], filter: string) {
 
     return filteredPeople
         .filter(p => !p.user.needProfile)
-        .map(renderPerson);
-    
-}
-
-function renderPerson(person: ProfileClass) {
-    const linkToProfile = `/profile/${person.user.name}`;
-
-    const imageUrl = person.image?.startsWith("/")
-        ? `${import.meta.env.VITE_UNIVERSIME_API}${person.image}`
-        : person.image;
-
-    return (
-        <div className="person-item tab-item" key={person.id} id={person.id}>
-            <Link to={linkToProfile} className="person-image-info">
-                <ProfileImage imageUrl={imageUrl} name={person.fullname} className="person-image" />
-            </Link>
-
-            <div className="info">
-                <Link to={linkToProfile} className="person-name">{person.fullname}</Link>
-                <p className="person-bio">{person.bio}</p>
-            </div>
-        </div>
-    );
+        .map( p => <ProfileCard
+            profile={ p }
+            key={ p.id }
+            useLink
+            renderBio
+            renderDepartment
+            className="person-item"
+        /> );
 }

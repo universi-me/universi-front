@@ -1,10 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import _ from "lodash";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
 import { SettingsTitle, SettingsDescription } from "@/pages/Settings";
-import UniversimeApi from "@/services/UniversimeApi";
-import type { GroupTheme } from "@/types/Group";
+import { UniversimeApi } from "@/services"
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import ThemeContext from "@/contexts/Theme";
 import ThemeMappings from "@/configs/ThemeMappings";
@@ -31,6 +29,9 @@ export function GroupThemeColorPage() {
         };
     }, [auth.organization.groupSettings.theme]);
 
+    const isEqual = (obj1: any, obj2: any) =>
+        JSON.stringify(obj1) === JSON.stringify(obj2);
+
     return <div id="theme-color-settings">
         <SettingsTitle>Configuração de Tema</SettingsTitle>
         <SettingsDescription>Escolha o tema para o grupo.</SettingsDescription>
@@ -42,7 +43,7 @@ export function GroupThemeColorPage() {
                 return <ThemeColorItem
                     key={themeName}
                     theme={theme}
-                    isSelected={ _.isEqual(theme, selectedTheme) }
+                    isSelected={ isEqual(theme, selectedTheme) }
                     onClick={ setSelectedTheme }
                 />
             })}
@@ -69,15 +70,12 @@ export function GroupThemeColorPage() {
     </div>;
 
     async function saveChanges() {
-        const res = await UniversimeApi.Group.editTheme({
-            groupId: auth.organization.id,
-            ...selectedTheme,
-        }).catch(err => null);
+        const res = await UniversimeApi.GroupTheme.update( buildThemeUpdateDTO() ).catch(err => null);
 
-        if ( !res?.success ) {
+        if ( !res?.isSuccess() ) {
             SwalUtils.fireModal({
                 title: "Erro ao salvar alterações",
-                text: res?.message ?? "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente mais tarde. Se o problema persistir entre em contato com o suporte."
+                text: res?.errorMessage ?? "Ocorreu um erro ao salvar as alterações do tema. Por favor, tente novamente mais tarde. Se o problema persistir entre em contato com o suporte."
             });
         }
 
@@ -92,5 +90,25 @@ export function GroupThemeColorPage() {
         newTheme[variable] = value.toLocaleUpperCase();
 
         setSelectedTheme(newTheme);
+    }
+
+    function buildThemeUpdateDTO(): UniversimeApi.GroupTheme.GroupThemeUpdate_RequestDTO {
+        return {
+            groupId: auth.organization.id!,
+            background_color: selectedTheme.backgroundColor,
+            button_hover_color: selectedTheme.buttonHoverColor,
+            card_background_color: selectedTheme.cardBackgroundColor,
+            card_item_color: selectedTheme.cardItemColor,
+            font_color_alert: selectedTheme.fontColorAlert,
+            font_color_disabled: selectedTheme.fontColorDisabled,
+            font_color_links: selectedTheme.fontColorLinks,
+            font_color_success: selectedTheme.fontColorSuccess,
+            font_color_v1: selectedTheme.fontColorV1,
+            font_color_v2: selectedTheme.fontColorV2,
+            font_color_v3: selectedTheme.fontColorV3,
+            primary_color: selectedTheme.primaryColor,
+            secondary_color: selectedTheme.secondaryColor,
+            wrong_invalid_color: selectedTheme.wrongInvalidColor,
+        };
     }
 }

@@ -1,8 +1,6 @@
 import { useContext, useMemo } from "react";
 
 import BootstrapIcon from "@/components/BootstrapIcon";
-import { CompetenceType } from "@/types/Competence";
-import { Job } from "@/types/Job";
 
 import { JobContext } from "@/pages/JobPage";
 

@@ -1,6 +1,6 @@
 import { MouseEventHandler, MouseEvent, useContext, useMemo } from 'react';
 import { ProfileContext, ProfileContextType } from '@/pages/Profile'
-import { LevelToLabel} from '@/types/Competence';
+import { CompetenceLevelObjects } from '@/types/Competence';
 import { ICON_EDIT_BLACK } from '@/utils/assets';
 import './ProfileCompetences.css'
 
@@ -47,7 +47,7 @@ export function ProfileCompetences(props: ProfileCompetencesProps) {
                                 <h4 className="competence-type">{competence.competenceType.name}</h4>
                                 <h4 className="learning">{competence.description}</h4>
                                 <div className="level-container">
-                                    <h2 className="level-label">{LevelToLabel[competence.level]}</h2>
+                                    <h2 className="level-label">{CompetenceLevelObjects[competence.level].label}</h2>
                                     <div className="competence-level-list">
                                         {
                                             Array.apply(null, Array(MAX_COMPETENCE_LEVEL)).map((_, i) => {

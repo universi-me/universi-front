@@ -13,9 +13,10 @@ COPY . .
 RUN npm ci --legacy-peer-deps
 
 # setting environment variables to set version
-ENV VITE_UNIVERSIME_API=/api
+ARG VITE_UNIVERSIME_API
+ENV VITE_UNIVERSIME_API=${VITE_UNIVERSIME_API:-@UNIVERSIME_API@}
 ARG VITE_BUILD_HASH
-ENV VITE_BUILD_HASH=${VITE_BUILD_HASH}
+ENV VITE_BUILD_HASH=${VITE_BUILD_HASH:-@BUILD_HASH@}
 
 #  Build app
 RUN npm run build:docker

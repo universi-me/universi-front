@@ -1,7 +1,5 @@
-import UniversimeApi from "@/services/UniversimeApi"
-import { competenceListResponse } from "@/services/UniversimeApi/Group"
-import { LevelToLabel} from "@/types/Competence"
-import { Profile } from "@/types/Profile"
+import { UniversimeApi } from "@/services"
+import { CompetenceLevelObjectsArray, strToLevel } from "@/types/Competence"
 import { useContext, useEffect, useState } from "react"
 import { GroupContext } from "../../GroupContext"
 import "./GroupCompetence.less"
@@ -9,7 +7,7 @@ import "./GroupCompetence.less"
 export function GroupCompetences(){
 
     const groupContext = useContext(GroupContext)
-    const [groupCompetences, setGroupCompetences] = useState<competenceListResponse>();
+    const [groupCompetences, setGroupCompetences] = useState<Group.CompetenceInfo[]>();
     const [competencesInfo, setCompetencesInfo] = useState<CompetenceInfo[]>();
 
     const [orderedByName, setOrderedByName] = useState<boolean | undefined>(undefined);
@@ -18,21 +16,19 @@ export function GroupCompetences(){
 
     type CompetenceInfo = {
         competenceName: string,
-        competencePeople: Profile[],
+        competencePeople: Profile.DTO[],
         competenceTypeId: string,
         competenceLevelInfo: {
-            level: string,
-            people: Profile[]
+            level: Competence.Level,
+            people: Profile.DTO[]
         }[]
     }
 
 
     useEffect(()=>{
-        UniversimeApi.Group.listCompetences({groupId: groupContext?.group.id}).then((response)=>{
-            return response.body;
-        }).then((body)=>{
-            if(body?.competences){
-                setGroupCompetences({competences: body.competences});
+        UniversimeApi.GroupParticipant.competences( groupContext?.group.id! ).then( response => {
+            if ( response.data ) {
+                setGroupCompetences( response.data );
             }
         })
     }, [])
@@ -46,23 +42,18 @@ export function GroupCompetences(){
             return;
 
         let createCompetenceInfo : CompetenceInfo[] = []
-        groupCompetences.competences.map((competence)=>{
+        groupCompetences.forEach((competence)=>{
 
-            let people : Profile[] = [];
-            let levelInfo : {
-                level: string,
-                people: Profile[]
-            }[] = [];
+            let people : Profile.DTO[] = [];
+            let levelInfo = CompetenceLevelObjectsArray.map( lv => ({
+                level: lv.level,
+                people: [] as Profile.DTO[],
+            }) );
 
-            Object.entries(LevelToLabel).map((level)=>{
-                levelInfo.push({level: level[0], people: []})
-            })
-
-            Object.entries(competence.levelInfo).map(([level, profiles])=>{
-                profiles.map((profile)=>{
-                    people.push(profile)
-                })
-                levelInfo.map((infoLevel)=>{
+            Object.entries(competence.levelInfo).forEach(([lv, profiles])=>{
+                const level = strToLevel( lv );
+                people.push( ...profiles );
+                levelInfo.forEach((infoLevel)=>{
                     infoLevel.level == level ? infoLevel.people = profiles : null;
                 })
             })
@@ -83,7 +74,7 @@ export function GroupCompetences(){
 
     }
 
-    function getLevelPercentage(competencePeople : Profile[], levelInfo: Profile[]) : number{
+    function getLevelPercentage(competencePeople : Profile.DTO[], levelInfo: Profile.DTO[]) : number{
 
         if(!competencePeople || !levelInfo)
             return 0;
@@ -182,13 +173,13 @@ export function GroupCompetences(){
                         }
                     </div>
                     {
-                        Object.entries(LevelToLabel).map((level)=>(
-                            <div className="label" onClick={() => {orderByLevel(parseInt(level[0]))}}>
-                                {level[1]}
+                        CompetenceLevelObjectsArray.map(({level, label})=>(
+                            <div className="label" onClick={() => {orderByLevel(level)}} key={level}>
+                                {label}
                                 {
-                                    orderedByLevel?.level == parseInt(level[0]) && orderedByLevel.inOrder?
+                                    orderedByLevel?.level == level && orderedByLevel.inOrder?
                                     <i className="bi bi-caret-up-fill"></i>
-                                    : orderedByLevel?.level == parseInt(level[0]) && !orderedByLevel.inOrder?
+                                    : orderedByLevel?.level == level && !orderedByLevel.inOrder?
                                     <i className="bi bi-caret-down-fill"></i>
                                     :
                                     <></>
@@ -201,12 +192,12 @@ export function GroupCompetences(){
                 {
                     !competencesInfo ? <></> :
                     competencesInfo.map((competence)=>(
-                        <div className="competence">
+                        <div className="competence" key={ competence.competenceTypeId }>
                             <div className="competence-name">{competence.competenceName}</div>
                             <div className="amount-people">{competence.competencePeople.length}</div>
                                 {
                                     competence.competenceLevelInfo.map((level)=>(
-                                    <div className="competence-level-container">
+                                    <div className="competence-level-container" key={ level.level }>
                                         <div className="competence-level">
                                             <div className="bar-container">
                                                 <div className="bar" style={

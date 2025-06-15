@@ -2,7 +2,7 @@ import { useReducer, useState, useContext } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { AuthContext } from "@/contexts/Auth";
 import { SettingsTitle, type RolesPageLoaderResponse, RolesPageFetch, SettingsDescription } from "@/pages/Settings";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
@@ -10,9 +10,8 @@ import { setStateAsValue } from "@/utils/tsxUtils";
 import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 
-import { ProfileClass, type Profile } from "@/types/Profile";
-import { UserAccessLevelLabel, type UserAccessLevel } from "@/types/User";
-import { type Optional } from "@/types/utils";
+import { ProfileClass } from "@/types/Profile";
+import { UserAccessLevelLabel } from "@/types/User";
 import "./RolesPage.less";
 
 export function RolesPage() {
@@ -192,7 +191,7 @@ export function RolesPage() {
         <section id="participants-list">
         { filteredParticipants.map(profile => {
             const isOwnProfile = auth.profile!.id === profile.id;
-            const roleLabel = UserAccessLevelLabel[profile.role];
+            const roleLabel = UserAccessLevelLabel[profile.accessLevel];
 
             return <div className="profile-item" key={profile.id}>
                 <div style={{  display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', justifyContent: 'space-between',  width: '100%', }}>
@@ -261,7 +260,7 @@ export function RolesPage() {
     }
 
     async function refreshParticipants() {
-        const response = await RolesPageFetch(auth.organization!.id);
+        const response = await RolesPageFetch(auth.organization.id!);
         participantsDispatch({
             type: "SET_ALL",
             setParticipants: response.success
@@ -275,17 +274,17 @@ export function RolesPage() {
             return;
 
         const responses = await Promise.all(
-            changedParticipants.map(p => UniversimeApi.Admin.editAccount({ userId: p.user.id, authorityLevel: p.role, blockedAccount: p.blockedAccount}))
+            changedParticipants.map(p => UniversimeApi.User.updateAccount({ userId: p.user.id, authorityLevel: p.accessLevel, blockedAccount: p.blockedAccount}))
         );
 
         refreshParticipants();
 
-        const failedChanges = responses.filter(r => !r.success);
+        const failedChanges = responses.filter(r => !r.isSuccess());
         if (failedChanges.length === 0)
             return;
 
         const messages = failedChanges
-            .map(err => err.message)
+            .map(err => err.errorMessage)
             .filter(m => m !== undefined);
 
         SwalUtils.fireModal({
@@ -302,7 +301,7 @@ class ProfileOnList extends ProfileClass {
     /**
      * Returns the current role of the profile, which can be the modified before saving or the original
      */
-    get role() {
+    get accessLevel(): UserAccessLevel {
         return this.newRole ?? this.user.accessLevel!;
     }
 

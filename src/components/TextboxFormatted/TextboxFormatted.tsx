@@ -1,32 +1,34 @@
-import UniversimeApi from '@/services/UniversimeApi';
+import { UniversimeApi } from "@/services"
 import { isAbsoluteUrl } from '@/utils/regexUtils';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 
-import ReactQuill, { Quill } from "react-quill"
+import ReactQuill, { Quill } from "react-quill-new"
 import { ImageActions } from '@xeger/quill-image-actions';
-import { ImageFormats } from '@xeger/quill-image-formats';
+import BlotFormatter from 'quill-blot-formatter';
 import ImageUploader from "quill-image-uploader";
 
-import 'react-quill/dist/quill.snow.css'
-import 'quill-image-uploader/dist/quill.imageUploader.min.css'
-
 import './TextboxFormatted.less'
+import { HttpStatusCode } from "axios";
 
 Quill.register('modules/imageUploader', ImageUploader);
 Quill.register('modules/imageActions', ImageActions);
-Quill.register('modules/imageFormats', ImageFormats);
+Quill.register('modules/blotFormatter', BlotFormatter);
 
 
 interface TextboxFormattedProps {
-  value: string;
+  value?: string;
+  imageUploadPublic?: boolean;
   onChange: (value: string) => void;
   theme?: string;
   modules?: object;
   formats?: string[];
   toolbar?: any;
+  className?: string;
 }
 
 const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModules, formats: customFormats, toolbar: customtToolbar, ...props }: TextboxFormattedProps) => {
+  const quillRef = useRef<any>(null);
+
 
   const defaultFormats = useMemo(() => ([
     "align",
@@ -36,10 +38,8 @@ const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModu
     "bold",
     "code-block",
     "color",
-    "float",
     "font",
     "header",
-    "height",
     "image",
     "imageBlot",
     "italic",
@@ -47,15 +47,18 @@ const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModu
     "script",
     "strike",
     "size",
-    "underline",
-    "width"
+    "underline"
   ]), []);
 
   const formats = customFormats || defaultFormats;
 
   const defaultModules = useMemo(() => ({
     imageActions: {},
-    imageFormats: {},
+    blotFormatter: {
+      align: {
+        defaultAlignment: 'center',
+      },
+    },
     toolbar: customtToolbar || [
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
         ["bold", "italic", "underline", "strike",],
@@ -71,25 +74,59 @@ const TextboxFormatted = ({ value, onChange, theme = 'snow', modules: customModu
         upload: (file : File) => {
             return new Promise(async (resolve, reject) => {
                 try {
-                  let res = await UniversimeApi.Image.upload({image: file})
-                  if(res.success && res.body) {
-                    resolve(isAbsoluteUrl(res.body.link) ? res.body.link : import.meta.env.VITE_UNIVERSIME_API + res.body.link)
+                  let res = await UniversimeApi.Image.upload({image: file, isPublic: props.imageUploadPublic});
+                  if(res.isSuccess() && res.status === HttpStatusCode.Created) {
+                    resolve(isAbsoluteUrl(res.data) ? res.data : import.meta.env.VITE_UNIVERSIME_API + '/img/' + res.data );
                   } else {
-                    reject()
+                    reject( new Error( res.errorMessage ) )
                   }
                 }catch(e) {
-                  reject()
+                  reject( new Error( String( e ) ) )
                 }
             });
         },
     },
   }), []);
 
-  const modules = customModules || defaultModules;
+  const modules = customModules ?? defaultModules;
 
+  
+  // set new image inserted centered position as default
+  const handleChange = (content: string, delta: any, source: string, editor: any) => {
+    onChange(content);
+
+    var editorCurr = quillRef.current?.getEditor();
+    if (!editorCurr) return;
+  
+    if (source === "user") {
+      delta.ops.forEach((op: any) => {
+        if (op.insert && op.insert.image) {
+          var imgUrl = op.insert.image;
+          var quillEditor = editorCurr;
+          var images = quillEditor.container.querySelectorAll(`img[src="${imgUrl}"]`);
+          images.forEach((img: HTMLImageElement) => {
+            if(img.tagName === "IMG") {
+              var parent = img.parentElement;
+              if ((!parent || !parent.classList.contains("ql-align-center")) && (!parent || (parent && parent.tagName === "P"))) {
+                var wrapper = document.createElement("p");
+                wrapper.classList.add("ql-align-center");
+                img.replaceWith(wrapper);
+                wrapper.appendChild(img);
+                // update back the content with actual changes
+                handleChange(editorCurr.root.innerHTML, delta, "api", editorCurr);
+              }
+            }
+          });
+        }
+      });
+    }
+
+  };
+  
+  
 
   return (
-    <ReactQuill formats={formats} modules={modules} theme={theme} value={value} onChange={onChange} {...props} />
+    <ReactQuill ref={quillRef} formats={formats} modules={modules as any} theme={theme} value={value} onChange={handleChange} {...props} />
   );
 };
 

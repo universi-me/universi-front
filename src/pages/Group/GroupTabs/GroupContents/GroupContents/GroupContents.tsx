@@ -1,157 +1,25 @@
-import { useContext, useEffect, useMemo, useReducer, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { EMPTY_LIST_CLASS, GroupContentMaterials, GroupContext } from "@/pages/Group";
-import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 import { ManageContent } from "@/components/ManageContent";
 import { type OptionInMenu, renderOption, hasAvailableOption } from "@/utils/dropdownMenuUtils";
+import AssignFolderForm from "./AssignFolderForm";
 
-import type { Folder } from "@/types/Capacity";
 import "./GroupContents.less";
 import { Filter } from "@/components/Filter/Filter";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
-import { AuthContext } from "@/contexts/Auth";
-import { UniversiModal } from "@/components/UniversiModal";
-import { ProfileClass } from "@/types/Profile";
-import { makeClassName } from "@/utils/tsxUtils";
-import { arrayRemoveEquals } from "@/utils/arrayUtils";
-import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
+import UniversiForm from "@/components/UniversiForm";
 import useCanI from "@/hooks/useCanI";
-import { Permission } from "@/types/Roles";
+import { Permission } from "@/utils/roles/rolesUtils";
 
-function SelectPeople(){
-    const groupContext = useContext(GroupContext)
-    const authContext = useContext(AuthContext)
-
-    const [currentlyAssigned, setCurrentlyAssigned] = useState<ProfileClass[]>([]);
-    const [selectedProfiles, selectedProfilesDispatch] = useReducer(selectProfileReducer, []);
-    const [filterName, setFilterName] = useState("");
-
-    const possibleAssignments = useMemo(() => {
-        return [...groupContext?.participants ?? []]
-            .filter(a => !a.user.needProfile && a.user.name !== authContext.profile?.user.name)
-            .sort((a, b) => a.fullname!.localeCompare(b.fullname!));
-    }, [groupContext?.participants, authContext.profile]);
-
-    useEffect(() => {
-        if (!groupContext?.assignFolder) return;
-
-        UniversimeApi.Capacity.folderAssignedTo({ reference: groupContext.assignFolder.reference })
-            .then((res) => { setCurrentlyAssigned(res.body?.profilesIds.map(ProfileClass.new) ?? []) });
-    }, [groupContext?.assignFolder]);
-
-    useEffect(() => {
-        selectedProfilesDispatch({
-            action: "SET",
-            to: currentlyAssigned.map(ProfileClass.new),
-        });
-    }, [currentlyAssigned]);
-
-    if (!groupContext?.assignFolder) return null;
-
-    const assignedTo = arrayRemoveEquals(selectedProfiles, currentlyAssigned, (a, b) => a.id === b.id);
-    const unassignedTo = arrayRemoveEquals(currentlyAssigned, selectedProfiles, (a, b) => a.id === b.id);
-
-    const canSave = assignedTo.length > 0 || unassignedTo.length > 0;
-
-    const shownParticipants = possibleAssignments
-        .filter(a => a.nameIncludesIgnoreCase(filterName));
-
-    async function makeRequest(){
-        if(groupContext?.assignFolder == undefined)
-            return;
-
-        if (assignedTo.length) {
-            await UniversimeApi.Capacity.assignContent({
-                folderId: groupContext.assignFolder.id,
-                profilesIds: assignedTo.map(p => p.id),
-            });
-        }
-
-        if (unassignedTo.length) {
-            UniversimeApi.Capacity.unassignContent({
-                folderId: groupContext.assignFolder.id,
-                profilesIds: unassignedTo.map(p => p.id),
-            })
-        }
-
-        groupContext.setAssignFolder(undefined);
-        groupContext.refreshData();
-    }
-
-    function selectProfileReducer(state: ProfileClass[], action: SelectProfileAction): ProfileClass[] {
-        switch (action.action) {
-            case "ADD":
-                return state.concat([action.profile]);
-            case "REMOVE":
-                return state.filter(p => p.id !== action.profile.id);
-            case "SET":
-                return action.to;
-        }
-    }
-
-    function handleAssignToAll() {
-        if (selectedProfiles.length === possibleAssignments.length)
-            selectedProfilesDispatch({action: "SET", to: []})
-        else
-            selectedProfilesDispatch({ action: "SET", to: possibleAssignments })
-    }
-
-    return(
-        <UniversiModal>
-            <div id="universi-form-container" className="assign-content-modal" >
-                <div className="universi-form-container fields">
-
-                    <div className="header">
-                        <img src="/assets/imgs/create-content.png" />
-                        <h1 className="title">Atribuir Conteúdo </h1>
-                    </div>
-
-                    <fieldset>
-                        <div className="legend-wrapper">
-                            <legend>Pessoas</legend>
-                            <Filter setter={setFilterName} placeholderMessage="Pesquisar por alguém..." />
-                        </div>
-                        <div id="assign-content-to-profile">
-                            { shownParticipants.length > 0 ? shownParticipants
-                                .map(p => {
-                                const isSelected = !!selectedProfiles.find(i => i.id === p.id);
-
-                                return <div className="participant-item" key={p.id}>
-                                    <ProfileImage className="profile-picture" imageUrl={p.imageUrl!} name={p?.fullname} />
-                                    <div className="profile-data">
-                                        <h2 className="profile-name">{ p.fullname }</h2>
-                                    </div>
-                                    <button className="assign-profile" onClick={() => { selectedProfilesDispatch({ action: isSelected ? "REMOVE" : "ADD", profile: p }) }}>
-                                        <i className={makeClassName("bi", isSelected ? "bi-check-circle-fill" : "bi-check-circle")} />
-                                    </button>
-                                </div>
-                            }) : <p>{ possibleAssignments.length > 0 ? "Nenhum participante encontrado nessa busca" : "Nenhum participante no grupo" }</p> }
-                        </div>
-                    </fieldset>
-                    <section className="operation-buttons">
-                        <button type="button" className="submit-button" style={{width: "fit-content", padding: "0.75rem"}} onClick={handleAssignToAll}>
-                            <i className="bi bi-people-fill"/> Todas as pessoas do grupo
-                        </button>
-                        <button type="button" className="cancel-button" onClick={() => groupContext?.setAssignFolder(undefined)}>
-                            <i className="bi bi-x-circle-fill" /> Cancelar
-                        </button>
-                        <button type="button" className="submit-button" onClick={makeRequest} disabled={!canSave} title={canSave ? undefined : "Preencha os dados antes de salvar"}>
-                            <i className="bi bi-check-circle-fill" /> Salvar
-                        </button>
-                    </section>
-                </div>
-            </div>
-        </UniversiModal>
-    )
-}
 
 export function GroupContents() {
     const groupContext = useContext(GroupContext);
     const [filterContents, setFilterContents] = useState<string>("");
-    const [importContentAvailable, setImportContentAvailable] = useState<Folder[]>();
+    const [importContentAvailable, setImportContentAvailable] = useState<Capacity.Folder.DTO[]>();
     const [duplicateContentId, setDuplicateContentId] = useState<string | undefined> ();
     const [moveContentReference, setMoveContentReference] = useState<string>();
 
@@ -164,7 +32,7 @@ export function GroupContents() {
         return <GroupContentMaterials />;
     }
 
-    const OPTIONS_DEFINITION: OptionInMenu<Folder>[] = [
+    const OPTIONS_DEFINITION: OptionInMenu<Capacity.Folder.DTO>[] = [
         {
             text: "Editar",
             biIcon: "pencil-fill",
@@ -189,8 +57,8 @@ export function GroupContents() {
             text: "Favoritar",
             biIcon: "star-fill",
             onSelect(data) {
-                UniversimeApi.Capacity.favoriteFolder({ folderId: data.id })
-                .then(res => {res.success && groupContext.refreshData()});
+                UniversimeApi.Capacity.Folder.favorite( data.id )
+                .then(res => {res.isSuccess() && groupContext.refreshData()});
             },
             hidden(data) {
                 return !!data.favorite;
@@ -203,8 +71,8 @@ export function GroupContents() {
                 return !data.favorite;
             },
             onSelect(data) {
-                UniversimeApi.Capacity.unfavoriteFolder({ folderId: data.id })
-                .then(res => {res.success && groupContext.refreshData()});
+                UniversimeApi.Capacity.Folder.unfavorite( data.id )
+                .then(res => {res.isSuccess() && groupContext.refreshData()});
             },
         },
         {
@@ -255,48 +123,41 @@ export function GroupContents() {
 
             {
                 groupContext.editContent !== undefined &&
-                <ManageContent content={groupContext.editContent} group={groupContext.group} afterSave={()=>{groupContext.setEditContent(undefined); groupContext.refreshData() }} />
+                <ManageContent content={groupContext.editContent} group={groupContext.group} afterSave={ async res => {
+                    let newContext = groupContext;
+                    if ( res?.isSuccess() )
+                        newContext = await groupContext.refreshData();
+
+                    newContext.setEditContent( undefined );
+                } } />
             }
             {
                 groupContext.assignFolder !== undefined
                 ?
-                <SelectPeople/>
+                <AssignFolderForm/>
                 :
                 duplicateContentId !== undefined
                 ?
-                <UniversiForm
-                callback={async () => {setDuplicateContentId(undefined); await groupContext.refreshData()}}
-                formTitle="Criar uma cópia"
-                objects={[
-                    {
-                        DTOName : "targetGroupId", 
-                        label : "Copiar para: ",
-                        type: FormInputs.SELECT_SINGLE,
-                        value: {value : groupContext.group.id, label: groupContext.group.name},
-                        options : groupContext.loggedData.groups.filter(g => g.canEdit).map((g) => ({value: g.id, label: g.name}))
-                    },
-                    {
-                        DTOName: "contentId",
-                        label: "",
-                        value: duplicateContentId,
-                        type: FormInputs.HIDDEN
-                    }
-                ]}
-                requisition={UniversimeApi.Capacity.duplicateContent}
-                saveButtonText="Copiar"
-                />
-                : moveContentReference !== undefined ? <UniversiForm formTitle="Mover conteúdo" objects={[
-                    { DTOName: "folderReference", label: "", type: FormInputs.HIDDEN, value: moveContentReference },
-                    { DTOName: "originalGroupPath", label: "", type: FormInputs.HIDDEN, value: groupContext.group.path },
-                    {
-                        DTOName: "newGroupPath", label: "Mover para:",
-                        type: FormInputs.SELECT_SINGLE, required: true,
-                        options: groupContext.loggedData.groups
-                            .filter(g => g.id !== groupContext.group.id && canI("GROUP", Permission.READ_WRITE, g))
-                            .map(g => ({value: g.path, label: g.name}))
-                    },
-                ]} callback={async () => { await groupContext.refreshData().then(() => setMoveContentReference(undefined)) }} requisition={UniversimeApi.Capacity.moveFolderToAnotherGroup}
-                saveButtonText="Mover" cancelButtonText="Cancelar" />
+                <UniversiForm.Root title="Criar uma cópia" callback={ handleDuplicate } confirmButtonText="Copiar">
+                    <UniversiForm.Input.Select
+                        param="targetGroup"
+                        label="Copiar para:"
+                        options={ groupContext.loggedData.groups.filter( g => g.canEdit ) }
+                        getOptionUniqueValue={ g => g.id! }
+                        getOptionLabel={ g => g.name }
+                        required
+                    />
+                </UniversiForm.Root>
+                : moveContentReference !== undefined ? <UniversiForm.Root title="Mover conteúdo" callback={ handleMove } confirmButtonText="Mover">
+                    <UniversiForm.Input.Select
+                        param="targetGroup"
+                        label="Mover para:"
+                        options={ groupContext.loggedData.groups.filter( g => g.id !== groupContext.group.id && canI("GROUP", Permission.READ_WRITE, g ) ) }
+                        getOptionUniqueValue={ g => g.id! }
+                        getOptionLabel={ g => g.name }
+                        required
+                    />
+                </UniversiForm.Root>
                 :
                 <></>
             }
@@ -310,7 +171,7 @@ export function GroupContents() {
     );
 
 
-    function makeContentList(contents: Folder[], filter: string) {
+    function makeContentList(contents: Capacity.Folder.DTO[], filter: string) {
         if (contents.length === 0) {
             return <p className={EMPTY_LIST_CLASS}>Esse grupo não possui conteúdos.</p>
         }
@@ -329,12 +190,12 @@ export function GroupContents() {
             .map(renderContent);
     }
 
-    function selectContent(content: Folder) {
+    function selectContent(content: Capacity.Folder.DTO) {
         groupContext?.setCurrentContent(content)
         window.location.hash = "contents" + "/" + content.id;
     }
 
-    function renderContent(content: Folder) {
+    function renderContent(content: Capacity.Folder.DTO) {
         const imageUrl = content.image?.startsWith("/")
             ? `${import.meta.env.VITE_UNIVERSIME_API}${content.image}`
             : content.image;
@@ -374,7 +235,7 @@ export function GroupContents() {
         );
     }
 
-    function handleDeleteContent(content: Folder) {
+    function handleDeleteContent(content: Capacity.Folder.DTO) {
         SwalUtils.fireModal({
             showCancelButton: true,
 
@@ -387,9 +248,9 @@ export function GroupContents() {
             icon: "warning",
         }).then(res => {
             if (res.isConfirmed) {
-                UniversimeApi.Capacity.editFolder({ id: content.id, removeGrantedAccessGroupByIds: groupContext!.group.id })
+                UniversimeApi.Capacity.Folder.update(content.id, { removeGrantedAccessGroups: [ groupContext!.group.id! ] })
                     .then(res => {
-                        if (!res.success)
+                        if (!res.isSuccess())
                             return;
 
                         groupContext?.refreshData();
@@ -414,24 +275,41 @@ export function GroupContents() {
             groupContext!.setEditContent(null);
 
         if (response.isDenied) {
-            UniversimeApi.Capacity.folderList()
+            UniversimeApi.Capacity.Folder.list()
             .then(res => {
-                if (res.success) setImportContentAvailable(res.body.folders);
+                if (res.isSuccess()) setImportContentAvailable(res.data);
             })
         }
     }
+
+    async function handleDuplicate( form: UniversiForm.Data<{ targetGroup: Group.DTO }> ) {
+        if ( !form.confirmed ) {
+            setDuplicateContentId( undefined );
+            return;
+        }
+
+        await UniversimeApi.Capacity.Folder.duplicate( duplicateContentId!, { groups: [ form.body.targetGroup.id! ] } );
+        await groupContext?.refreshData();
+        setDuplicateContentId( undefined );
+    }
+
+    async function handleMove( form: UniversiForm.Data<{ targetGroup: Group.DTO }> ) {
+        if ( !form.confirmed ) {
+            setMoveContentReference( undefined );
+            return;
+        }
+
+        await UniversimeApi.Capacity.Folder.move( moveContentReference!, {
+            originalGroupId: groupContext!.group.id!,
+            newGroupId: form.body.targetGroup.id!,
+        } );
+        await groupContext!.refreshData();
+        setMoveContentReference( undefined );
+    }
 }
 
-type SelectProfileAction = {
-    action: "ADD" | "REMOVE";
-    profile: ProfileClass;
-} | {
-    action: "SET";
-    to: ProfileClass[];
-};
-
 type ImportContentProps = {
-    availableContents: Folder[];
+    availableContents: Capacity.Folder.DTO[];
     resetContents(): any;
 };
 function ImportContent(props: Readonly<ImportContentProps>) {
@@ -443,31 +321,34 @@ function ImportContent(props: Readonly<ImportContentProps>) {
             // filter - not already in group
             .filter(c => !groupContext?.folders.find(groupContent => groupContent.id === c.id))
 
-            .map(c => ({label: c.name, value: c.id}))
-            .sort((c1, c2) => c1.label.localeCompare(c2.label));
+            .sort( ( c1, c2 ) => c1.name.localeCompare( c2.name ) );
     }, availableContents)
 
-    return <UniversiForm
-        formTitle="Importar conteúdos"
-        objects={[
-        {
-            label: "Conteúdos disponíveis", DTOName: "contentIds", type: FormInputs.SELECT_MULTI,
-            canCreate: false, required: true,
-            options: importOptions
-        },
-        ]}
-        requisition={handleImport}
-        callback={async () => await resetContents()}
-    />;
+    return <UniversiForm.Root title="Importar Conteúdos" callback={ handleImport }>
+        <UniversiForm.Input.Select
+            param="contents"
+            label="Conteúdos disponíveis"
+            required
+            isMultiSelection
+            options={ importOptions }
+            getOptionUniqueValue={ c => c.id }
+            getOptionLabel={ c => c.name }
+        />
+    </UniversiForm.Root>
 
-    async function handleImport(formData: {contentIds: string[]}) {
-        const { contentIds } = formData;
+    async function handleImport( form: UniversiForm.Data<{ contents: Capacity.Folder.DTO[] }> ) {
+        if ( !form.confirmed ) {
+            await resetContents();
+            return;
+        }
 
-        await Promise.all(contentIds.map( cId => UniversimeApi.Capacity.editFolder({
-            id: cId,
-            addGrantedAccessGroupByIds: groupContext!.group.id,
+        const contentIds = form.body.contents.map( c => c.id );
+
+        await Promise.all(contentIds.map( cId => UniversimeApi.Capacity.Folder.update( cId, {
+            addGrantedAccessGroups: [ groupContext!.group.id! ],
         })));
 
         await groupContext!.refreshData();
+        await resetContents();
     }
 }

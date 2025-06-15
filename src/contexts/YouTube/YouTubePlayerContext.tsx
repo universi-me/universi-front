@@ -1,7 +1,5 @@
 import { createContext } from "react";
 
-import { type Content } from "@/types/Capacity";
-
 export type YouTubePlayerContextType = {
     currentVideoId: string | undefined;
     currentMaterial: Content | undefined;

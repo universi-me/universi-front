@@ -1,7 +1,5 @@
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { LoaderFunctionArgs } from "react-router-dom";
-import { type Profile } from "@/types/Profile";
-import { type Optional } from "@/types/utils";
 
 export type RolesPageLoaderResponse = {
     success: true,
@@ -12,17 +10,17 @@ export type RolesPageLoaderResponse = {
 };
 
 export async function RolesPageFetch(organizationId: string): Promise<RolesPageLoaderResponse> {
-    const participants = await UniversimeApi.Group.participants({ groupId: organizationId });
+    const participants = await UniversimeApi.GroupParticipant.get( organizationId );
 
-    if (!participants.success || !participants.body) {
+    if (!participants.isSuccess() || !participants.body) {
         return {
             success: false,
-            reason: participants.message,
+            reason: participants.errorMessage,
         };
     }
 
     // if doesn't have access to accessLevel = not an admin
-    if (participants.body.participants.find(p => p.user.accessLevel === undefined)) {
+    if (participants.data.find(p => p.user.accessLevel === undefined)) {
         return {
             success: false,
             reason: undefined,
@@ -31,19 +29,19 @@ export async function RolesPageFetch(organizationId: string): Promise<RolesPageL
 
     return {
         success: true,
-        participants: participants.body.participants,
+        participants: participants.data,
     };
 }
 
 export async function RolesPageLoader(args: LoaderFunctionArgs): Promise<RolesPageLoaderResponse> {
-    const organization = await UniversimeApi.User.organization();
+    const organization = await UniversimeApi.Group.currentOrganization();
 
-    if (!organization.success || !organization.body?.organization) {
+    if ( !organization.isSuccess() ) {
         return {
             success: false,
-            reason: organization.message,
+            reason: organization.errorMessage,
         };
     }
 
-    return RolesPageFetch(organization.body.organization.id);
+    return RolesPageFetch(organization.data.id!);
 }

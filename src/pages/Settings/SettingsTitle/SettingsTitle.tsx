@@ -7,7 +7,7 @@ export type SettingsTitleProps = {
 
 export function SettingsTitle({ children }: Readonly<SettingsTitleProps>) {
     return <div className="settings-title-wrapper settings-page-title">
-        { location.pathname !== "/settings" && <Link to="/settings">
+        { location.pathname !== "/settings" && <Link to="..">
             <span className="bi bi-arrow-left" />
         </Link> }
         { children }

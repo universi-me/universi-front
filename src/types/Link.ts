@@ -1,18 +1,4 @@
-import { Profile } from "@/types/Profile";
-
-export type Link = {
-    id:       string;
-    name:     string;
-    url:      string;
-    typeLink: TypeLink;
-    perfil:   Profile;
-};
-
-export type TypeLink = "LINK" | "GITHUB" | "GIT" | "TWITTER" | "WORDPRESS" | "TELEGRAM" | "INSTAGRAM" | "REDDIT"
-                     | "LINKEDIN" | "DISCORD" | "PAYPAL" | "WHATSAPP" | "TRELLO" | "SLACK" | "SPOTIFY" | "YOUTUBE"
-                     | "SKYPE" | "STACK" | "FACEBOOK";
-
-export const TypeLinkToLabel: {[k in TypeLink]: string} = {
+export const TypeLinkToLabel: {[k in Link.Type]: string} = {
     "LINK":      "Link",
     "GITHUB":    "GitHub",
     "GIT":       "Git",
@@ -34,7 +20,7 @@ export const TypeLinkToLabel: {[k in TypeLink]: string} = {
     "FACEBOOK":  "Facebook",
 };
 
-export const TypeLinkToBootstrapIcon: {[k in TypeLink]: string} = {
+export const TypeLinkToBootstrapIcon: {[k in Link.Type]: string} = {
     "LINK":      "link-45deg",
     "GITHUB":    "github",
     "GIT":       "git",

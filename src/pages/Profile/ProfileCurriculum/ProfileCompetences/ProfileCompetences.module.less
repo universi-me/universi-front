@@ -1,0 +1,88 @@
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+.item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    .name {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: .25rem;
+
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        font-weight: var(--font-weight-bold);
+
+        .badge {
+            width: 1.5em;
+            height: 1.5em;
+
+            margin-right: .25em;
+        }
+
+        .unreviewed {
+            color: @warning-color;
+            cursor: help;
+        }
+
+        .activity_trigger {
+            cursor: help;
+            color: @primary-color;
+        }
+    }
+
+    .level {
+        margin-left: auto;
+
+        .level_label {
+            font-size: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .level_bar_back {
+            width: 200px;
+            display: flex;
+            align-items: center;
+            background-color: #e4e4e4;
+            border-radius: 20px;
+            margin-top: 2px;
+
+            .level_bar_front {
+                height: 10px;
+                background-color: @primary-color;
+                transition: width 0.3s;
+                border-radius: 20px;
+            }
+        }
+    }
+}
+
+.activity_tooltip {
+    width: fit-content;
+    border-radius: 10px;
+    padding: .5rem;
+
+    background-color:@card-background-color;
+
+    .activity_header {
+        margin: auto;
+        font-weight: @font-weight-semibold;
+    }
+
+    .activity_list {
+        list-style-type: none;
+        width: 100%;
+
+        .activity_name {
+            width: 100%;
+            text-align: center;
+        }
+    }
+}

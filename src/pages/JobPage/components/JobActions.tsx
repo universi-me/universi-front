@@ -1,9 +1,8 @@
 import { useContext } from "react";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import ActionButton from "@/components/ActionButton";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { Job } from "@/types/Job";
 
 import { JobContext } from "@/pages/JobPage";
 
@@ -33,7 +32,7 @@ export function JobActions( props : Readonly<JobActionsProps> ) {
         });
 
         if (res.isConfirmed) {
-            await UniversimeApi.Job.close({ jobId: job!.id });
+            await UniversimeApi.Job.close( job!.id );
             await context?.refresh();
         }
     }

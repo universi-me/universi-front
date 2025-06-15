@@ -1,5 +1,5 @@
-import { useContext, useEffect } from "react";
-import { UniversimeApi } from "@/services/UniversimeApi";
+import { useContext, useEffect, useRef } from "react";
+import { UniversimeApi } from "@/services";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import * as SweetAlertUtils from "@/utils/sweetalertUtils";
@@ -32,6 +32,10 @@ export function OAuth2Element() {
     const auth = useContext(AuthContext);
     const navigate = useNavigate()
 
+    // prevents StrictMode to run two login functions simultaneously
+    // https://react.dev/reference/react/StrictMode
+    const loggingIn = useRef( false );
+
     const id_token = new URLSearchParams(window.location.hash.substring(1)).get("id_token")!;
 
     useEffect(() => { handleGoogleLogin() }, []);
@@ -39,6 +43,9 @@ export function OAuth2Element() {
     return <></>
 
     async function handleGoogleLogin() {
+        if ( loggingIn.current ) return;
+        loggingIn.current = true;
+
         const response = await UniversimeApi.Auth.login_google({ token: id_token })
             .catch(err => null);
 
@@ -49,22 +56,21 @@ export function OAuth2Element() {
                     + "Tente novamente em alguns minutos ou entre em contato com o suporte.",
                 confirmButtonText: "Voltar para o login",
             });
-
-            navigate("/");
         }
 
-        else if ( response.success ) {
-            auth.signinGoogle();
+        else if ( response.isSuccess() ) {
+            await auth.updateLoggedUser();
         }
 
         else {
             await SweetAlertUtils.fireModal({
                 title: "Erro ao fazer login com Google",
-                text: response.message,
+                text: response.errorMessage,
                 confirmButtonText: "Voltar para o login",
             });
-
-            navigate("/login");
         }
+
+        await navigate( "/" );
+        loggingIn.current = false;
     }
 }

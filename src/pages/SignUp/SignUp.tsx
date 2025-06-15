@@ -2,12 +2,15 @@ import { useContext, useState } from "react";
 
 import AuthContext from "@/contexts/Auth";
 import SignInWithGoogle from "@/components/SignInWithGoogle/SignInWithGoogle";
-import { SignUpModal } from "@/pages/SignUp";
+import { SignUpModal, SignUpPageData } from "@/pages/SignUp";
 
 import "./SignUp.less"
+import { useLoaderData } from "react-router";
 
 export default function SignUpPage() {
     const authContext = useContext(AuthContext);
+    const { departments } = useLoaderData() as SignUpPageData;
+
     const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false);
 
     const googleClientId = authContext.organization.groupSettings.environment?.google_client_id;
@@ -43,7 +46,7 @@ export default function SignUpPage() {
                 </div>
 
                 {
-                    showSignUpModal ? <SignUpModal toggleModal={setShowSignUpModal} /> : null
+                    showSignUpModal ? <SignUpModal toggleModal={setShowSignUpModal} departments={ departments } /> : null
                 }
 
             </div>

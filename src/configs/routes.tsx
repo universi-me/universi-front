@@ -2,11 +2,11 @@ import { createBrowserRouter } from 'react-router-dom';
 
 
 // Import pages
-import { App } from "@/src/App";
+import { App } from "@/App";
 import GroupPage, { GroupPageLoader } from "@/pages/Group";
 import { ProfilePage, ProfilePageLoader } from "@/pages/Profile";
 import Singin from "@/pages/singin/Singin";
-import SignUpPage from "@/pages/SignUp";
+import SignUpPage, { SignUpPageLoader } from "@/pages/SignUp";
 import Recovery from "@/pages/Recovery/Recovery";
 import NewPassword from "@/pages/NewPassword/NewPassword";
 import ManageProfilePage, { ManageProfileLoader } from "@/pages/ManageProfile";
@@ -21,6 +21,8 @@ import HealthCheckPage from "@/pages/HealthCheckPage";
 // Import services
 import { OAuth2Element } from '@/services/oauth2-google';
 import { KeyCloakOAuth2Element } from "@/services/oauth2-keycloak";
+import EntitiesPage from '@/pages/Settings/EntitiesPage';
+import DepartmentPage, { DepartmentPageLoaderFetch } from '@/pages/Settings/EntitiesPage/DepartmentPage';
 
 // Configure pages routing
 export const router = createBrowserRouter([{
@@ -57,7 +59,8 @@ export const router = createBrowserRouter([{
         },
         {
             path: "/signup",
-            element: <SignUpPage />
+            element: <SignUpPage />,
+            loader: SignUpPageLoader,
         },
         {
             path: "/recovery",
@@ -91,9 +94,20 @@ export const router = createBrowserRouter([{
                     loader: EnvironmentsLoader,
                 },
                 {
-                    path: "competences",
-                    element: <CompetencesSettingsPage />,
-                    loader: CompetencesSettingsLoader,
+                    path: "entities",
+                    element: <EntitiesPage />,
+                    children: [
+                        {
+                            path: "competences",
+                            element: <CompetencesSettingsPage />,
+                            loader: CompetencesSettingsLoader,
+                        },
+                        {
+                            path: "departments",
+                            element: <DepartmentPage />,
+                            loader: DepartmentPageLoaderFetch,
+                        },
+                    ]
                 },
                 {
                     path: "theme-color",

@@ -4,15 +4,11 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import { AuthContext } from "@/contexts/Auth";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 
-import { FormInputs, UniversiForm } from "@/components/UniversiForm/UniversiForm";
-import { TextValidation } from "@/components/UniversiForm/Validation/TextValidation";
-import { ValidationComposite } from "@/components/UniversiForm/Validation/ValidationComposite";
+import UniversiForm from "@/components/UniversiForm";
 
 import { type OptionInMenu, renderOption } from "@/utils/dropdownMenuUtils";
-
-import { FeatureTypes, FeatureTypesToLabel, Permission, Roles } from "@/types/Roles";
 
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
@@ -22,14 +18,13 @@ import { type RolesResponse, RolesFetch } from "./RolesLoader";
 
 
 import "./Roles.less";
-import { Group } from "@/types/Group";
-import { rolesSorter } from "@/utils/roles/rolesUtils";
+import { rolesSorter, Permission, FeatureTypesToLabel } from "@/utils/roles/rolesUtils";
 import { removeFalsy } from "@/utils/arrayUtils";
 import { Filter } from "@/components/Filter/Filter";
 import stringUtils from "@/utils/stringUtils";
 
 type RolesPageProps = {
-    group: Group | undefined;
+    group: Group.DTO | undefined;
 };
 
 
@@ -42,10 +37,10 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     const editMode = true;
 
     const [showRolesForm, setShowRolesForm] = useState(false);
-    const [rolesEdit, setRolesEdit] = useState(null as Roles | null);
+    const [rolesEdit, setRolesEdit] = useState(null as Role.DTO | null);
     const [filterParticipant, setFilterParticipant] = useState("");
 
-    const [rows, setRows] = useState(null as Roles[] | null);
+    const [rows, setRows] = useState(null as Role.DTO[] | null);
 
     const [participants, setParticipants] = useState(null as ProfileClass[] | null);
 
@@ -54,7 +49,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
         .map((roles) => ({
             text: roles.name,
             onSelect(data) {
-                UniversimeApi.Roles.assign({rolesId: roles.id, groupId: group!?.id, profileId: data.id}).then(
+                UniversimeApi.Role.assign( roles.id, data.id ).then(
                     refreshPage
                 );
             },
@@ -65,42 +60,39 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
         refreshPage();
     }, [data]);
     
-    const handleFeatureCheckboxChange = (e : ChangeEvent<HTMLSelectElement>, row : Roles, column : FeatureTypes) => {
-        UniversimeApi.Feature.toggle({rolesId: row.id, feature: column, value: parseInt(e.target.value)}).then(
+    const handleFeatureCheckboxChange = (e : ChangeEvent<HTMLSelectElement>, row : Role.DTO, column : Role.Feature) => {
+        const features: { [k in Role.Feature]?: Role.Permission } = {};
+        features[ column ] = parseInt( e.target.value ) as Role.Permission;
+
+        UniversimeApi.Role.update( { rolesId: row.id, features } ).then(
             refreshPage
         );
     };
 
-    const isFeatureChecked = (row : Roles, column : FeatureTypes) => {
+    const isFeatureChecked = (row : Role.DTO, column : Role.Feature) => {
         return row.permissions[column];
     };
 
     return <div id="roles-settings">
 
             { showRolesForm &&
-                <UniversiForm
-                    formTitle={rolesEdit == null ? "Criar Papel" : "Editar Papel"}
-                    objects={[
-                        {
-                            DTOName: "name", label: "Nome", type: FormInputs.TEXT, value: rolesEdit?.name, required: true,
-                            charLimit: 30,
-                            validation: new ValidationComposite<string>().addValidation(new TextValidation())
-                        }, {
-                            DTOName: "description", label: "Descrição", type: FormInputs.LONG_TEXT, value: rolesEdit?.description, required: false,
-                            charLimit: 130
-                        },
-                        {
-                            DTOName: "groupId", label: "id", type: FormInputs.HIDDEN,
-                            value: group?.id
-                        },
-                        {
-                            DTOName: "rolesId", label: "id", type: FormInputs.HIDDEN,
-                            value: rolesEdit?.id
-                        },
-                    ]}
-                    requisition={rolesEdit ? UniversimeApi.Roles.edit : UniversimeApi.Roles.create}
-                    callback={async () => {setRolesEdit(null); setShowRolesForm(false); await refreshPage()}}
-                />
+                <UniversiForm.Root title={ rolesEdit == null ? "Criar Papel" : "Editar Papel" } callback={ handleForm }>
+                    <UniversiForm.Input.Text
+                        param="name"
+                        label="Nome"
+                        defaultValue={ rolesEdit?.name }
+                        required
+                        maxLength={ 30 }
+                    />
+
+                    <UniversiForm.Input.Text
+                        param="description"
+                        label="Descrição"
+                        defaultValue={ rolesEdit?.description }
+                        isLongText
+                        maxLength={ 130 }
+                    />
+                </UniversiForm.Root>
             }
 
         { manageRolesMode ? <div>
@@ -125,7 +117,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                     <tr>
                       <th></th>
                       { Object.keys(FeatureTypesToLabel).map((key, index, value) => (
-                        <th key={key}>{FeatureTypesToLabel[key as FeatureTypes]}</th>
+                        <th key={key}>{FeatureTypesToLabel[key as Role.Feature]}</th>
                       ))}
                     </tr>
                   </thead>
@@ -142,8 +134,8 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                         {Object.keys(FeatureTypesToLabel).map((key, index, value) => (
                           <td key={key}>
                             <select
-              value={isFeatureChecked(row, key as FeatureTypes)}
-              onChange={(e) => handleFeatureCheckboxChange(e, row, key as FeatureTypes)}
+              value={isFeatureChecked(row, key as Role.Feature)}
+              onChange={(e) => handleFeatureCheckboxChange(e, row, key as Role.Feature)}
             >
               <option value={ Permission.DISABLED }>Desabilitada</option>
               <option value={ Permission.READ }>Ver</option>
@@ -177,7 +169,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
             <section id="participants-list">
         { participants?.filter(p => stringUtils.includesIgnoreCase(p.fullname ?? "", filterParticipant)).map(profile => {
             const isOwnProfile = auth.profile!.id === profile.id;
-            const isOwnerGroup = group?.admin.id === profile.id;
+            const isOwnerGroup = group?.admin?.id === profile.id;
 
             const disable = isOwnProfile || isOwnerGroup;
             const title = isOwnProfile 
@@ -200,7 +192,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild disabled={disable} title={title}>
                         <button type="button" className="set-role-trigger">
-                            { profile.roles?.name }
+                            { profile.role?.name }
                             <span className="bi"/>
                         </button>
                     </DropdownMenu.Trigger>
@@ -221,7 +213,7 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     </div>
 
     async function refreshPage() {
-        const newData = await RolesFetch(group!.id);
+        const newData = await RolesFetch(group!.id!);
         setValuesWithData(newData);
     }
 
@@ -232,13 +224,43 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
         setParticipants(data.participants
             ?.map(ProfileClass.new)
             .sort((a, b) => {
-                if (a.roles && b.roles && a.roles !== b.roles)
-                    return rolesSorter(a.roles, b.roles)
+                if (a.role && b.role && a.role !== b.role)
+                    return rolesSorter(a.role, b.role)
 
                 return ProfileClass.compare(a, b);
             }) ?? []
         );
     }
+
+    async function handleForm( form: RolesForm ) {
+        if ( !form.confirmed ) {
+            close();
+            return;
+        }
+
+        const body = {
+            name: form.body.name,
+            description: form.body.description,
+        };
+
+        if ( rolesEdit )
+            await UniversimeApi.Role.update( { ...body, rolesId: rolesEdit.id } );
+        else
+            await UniversimeApi.Role.create( { ...body, group: group!.id! } );
+
+        await refreshPage();
+        close();
+
+        function close() {
+            setRolesEdit( null );
+            setShowRolesForm( false );
+        }
+    }
 }
 
 export default RolesPage;
+
+type RolesForm = UniversiForm.Data<{
+    name: string;
+    description: string;
+}>;

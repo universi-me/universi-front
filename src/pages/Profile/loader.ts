@@ -1,15 +1,4 @@
-import UniversimeApi from "@/services/UniversimeApi";
-import type { Achievements } from "@/types/Achievements";
-import type { Folder, FolderProfile } from "@/types/Capacity";
-import type { CompetenceProfileDTO, CompetenceType } from "@/types/Competence";
-import { Education } from "@/types/Education";
-import { Experience, TypeExperience } from "@/types/Experience";
-import type { Group } from "@/types/Group";
-import { Institution } from "@/types/Institution";
-import type { Link } from "@/types/Link";
-import type { Profile } from "@/types/Profile";
-import type { Recommendation } from "@/types/Recommendation";
-import { TypeEducation } from "@/types/TypeEducation";
+import { UniversimeApi } from "@/services"
 import { removeFalsy } from "@/utils/arrayUtils";
 import type { LoaderFunctionArgs } from "react-router-dom";
 
@@ -23,16 +12,14 @@ export type ProfilePageLoaderResponse = {
 
     profileListData: {
         groups:                  Group[];
-        competences:             CompetenceProfileDTO[];
+        competences:             Competence.DTO[];
         education:               Education[];
         experience:              Experience[];
         links:                   Link[];
-        recommendationsSend:     Recommendation[];
-        recommendationsReceived: Recommendation[];
-        achievements:            Achievements[];
-        folders:                 Folder[];
+        folders:                 Nullable<Folder[]>;
         favorites:               Folder[];
         assignedByMe:            FolderProfile[];
+        activities:              Activity.DTO[] | undefined;
     };
 };
 
@@ -41,45 +28,46 @@ export async function fetchProfilePageData(username: string | undefined): Promis
         return FAILED_TO_LOAD;
 
     const [fetchProfile, fetchCompetenceTypes, fetchEducationTypes, fetchExperienceTypes, fetchInstitutions] = await Promise.all([
-        UniversimeApi.Profile.get({username}),
+        UniversimeApi.Profile.get( username ),
         UniversimeApi.CompetenceType.list(),
-        UniversimeApi.TypeEducation.list(),
-        UniversimeApi.TypeExperience.list(),
-        UniversimeApi.Institution.listAll(),
+        UniversimeApi.EducationType.list(),
+        UniversimeApi.ExperienceType.list(),
+        UniversimeApi.Institution.list(),
     ]);
 
-    if (!fetchProfile.success || !fetchProfile.body?.profile )
+    if ( !fetchProfile.isSuccess() )
         return FAILED_TO_LOAD;
 
-    const isOwnProfile = fetchProfile.body.profile.user.ownerOfSession;
+    const isOwnProfile = fetchProfile.data.user.ownerOfSession;
 
-    const [fetchGroups, fetchCompetences, fetchLinks, fetchRecommendations, fetchFolders, fetchEducations, fetchExperiences, fetchAssignedByMe] = await Promise.all([
-        UniversimeApi.Profile.groups({username}),
-        UniversimeApi.Profile.competences({username}),
-        UniversimeApi.Profile.links({username}),
-        UniversimeApi.Profile.recommendations({username}),
-        UniversimeApi.Profile.folders({username}),
-        UniversimeApi.Profile.educations({username}),
-        UniversimeApi.Profile.experiences({username}),
-        isOwnProfile ? UniversimeApi.Capacity.foldersAssignedBy({username}) : Promise.resolve(undefined),
+    const [fetchGroups, fetchCompetences, fetchLinks, fetchFavorites, fetchAssignements, fetchEducations, fetchExperiences, fetchAssignedByMe, fetchActivities] = await Promise.all([
+        UniversimeApi.Profile.groups( username ),
+        UniversimeApi.Profile.competences( username ),
+        UniversimeApi.Profile.links( username ),
+        UniversimeApi.Profile.favorites( username ),
+        isOwnProfile ? UniversimeApi.Capacity.Folder.assignments( { assignedTo: username } ) : Promise.resolve( undefined ),
+        UniversimeApi.Profile.educations( username ),
+        UniversimeApi.Profile.experiences( username ),
+        isOwnProfile ? UniversimeApi.Capacity.Folder.assignments({ assignedBy: username }) : Promise.resolve(undefined),
+        UniversimeApi.Profile.activities( username ),
     ]);
 
     return {
-        profile: fetchProfile.body.profile,
-        accessingLoggedUser: fetchProfile.body.profile.user.ownerOfSession,
-        allTypeCompetence: fetchCompetenceTypes.body?.list ?? [],
-        allTypeEducation: fetchEducationTypes.body?.lista ?? [],
-        allTypeExperience: fetchExperienceTypes.body?.lista ?? [],
-        allInstitution: fetchInstitutions.body?.list ?? [],
+        profile: fetchProfile.data,
+        accessingLoggedUser: fetchProfile.data.user.ownerOfSession,
+        allTypeCompetence: fetchCompetenceTypes.data ?? [],
+        allTypeEducation: fetchEducationTypes.data ?? [],
+        allTypeExperience: fetchExperienceTypes.data ?? [],
+        allInstitution: fetchInstitutions.data ?? [],
 
         profileListData: {
-            achievements: [], // todo: fetch achievements,
-            competences: fetchCompetences.body?.competences ?? [],
-            education: fetchEducations.body?.educations ?? [],
-            experience: fetchExperiences.body?.experiences ?? [],
-            folders: fetchFolders.body?.folders ? removeFalsy(fetchFolders.body.folders) : [],
-            favorites: fetchFolders.body?.favorites ? removeFalsy(fetchFolders.body.favorites) : [],
-            groups: fetchGroups.body?.groups.sort((g1, g2) => {
+            competences: fetchCompetences.data ?? [],
+            education: fetchEducations.data ?? [],
+            experience: fetchExperiences.data ?? [],
+            // folders: fetchAssignements?.isSuccess() ? removeFalsy(fetchAssignements.data).map( f => f.folder ) : [],
+            folders: fetchAssignements?.isSuccess() ? removeFalsy(fetchAssignements.data).map( f => f.folder ) : null,
+            favorites: fetchFavorites.isSuccess() ? removeFalsy(fetchFavorites.body).map( f => f.folder ) : [],
+            groups: fetchGroups.data?.sort((g1, g2) => {
                 if (g1.rootGroup && !g2.rootGroup) {
                     return -1; 
                 } else if (!g1.rootGroup && g2.rootGroup) {
@@ -88,10 +76,9 @@ export async function fetchProfilePageData(username: string | undefined): Promis
                     return g1.name.localeCompare(g2.name);
                 }
             }) ?? [],
-            links: fetchLinks.body?.links ?? [],
-            recommendationsReceived: fetchRecommendations.body?.recomendationsReceived ?? [],
-            recommendationsSend: fetchRecommendations.body?.recomendationsSend ?? [],
-            assignedByMe: fetchAssignedByMe?.body?.folders ?? [],
+            links: fetchLinks.data ?? [],
+            assignedByMe: fetchAssignedByMe?.data ?? [],
+            activities: fetchActivities.data ?? [],
         },
     };
 }
@@ -109,7 +96,6 @@ const FAILED_TO_LOAD: ProfilePageLoaderResponse = {
     allTypeExperience: [],
     allInstitution: [],
     profileListData: {
-        achievements: [],
         competences: [],
         education: [],
         experience: [],
@@ -117,8 +103,7 @@ const FAILED_TO_LOAD: ProfilePageLoaderResponse = {
         favorites: [],
         groups: [],
         links: [],
-        recommendationsReceived: [],
-        recommendationsSend: [],
         assignedByMe: [],
+        activities: [],
     },
 };

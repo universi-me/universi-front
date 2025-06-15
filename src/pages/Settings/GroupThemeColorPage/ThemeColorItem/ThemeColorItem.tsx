@@ -1,4 +1,3 @@
-import { GroupTheme } from "@/types/Group";
 import { makeClassName } from "@/utils/tsxUtils";
 
 export type ThemeColorItemProps = {

@@ -1,7 +1,6 @@
 import { useContext } from "react";
 
 import BootstrapIcon from "@/components/BootstrapIcon";
-import { Job } from "@/types/Job";
 
 import { JobContext } from "@/pages/JobPage";
 

@@ -1,8 +1,5 @@
 import { createContext } from "react";
-import { User } from "@/types/User";
 import { type ProfileClass } from "@/types/Profile";
-import type { Group } from "@/types/Group";
-import type { Link } from "@/types/Link";
 
 export type AuthContextType = {
     user : User | null;
@@ -12,7 +9,6 @@ export type AuthContextType = {
     organization: Group;
 
     signin: (email : string, password: string, recaptchaToken: string | null) => Promise<ProfileClass | null>;
-    signinGoogle: () => Promise<ProfileClass | null>;
     signout: () => Promise<void>;
 
     updateLoggedUser: () => Promise<ProfileClass | null>;

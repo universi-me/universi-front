@@ -1,8 +1,8 @@
 import { ChangeEvent, MouseEvent, useContext, useMemo, useState } from 'react';
 import { ProfileContext } from '@/pages/Profile';
-import { Link, TypeLink, TypeLinkToBootstrapIcon, TypeLinkToLabel } from '@/types/Link';
+import { TypeLinkToBootstrapIcon, TypeLinkToLabel } from '@/types/Link';
 import { GENDER_OPTIONS, ProfileClass } from "@/types/Profile";
-import { UniversimeApi } from '@/services/UniversimeApi';
+import { UniversimeApi } from '@/services';
 import './ProfileSettings.css'
 
 export type ProfileSettingsProps = {
@@ -142,7 +142,6 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         setProfileLinks([...profileLinks, {
             id: (NEW_LINK_ID--).toString(),
             name: "",
-            perfil: profileContext.profile,
             typeLink: "LINK",
             url: "",
         }])
@@ -183,14 +182,13 @@ export function ProfileSettings(props: ProfileSettingsProps) {
             ? (genderElement as HTMLSelectElement).value
             : '';
 
-        const [name, lastname] = ProfileClass.separateFullname(fullname);
+        const [firstname, lastname] = ProfileClass.separateFullname(fullname);
 
-        UniversimeApi.Profile.edit({
-            profileId: profileContext.profile.id,
-            name,
+        UniversimeApi.Profile.update({
+            firstname,
             lastname,
-            bio,
-            gender,
+            biography: bio,
+            gender: gender as Profile.Gender,
         }).then(r => {
             profileContext.reloadPage();
         });
@@ -199,20 +197,19 @@ export function ProfileSettings(props: ProfileSettingsProps) {
         links?.toCreate.forEach(link => {
             UniversimeApi.Link.create({
                 name: link.name,
-                linkType: link.typeLink,
+                type: link.typeLink,
                 url: link.url,
             })
         });
 
         links?.toDelete.forEach(id => {
-            UniversimeApi.Link.remove({linkId: id})
+            UniversimeApi.Link.remove( id )
         });
 
         links?.toUpdate.forEach(link => {
-            UniversimeApi.Link.update({
-                linkId: link.id,
+            UniversimeApi.Link.update( link.id, {
                 name: link.name,
-                linkType: link.typeLink,
+                type: link.typeLink,
                 url: link.url,
             })
         })

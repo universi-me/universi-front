@@ -1,13 +1,18 @@
 import { type LoaderFunctionArgs } from "react-router-dom";
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
+import { type GroupEnvironmentUpdate_RequestDTO } from "@/services/UniversimeApi/GroupEnvironment";
 
 export type EnvironmentsLoaderResponse = {
-    envDic: {} | undefined;
+    envDic: {
+        [k in keyof GroupEnvironmentUpdate_RequestDTO]?: GroupEnvironmentUpdate_RequestDTO[k];
+    };
 };
 
 export async function EnvironmentsFetch(): Promise<EnvironmentsLoaderResponse> {
-    const environments = await UniversimeApi.Group.listEnvironments({});
-    return { envDic: (environments as any).body.environments??{}, };
+    const environments = await UniversimeApi.GroupEnvironment.get();
+    return {
+        envDic: environments.data ?? {},
+    }
 }
 
 export async function EnvironmentsLoader(args: LoaderFunctionArgs) {

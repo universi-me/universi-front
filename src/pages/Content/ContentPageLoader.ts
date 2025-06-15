@@ -1,8 +1,7 @@
 import { type LoaderFunctionArgs } from "react-router";
 
-import UniversimeApi from "@/services/UniversimeApi";
+import { UniversimeApi } from "@/services"
 import { removeFalsy } from "@/utils/arrayUtils";
-import { type Content, type Folder } from "@/types/Capacity";
 import { ProfileClass } from "@/types/Profile";
 
 export type ContentPageLoaderSuccess = {
@@ -10,12 +9,12 @@ export type ContentPageLoaderSuccess = {
     materials: Content[];
     beingWatched?: ProfileClass;
 
-    reasons?: string[];
+    reasons?: undefined;
 }
 
 export type ContentPageLoaderFail = {
-    content: undefined;
-    materials: undefined;
+    content?: undefined;
+    materials?: undefined;
     beingWatched?: undefined;
 
     reasons: string[];
@@ -31,35 +30,46 @@ export async function fetchContentPageData(folderReference: string | undefined, 
     };
 
     if (watchUsername) {
-        const fetchWatchData = await UniversimeApi.Capacity.watchProfileProgress({ folderReference, username: watchUsername, });
-        if (fetchWatchData.success) return {
-            content: fetchWatchData.body.folder,
-            materials: fetchWatchData.body.contentWatches.map(c => ({...c.content, status: c.status})),
-            beingWatched: new ProfileClass(fetchWatchData.body.watching),
+        const [ fetchBeingWatchedData, fetchFolderData, fetchWatchData ] = await Promise.all([
+            UniversimeApi.Profile.get( watchUsername ),
+            UniversimeApi.Capacity.Folder.get( folderReference ),
+            UniversimeApi.Capacity.Folder.watch( folderReference, watchUsername ),
+        ]);
+
+        if ( !fetchFolderData.isSuccess() ) return {
+            reasons: fetchFolderData.error?.errors ?? [],
+        }
+
+        if ( !fetchBeingWatchedData.isSuccess() ) return {
+            reasons: fetchBeingWatchedData.error?.errors ?? [],
+        }
+
+        if (fetchWatchData.isSuccess()) return {
+            content: fetchFolderData.data,
+            materials: fetchWatchData.data.map(c => ({...c.content, status: c.status})),
+            beingWatched: new ProfileClass(fetchBeingWatchedData.data),
         };
 
         else return {
-            content: undefined,
-            materials: undefined,
-            reasons: removeFalsy([fetchWatchData.message]),
+            reasons: fetchWatchData.error?.errors ?? [],
         };
     }
 
     const [fetchContent, fetchMaterials] = await Promise.all([
-        UniversimeApi.Capacity.getFolder({ reference: folderReference }),
-        UniversimeApi.Capacity.contentsInFolder({ reference: folderReference }),
+        UniversimeApi.Capacity.Folder.get( folderReference ),
+        UniversimeApi.Capacity.Folder.contents( folderReference ),
     ]);
 
-    const content = fetchContent.body?.folder;
-    const materials = fetchMaterials.body?.contents;
+    const content = fetchContent.data;
+    const materials = fetchMaterials.data;
 
     if (!content || !materials) return {
         content: undefined,
         materials: undefined,
 
         reasons: removeFalsy([
-            fetchContent.message,
-            fetchMaterials.message,
+            fetchContent.errorMessage,
+            fetchMaterials.errorMessage,
         ]),
     };
 

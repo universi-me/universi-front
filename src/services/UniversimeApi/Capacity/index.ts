@@ -1,4 +1,3 @@
-export * from "./Content";
-export * from "./Category";
-export * from "./ContentTypes";
-export * from "./Folder";
+export * as Content from "./Content";
+export * as Category from "./Category";
+export * as Folder from "./Folder";

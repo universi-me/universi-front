@@ -4,15 +4,14 @@ import { ProfileImage } from '@/components/ProfileImage/ProfileImage';
 import { ICON_EDIT_WHITE } from '@/utils/assets';
 import { groupBannerUrl } from '@/utils/apiUtils';
 
-import { type Profile, ProfileClass } from '@/types/Profile';
-import { TypeLinkToBootstrapIcon, type Link as Link_API } from '@/types/Link';
-import type { Group } from '@/types/Group';
+import { ProfileClass } from '@/types/Profile';
+import { TypeLinkToBootstrapIcon } from '@/types/Link';
 import './ProfileBio.less';
 
 export type ProfileBioProps = {
     profile: Profile;
     organization?: Group | null;
-    links: Link_API[];
+    links: Link[];
 };
 
 
@@ -50,9 +49,13 @@ export function ProfileBio(props: ProfileBioProps) {
                         : <Link className="card-heading name" to={linkToOwnProfile}>{ profile.fullname }</Link>
                 }
                 {
-                    props.profile.bio === null || props.profile.bio.length === 0
-                    ? <p style={{fontStyle: 'italic', textAlign: 'center'}}>Nenhuma bio</p>
-                    : <p style={{whiteSpace: 'break-spaces', textAlign: 'center'}} className='profile-bio'>{ props.profile.bio }</p>
+                    props.profile.department && <p className="profile-department">
+                        {props.profile.department.acronym} – {props.profile.department.name}
+                    </p>
+                }
+                {
+                    props.profile.bio?.length &&
+                    <p className='profile-bio'>{ props.profile.bio }</p>
                 }
             </div>
 

@@ -1,15 +1,12 @@
-import type { GroupTheme } from "@/types/Group";
-
-export const applyThemeStyles = (themeMapping: GroupTheme) => {
+export const applyThemeStyles = (themeMapping: Group.Theme) => {
     for (const [property, variableName] of Object.entries(GroupThemeToCssVariable)) {
-        const key = property as keyof GroupTheme;
+        const key = property as keyof Group.Theme;
 
         document.documentElement.style.setProperty(variableName, themeMapping[key]);
-        console.log(`setting ${key} to ${variableName}`)
     }
 }
 
-export const GroupThemeToCssVariable: Record<keyof GroupTheme, string> = {
+export const GroupThemeToCssVariable: Record<keyof Group.Theme, string> = {
     primaryColor: "--primary-color",
     secondaryColor: "--secondary-color",
     backgroundColor: "--background-color",
@@ -26,7 +23,7 @@ export const GroupThemeToCssVariable: Record<keyof GroupTheme, string> = {
     wrongInvalidColor: "--wrong-invalid-color",
 };
 
-export const GroupThemeToLabel: Record<keyof GroupTheme, { label: string, description?: string }> = {
+export const GroupThemeToLabel: Record<keyof Group.Theme, { label: string, description?: string }> = {
     // TODO: Label and describe all variables
     primaryColor: {
         label: "Cor primária",

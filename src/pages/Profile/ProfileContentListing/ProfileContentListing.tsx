@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { ProfileContentItem } from "../ProfileContentItem/ProfileContentItem";
 import "./ProfileContentListing.less"
 import { ProfileContext } from "../ProfileContext";
+import { compareContents } from "@/types/Capacity";
 
 export function ProfileContentListing(){
 
@@ -10,16 +11,10 @@ export function ProfileContentListing(){
         return null;
 
     const assignedContents = profileContext.profileListData.folders
-        .slice(0)
-        .sort((content1, content2) => {
-            return content1.name.localeCompare(content2.name);
-        });
+        ?.slice(0).sort( compareContents );
 
     const favoriteContents = profileContext.profileListData.favorites
-        .slice(0)
-        .sort((content1, content2) => {
-            return content1.name.localeCompare(content2.name);
-        });
+        .slice(0).sort( compareContents );
 
     const isOwnProfile = !!profileContext?.accessingLoggedUser;
     const hasOtherProfile = !!profileContext?.profile.firstname;
@@ -43,6 +38,7 @@ export function ProfileContentListing(){
       return(
         <div className="content-listing-container">
             <h1 className="content-name">{tabTitle}</h1>
+            { assignedContents &&
             <div className="content-wrapper">
                 <h2>{assignedLabel}</h2>
                 <div className="contents">
@@ -53,6 +49,7 @@ export function ProfileContentListing(){
                     }
                 </div>
             </div>
+            }
             <div className="content-wrapper">
                 <h2>{favoriteLabel}</h2>
                 <div className="contents">

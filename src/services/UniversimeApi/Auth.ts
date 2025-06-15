@@ -1,9 +1,33 @@
-import type { ApiResponse } from "@/types/UniversimeApi";
-import type { User } from "@/types/User";
 import { createApiInstance } from "./api";
-import { Roles } from "@/types/Roles";
+import { ApiResponse } from "@/utils/apiUtils";
 
 const api = createApiInstance("/")
+
+
+export function signin( body: SignIn_RequestDTO ) {
+    return api.post<SignIn_ResponseDTO>( "/signin", body ).then( ApiResponse.new );
+}
+
+export async function logout() {
+    const response = await api.get<boolean>('/account/logout');
+    return response.data;
+}
+
+export function login_google({ token }: GoogleSignIn_RequestDTO) {
+    return api.post<SignIn_ResponseDTO>("/login/google", { token }).then( ApiResponse.new );
+}
+
+export function login_keycloak({ code }: KeyCloakSignIn_RequestDTO) {
+    return api.post<SignIn_ResponseDTO>("/login/keycloak", { code }).then( ApiResponse.new );;
+}
+
+export function recoverPassword( body: RecoverPassword_RequestDTO ) {
+    return api.post<undefined>( "/recovery-password", body ).then( ApiResponse.new );
+}
+
+export function newPassword( body: RecoverNewPassword_RequestDTO ) {
+    return api.post<undefined>( "/new-password", body ).then( ApiResponse.new );
+}
 
 export type SignIn_RequestDTO = {
     username: string;
@@ -19,36 +43,21 @@ export type KeyCloakSignIn_RequestDTO = {
     code: string;
 };
 
-export type GetAccount_ResponseDTO = ApiResponse<{ user: User, roles: Roles[] }>;
-export type SignIn_ResponseDTO =     ApiResponse<{ user: User }>;
-export type LogOut_ResponseDTO =     ApiResponse;
+export type GetAccount_ResponseDTO = {
+    user: User.DTO;
+    roles: Role.DTO[]
+};
 
-export async function validateToken() {
-    const response = await getAccount();
-    return response.body?.user ?? null;
-}
+export type SignIn_ResponseDTO = {
+    user: User.DTO;
+};
 
-export async function getAccount() {
-    const response = await api.get<GetAccount_ResponseDTO>("/account");
-    return response.data;
-}
+export type RecoverPassword_RequestDTO = {
+    recaptchaToken?: string;
+    username: string;
+};
 
-export async function signin({ username, password, recaptchaToken }: SignIn_RequestDTO) {
-    const response = await api.post<SignIn_ResponseDTO>("/signin", { username, password, recaptchaToken });
-    return response.data;
-}
-
-export async function logout() {
-    const response = await api.get<LogOut_ResponseDTO>('/logout');
-    return response.data;
-}
-
-export async function login_google({ token }: GoogleSignIn_RequestDTO) {
-    const response = await api.post<SignIn_ResponseDTO>("/login/google", { token });
-    return response.data;
-}
-
-export async function login_keycloak({ code }: KeyCloakSignIn_RequestDTO) {
-    const response = await api.post<SignIn_ResponseDTO>("/login/keycloak", { code });
-    return response.data;
-}
+export type RecoverNewPassword_RequestDTO = {
+    token: string;
+    newPassword: string;
+};
