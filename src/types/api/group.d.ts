@@ -21,10 +21,7 @@ namespace Group {
         buildHash: Optional<string>;
         canEdit: Optional<boolean>;
         organization: Possibly<Group>;
-
-        permissions: {
-            [ k in Role.Feature ]: Role.Permission;
-        };
+        role: Optional<Role.DTO>;
     } & ({
         regularGroup: true;
         activity: null;

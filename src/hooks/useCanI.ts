@@ -5,7 +5,7 @@ import { Permission } from "@/utils/roles/rolesUtils";
 
 
 
-export type CanI_SyncFunction = (feature: Role.Feature, permission?: Permission, optionalGroup?: Pick<Group.DTO, "permissions"> | undefined) => boolean;
+export type CanI_SyncFunction = (feature: Role.Feature, permission?: Permission, optionalGroup?: Pick<Group.DTO, "role"> | undefined) => boolean;
 
 /**
  * React Hook that uses `AuthContext` data to verify if a user can use a feature in a group.
@@ -23,11 +23,11 @@ export type CanI_SyncFunction = (feature: Role.Feature, permission?: Permission,
 export default function useCanI(): CanI_SyncFunction {
     const auth = useContext(AuthContext);
 
-    return function(feature: Role.Feature, permission = Permission.READ, optionalGroup?: Pick<Group.DTO, "permissions">): boolean {
+    return function(feature: Role.Feature, permission = Permission.READ, optionalGroup?: Pick<Group.DTO, "role">): boolean {
         if (optionalGroup === undefined && auth.organization === null) return false;
 
         const group = (optionalGroup ?? auth.organization)!;
 
-        return group.permissions[feature] >= permission;
+        return ( group.role?.permissions[feature] ?? 0 ) >= permission;
     };
 }

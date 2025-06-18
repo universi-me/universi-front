@@ -62,7 +62,7 @@ export function GroupActivities() {
                         <BootstrapIcon icon="filter-circle-fill" />
                     </button>
 
-                    { canI( "ACTIVITY", Permission.READ_WRITE, groupContext.group ) && <ActionButton
+                    { canI( "GROUP", Permission.READ_WRITE, groupContext.group ) && <ActionButton
                         name="Criar"
                         buttonProps={{ onClick(){ setEditActivity( null ) } }}
                     /> }
@@ -266,7 +266,7 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
                 biIcon: "trash-fill",
                 className: styles.delete_option,
                 hidden( activity ) {
-                    return !canI( "ACTIVITY", Permission.READ_WRITE_DELETE, activity.group );
+                    return activity.group.role?.roleType === "ADMINISTRATOR";
                 },
                 async onSelect( activity ) {
                     const isSure = await SwalUtils.fireAreYouSure({

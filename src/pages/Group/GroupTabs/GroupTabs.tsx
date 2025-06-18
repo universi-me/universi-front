@@ -202,10 +202,9 @@ const TABS: GroupTabDefinition[] = [
         renderer: GroupActivities,
         condition( context, canI ) {
             return !!context.activities
-                && canI( "ACTIVITY", Permission.READ, context.group )
                 && (
                     context.activities.length > 0
-                    || canI( "ACTIVITY", Permission.READ_WRITE, context.group )
+                    || canI( "GROUP", Permission.READ_WRITE, context.group )
                 );
         },
     }
