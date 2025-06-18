@@ -4,14 +4,10 @@ import AuthContext from "@/contexts/Auth";
 import { UniversimeApi } from "@/services";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import UniversiForm from "@/components/UniversiForm";
-import { UniversiFormCardSelectionInputValue } from "@/components/UniversiForm/inputs/UniversiFormCardSelectionInput";
-import ProfileImage from "@/components/ProfileImage";
 import { GroupContext } from "@/pages/Group/GroupContext";
 
-import { ProfileClass } from "@/types/Profile";
-
-import styles from "./AssignFolderForm.module.less";
-import stringUtils from "@/utils/stringUtils";
+import { ProfileClass, ProfileSelect } from "@/types/Profile";
+import { ArrayChanges } from "@/utils/arrayUtils";
 
 
 export function AssignFolderForm() {
@@ -48,12 +44,11 @@ export function AssignFolderForm() {
             <ProfileSelect
                 param="people"
                 label="Participantes do grupo"
-                isSeparate
                 isSearchable
                 defaultValue={ defaultValue }
                 options={ possibleAssignments }
                 validations={[
-                    d => ( d.added.length > 0 ) || ( d.removed.length > 0 ),
+                    value => ArrayChanges.from( defaultValue, value, ( p1, p2 ) => p1.id === p2.id ).hasChanges,
                 ]}
             />
         </UniversiForm.Root>
@@ -65,9 +60,11 @@ export function AssignFolderForm() {
                 groupContext.setAssignFolder(undefined);
 
         else {
+            const changes = ArrayChanges.from( defaultValue, form.body.people, ( p1, p2 ) => p1.id === p2.id );
+
             const res = await UniversimeApi.Capacity.Folder.changeAssignments( groupContext.assignFolder.id, {
-                addProfileIds: form.body.people.added.map( p => p.id ),
-                removeProfileIds: form.body.people.removed.map( p => p.id ),
+                addProfileIds: changes.added.map( p => p.id ),
+                removeProfileIds: changes.removed.map( p => p.id ),
             });
 
             if ( res.isSuccess() ) {
@@ -79,5 +76,5 @@ export function AssignFolderForm() {
 }
 
 export type AssignFolderForm = UniversiForm.Data<{
-    people: UniversiFormCardSelectionInputValue<ProfileClass, true>;
+    people: ProfileClass[];
 }>;

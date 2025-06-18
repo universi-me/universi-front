@@ -10,16 +10,15 @@ import BootstrapIcon from "@/components/BootstrapIcon";
 import { ManageActivity } from "@/components/ManageActivity/ManageActivity";
 import DropdownOptions from "@/components/DropdownOptions";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { SelectionChanges } from "@/components/UniversiForm/inputs/UniversiFormCardSelectionInput";
 import useCanI from "@/hooks/useCanI";
 import { groupImageUrl } from "@/utils/apiUtils";
-import { groupArray } from "@/utils/arrayUtils";
+import { ArrayChanges, groupArray } from "@/utils/arrayUtils";
 import { OptionInMenu } from "@/utils/dropdownMenuUtils";
 import { Permission } from "@/utils/roles/rolesUtils";
 import { makeClassName } from "@/utils/tsxUtils";
 import { dateWithoutTimezone } from "@/utils/dateUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { ProfileSelect } from "@/types/Profile";
+import { ProfileClass, ProfileSelect } from "@/types/Profile";
 import { ActivityStatusArrayObject, ActivityStatusObjects, ActivityStatusSelect, ActivityTypeSelect } from "@/types/Activity";
 
 import { GroupContext } from "../../GroupContext";
@@ -220,9 +219,11 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
             activity={ activity }
             callback={ async form => {
                 if ( form.confirmed ) {
+                    const changes = ArrayChanges.from( form.body.initial, form.body.participants, ( p1, p2 ) => p1.id === p2.id );
+
                     await UniversimeApi.GroupParticipant.changeParticipants( activity.group.id!, {
-                        add: form.body.participants.added.map( p => ( { profile: p.id } ) ),
-                        remove: form.body.participants.removed.map( p => p.id ),
+                        add: changes.added.map( p => ( { profile: p.id } ) ),
+                        remove: changes.removed.map( p => p.id ),
                     } );
                 }
 
@@ -307,13 +308,17 @@ function ChangeActivityParticipants( props: Readonly<ChangeActivityParticipantsP
         <ProfileSelect
             param="participants"
             label="Participantes"
-            isSeparate
             isSearchable
             defaultValue={ participants }
             options={ groupContext!.participants }
             validations={ [
-                changes => changes.added.length !== 0 || changes.removed.length !== 0
+                value => ArrayChanges.from( participants, value, ( p1, p2 ) => p1.id === p2.id ).hasChanges,
             ] }
+        />
+
+        <UniversiForm.Input.Hidden
+            param="initial"
+            defaultValue={ participants }
         />
     </UniversiForm.Root>;
 }
@@ -343,5 +348,6 @@ type ChangeActivityParticipantsProps = {
 };
 
 type ChangeActivityParticipantsForm = UniversiForm.Data<{
-    participants: SelectionChanges<Profile.DTO>;
+    participants: ProfileClass[];
+    initial?: Profile.DTO[];
 }>;
