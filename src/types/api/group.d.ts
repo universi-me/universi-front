@@ -95,10 +95,10 @@ namespace Group {
         message_template_assigned_content: string;
     };
 
-    type Type = "INSTITUTION" | "CAMPUS" | "COURSE" | "PROJECT" | "CLASSROOM" | "MONITORIA" | "LABORATORY"
-              | "ACADEMIC_CENTER" | "DEPARTMENT" | "STUDY_GROUP" | "GROUP_GENERAL" | "DIRECTORATE" | "MANAGEMENT"
-              | "COORDINATION" | "COMPANY_AREA" | "DEVELOPMENT_TEAM" | "INTEREST_GROUP" | "MISCELLANEOUS_SUBJECTS"
-              | "ENTERTAINMENT";
+    type Type = {
+        label: string;
+        id: string;
+    };
 
     namespace EmailFilter {
         type DTO = {

@@ -1,8 +1,10 @@
 import UniversiForm from "@/components/UniversiForm";
 import { UniversimeApi } from "@/services"
 
-import { getGroupTypeObject, type GroupTypeArrayObject, GroupTypeSelect } from "@/types/Group";
+import { GroupTypeSelect } from "@/types/Group";
 import { type ApiResponse, groupBannerUrl, groupHeaderUrl, groupImageUrl } from "@/utils/apiUtils";
+import { useEffect, useState } from "react";
+import LoadingSpinner from "../LoadingSpinner";
 
 export type ManageGroupProps = {
     group: Group | null;
@@ -16,6 +18,18 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
 
     const isCreating = group === null;
     const isOrganization = group?.rootGroup ?? false;
+
+    const [ availableGroupTypes, setAvailableGroupTypes ] = useState<Group.Type[]>();
+    useEffect( () => {
+        UniversimeApi.GroupType.list()
+        .then( res => {
+            if ( res.isSuccess() )
+                setAvailableGroupTypes( res.body );
+        } )
+    }, [] );
+
+    if ( availableGroupTypes === undefined )
+        return <LoadingSpinner />
 
     return <UniversiForm.Root title={ isCreating ? "Criar Grupo" : isOrganization ? "Editar Organização" : "Editar Grupo" } callback={ handleForm }>
         <UniversiForm.Input.Text
@@ -63,8 +77,9 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
 
         <GroupTypeSelect
             param="groupType"
+            options={ availableGroupTypes }
             label={ isOrganization ? "Tipo da Organização" : "Tipo do Grupo" }
-            defaultValue={ getGroupTypeObject( group?.type ) }
+            defaultValue={ group?.type }
             required
         />
 
@@ -109,7 +124,7 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
                 description: form.body.description,
                 canCreateSubgroup: form.body.canCreateSubgroup,
                 canJoin: form.body.canJoin,
-                groupType: form.body.groupType.type,
+                groupType: form.body.groupType.id,
                 isPublic: form.body.isPublic,
                 image: image?.body,
                 bannerImage: bannerImage?.body,
@@ -138,7 +153,7 @@ type ManageGroupForm = UniversiForm.Data<{
     image?: File | string;
     bannerImage?: File | string;
     headerImage?: File | string;
-    groupType: GroupTypeArrayObject;
+    groupType: Group.Type;
     canCreateSubgroup: boolean;
     isPublic: boolean;
     canJoin: boolean;

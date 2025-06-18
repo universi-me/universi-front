@@ -1,4 +1,5 @@
 import { UniversiFormSelectInput, UniversiFormSelectInputProps } from "@/components/UniversiForm/inputs/UniversiFormSelectInput";
+import { stringIncludesIgnoreCase } from "@/utils/stringUtils";
 
 export const GroupEmailFilterTypeToLabel = {
     "END_WITH":     "Terminando em",
@@ -9,117 +10,23 @@ export const GroupEmailFilterTypeToLabel = {
     "REGEX":        "Padrão RegEx",
 };
 
-export const GroupTypeObjects: { [ t in Group.Type ]: GroupTypeObject } = {
-    INSTITUTION: {
-        label: "Instituição",
-    },
-
-    CAMPUS: {
-        label: "Campus",
-    },
-
-    COURSE: {
-        label: "Curso",
-    },
-
-    PROJECT: {
-        label: "Projeto",
-    },
-
-    CLASSROOM: {
-        label: "Sala de Aula",
-    },
-
-    MONITORIA: {
-        label: "Monitoria",
-    },
-
-    LABORATORY: {
-        label: "Laboratório",
-    },
-
-    ACADEMIC_CENTER: {
-        label: "Centro Acadêmico",
-    },
-
-    DEPARTMENT: {
-        label: "Departamento",
-    },
-
-    STUDY_GROUP: {
-        label: "Grupo de Estudos",
-    },
-
-    GROUP_GENERAL: {
-        label: "Grupo Geral",
-    },
-
-    DIRECTORATE: {
-        label: "Diretoria",
-    },
-
-    MANAGEMENT: {
-        label: "Gerência",
-    },
-
-    COORDINATION: {
-        label: "Coordenação",
-    },
-
-    COMPANY_AREA: {
-        label: "Área da Empresa",
-    },
-
-    DEVELOPMENT_TEAM: {
-        label: "Time de Desenvolvimento",
-    },
-
-    INTEREST_GROUP: {
-        label: "Grupo de Interesse",
-    },
-
-    MISCELLANEOUS_SUBJECTS: {
-        label: "Assuntos Diversos",
-    },
-
-    ENTERTAINMENT: {
-        label: "Entretenimento",
-    },
-};
-
-export const GroupTypeObjectsArray: GroupTypeArrayObject[] = Object.entries( GroupTypeObjects )
-    .map( ( [ type, data ] ) => ({
-        ...data,
-        type: type as Group.Type,
-    }) );
-
-export function getGroupTypeObject( type: undefined ): undefined;
-export function getGroupTypeObject( type: Group.Type ): GroupTypeArrayObject;
-export function getGroupTypeObject( type: Optional<Group.Type> ): Optional<GroupTypeArrayObject>;
-export function getGroupTypeObject( type: Optional<Group.Type> ): Optional<GroupTypeArrayObject> {
-    return GroupTypeObjectsArray.find( l => l.type === type );
+export function compareGroupTypes( gt1: Group.Type, gt2: Group.Type ): number {
+    return gt1.label.localeCompare( gt2.label );
 }
 
 export function GroupTypeSelect<C extends Optional<boolean>>( props: Readonly<GroupTypeSelectProps<C>> ) {
     return <UniversiFormSelectInput
         isSearchable
         { ...props }
-        options={ GroupTypeObjectsArray }
-        getOptionUniqueValue={ o => o.type }
+        getOptionUniqueValue={ o => o.id }
         getOptionLabel={ o => o.label }
         canCreateOptions={ false }
+        sortOptions={ compareGroupTypes }
+        filterOption={ ( gt, s ) => stringIncludesIgnoreCase( gt.label, s ) }
     />
 }
 
-export type GroupTypeObject = {
-    label: string;
-};
-
-export type GroupTypeArrayObject = GroupTypeObject & {
-    type: Group.Type;
-};
-
 export type GroupTypeSelectProps<Clearable extends Optional<boolean>> = Omit<
-    UniversiFormSelectInputProps<GroupTypeArrayObject, false, Clearable>,
-    "canCreateOptions" | "options" | "getOptionUniqueValue" | "getOptionLabel"
+    UniversiFormSelectInputProps<Group.Type, false, Clearable>,
+    "canCreateOptions" | "getOptionUniqueValue" | "getOptionLabel" | "sortOptions" | "filterOption"
 >

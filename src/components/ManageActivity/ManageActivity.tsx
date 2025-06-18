@@ -5,7 +5,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import { ApiResponse } from "@/utils/apiUtils";
 import { ActivityTypeSelect } from "@/types/Activity";
 import { CompetenceTypeSelect } from "@/types/Competence";
-import { GroupTypeArrayObject, GroupTypeSelect } from "@/types/Group";
+import { GroupTypeSelect } from "@/types/Group";
 import { isValidUsernamePattern } from "@/types/Profile";
 
 export function ManageActivity( props: Readonly<ManageActivityProps> ) {
@@ -29,10 +29,19 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         } )
     }, [] );
 
+    const [ availableGroupTypes, setAvailableGroupTypes ] = useState<Group.Type[]>();
+    useEffect( () => {
+        UniversimeApi.GroupType.list()
+        .then( res => {
+            if ( res.isSuccess() )
+                setAvailableGroupTypes( res.body );
+        } )
+    }, [] );
+
     const isCreating = props.activity === null;
     const title = isCreating ? "Criar Atividade" : "Editar Atividade";
 
-    if ( availableActivityTypes === undefined || availableCompetenceTypes === undefined )
+    if ( availableActivityTypes === undefined || availableCompetenceTypes === undefined || availableGroupTypes === undefined )
         return <LoadingSpinner />
 
     return <UniversiForm.Root title={ title } callback={ handleForm }>
@@ -134,6 +143,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             <GroupTypeSelect
                 param="groupType"
                 label="Tipo"
+                options={ availableGroupTypes }
                 placeholder="Tipo do Grupo"
                 required
             />
@@ -180,7 +190,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             ? await UniversimeApi.Activity.create( {
                 ...body,
                 group: group.id!,
-                groupType: form.body.groupType!.type,
+                groupType: form.body.groupType!.id,
                 nickname: form.body.nickname!,
                 image: image?.body,
                 bannerImage: bannerImage?.body,
@@ -208,7 +218,7 @@ type ManageActivityForm<IsCreating extends boolean> = {
     badges: Optional<Competence.Type[]>;
 
     nickname: IsCreating extends true ? string : undefined;
-    groupType: IsCreating extends true ? GroupTypeArrayObject : undefined;
+    groupType: IsCreating extends true ? Group.Type : undefined;
     image: IsCreating extends true ? Optional<File | string> : undefined;
     bannerImage: IsCreating extends true ? Optional<File | string> : undefined;
 };
