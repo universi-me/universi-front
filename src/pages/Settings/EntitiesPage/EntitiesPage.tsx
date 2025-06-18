@@ -13,6 +13,7 @@ export function EntitiesPage() {
 
             <SettingsMoveTo title="Atividades" description="Configurar Tipos de Atividades cadastrados na plataforma" to="activities" />
             <SettingsMoveTo title="Competências" description="Configurar e validar competências cadastradas na plataforma" to="competences" />
+            <SettingsMoveTo title="Grupos" description="Configurar Tipos de Grupos cadastrados na plataforma" to="groups" />
             <SettingsMoveTo title="Órgãos/Áreas" description="Configurar órgão/área cadastrados na plataforma" to="departments" />
         </> }
     </div>

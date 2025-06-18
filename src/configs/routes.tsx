@@ -23,6 +23,7 @@ import { OAuth2Element } from '@/services/oauth2-google';
 import { KeyCloakOAuth2Element } from "@/services/oauth2-keycloak";
 import EntitiesPage, { ActivitiesPage, ActivitiesPageLoaderFetch } from '@/pages/Settings/EntitiesPage';
 import DepartmentPage, { DepartmentPageLoaderFetch } from '@/pages/Settings/EntitiesPage/DepartmentPage';
+import GroupsPage, { GroupsPageLoaderFetch } from '@/pages/Settings/EntitiesPage/GroupsPage';
 
 // Configure pages routing
 export const router = createBrowserRouter([{
@@ -111,7 +112,11 @@ export const router = createBrowserRouter([{
                             path: "activities",
                             element: <ActivitiesPage />,
                             loader: ActivitiesPageLoaderFetch,
-                            
+                        },
+                        {
+                            path: "groups",
+                            element: <GroupsPage />,
+                            loader: GroupsPageLoaderFetch,
                         },
                     ]
                 },
