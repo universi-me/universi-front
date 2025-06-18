@@ -45,19 +45,13 @@ export function AssignFolderForm() {
 
     else
         return <UniversiForm.Root title="Atribuir Conteúdo" callback={ assignFolder }>
-            <UniversiForm.Input.CardSelection
+            <ProfileSelect
                 param="people"
                 label="Participantes do grupo"
                 isSeparate
                 isSearchable
-                searchFilter={ ( t, p ) => stringUtils.includesIgnoreCase( p.fullname!, t ) }
-                getOptionUniqueValue={ p => p.id }
                 defaultValue={ defaultValue }
                 options={ possibleAssignments }
-                render={ p => <div className={ styles.card } key={p.id}>
-                    <ProfileImage className={ styles.picture } imageUrl={ p.imageUrl } name={ p?.fullname } />
-                    <h2>{ p.fullname }</h2>
-                </div> }
                 validations={[
                     d => ( d.added.length > 0 ) || ( d.removed.length > 0 ),
                 ]}
