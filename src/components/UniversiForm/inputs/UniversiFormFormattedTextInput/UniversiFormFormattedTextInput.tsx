@@ -20,6 +20,7 @@ export function UniversiFormFormattedTextInput( props: Readonly<UniversiFormForm
             className={ styles.input }
             onChange={ handleChange }
             placeholder={ props.placeholder }
+            readOnly={ props.disabled }
         />
         <FieldHelp>{ props.help }</FieldHelp>
     </fieldset>

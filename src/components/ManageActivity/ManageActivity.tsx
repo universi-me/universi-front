@@ -50,6 +50,8 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             label="Título"
             placeholder="Título da Atividade"
             defaultValue={ activity?.group.name }
+            disabled={ activity !== null }
+            help={ activity && "Para alterar o título desta atividade, entre no grupo associado e altere o título daquele grupo." }
             required
         />
 
@@ -67,6 +69,8 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             label="Descrição"
             placeholder="Descrição da Atividade"
             defaultValue={ activity?.group.description }
+            disabled={ activity !== null }
+            help={ activity && "Para alterar a descrição desta atividade, entre no grupo associado e altere a descrição daquele grupo." }
             required
         />
 
@@ -176,8 +180,6 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             : undefined;
 
         const body = {
-            name: form.body.name,
-            description: form.body.description,
             type: form.body.type.id,
             location: form.body.location,
             workload: form.body.workload,
@@ -189,6 +191,8 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         const res = isCreating
             ? await UniversimeApi.Activity.create( {
                 ...body,
+                name: form.body.name,
+                description: form.body.description,
                 group: group.id!,
                 groupType: form.body.groupType!.id,
                 nickname: form.body.nickname!,
