@@ -28,6 +28,9 @@ export type ActivityFilter_RequestDTO = {
     type?: string;
     group?: string;
     status?: Activity.Status;
+
+    startDate?: string;
+    endDate?: string;
 };
 
 export type ActivityCreate_RequestDTO = {

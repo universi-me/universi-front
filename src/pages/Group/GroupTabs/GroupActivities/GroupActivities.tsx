@@ -107,6 +107,20 @@ export function GroupActivities() {
                 label="Estado Atual"
                 defaultValue={ filter.current?.status }
             />
+
+            <UniversiForm.Input.Date
+                param="startDate"
+                label="Data de Início"
+                defaultValue={ filter.current?.startDate }
+                help="Filtra Atividades que iniciam nesta data ou depois"
+            />
+
+            <UniversiForm.Input.Date
+                param="endDate"
+                label="Data de Término"
+                defaultValue={ filter.current?.endDate }
+                help="Filtra Atividades que terminam nesta data ou antes"
+            />
         </UniversiForm.Root> }
     </GroupActivitiesContext.Provider>;
 
@@ -125,12 +139,16 @@ export function GroupActivities() {
             filter.current = {
                 type: form.body.type,
                 status: form.body.status,
+                startDate: form.body.startDate,
+                endDate: form.body.endDate,
             };
 
             const res = await UniversimeApi.Activity.list( {
                 group: groupContext!.group.id!,
                 type: form.body.type?.id,
                 status: form.body.status?.status,
+                startDate: form.body.startDate?.toISOString(),
+                endDate: form.body.endDate?.toISOString(),
             } );
 
             if ( res.isSuccess() )
@@ -326,6 +344,8 @@ function ChangeActivityParticipants( props: Readonly<ChangeActivityParticipantsP
 type FilterActivitiesForm = UniversiForm.Data<{
     type?: Activity.Type;
     status?: ActivityStatusArrayObject;
+    startDate?: Date;
+    endDate?: Date;
 }>;
 
 type RenderActivityGroupProps = {

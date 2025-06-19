@@ -111,13 +111,13 @@ export class ApiResponse<T> {
     }
 }
 
-export function URLSearchParamsIgnoreUndefined( ...body: ConstructorParameters<typeof URLSearchParams> ) {
+export function URLSearchParamsIgnoreUndefined( body?: Record<string, any> ) {
     const params = new URLSearchParams();
 
-    if ( body[0] ) {
-        Object.entries( body[ 0 ] ).forEach( ( [ key, value ] ) => {
+    if ( body ) {
+        Object.entries( body ).forEach( ( [ key, value ] ) => {
             if ( value !== undefined )
-                params.set( key, value );
+                params.set( key, String( value ) );
         } );
     }
 
