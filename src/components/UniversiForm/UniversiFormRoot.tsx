@@ -127,9 +127,11 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                     formData.get( key )!.value = value;
 
                 else formData.set( key, {
-                    valid: false,
+                    validation: {
+                        functions: [],
+                        valid: false,
+                    },
                     required: false,
-                    validations: [],
                     value,
                 } );
 
@@ -148,7 +150,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                 if ( formData.has( key ) )
                     value = formData.get( key )!.value;
 
-                formData.set( key, { value, validations, valid: false, required: validationOptions.required ?? false } );
+                formData.set( key, { value, validation: { functions: validations, valid: false }, required: validationOptions.required ?? false } );
                 setHasRequiredField( formData.values().some( d => d.required ) );
 
                 updateValidations( key ).then( () => {
@@ -162,13 +164,13 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                     // return undefined if key is not present or value evaluates to false
                     return undefined;
 
-                return formData.get( key )!.valid;
+                return formData.get( key )!.validation.valid;
             },
         }
     }
 
     function updateIsAllValid() {
-        setIsAllValid( formData.values().every( v => v.valid ) );
+        setIsAllValid( formData.values().every( v => v.validation.valid ) );
     }
 
     async function updateValidations( key: string ) {
@@ -179,11 +181,11 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         setIsAllValid( false );
         const body = getFormBody();
         const responses = await Promise.all(
-            formData.get( key )!.validations
+            formData.get( key )!.validation.functions
                 .map( validate => validate( value, body ) )
         );
 
-        formData.get( key )!.valid = responses.every( r => r );
+        formData.get( key )!.validation.valid = responses.every( r => r );
         updateIsAllValid();
     }
 
@@ -225,7 +227,9 @@ export type UniversiFormData<T> = {
 
 type FormFieldData = {
     value: any;
-    validations: UniversiFormFieldValidation<any>[];
-    valid: boolean;
+    validation: {
+        functions: UniversiFormFieldValidation<any>[];
+        valid: boolean;
+    };
     required: boolean;
 };
