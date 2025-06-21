@@ -7,7 +7,6 @@ import UniversiForm from "@/components/UniversiForm";
 import ActionButton from "@/components/ActionButton";
 import RenderCompetenceType from "@/components/RenderCompetenceType";
 import BootstrapIcon from "@/components/BootstrapIcon";
-import { ManageActivity } from "@/components/ManageActivity/ManageActivity";
 import DropdownOptions from "@/components/DropdownOptions";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import useCanI from "@/hooks/useCanI";
@@ -34,14 +33,12 @@ export function GroupActivities() {
     const [ activities, setActivities ] = useState( groupContext?.activities );
     const [ activityTypes, setActivityTypes ] = useState<Activity.Type[]>();
 
-    const [ editActivity, setEditActivity ] = useState<Possibly<Activity.DTO>>();
     const [ isLoading, setIsLoading ] = useState( false );
 
     const [ showFilterForm, setShowFilterForm ] = useState( false );
     const filter = useRef<FilterActivitiesForm["body"]>();
 
     const contextValue: GroupActivitiesContextType = useMemo( () => ({
-        setEditActivity,
         setIsLoading,
     }), [ ] );
 
@@ -64,7 +61,7 @@ export function GroupActivities() {
 
                     { canI( "GROUP", Permission.READ_WRITE, groupContext.group ) && <ActionButton
                         name="Criar"
-                        buttonProps={{ onClick(){ setEditActivity( null ) } }}
+                        buttonProps={{ onClick(){ groupContext.setEditActivity( null ) } }}
                     /> }
                 </div>
             </div>
@@ -79,17 +76,6 @@ export function GroupActivities() {
                     </>
                 }
             </div>
-
-            { editActivity !== undefined && <ManageActivity
-                activity={ editActivity }
-                group={ groupContext.group }
-                callback={ async res => {
-                    if ( res?.isSuccess() )
-                        await groupContext.refreshData();
-
-                    setEditActivity( undefined );
-                } }
-            /> }
         </section>
 
         { isLoading && <LoadingSpinner /> }
@@ -260,7 +246,7 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
                     return !activity.group.canEdit;
                 },
                 onSelect( activity ) {
-                    context?.setEditActivity( activity );
+                    groupContext?.setEditActivity( activity );
                 },
             }, {
                 text: "Alterar participantes",
@@ -350,7 +336,6 @@ type RenderActivityProps = {
 };
 
 type GroupActivitiesContextType = {
-    setEditActivity( action: React.SetStateAction<Possibly<Activity.DTO>> ): unknown;
     setIsLoading( action: React.SetStateAction<boolean> ): unknown;
 };
 

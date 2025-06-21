@@ -8,6 +8,7 @@ import { AuthContext } from "@/contexts/Auth";
 import "./Group.less";
 import { ProfileClass } from "@/types/Profile";
 import GroupConfigModal from './GroupConfig/GroupConfigModal';
+import ManageActivity from "@/components/ManageActivity";
 
 export function GroupPage() {
     const page = useLoaderData() as GroupPageLoaderResponse;
@@ -59,6 +60,17 @@ export function GroupPage() {
                 } }
             />
         }
+
+        { context.editActivity !== undefined && <ManageActivity
+            activity={ context.editActivity ? { ...context.editActivity, group: context.group } : null }
+            group={ context.group }
+            callback={ async res => {
+                if ( res?.isSuccess() )
+                    await context.refreshData();
+
+                context.setEditActivity( undefined );
+            } }
+        /> }
         </GroupContext.Provider>
     );
 
@@ -139,6 +151,11 @@ export function GroupPage() {
             editJob: undefined,
             setEditJob(j) {
                 setContext({...this, editJob: j})
+            },
+
+            editActivity: undefined,
+            setEditActivity(a) {
+                setContext({...this, editActivity: a})
             },
 
             currentTab: tabSave.current,
