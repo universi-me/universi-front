@@ -17,7 +17,6 @@ namespace Group {
         canAddParticipant: Optional<boolean>;
         createdAt: Optional<string>;
         publicGroup: Optional<boolean>;
-        enableCurriculum: Optional<boolean>;
         buildHash: Optional<string>;
         canEdit: Optional<boolean>;
         organization: Possibly<Group>;

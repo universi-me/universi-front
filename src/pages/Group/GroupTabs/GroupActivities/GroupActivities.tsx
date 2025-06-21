@@ -16,13 +16,13 @@ import { ArrayChanges, groupArray } from "@/utils/arrayUtils";
 import { OptionInMenu } from "@/utils/dropdownMenuUtils";
 import { Permission } from "@/utils/roles/rolesUtils";
 import { makeClassName } from "@/utils/tsxUtils";
-import { dateWithoutTimezone } from "@/utils/dateUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ProfileClass, ProfileSelect } from "@/types/Profile";
 import { ActivityStatusArrayObject, ActivityStatusObjects, ActivityStatusSelect, ActivityTypeSelect } from "@/types/Activity";
 
 import { GroupContext } from "../../GroupContext";
 import styles from "./GroupActivities.module.less";
+import { formatActivityDate } from "../groupTabsUtils";
 
 
 const GroupActivitiesContext = createContext<Possibly<GroupActivitiesContextType>>( undefined );
@@ -201,7 +201,7 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
                 </Link>
                 <p className={ styles.type }>{ activity.type.name }</p>
                 <p className={ styles.location }>Local: { activity.location }</p>
-                <p className={ styles.date }>Data: { formatDate( activity.startDate, activity.endDate ) }</p>
+                <p className={ styles.date }>Data: { formatActivityDate( activity.startDate, activity.endDate ) }</p>
 
                 { activity.badges.length >0 && <p className={ styles.badges_wrapper }>
                     { activity.badges.map( ct => <RenderCompetenceType
@@ -249,14 +249,6 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
             } }
         /> }
     </div>
-
-    function formatDate( start: string, end?: string ): string {
-        if ( end === undefined || start === end )
-            return dateWithoutTimezone( start ).toLocaleDateString( "pt-BR" );
-
-        else
-            return `${ formatDate( start ) } – ${ formatDate( end ) }`
-    }
 
     function toggleExpansion() { setIsExpanded( e => !e ); }
     function makeOptions(): OptionInMenu<Activity.DTO>[] {
