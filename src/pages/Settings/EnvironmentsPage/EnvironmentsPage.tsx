@@ -69,6 +69,12 @@ export function EnvironmentsPage() {
                         type: "boolean",
                         defaultValue: false,
                     },
+                    {
+                        name: "Recuperar Conta",
+                        key: "recovery_enabled",
+                        type: "boolean",
+                        defaultValue: true,
+                    },
                 ]
             },
             {
@@ -359,7 +365,7 @@ export function EnvironmentsPage() {
     }
 
     async function refreshPage() {
-        authContext.updateLoggedUser();
+        await authContext.updateLoggedUser();
         const newData = await EnvironmentsFetch();
         setFetchEnvironmentsItems(newData.envDic);
         setEditedItems({ type: 'RESET' });

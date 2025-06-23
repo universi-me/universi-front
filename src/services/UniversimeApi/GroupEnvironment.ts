@@ -14,6 +14,7 @@ export function get() {
 export type GroupEnvironmentUpdate_RequestDTO = {
     signup_enabled?: boolean;
     signup_confirm_account_enabled?: boolean;
+    recovery_enabled?: boolean;
     login_google_enabled?: boolean;
     google_client_id?: string;
     recaptcha_enabled?: boolean;
