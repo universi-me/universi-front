@@ -19,7 +19,8 @@ export default function SinginForm() {
 
   const organizationEnv = auth.organization.groupSettings.environment;
   const SIGNUP_ENABLED = organizationEnv?.signup_enabled ?? true;
-  const ENABLE_GOOGLE_LOGIN = auth.organization.groupSettings.environment?.login_google_enabled ?? false;
+  const RECOVERY_ENABLED = organizationEnv?.recovery_enabled ?? true;
+  const ENABLE_GOOGLE_LOGIN = organizationEnv?.login_google_enabled ?? false;
   const ENABLE_RECAPTCHA = organizationEnv?.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
   const RECAPTCHA_SITE_KEY = organizationEnv?.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
   const ENABLE_KEYCLOAK_LOGIN = organizationEnv?.keycloak_enabled ?? false;
@@ -119,7 +120,9 @@ export default function SinginForm() {
         <Link id="signup" to="/signup">Crie sua conta</Link>
       }
 
+      { RECOVERY_ENABLED &&
         <Link id="recovery" to="/recovery">Esqueci minha senha</Link>
+      }
     </div>;
 
     async function handleLogin( e: FormEvent ) {
