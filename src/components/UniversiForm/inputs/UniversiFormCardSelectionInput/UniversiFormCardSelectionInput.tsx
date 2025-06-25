@@ -27,7 +27,7 @@ export function UniversiFormCardSelectionInput<T>( props: Readonly<UniversiFormC
             .filter( o => (!props.isSearchable || props.searchFilter( textFilter, o )) && (props.advancedSearchFilter?.( o ) ?? true) )
     }, [ textFilter, props.options ] );
 
-    const isAllSelected = props.options.every( o => changes.inFinal( o ) );
+    const isAllSelected = props.options.every( o => isSelected( o ) );
 
     return <fieldset className={ formStyles.fieldset }>
         <div className={ styles.legend }>
@@ -91,25 +91,22 @@ export function UniversiFormCardSelectionInput<T>( props: Readonly<UniversiFormC
         return undefined !== value.find( v => props.getOptionUniqueValue( v ) === props.getOptionUniqueValue( option ) );
     }
 
-    async function handleToggle( option: T ) {
-        const newValue = isSelected( option )
-            ? value.filter( v => props.getOptionUniqueValue( v ) !== props.getOptionUniqueValue( option ) )
-            : [ ...value, option ];
-
+    async function changeValue( newValue: T[] ) {
         setValue( newValue );
         await context?.set( props.param, newValue );
         await props.onChange?.( newValue );
     }
 
-    function handleSelectAll() {
-        props.options.forEach( o => {
-            if ( isAllSelected )
-                changes.remove( o );
-            else
-                changes.add( o );
-        } );
+    async function handleToggle( option: T ) {
+        const newValue = isSelected( option )
+            ? value.filter( v => props.getOptionUniqueValue( v ) !== props.getOptionUniqueValue( option ) )
+            : [ ...value, option ];
 
-        refreshComponent();
+        changeValue( newValue );
+    }
+
+    function handleSelectAll() {
+        changeValue( isAllSelected ? [] : props.options );
     }
 }
 
