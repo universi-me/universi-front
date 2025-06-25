@@ -297,7 +297,7 @@ function ChangeActivityParticipants( props: Readonly<ChangeActivityParticipantsP
         } )
     }, [ props.activity.id ] );
 
-    if ( participants === null )
+    if ( participants === undefined )
         return <LoadingSpinner />
 
     return <UniversiForm.Root title={ "Alterar Participantes" } callback={ props.callback }>
