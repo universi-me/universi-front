@@ -4,6 +4,7 @@ import BootstrapIcon from "@/components/BootstrapIcon";
 import Filter from "@/components/Filter";
 import useRefreshComponent from "@/hooks/useRefreshComponent";
 import { ArrayChanges } from "@/utils/arrayUtils";
+import { makeClassName } from "@/utils/tsxUtils";
 import { UniversiFormContext } from "../../UniversiFormContext";
 import { RequiredIndicator, useInitialize } from "../../utils";
 
@@ -66,8 +67,8 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean> = 
         <div className={ styles.options_list }>
             { filteredOptions.map( option => <div className={ styles.option } key={ props.getOptionUniqueValue( option ) }>
                 { props.render( option ) }
-                <button type="button" onClick={ () => handleToggle( option ) } className={ styles.check }>
-                    <BootstrapIcon icon={ changes.inFinal( option ) ? "check-circle-fill" : "check-circle" }/>
+                <button type="button" onClick={ () => handleToggle( option ) } className={ makeClassName( styles.check, changes.inFinal( option ) && styles.selected ) }>
+                    <BootstrapIcon icon={ changes.inFinal( option ) ? "check-circle-fill" : "x-circle" }/>
                 </button>
             </div> ) }
         </div>
