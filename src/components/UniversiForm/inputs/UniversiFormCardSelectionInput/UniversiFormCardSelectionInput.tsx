@@ -2,6 +2,7 @@ import { useContext, type ReactNode, useState, useMemo } from "react";
 
 import BootstrapIcon from "@/components/BootstrapIcon";
 import Filter from "@/components/Filter";
+import ActionButton from "@/components/ActionButton";
 import useRefreshComponent from "@/hooks/useRefreshComponent";
 import { ArrayChanges } from "@/utils/arrayUtils";
 import { makeClassName } from "@/utils/tsxUtils";
@@ -33,9 +34,21 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean> = 
             .filter( o => (!props.isSearchable || props.searchFilter( textFilter, o )) && (props.advancedSearchFilter?.( o ) ?? true) )
     }, [ textFilter, props.options ] );
 
+    const isAllSelected = props.options.every( o => changes.inFinal( o ) );
+
     return <fieldset className={ formStyles.fieldset }>
         <div className={ styles.legend }>
             <legend>{ props.label } <RequiredIndicator required={ props.required }/></legend>
+
+            { props.canSelectAll !== false && <ActionButton
+                name={ isAllSelected ? "Desmarcar todos" : "Marcar todos" }
+                biIcon={ isAllSelected ? "x-circle" : "check-circle" }
+                buttonProps={ {
+                    onClick: handleSelectAll,
+                    className: styles.toggle_all,
+                } }
+            /> }
+
             { props.isSearchable !== false && <Filter
                 className={ styles.filter }
                 setter={ setTextFilter }
@@ -105,6 +118,17 @@ export function UniversiFormCardSelectionInput<T, S extends Optional<boolean> = 
 
         refreshComponent();
     }
+
+    function handleSelectAll() {
+        props.options.forEach( o => {
+            if ( isAllSelected )
+                changes.remove( o );
+            else
+                changes.add( o );
+        } );
+
+        refreshComponent();
+    }
 }
 
 export type UniversiFormCardSelectionInputProps<T, Separate extends Optional<boolean>> = {
@@ -114,6 +138,7 @@ export type UniversiFormCardSelectionInputProps<T, Separate extends Optional<boo
     render( option: T ): NonNullable<ReactNode>;
 
     isSeparate?: Separate;
+    canSelectAll?: boolean;
 
     searchPlaceholder?: string;
     searchNotFound?: string;
