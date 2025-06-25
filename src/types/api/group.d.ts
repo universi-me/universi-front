@@ -57,6 +57,7 @@ namespace Group {
         // Signup
         signup_enabled: boolean;
         signup_confirm_account_enabled: boolean;
+        recovery_enabled: boolean;
 
         // Google OAuth Login
         login_google_enabled: boolean;

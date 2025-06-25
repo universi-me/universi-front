@@ -2,7 +2,9 @@ import { useContext, type ReactNode, useState, useMemo } from "react";
 
 import BootstrapIcon from "@/components/BootstrapIcon";
 import Filter from "@/components/Filter";
+import ActionButton from "@/components/ActionButton";
 import useRefreshComponent from "@/hooks/useRefreshComponent";
+import { makeClassName } from "@/utils/tsxUtils";
 import { UniversiFormContext } from "../../UniversiFormContext";
 import { FieldHelp, RequiredIndicator, useInitialize } from "../../utils";
 
@@ -25,9 +27,21 @@ export function UniversiFormCardSelectionInput<T>( props: Readonly<UniversiFormC
             .filter( o => (!props.isSearchable || props.searchFilter( textFilter, o )) && (props.advancedSearchFilter?.( o ) ?? true) )
     }, [ textFilter, props.options ] );
 
+    const isAllSelected = props.options.every( o => changes.inFinal( o ) );
+
     return <fieldset className={ formStyles.fieldset }>
         <div className={ styles.legend }>
             <legend>{ props.label } <RequiredIndicator required={ props.required }/></legend>
+
+            { props.canSelectAll !== false && <ActionButton
+                name={ isAllSelected ? "Desmarcar todos" : "Marcar todos" }
+                biIcon={ isAllSelected ? "x-circle" : "check-circle" }
+                buttonProps={ {
+                    onClick: handleSelectAll,
+                    className: styles.toggle_all,
+                } }
+            /> }
+
             { props.isSearchable !== false && <Filter
                 className={ styles.filter }
                 setter={ setTextFilter }
@@ -60,8 +74,8 @@ export function UniversiFormCardSelectionInput<T>( props: Readonly<UniversiFormC
         <div className={ styles.options_list }>
             { filteredOptions.map( option => <div className={ styles.option } key={ props.getOptionUniqueValue( option ) }>
                 { props.render( option ) }
-                <button type="button" onClick={ () => handleToggle( option ) } className={ styles.check }>
-                    <BootstrapIcon icon={ isSelected( option ) ? "check-circle-fill" : "check-circle" }/>
+                <button type="button" onClick={ () => handleToggle( option ) } className={ makeClassName( styles.check, isSelected( option ) && styles.selected ) }>
+                    <BootstrapIcon icon={ isSelected( option ) ? "check-circle-fill" : "x-circle" }/>
                 </button>
             </div> ) }
         </div>
@@ -86,6 +100,17 @@ export function UniversiFormCardSelectionInput<T>( props: Readonly<UniversiFormC
         await context?.set( props.param, newValue );
         await props.onChange?.( newValue );
     }
+
+    function handleSelectAll() {
+        props.options.forEach( o => {
+            if ( isAllSelected )
+                changes.remove( o );
+            else
+                changes.add( o );
+        } );
+
+        refreshComponent();
+    }
 }
 
 export type UniversiFormCardSelectionInputProps<T> = {
@@ -93,6 +118,7 @@ export type UniversiFormCardSelectionInputProps<T> = {
     defaultValue?: T[];
     getOptionUniqueValue( option: T ): string | number;
     render( option: T ): NonNullable<ReactNode>;
+    canSelectAll?: boolean;
 
     searchPlaceholder?: string;
     searchNotFound?: string;
