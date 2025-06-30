@@ -14,7 +14,7 @@ namespace Role {
 
     type Type = "ADMINISTRATOR" | "PARTICIPANT" | "VISITOR" | "CUSTOM";
 
-    type Feature = "FEED" | "CONTENT" | "GROUP" | "PEOPLE" | "COMPETENCE" | "JOBS" | "ACTIVITY";
+    type Feature = "FEED" | "CONTENT" | "GROUP" | "PEOPLE" | "COMPETENCE" | "JOBS";
 
     type Permission = 0 | 1 | 2 | 3 | 4;
 }

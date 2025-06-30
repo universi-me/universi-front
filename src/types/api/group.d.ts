@@ -17,16 +17,17 @@ namespace Group {
         canAddParticipant: Optional<boolean>;
         createdAt: Optional<string>;
         publicGroup: Optional<boolean>;
-        enableCurriculum: Optional<boolean>;
-        everyoneCanPost: boolean;
         buildHash: Optional<string>;
         canEdit: Optional<boolean>;
         organization: Possibly<Group>;
-
-        permissions: {
-            [ k in Role.Feature ]: Role.Permission;
-        };
-    };
+        role: Optional<Role.DTO>;
+    } & ({
+        regularGroup: true;
+        activity: null;
+    } | {
+        regularGroup: false;
+        activity: Omit<Activity.DTO, "group">;
+    });
 
     type Settings = {
         theme: Nullable<Theme>;
@@ -91,10 +92,10 @@ namespace Group {
         message_template_assigned_content: string;
     };
 
-    type Type = "INSTITUTION" | "CAMPUS" | "COURSE" | "PROJECT" | "CLASSROOM" | "MONITORIA" | "LABORATORY"
-              | "ACADEMIC_CENTER" | "DEPARTMENT" | "STUDY_GROUP" | "GROUP_GENERAL" | "DIRECTORATE" | "MANAGEMENT"
-              | "COORDINATION" | "COMPANY_AREA" | "DEVELOPMENT_TEAM" | "INTEREST_GROUP" | "MISCELLANEOUS_SUBJECTS"
-              | "ENTERTAINMENT";
+    type Type = {
+        label: string;
+        id: string;
+    };
 
     namespace EmailFilter {
         type DTO = {

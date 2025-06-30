@@ -7,8 +7,9 @@ import { GroupSubmenu } from "../GroupSubmenu/GroupSubmenu";
 import { GroupCompetences } from "./GroupCompetences/GroupCompetences";
 import useCanI, { CanI_SyncFunction } from "@/hooks/useCanI";
 import { Permission } from "@/utils/roles/rolesUtils";
+import { GroupInfo } from "./GroupInfo/GroupInfo";
 
-export type AvailableTabs = "feed" | "contents" | "groups" | "people" | "competences" | "jobs" | "activities";
+export type AvailableTabs = "feed" | "contents" | "groups" | "people" | "competences" | "jobs" | "activities" | "info";
 
 export type GroupTabDefinition = {
     name: string,
@@ -70,7 +71,7 @@ export function GroupTabs(props: Readonly<GroupTabsProps>) {
         }
 
         if (useDefaultTab) {
-            context?.setCurrentTab(renderedTabs[0]?.value ?? "feed" as AvailableTabs);
+            context?.setCurrentTab( renderedTabs[0]?.value ?? "info" );
         }
 
     }, [ context?.group?.id ]);
@@ -134,6 +135,11 @@ export function asTabAvailable(tab: string): Optional<AvailableTabs> {
 export const EMPTY_LIST_CLASS = "empty-text";
 
 const TABS: GroupTabDefinition[] = [
+    {
+        name: "Descrição",
+        value: "info",
+        renderer: GroupInfo,
+    },
     {
         name: 'Publicações',
         value: 'feed',
@@ -202,10 +208,9 @@ const TABS: GroupTabDefinition[] = [
         renderer: GroupActivities,
         condition( context, canI ) {
             return !!context.activities
-                && canI( "ACTIVITY", Permission.READ, context.group )
                 && (
                     context.activities.length > 0
-                    || canI( "ACTIVITY", Permission.READ_WRITE, context.group )
+                    || canI( "GROUP", Permission.READ_WRITE, context.group )
                 );
         },
     }

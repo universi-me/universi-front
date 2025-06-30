@@ -1,0 +1,62 @@
+@import url(/src/layouts/border-radius.less);
+@import url(/src/layouts/colors.less);
+@import url(/src/layouts/fonts.less);
+
+.tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .image {
+        @size: 10rem;
+        width: @size;
+        height: @size;
+
+        object-fit: contain;
+
+        border-radius: @border-radius;
+        border: 5px solid @primary-color;
+    }
+
+    .title {
+        width: 100%;
+
+        font-size: 2rem;
+        text-align: center;
+        font-weight: @font-weight-bold;
+        font-variant: small-caps;
+    }
+
+    .competences {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: .35rem;
+
+        max-width: 80%;
+        margin: 0 auto;
+
+        .item {
+            display: flex;
+            align-items: center;
+            gap: .25em;
+
+            width: fit-content;
+
+            padding: .15em .5em;
+            background-color: @primary-color;
+            border-radius: 5px;
+            color: @font-color-v1;
+        }
+    }
+
+    .description {
+        margin-top: 1.5rem;
+
+        &.empty {
+            text-align: center;
+            font-style: italic;
+        }
+    }
+}

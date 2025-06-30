@@ -1,26 +1,26 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import DOMPurify from "dompurify";
 
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { groupImageUrl } from "@/utils/apiUtils";
 
 import "./GroupGroups.less";
 import { Filter } from "@/components/Filter/Filter";
-import { AuthContext } from "@/contexts/Auth";
 import { UniversimeApi } from "@/services"
 import { OptionInMenu, hasAvailableOption, renderOption } from "@/utils/dropdownMenuUtils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ActionButton } from "@/components/ActionButton/ActionButton";
-import { ManageGroup } from "@/components/ManageGroup/ManageGroup";
 
 export function GroupGroups() {
     const groupContext = useContext(GroupContext);
     const [filterGroups, setFilterGroups] = useState<string>("");
-    const authContext = useContext(AuthContext);
 
     if(groupContext == null)
         return <></>
+
+    const regularGroups = groupContext.subgroups.filter( g => g.regularGroup );
 
     const OPTIONS_DEFINITION: OptionInMenu<Group.DTO>[] = [
         {
@@ -78,7 +78,7 @@ export function GroupGroups() {
                 </div>
             </div>
 
-            <div className="group-list tab-list"> { makeGroupList(groupContext.subgroups, filterGroups) } </div>
+            <div className="group-list tab-list"> { makeGroupList(regularGroups, filterGroups) } </div>
         </section>
     );
     function makeGroupList(groups: Group.DTO[], filter: string) {
@@ -109,7 +109,7 @@ export function GroupGroups() {
 
                 <div className="info">
                     <Link to={linkToGroup} className="group-name">{group.name}</Link>
-                    <p className="group-description">{group.description}</p>
+                    <div className="group-description" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( group.description ?? "" ) }} />
                 </div>
                 { !hasAvailableOption(OPTIONS_DEFINITION, group) ? null :
                     <DropdownMenu.Root>

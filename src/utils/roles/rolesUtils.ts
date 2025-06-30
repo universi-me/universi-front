@@ -24,7 +24,7 @@ export async function canI_API(feature: Role.Feature, permission: Permission = P
     if (!group)
         return false;
 
-    return (group.permissions[feature]) >= permission;
+    return ( group.role?.permissions[feature] ?? 0 ) >= permission;
 }
 
 /**
@@ -64,5 +64,4 @@ export const FeatureTypesToLabel: { [k in Role.Feature]: string } = {
     "PEOPLE":       "Pessoas",
     "COMPETENCE":   "Competência",
     "JOBS":         "Vagas",
-    "ACTIVITY":     "Atividades",
 };

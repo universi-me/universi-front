@@ -4,7 +4,7 @@ import MaterialIcon from "@/components/MaterialIcon";
 import { PasswordValidity } from "@/utils/passwordValidation";
 
 import { UniversiFormContext } from "../../UniversiFormContext";
-import { RequiredIndicator, useInitialize } from "../../utils";
+import { FieldHelp, RequiredIndicator, useInitialize } from "../../utils";
 
 import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormPasswordInput.module.less";
@@ -38,6 +38,7 @@ export function UniversiFormPasswordInput( props: Readonly<UniversiFormPasswordI
                 onChange={ c => update( password, c ) }
                 placeholder={ props.confirmPlaceholder ?? "Confirme sua senha" }
             /> }
+            <FieldHelp>{ props.help }</FieldHelp>
 
             { props.mustMatchRequirements && <div className={ styles.requirements_wrapper }>
                 <h3>Sua senha precisa conter:</h3>

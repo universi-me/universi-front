@@ -26,19 +26,13 @@ export function ProfileGroupListing(){
         <h1 className="group-name">{tabTitle}</h1>
         <div className="groups-listing-container">
             {
-                profileContext.profileListData.groups.length <= 0
-                ? <div className="empty-groups">Não participa de um grupo.</div>
-                : <>
-                    {
-                        profileContext.profileListData.groups.map((group) => {
-                            return group === undefined ? null : (
-                                <Link to={`/group${group.path}`} className="group-item-listing" title={group.name} key={group.id}>
-                                    <img src={groupImageUrl(group)} alt="" />
-                                </Link>
-                            );
-                        })
-                    }
-                </>
+                profileContext.profileListData.groups.filter( g => g.regularGroup ).map((group) => {
+                    return group === undefined ? null : (
+                        <Link to={`/group${group.path}`} className="group-item-listing" title={group.name} key={group.id}>
+                            <img src={groupImageUrl(group)} alt="" />
+                        </Link>
+                    );
+                })
             }
         </div>
         </>

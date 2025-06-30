@@ -28,7 +28,7 @@ export function groupHeaderUrl(group: Group.DTO): Optional<string> {
     return undefined;
 }
 
-export function groupImageUrl(group: Group.DTO) {
+export function groupImageUrl(group: Pick<Group.DTO, "image" | "id">) {
     if(!group?.image)
         return IMG_DEFAULT_GROUP;
 
@@ -85,7 +85,7 @@ export class ApiResponse<T> {
     }
 
     get data(): T | undefined {
-        return "data" in this.response && !isApiError( this.response.data )
+        return typeof this.response === "object" && "data" in this.response && !isApiError( this.response.data )
             ? this.response.data
             : undefined;
     }
@@ -109,6 +109,19 @@ export class ApiResponse<T> {
 
         return err.errors?.join( "\n" ) ?? "";
     }
+}
+
+export function URLSearchParamsIgnoreUndefined( body?: Record<string, any> ) {
+    const params = new URLSearchParams();
+
+    if ( body ) {
+        Object.entries( body ).forEach( ( [ key, value ] ) => {
+            if ( value !== undefined )
+                params.set( key, String( value ) );
+        } );
+    }
+
+    return params;
 }
 
 interface SuccessfulApiResponse<T> {

@@ -19,6 +19,10 @@ export function remove( body: GroupParticipantUpdate_RequestDTO ) {
     return api.patch<boolean>( `/remove`, body ).then( ApiResponse.new );
 }
 
+export function changeParticipants( id: string, body: GroupParticipantChange_RequestDTO ) {
+    return api.patch<void>( `/${encodeURIComponent(id)}/change`, body ).then( ApiResponse.new );
+}
+
 export function get( groupId: string ) {
     return api.get<Profile.DTO[]>( `/${groupId}` ).then( ApiResponse.new );
 }
@@ -35,6 +39,14 @@ export function competences( groupId: string ) {
 export type GroupParticipantUpdate_RequestDTO = {
     groupId: string;
     participant: string;
+};
+
+export type GroupParticipantChange_RequestDTO = {
+    remove?: string[];
+    add?: {
+        profile: string;
+        role?: string;
+    }[];
 };
 
 export type GroupParticipantFilter_RequestDTO = {

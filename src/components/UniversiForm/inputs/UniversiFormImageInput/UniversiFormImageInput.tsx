@@ -6,7 +6,7 @@ import MaterialIcon from "@/components/MaterialIcon";
 import { arrayBufferToBase64 } from "@/utils/fileUtils";
 
 import { UniversiFormContext } from "../../UniversiFormContext";
-import { RequiredIndicator, useInitialize } from "../../utils";
+import { FieldHelp, RequiredIndicator, useInitialize } from "../../utils";
 
 import styles from "./UniversiFormImageInput.module.less";
 import formStyles from "../../UniversiForm.module.less";
@@ -24,7 +24,8 @@ export function UniversiFormImageInput( props: Readonly<UniversiFormImageInputPr
 
     return <fieldset className={ formStyles.fieldset }>
         <legend>{ label } <RequiredIndicator required={ required } /></legend>
-            <div className={ styles.img_wrapper }>
+        <FieldHelp>{ props.help }</FieldHelp>
+        <div className={ styles.img_wrapper }>
             <label htmlFor={ param } className={ styles.preview_label }>
             { imageSrc
                 ? <img src={ imageSrc } className={ styles.preview }/>
