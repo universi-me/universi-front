@@ -43,6 +43,10 @@ export function GroupActivities() {
     }), [ ] );
 
     useEffect( () => {
+        setActivities( groupContext?.activities );
+    }, [ groupContext?.activities ] );
+
+    useEffect( () => {
         loadActivityTypes();
     }, [] );
 

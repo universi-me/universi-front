@@ -65,10 +65,12 @@ export function GroupPage() {
             activity={ context.editActivity ? { ...context.editActivity, group: context.group } : null }
             group={ context.group }
             callback={ async res => {
-                if ( res?.isSuccess() )
-                    await context.refreshData();
+                let newContext = context;
 
-                context.setEditActivity( undefined );
+                if ( res?.isSuccess() )
+                    newContext = await context.refreshData();
+
+                newContext.setEditActivity( undefined );
             } }
         /> }
         </GroupContext.Provider>
