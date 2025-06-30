@@ -54,6 +54,15 @@ export function GroupSubmenu(){
                 context!.setEditGroup(data);
             }
         }, {
+            text: "Editar atividade",
+            biIcon: "pencil-fill",
+            hidden( data ) {
+                return !data.canEdit || !data.activity;
+            },
+            onSelect( data ) {
+                context!.setEditActivity( data.activity );
+            },
+        }, {
             text: "Configurações",
             biIcon: "gear-fill",
             hidden(data) {

@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { makeClassName } from "@/utils/tsxUtils";
 import { UniversiFormContext } from "../../UniversiFormContext";
-import { handleValidation, RequiredIndicator, useInitialize } from "../../utils";
+import { FieldHelp, handleValidation, RequiredIndicator, useInitialize } from "../../utils";
 
 import styles from "./UniversiFormNumberInput.module.less";
 import formStyles from "../../UniversiForm.module.less";
@@ -26,6 +26,7 @@ export function UniversiFormNumberInput( props: Readonly<UniversiFormNumberInput
                 handleValidation( valid, styles.valid, styles.invalid ),
             ) }
         />
+        <FieldHelp>{ props.help }</FieldHelp>
     </fieldset>
 
     async function handleOnChange( value: number ) {

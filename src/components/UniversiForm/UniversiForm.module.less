@@ -82,9 +82,9 @@
 
         gap: .5rem;
 
-        padding: 0 @form-padding @form-padding 0;
+        padding: 0 @form-padding @form-padding;
 
-        .cancel_button, .confirm_button {
+        .cancel_button, .confirm_button, .delete_button {
             display: flex;
             align-items: center;
 
@@ -92,7 +92,6 @@
             border: none;
             border-radius: .625em;
 
-            min-width: 7.5rem;
             padding: .75rem;
             gap: .25em;
 
@@ -109,6 +108,11 @@
             &:disabled {
                 cursor: not-allowed;
             }
+        }
+
+        .delete_button {
+            background-color: @font-color-alert;
+            margin-right: auto;
         }
 
         .cancel_button {

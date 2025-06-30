@@ -52,7 +52,7 @@ export function ProfileCompetences() {
                             <Tooltip.Content className={ styles.activity_tooltip }>
                                 <span className={ styles.activity_header }>Atividades relacionadas</span>
                                 <ul className={styles.activity_list}>
-                                    { data.activities.map( a => <li key={ a.id } className={ styles.activity_name }>{ a.name }</li> ) }
+                                    { data.activities.map( a => <li key={ a.id } className={ styles.activity_name }>{ a.group.name }</li> ) }
                                 </ul>
                             </Tooltip.Content>
                         </Tooltip.Portal>

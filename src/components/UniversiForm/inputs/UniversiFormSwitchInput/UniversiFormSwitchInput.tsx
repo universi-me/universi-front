@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import * as Switch from "@radix-ui/react-switch";
 
-import { RequiredIndicator, useInitialize } from "../../utils";
+import { FieldHelp, RequiredIndicator, useInitialize } from "../../utils";
 import { UniversiFormContext } from "../../UniversiFormContext";
 
 import formStyles from "../../UniversiForm.module.less";
@@ -17,6 +17,7 @@ export function UniversiFormSwitchInput( props: Readonly<UniversiFormSwitchInput
     return <fieldset className={ `${formStyles.fieldset} ${styles.fieldset}` }>
         <div className={ `${styles.legend} ${formStyles.legend}` }>
             { props.label } <RequiredIndicator required={ props.required } />
+            <FieldHelp>{ props.help }</FieldHelp>
         </div>
 
         <Switch.Root checked={ value } className={ styles.switch_root } onCheckedChange={ handleToggle } disabled={ props.disabled }>

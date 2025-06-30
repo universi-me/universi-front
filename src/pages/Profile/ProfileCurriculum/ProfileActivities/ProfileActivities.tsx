@@ -25,7 +25,6 @@ export function ProfileActivities() {
         sort={ compareActivities }
         emptyMessage={`${ context.accessingLoggedUser ? "Você" : context.profile.firstname } não participa de nenhuma atividade`}
         render={ ({ data }) => <div className={ styles.item }>
-            <h4>{ data.name }</h4>
             <Link to={`/group${data.group.path}`} className={ styles.group_link }>
                 <img src={ groupImageUrl( data.group ) } alt={ data.group.name } className={ styles.image }/>
                 { data.group.name }

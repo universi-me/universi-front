@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from "react";
 import { UniversiFormContext } from "../../UniversiFormContext";
-import { handleValidation, RequiredIndicator, useInitialize } from "../../utils";
+import { FieldHelp, handleValidation, RequiredIndicator, useInitialize } from "../../utils";
 
 import styles from "./UniversiFormDateInput.module.less";
 import formStyles from "../../UniversiForm.module.less";
@@ -35,6 +35,7 @@ export function UniversiFormDateInput( props: Readonly<UniversiFormDateInputProp
             disabled={ props.disabled }
             required={ props.required }
         />
+        <FieldHelp>{ props.help }</FieldHelp>
     </fieldset>;
 
     async function handleOnChange( newValue: Nullable<Date> ) {

@@ -42,12 +42,11 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
     if ( group.id === undefined )
         return FAILED_TO_LOAD;
 
-    const [ canISubgroups, canIParticipants, canIFolders, canIFeed, canIActivity ] = await Promise.all([
+    const [ canISubgroups, canIParticipants, canIFolders, canIFeed ] = await Promise.all([
         canI_API('GROUP',   Permission.READ, group),
         canI_API('PEOPLE',  Permission.READ, group),
         canI_API('CONTENT', Permission.READ, group),
         canI_API('FEED',    Permission.READ, group),
-        canI_API('ACTIVITY', Permission.READ, group),
     ]);
 
     const [subgroupsRes, participantsRes, foldersRes, profileGroupsRes, profileLinksRes, groupPostsRes, jobsRes, competenceTypesRes, activitiesRes] = await Promise.all([
@@ -59,7 +58,7 @@ export async function fetchGroupPageData(props: {groupPath: string | undefined})
         canIFeed ? UniversimeApi.Feed.listGroup(group.id) : undefined,
         group.rootGroup ? UniversimeApi.Job.list({}) : undefined,
         UniversimeApi.CompetenceType.list(),
-        canIActivity ? UniversimeApi.Group.activities( group.id ) : undefined,
+        UniversimeApi.Group.activities( group.id ),
     ]);
 
     return {

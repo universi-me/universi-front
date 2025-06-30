@@ -34,6 +34,30 @@ export class ArrayChanges<T> {
         private readonly match: ( v1: T, v2: T ) => boolean,
     ) {}
 
+    public static from<T>(
+        initial: Optional<T[]>,
+        final: Optional<T[]>,
+        match: ( v1: T, v2: T ) => boolean,
+    ): ArrayChanges<T> {
+        const changes = new ArrayChanges( initial ?? [], match );
+
+        final?.forEach( v => {
+            if ( !changes.inInitial( v ) )
+                changes.add( v );
+        } );
+
+        initial?.forEach( v1 => {
+            if ( !final?.some( ( v2 ) => match( v1, v2 ) ) )
+                changes.remove( v1 );
+        } );
+
+        return changes;
+    }
+
+    get hasChanges(): boolean {
+        return ( this._added.length > 0 ) || ( this._removed.length > 0 );
+    }
+
     add( val: T ) {
         const i = this._removed.findIndex( v => this.match( v, val ) );
         if ( i !== -1 )

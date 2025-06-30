@@ -1,8 +1,10 @@
 import UniversiForm from "@/components/UniversiForm";
 import { UniversimeApi } from "@/services"
 
-import { getGroupTypeObject, type GroupTypeArrayObject, GroupTypeObjectsArray } from "@/types/Group";
+import { GroupTypeSelect } from "@/types/Group";
 import { type ApiResponse, groupBannerUrl, groupHeaderUrl, groupImageUrl } from "@/utils/apiUtils";
+import { useEffect, useState } from "react";
+import LoadingSpinner from "../LoadingSpinner";
 
 export type ManageGroupProps = {
     group: Group | null;
@@ -16,6 +18,18 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
 
     const isCreating = group === null;
     const isOrganization = group?.rootGroup ?? false;
+
+    const [ availableGroupTypes, setAvailableGroupTypes ] = useState<Group.Type[]>();
+    useEffect( () => {
+        UniversimeApi.GroupType.list()
+        .then( res => {
+            if ( res.isSuccess() )
+                setAvailableGroupTypes( res.body );
+        } )
+    }, [] );
+
+    if ( availableGroupTypes === undefined )
+        return <LoadingSpinner />
 
     return <UniversiForm.Root title={ isCreating ? "Criar Grupo" : isOrganization ? "Editar Organização" : "Editar Grupo" } callback={ handleForm }>
         <UniversiForm.Input.Text
@@ -34,13 +48,11 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
             required
         />
 
-        <UniversiForm.Input.Text
+        <UniversiForm.Input.FormattedText
             param="description"
             label={ isOrganization ? "Descrição da Organização" : "Descrição do Grupo" }
-            isLongText
             defaultValue={ group?.description }
             required
-            maxLength={ 200 }
         />
 
         <UniversiForm.Input.Image
@@ -63,14 +75,11 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
             defaultValue={ groupHeaderUrl(group!) }
         /> }
 
-        <UniversiForm.Input.Select
+        <GroupTypeSelect
             param="groupType"
+            options={ availableGroupTypes }
             label={ isOrganization ? "Tipo da Organização" : "Tipo do Grupo" }
-            defaultValue={ getGroupTypeObject( group?.type ) }
-            options={ GroupTypeObjectsArray }
-            getOptionUniqueValue={ o => o.type }
-            getOptionLabel={ o => o.label }
-            isSearchable
+            defaultValue={ group?.type }
             required
         />
 
@@ -92,12 +101,6 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
             label="Permitir Entrada de Usuários"
             defaultValue={ group?.canEnter }
         /> }
-
-        <UniversiForm.Input.Switch
-            param="everyoneCanPost"
-            label="Permitir Publicações para Todos os Usuários"
-            defaultValue={ group?.everyoneCanPost }
-        />
     </UniversiForm.Root>
 
     async function handleForm( form: ManageGroupForm ) {
@@ -121,8 +124,7 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
                 description: form.body.description,
                 canCreateSubgroup: form.body.canCreateSubgroup,
                 canJoin: form.body.canJoin,
-                everyoneCanPost: form.body.everyoneCanPost,
-                groupType: form.body.groupType.type,
+                groupType: form.body.groupType.id,
                 isPublic: form.body.isPublic,
                 image: image?.body,
                 bannerImage: bannerImage?.body,
@@ -151,9 +153,8 @@ type ManageGroupForm = UniversiForm.Data<{
     image?: File | string;
     bannerImage?: File | string;
     headerImage?: File | string;
-    groupType: GroupTypeArrayObject;
+    groupType: Group.Type;
     canCreateSubgroup: boolean;
     isPublic: boolean;
     canJoin: boolean;
-    everyoneCanPost: boolean;
 }>;

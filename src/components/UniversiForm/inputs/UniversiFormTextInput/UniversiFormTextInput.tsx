@@ -3,7 +3,7 @@ import type { RefAttributes, InputHTMLAttributes, TextareaHTMLAttributes, Change
 
 import { makeClassName } from "@/utils/tsxUtils";
 import { UniversiFormContext } from "../../UniversiFormContext";
-import { RequiredIndicator, handleValidation, useInitialize } from "../../utils";
+import { FieldHelp, RequiredIndicator, handleValidation, useInitialize } from "../../utils";
 
 import formStyles from "../../UniversiForm.module.less";
 import styles from "./UniversiFormTextInput.module.less";
@@ -44,6 +44,7 @@ export function UniversiFormTextInput<L extends Optional<boolean> = undefined>( 
             ? <textarea { ...fieldProps as UniversiFormTextInputFieldProps<true> } />
             : <input { ...fieldProps as UniversiFormTextInputFieldProps<false | undefined> } />
         }
+        <FieldHelp>{ props.help }</FieldHelp>
     </fieldset>
 
     async function handleOnChange( newValue: string ) {

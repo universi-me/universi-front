@@ -11,6 +11,8 @@ export type ProfileGroupsProps = {
 export function ProfileGroups(props: Readonly<ProfileGroupsProps>) {
     const { groups } = props;
 
+    const regularGroups = groups.filter( g => g.regularGroup );
+
     return <div className="profile-groups-component">
         <div className="header-container">
             <img src="/assets/imgs/group2.png" className="group-background-image" />
@@ -18,10 +20,10 @@ export function ProfileGroups(props: Readonly<ProfileGroupsProps>) {
         </div>
 
         <div className="items-wrapper">
-            { groups.length <= 0
+            { regularGroups.length <= 0
                 ? <div className="empty-groups">Não participa de um grupo.</div>
                 : <div className="show-items">
-                    { groups.map(g => <GroupIcon group={g} key={g.id} />) }
+                    { regularGroups.map(g => <GroupIcon group={g} key={g.id} />) }
                   </div>
             }
         </div>

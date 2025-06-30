@@ -1,22 +1,22 @@
 namespace Activity {
     type DTO = {
         id: string;
-        name: string;
-        description: string;
-        author: Profile.DTO;
         type: Type;
         location: string;
         workload: number;
         startDate: string;
         endDate: string;
-        group: Group.DTO;
+        group: Omit<Group.DTO, "activity">;
         badges: Competence.Type[];
+        status: Activity.Status;
     };
 
     type Type = {
         id: string;
         name: string;
     };
+
+    type Status = "NOT_STARTED" | "STARTED" | "ENDED";
 }
 
 type Activity = Activity.DTO;

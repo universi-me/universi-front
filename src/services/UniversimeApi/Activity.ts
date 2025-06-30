@@ -1,4 +1,4 @@
-import { ApiResponse } from "@/utils/apiUtils";
+import { ApiResponse, URLSearchParamsIgnoreUndefined } from "@/utils/apiUtils";
 import { createApiInstance } from "./api";
 
 const api = createApiInstance( "/activities" );
@@ -8,8 +8,8 @@ export function get( activityId: string ) {
     return api.get<Activity.DTO>( `/${activityId}` ).then( ApiResponse.new );
 }
 
-export function list() {
-    return api.get<Activity.DTO[]>( "" ).then( ApiResponse.new );
+export function list( body?: ActivityFilter_RequestDTO ) {
+    return api.get<Activity.DTO[]>( "", { params: URLSearchParamsIgnoreUndefined( body ) } ).then( ApiResponse.new );
 }
 
 export function create( body: ActivityCreate_RequestDTO ) {
@@ -24,13 +24,14 @@ export function remove( activityId: string ) {
     return api.delete<void>( `/${activityId}` ).then( ApiResponse.new );
 }
 
-export function listParticipants( activityId: string ) {
-    return api.get<Profile.DTO[]>( `/${activityId}/participants` ).then( ApiResponse.new );
-}
+export type ActivityFilter_RequestDTO = {
+    type?: string;
+    group?: string;
+    status?: Activity.Status;
 
-export function changeParticipants( activityId: string, body: ActivityChangeParticipants_RequestDTO ) {
-    return api.patch<void>( `/${activityId}/participants`, body ).then( ApiResponse.new );
-}
+    startDate?: string;
+    endDate?: string;
+};
 
 export type ActivityCreate_RequestDTO = {
     name: string;
@@ -42,11 +43,14 @@ export type ActivityCreate_RequestDTO = {
     group: string;
     startDate: string | number;
     endDate: string | number;
+
+    nickname: string;
+    groupType: string;
+    image?: string;
+    bannerImage?: string;
 };
 
 export type ActivityUpdate_RequestDTO = {
-    name?: string;
-    description?: string;
     type?: string;
     location?: string;
     workload?: number,

@@ -1,24 +1,27 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router";
 import DOMPurify from "dompurify";
 
 import { UniversimeApi } from "@/services";
-import { GroupContext } from "../../GroupContext";
 import UniversiForm from "@/components/UniversiForm";
 import ActionButton from "@/components/ActionButton";
 import RenderCompetenceType from "@/components/RenderCompetenceType";
 import BootstrapIcon from "@/components/BootstrapIcon";
-import { ManageActivity } from "@/components/ManageActivity/ManageActivity";
 import DropdownOptions from "@/components/DropdownOptions";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { SelectionChanges } from "@/components/UniversiForm/inputs/UniversiFormCardSelectionInput";
 import useCanI from "@/hooks/useCanI";
+import { groupImageUrl } from "@/utils/apiUtils";
+import { ArrayChanges, groupArray } from "@/utils/arrayUtils";
 import { OptionInMenu } from "@/utils/dropdownMenuUtils";
 import { Permission } from "@/utils/roles/rolesUtils";
 import { makeClassName } from "@/utils/tsxUtils";
 import * as SwalUtils from "@/utils/sweetalertUtils";
-import { ProfileSelect } from "@/types/Profile";
+import { ProfileClass, ProfileSelect } from "@/types/Profile";
+import { ActivityStatusArrayObject, ActivityStatusObjects, ActivityStatusSelect, ActivityTypeSelect } from "@/types/Activity";
 
+import { GroupContext } from "../../GroupContext";
 import styles from "./GroupActivities.module.less";
+import { formatActivityDate } from "../groupTabsUtils";
 
 
 const GroupActivitiesContext = createContext<Possibly<GroupActivitiesContextType>>( undefined );
@@ -27,48 +30,137 @@ export function GroupActivities() {
     const groupContext = useContext( GroupContext );
     const canI = useCanI();
 
-    const [ editActivity, setEditActivity ] = useState<Possibly<Activity.DTO>>();
+    const [ activities, setActivities ] = useState( groupContext?.activities );
+    const [ activityTypes, setActivityTypes ] = useState<Activity.Type[]>();
+
+    const [ isLoading, setIsLoading ] = useState( false );
+
+    const [ showFilterForm, setShowFilterForm ] = useState( false );
+    const filter = useRef<FilterActivitiesForm["body"]>();
 
     const contextValue: GroupActivitiesContextType = useMemo( () => ({
-        editActivity,
-        setEditActivity,
-    }), [ editActivity ] );
+        setIsLoading,
+    }), [ ] );
 
-    if ( groupContext?.activities === undefined )
+    useEffect( () => {
+        setActivities( groupContext?.activities );
+    }, [ groupContext?.activities ] );
+
+    useEffect( () => {
+        loadActivityTypes();
+    }, [] );
+
+    if ( !groupContext || activities === undefined || activityTypes === undefined )
         return null;
 
-    const activities = groupContext.activities;
+    const groupedActivities = groupArray( activities, a => a.status );
 
     return <GroupActivitiesContext.Provider value={ contextValue }>
         <section id="activities" className="group-tab">
             <div className="heading top-container">
                 <div className="go-right">
-                    { canI( "ACTIVITY", Permission.READ_WRITE, groupContext.group ) && <ActionButton
+                    <button className={ styles.filter_button } onClick={ () => setShowFilterForm( true ) }>
+                        <BootstrapIcon icon="filter-circle-fill" />
+                    </button>
+
+                    { canI( "GROUP", Permission.READ_WRITE, groupContext.group ) && <ActionButton
                         name="Criar"
-                        buttonProps={{ onClick(){ setEditActivity( null ) } }}
+                        buttonProps={{ onClick(){ groupContext.setEditActivity( null ) } }}
                     /> }
                 </div>
             </div>
 
-            <div id="activities-list" className={`tab-list ${styles.list}`}>
+            <div id="activities-list" className={`tab-list ${ styles.groups }`}>
                 { activities.length === 0
                     ? <p className="empty-list">Nenhuma atividade encontrada</p>
-                    : activities.map( a => <RenderActivity activity={ a } key={ a.id } /> )
+                    : <>
+                        <RenderActivityGroup activities={ groupedActivities.get( "STARTED" ) } group="STARTED" />
+                        <RenderActivityGroup activities={ groupedActivities.get( "NOT_STARTED" ) } group="NOT_STARTED" />
+                        <RenderActivityGroup activities={ groupedActivities.get( "ENDED" ) } group="ENDED" />
+                    </>
                 }
             </div>
-
-            { editActivity !== undefined && <ManageActivity
-                activity={ editActivity }
-                group={ groupContext.group }
-                callback={ async res => {
-                    if ( res?.isSuccess() )
-                        await groupContext.refreshData();
-
-                    setEditActivity( undefined );
-                } }
-            /> }
         </section>
+
+        { isLoading && <LoadingSpinner /> }
+        { showFilterForm && <UniversiForm.Root title="Filtrar Atividades" callback={ handleFilterForm }>
+            <ActivityTypeSelect
+                param="type"
+                label="Tipo da Atividade"
+                options={ activityTypes }
+                defaultValue={ filter.current?.type }
+                isClearable
+            />
+
+            <ActivityStatusSelect
+                param="status"
+                label="Estado Atual"
+                defaultValue={ filter.current?.status }
+            />
+
+            <UniversiForm.Input.Date
+                param="startDate"
+                label="Data de Início"
+                defaultValue={ filter.current?.startDate }
+                help="Filtra Atividades que iniciam nesta data ou depois"
+            />
+
+            <UniversiForm.Input.Date
+                param="endDate"
+                label="Data de Término"
+                defaultValue={ filter.current?.endDate }
+                help="Filtra Atividades que terminam nesta data ou antes"
+            />
+        </UniversiForm.Root> }
     </GroupActivitiesContext.Provider>;
+
+    async function loadActivityTypes() {
+        if ( !groupContext ) return;
+
+        const res = await UniversimeApi.ActivityType.list();
+        if ( res.isSuccess() )
+            setActivityTypes( res.body );
+    }
+
+    async function handleFilterForm( form: FilterActivitiesForm ) {
+        if ( form.confirmed ) {
+            setIsLoading( true );
+
+            filter.current = {
+                type: form.body.type,
+                status: form.body.status,
+                startDate: form.body.startDate,
+                endDate: form.body.endDate,
+            };
+
+            const res = await UniversimeApi.Activity.list( {
+                group: groupContext!.group.id!,
+                type: form.body.type?.id,
+                status: form.body.status?.status,
+                startDate: form.body.startDate?.toISOString(),
+                endDate: form.body.endDate?.toISOString(),
+            } );
+
+            if ( res.isSuccess() )
+                setActivities( res.body );
+
+            setIsLoading( false );
+        }
+
+        setShowFilterForm( false );
+    }
+}
+
+function RenderActivityGroup( props: Readonly<RenderActivityGroupProps> ) {
+    if ( props.activities === undefined )
+        return null;
+
+    return <div>
+        <h3 className={ styles.group_title }>{ ActivityStatusObjects[ props.group ].label }</h3>
+        <div className={ styles.list }>
+            { props.activities.map( a => <RenderActivity activity={ a } key={ a.id } /> ) }
+        </div>
+    </div>;
 }
 
 function RenderActivity( props: Readonly<RenderActivityProps> ) {
@@ -85,11 +177,21 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
     if ( !groupContext || !context )
         return null;
 
+    const groupHref = `/group${activity.group.path}`;
+
     return <div className={ styles.item }>
         <div className={ styles.info }>
+            <Link to={ groupHref } className={ styles.image }>
+                <img src={ groupImageUrl( activity.group ) } alt=""/>
+            </Link>
+
             <div>
-                <h3 className={ styles.title }>{ activity.name }</h3>
-                <h4 className={ styles.location }>{ activity.location } ({ activity.workload }h)</h4>
+                <Link to={ groupHref } className={ styles.link }>
+                    <h3 className={ styles.title }>{ activity.group.name } ({ activity.workload }h)</h3>
+                </Link>
+                <p className={ styles.type }>{ activity.type.name }</p>
+                <p className={ styles.location }>Local: { activity.location }</p>
+                <p className={ styles.date }>Data: { formatActivityDate( activity.startDate, activity.endDate ) }</p>
 
                 { activity.badges.length >0 && <p className={ styles.badges_wrapper }>
                     { activity.badges.map( ct => <RenderCompetenceType
@@ -118,16 +220,18 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
 
         { isExpanded && <div
             className={ styles.description }
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( activity.description ) }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( activity.group.description ?? "" ) }}
         /> }
 
         { isChangingParticipants && <ChangeActivityParticipants
             activity={ activity }
             callback={ async form => {
                 if ( form.confirmed ) {
-                    await UniversimeApi.Activity.changeParticipants( activity.id, {
-                        add: form.body.participants.added.map( p => p.id ),
-                        remove: form.body.participants.removed.map( p => p.id ),
+                    const changes = ArrayChanges.from( form.body.initial, form.body.participants, ( p1, p2 ) => p1.id === p2.id );
+
+                    await UniversimeApi.GroupParticipant.changeParticipants( activity.group.id!, {
+                        add: changes.added.map( p => ( { profile: p.id } ) ),
+                        remove: changes.removed.map( p => p.id ),
                     } );
                 }
 
@@ -143,16 +247,16 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
                 text: "Editar",
                 biIcon: "pencil-fill",
                 hidden( activity ) {
-                    return !canI( "ACTIVITY", Permission.READ_WRITE, activity.group );
+                    return !activity.group.canEdit;
                 },
                 onSelect( activity ) {
-                    context?.setEditActivity( activity );
+                    groupContext?.setEditActivity( activity );
                 },
             }, {
                 text: "Alterar participantes",
                 biIcon: "people-fill",
                 hidden( activity ) {
-                    return !canI( "ACTIVITY", Permission.READ_WRITE, activity.group );
+                    return !canI( "PEOPLE", Permission.READ_WRITE_DELETE, activity.group );
                 },
                 onSelect(){
                     setIsChangingParticipants( true );
@@ -162,7 +266,7 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
                 biIcon: "trash-fill",
                 className: styles.delete_option,
                 hidden( activity ) {
-                    return !canI( "ACTIVITY", Permission.READ_WRITE_DELETE, activity.group );
+                    return activity.group.role?.roleType === "ADMINISTRATOR";
                 },
                 async onSelect( activity ) {
                     const isSure = await SwalUtils.fireAreYouSure({
@@ -176,9 +280,11 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
                     });
                     if ( !isSure.isConfirmed ) return;
 
+                    context?.setIsLoading( true );
                     const res = await UniversimeApi.Activity.remove( activity.id );
                     if ( res.isSuccess() )
-                        groupContext?.refreshData();
+                        await groupContext?.refreshData();
+                    context?.setIsLoading( false );
                 },
             }
         ];
@@ -189,34 +295,52 @@ function ChangeActivityParticipants( props: Readonly<ChangeActivityParticipantsP
     const groupContext = useContext( GroupContext );
     const [ participants, setParticipants ] = useState<Profile.DTO[]>();
     useEffect( () => {
-        UniversimeApi.Activity.listParticipants( props.activity.id )
+        UniversimeApi.GroupParticipant.filter( { groupId: props.activity.group.id, competences: [], matchEveryCompetence: false } )
         .then( participants => {
             setParticipants( participants.body ?? [] );
         } )
     }, [ props.activity.id ] );
 
-    if ( participants === null )
+    if ( participants === undefined )
         return <LoadingSpinner />
 
     return <UniversiForm.Root title={ "Alterar Participantes" } callback={ props.callback }>
         <ProfileSelect
             param="participants"
             label="Participantes"
-            isSeparate
             isSearchable
             defaultValue={ participants }
             options={ groupContext!.participants }
+            validations={ [
+                value => ArrayChanges.from( participants, value, ( p1, p2 ) => p1.id === p2.id ).hasChanges,
+            ] }
+        />
+
+        <UniversiForm.Input.Hidden
+            param="initial"
+            defaultValue={ participants }
         />
     </UniversiForm.Root>;
 }
+
+type FilterActivitiesForm = UniversiForm.Data<{
+    type?: Activity.Type;
+    status?: ActivityStatusArrayObject;
+    startDate?: Date;
+    endDate?: Date;
+}>;
+
+type RenderActivityGroupProps = {
+    activities: Optional<Activity.DTO[]>;
+    group: Activity.Status;
+};
 
 type RenderActivityProps = {
     activity: Activity.DTO;
 };
 
 type GroupActivitiesContextType = {
-    editActivity: Possibly<Activity.DTO>;
-    setEditActivity( action: React.SetStateAction<Possibly<Activity.DTO>> ): unknown;
+    setIsLoading( action: React.SetStateAction<boolean> ): unknown;
 };
 
 type ChangeActivityParticipantsProps = {
@@ -225,5 +349,6 @@ type ChangeActivityParticipantsProps = {
 };
 
 type ChangeActivityParticipantsForm = UniversiForm.Data<{
-    participants: SelectionChanges<Profile.DTO>;
+    participants: ProfileClass[];
+    initial?: Profile.DTO[];
 }>;

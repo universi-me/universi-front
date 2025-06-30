@@ -16,7 +16,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const formData = useMemo( () => new Map<string, FormFieldData>, [] );
     const contextValue = useMemo<UniversiFormContextType>( makeFormContext, [] );
 
-    const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, confirmButtonText, cancelButtonText, style, ...formAttributes } = props;
+    const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, confirmButtonText, cancelButtonText, allowDelete, deleteAction, deleteButtonText, style, ...formAttributes } = props;
     const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
 
     const [ hasRequiredField, setHasRequiredField ] = useState( false );
@@ -39,6 +39,10 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
             </section>
 
             <section className={ styles.actions }>
+                { allowDelete && <button type="button" className={ styles.delete_button } onClick={ handleDelete }>
+                    <BootstrapIcon icon="trash-fill" /> { deleteButtonText ?? "Excluir" }
+                </button> }
+
                 <button type="button" className={ makeClassName( styles.cancel_button ) } onClick={ handleCancel }>
                     <i className="bi bi-x-circle-fill" /> { cancelButtonText ?? "Cancelar" }
                 </button>
@@ -75,7 +79,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
 
         if ( shouldCancel ) {
             setHandlingFormEnd( true );
-            await callback( { confirmed: false } );
+            await callback( { confirmed: false, action: "CANCELED" } );
             setHandlingFormEnd( false );
         }
     }
@@ -91,7 +95,25 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         e.preventDefault();
 
         setHandlingFormEnd( true );
-        await callback( { confirmed: true, body: getFormBody() } );
+        await callback( { confirmed: true, action: "CONFIRMED", body: getFormBody() } );
+        setHandlingFormEnd( false );
+    }
+
+    async function handleDelete( e: MouseEvent<HTMLButtonElement> ) {
+        e.preventDefault();
+
+        if ( !allowDelete ) return;
+        const res = await SwalUtils.fireAreYouSure({
+            title: `Deseja excluir?`,
+            confirmButtonText: "Excluir",
+            confirmButtonColor: "var(--font-color-alert)",
+        });
+
+        if ( !res.isConfirmed ) return;
+
+        setHandlingFormEnd( true );
+        await deleteAction();
+        await callback( { confirmed: false, action: "DELETED" } );
         setHandlingFormEnd( false );
     }
 
@@ -105,9 +127,11 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                     formData.get( key )!.value = value;
 
                 else formData.set( key, {
-                    valid: false,
+                    validation: {
+                        functions: [],
+                        valid: false,
+                    },
                     required: false,
-                    validations: [],
                     value,
                 } );
 
@@ -126,7 +150,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                 if ( formData.has( key ) )
                     value = formData.get( key )!.value;
 
-                formData.set( key, { value, validations, valid: false, required: validationOptions.required ?? false } );
+                formData.set( key, { value, validation: { functions: validations, valid: false }, required: validationOptions.required ?? false } );
                 setHasRequiredField( formData.values().some( d => d.required ) );
 
                 updateValidations( key ).then( () => {
@@ -140,13 +164,13 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
                     // return undefined if key is not present or value evaluates to false
                     return undefined;
 
-                return formData.get( key )!.valid;
+                return formData.get( key )!.validation.valid;
             },
         }
     }
 
     function updateIsAllValid() {
-        setIsAllValid( formData.values().every( v => v.valid ) );
+        setIsAllValid( formData.values().every( v => v.validation.valid ) );
     }
 
     async function updateValidations( key: string ) {
@@ -157,11 +181,11 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
         setIsAllValid( false );
         const body = getFormBody();
         const responses = await Promise.all(
-            formData.get( key )!.validations
+            formData.get( key )!.validation.functions
                 .map( validate => validate( value, body ) )
         );
 
-        formData.get( key )!.valid = responses.every( r => r );
+        formData.get( key )!.validation.valid = responses.every( r => r );
         updateIsAllValid();
     }
 
@@ -182,19 +206,30 @@ export type UniversiFormRootProps = PropsWithChildren<{
     allowConfirm?: boolean;
     confirmButtonText?: string;
     cancelButtonText?: string;
-}> & FormHTMLAttributes<HTMLDivElement>;
+    deleteButtonText?: string;
+}> & ({
+    allowDelete?: false;
+    deleteAction?(): unknown;
+} | {
+    allowDelete: true;
+    deleteAction(): unknown;
+}) & FormHTMLAttributes<HTMLDivElement>;
 
 export type UniversiFormData<T> = {
     confirmed: true;
+    action: "CONFIRMED";
     body: T;
 } | {
     confirmed: false;
+    action: "CANCELED" | "DELETED";
     body?: undefined;
 };
 
 type FormFieldData = {
     value: any;
-    validations: UniversiFormFieldValidation<any>[];
-    valid: boolean;
+    validation: {
+        functions: UniversiFormFieldValidation<any>[];
+        valid: boolean;
+    };
     required: boolean;
 };

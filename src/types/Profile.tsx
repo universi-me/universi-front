@@ -11,7 +11,7 @@ export const GENDER_OPTIONS: {[k in Profile.Gender]: string} = {
     O: "Outro",
 };
 
-export function ProfileSelect<S extends Optional<boolean>>( props: Readonly<ProfileSelectProps<S>> ) {
+export function ProfileSelect( props: Readonly<ProfileSelectProps> ) {
     const { options, renderBio, renderDepartment, useLink, defaultValue, ...selectProps } = props;
 
     const [departmentsFilters, setDepartmentsFilters] = useState([]);
@@ -90,6 +90,12 @@ export function ProfileSelect<S extends Optional<boolean>>( props: Readonly<Prof
             .filter((item, index, self) => self.findIndex(d => d.id === item.id) === index)
             .sort( (a, b) => a.name.localeCompare(b.name) );
     }
+}
+
+export const USERNAME_CHAR_REGEX = /[a-z0-9_.-]/
+export const USERNAME_REGEX = RegExp( "^" + String( USERNAME_CHAR_REGEX ).slice( 1, -1 ) + "+$" )
+export function isValidUsernamePattern( username: string ): boolean {
+    return USERNAME_REGEX.test( username );
 }
 
 export class ProfileClass implements Profile.DTO {
@@ -229,8 +235,8 @@ export class ProfileClass implements Profile.DTO {
     set department( department: Nullable<Department.DTO> ) { this.profile.department = department; }
 }
 
-export type ProfileSelectProps<Separate extends Optional<boolean>> = Omit<
-    UniversiFormCardSelectionInputProps<ProfileClass, Separate>,
+export type ProfileSelectProps = Omit<
+    UniversiFormCardSelectionInputProps<ProfileClass>,
     "getOptionUniqueValue" | "options" | "render" | "defaultValue" | "searchFilter"
 > & Omit<
     ProfileCardProps,
