@@ -20,10 +20,16 @@ export default function SinginForm() {
   const organizationEnv = auth.organization.groupSettings.environment;
   const SIGNUP_ENABLED = organizationEnv?.signup_enabled ?? true;
   const RECOVERY_ENABLED = organizationEnv?.recovery_enabled ?? true;
-  const ENABLE_GOOGLE_LOGIN = organizationEnv?.login_google_enabled ?? false;
   const ENABLE_RECAPTCHA = organizationEnv?.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
   const RECAPTCHA_SITE_KEY = organizationEnv?.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  
+  const ENABLE_GOOGLE_LOGIN = organizationEnv?.login_google_enabled ?? false;
+  const GOOGLE_LOGIN_IMAGE_URL = organizationEnv?.google_login_image_url ?? undefined;
+  const GOOGLE_LOGIN_TEXT = organizationEnv?.google_login_text ?? undefined;
+
   const ENABLE_KEYCLOAK_LOGIN = organizationEnv?.keycloak_enabled ?? false;
+  const KEYCLOAK_LOGIN_IMAGE_URL = organizationEnv?.keycloak_login_image_url ?? "https://i.imgur.com/pKFFuoh.png";
+  const KEYCLOAK_LOGIN_TEXT = organizationEnv?.keycloak_login_text ?? "Keycloak";
 
   const disableSignInButton = !email.length || !password.length || ( ENABLE_RECAPTCHA && !recaptchaToken );
 
@@ -92,7 +98,7 @@ export default function SinginForm() {
                 <div className="line-form"></div>
             </div>
 
-            <SignInWithGoogle client_id={organizationEnv?.google_client_id!} />
+            <SignInWithGoogle client_id={organizationEnv?.google_client_id!} text={ GOOGLE_LOGIN_TEXT } imageUrl={ GOOGLE_LOGIN_IMAGE_URL } />
         </>
       }
 
@@ -110,8 +116,8 @@ export default function SinginForm() {
                 type="button"
                 onClick={handleAuthLoginKeycloak}
             >
-                <img src="https://i.imgur.com/pKFFuoh.png"  height={70}/>
-                Keycloak
+                <img src={ KEYCLOAK_LOGIN_IMAGE_URL } alt={ KEYCLOAK_LOGIN_TEXT } height={69}/>
+                { KEYCLOAK_LOGIN_TEXT }
             </button>
         </>
       }

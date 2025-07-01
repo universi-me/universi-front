@@ -124,7 +124,7 @@ export function EnvironmentsPage() {
                 items: [
                     {
                         name: "Notificar Novo Conteúdo No Grupo",
-                        key: "alert_new_content_enabled",
+                        key: "message_new_content_enabled",
                         type: "boolean",
                         defaultValue: true,
                     },
@@ -139,7 +139,7 @@ export function EnvironmentsPage() {
                     },
                     {
                         name: "Notificar Conteúdo Atribuído",
-                        key: "alert_assigned_content_enabled",
+                        key: "message_assigned_content_enabled",
                         type: "boolean",
                         defaultValue: true,
                     },
@@ -164,6 +164,12 @@ export function EnvironmentsPage() {
                         defaultValue: false,
                     },
                     {
+                        name: "Texto do Botão",
+                        key: "google_login_text",
+                        type: "string",
+                        defaultValue: "EMAIL GOOGLE"
+                    },
+                    {
                         name: "Client ID",
                         key: "google_client_id",
                         type: "string",
@@ -181,6 +187,12 @@ export function EnvironmentsPage() {
                         key: "keycloak_enabled",
                         type: "boolean",
                         defaultValue: false,
+                    },
+                    {
+                        name: "Texto do Botão",
+                        key: "keycloak_login_text",
+                        type: "string",
+                        defaultValue: "Keycloak"
                     },
                     {
                         name: "Auth URL",
