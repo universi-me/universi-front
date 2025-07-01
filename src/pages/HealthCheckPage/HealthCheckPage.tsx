@@ -10,7 +10,16 @@ export function HealthCheckPage() {
     const [servicesHealth, setServicesHealth] = useState(initialState);
     const [ resourcesUsage, setResourcesUsage ] = useState<Health.Usage>();
 
-    useEffect(() => { checkHealth(); checkResourcesUsage(); }, []);
+    useEffect(() => {
+        checkHealth();
+        checkResourcesUsage();
+
+        const interval = setInterval( () => {
+            checkResourcesUsage();
+        }, 5_000 );
+
+        return function() { clearInterval( interval ); }
+    }, []);
 
     return <main id="health-check-page">
         <center>
