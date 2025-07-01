@@ -7,7 +7,7 @@ import { LOGIN_REDIRECT_PARAM } from "@/pages/singin/Singin";
 import { isApiError } from "@/utils/apiUtils";
 
 const baseApiUrl = import.meta.env.VITE_UNIVERSIME_API;
-const jwtTokenCookie = "JWT_TOKEN";
+export const jwtTokenCookie = "JWT_TOKEN";
 
 export function createApiInstance( path: string ) {
     const api = axios.create({
