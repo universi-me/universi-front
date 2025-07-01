@@ -12,7 +12,7 @@ export const jwtTokenCookie = "JWT_TOKEN";
 export function createApiInstance( path: string ) {
     const api = axios.create({
         baseURL: `${baseApiUrl}${path}`,
-        withCredentials: false,
+        withCredentials: true,
     });
 
     api.interceptors.request.use( request => {
