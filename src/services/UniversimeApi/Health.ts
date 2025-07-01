@@ -22,6 +22,18 @@ export async function checkHealthAll() {
     return new ApiResponse( res ?? { status: 503, data: failToReachAll() } );
 }
 
+export async function usage() {
+    const res = await api.get<Health.Usage>( "/usage", { timeout: HEALTH_CHECK_TIMEOUT_MS, } )
+        .catch( () => null );
+
+    return new ApiResponse( res ?? { status: 503, data: {
+        cpuLoad: -1,
+        totalMemory: -1,
+        freeMemory: -1,
+        maxMemory: -1,
+    } } );
+}
+
 function failToReach(service: Health.ServiceId): Health.ResponseDTO {
     return {
         up: false,
