@@ -1,4 +1,6 @@
-import { createApiInstance } from "./api";
+import * as Cookie from "cookie";
+
+import { createApiInstance, jwtTokenCookie } from "./api";
 import { ApiResponse } from "@/utils/apiUtils";
 
 const api = createApiInstance("/")
@@ -10,6 +12,7 @@ export function signin( body: SignIn_RequestDTO ) {
 
 export async function logout() {
     const response = await api.get<boolean>('/account/logout');
+    document.cookie = Cookie.serialize( jwtTokenCookie, "", { expires: new Date(), path: "/" } );
     return response.data;
 }
 

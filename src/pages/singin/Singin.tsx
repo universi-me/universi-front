@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { AuthContext } from "@/contexts/Auth";
 import SinginForm from "./SinginForm";
@@ -7,6 +7,8 @@ import "./SignIn.less";
 export default function Singin() {
     const authContext = useContext(AuthContext);
     const [searchParams] = useSearchParams()
+
+    useEffect( () => { authContext.updateLoggedUser() }, [] );
 
     if (authContext.profile) {
         return <Navigate to={ searchParams.get(LOGIN_REDIRECT_PARAM) ?? "/" } />

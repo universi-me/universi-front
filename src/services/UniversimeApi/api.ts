@@ -1,3 +1,4 @@
+import * as Cookie from "cookie";
 import type { ApiResponse } from "@/types/UniversimeApi";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import axios from "axios";
@@ -6,12 +7,19 @@ import { LOGIN_REDIRECT_PARAM } from "@/pages/singin/Singin";
 import { isApiError } from "@/utils/apiUtils";
 
 const baseApiUrl = import.meta.env.VITE_UNIVERSIME_API;
+export const jwtTokenCookie = "JWT_TOKEN";
 
 export function createApiInstance( path: string ) {
     const api = axios.create({
         baseURL: `${baseApiUrl}${path}`,
         withCredentials: true,
     });
+
+    api.interceptors.request.use( request => {
+        const token = Cookie.parse( document.cookie )[ jwtTokenCookie ];
+        request.headers.Authorization = `Bearer ${ token }`;
+        return request;
+    } );
 
     api.interceptors.response.use( response => {
 
@@ -38,6 +46,10 @@ export function createApiInstance( path: string ) {
 
 function handleForResponseData( response: ApiResponse<any>, isModalAsDefault: boolean, isError: boolean ) {
     // handle redirect
+    if ( response.token ) {
+        document.cookie = Cookie.serialize( jwtTokenCookie, response.token, { path: "/", secure: true } );
+    }
+
     if(response.redirectTo) {
         let redirectUrl = response.redirectTo;
 
