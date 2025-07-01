@@ -170,6 +170,12 @@ export function EnvironmentsPage() {
                         defaultValue: "EMAIL GOOGLE"
                     },
                     {
+                        name: "Imagem do Botão",
+                        key: "google_login_image_url",
+                        type: "string",
+                        defaultValue: "https://lh3.googleusercontent.com/d_S5gxu_S1P6NR1gXeMthZeBzkrQMHdI5uvXrpn3nfJuXpCjlqhLQKH_hbOxTHxFhp5WugVOEcl4WDrv9rmKBDOMExhKU5KmmLFQVg"
+                    },
+                    {
                         name: "Client ID",
                         key: "google_client_id",
                         type: "string",
@@ -193,6 +199,12 @@ export function EnvironmentsPage() {
                         key: "keycloak_login_text",
                         type: "string",
                         defaultValue: "Keycloak"
+                    },
+                    {
+                        name: "Imagem do Botão",
+                        key: "keycloak_login_image_url",
+                        type: "string",
+                        defaultValue: "https://i.imgur.com/pKFFuoh.png"
                     },
                     {
                         name: "Auth URL",
