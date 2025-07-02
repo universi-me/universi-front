@@ -61,6 +61,8 @@ namespace Group {
 
         // Google OAuth Login
         login_google_enabled: boolean;
+        google_login_image_url: string;
+        google_login_text: string;
         google_client_id: string;
 
         // Google Recaptcha
@@ -71,6 +73,8 @@ namespace Group {
 
         // KeyCloak
         keycloak_enabled: boolean;
+        keycloak_login_image_url: string;
+        keycloak_login_text: string;
         keycloak_client_id: string;
         keycloak_client_secret: string;
         keycloak_realm: string;
@@ -87,9 +91,13 @@ namespace Group {
 
         // Email Notifications
         message_new_content_enabled: boolean;
+        message_assigned_content_enabled: boolean;
         message_template_new_content: string;
         message_assigned_content_enabled: string;
         message_template_assigned_content: string;
+
+        organization_name: string;
+        organization_nickname: string;
     };
 
     type Type = {
