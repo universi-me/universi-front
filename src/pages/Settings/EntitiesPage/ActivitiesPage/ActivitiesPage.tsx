@@ -64,7 +64,10 @@ export function ActivitiesPage() {
             title={ edit ? "Editar Tipo de Atividade" : "Criar Tipo de Atividade" }
             callback={ handleForm }
             allowDelete={ edit !== null }
-            deleteAction={ () => UniversimeApi.ActivityType.remove( edit!.id ) }
+            deleteAction={ async () => {
+                await UniversimeApi.ActivityType.remove( edit!.id );
+                await cache.CompetenceType.update();
+            } }
         >
             <UniversiForm.Input.Text
                 param="name"
