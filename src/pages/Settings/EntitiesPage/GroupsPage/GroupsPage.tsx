@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useLoaderData } from "react-router";
 
+import useCache from "@/contexts/Cache";
 import { UniversimeApi } from "@/services";
 import Filter from "@/components/Filter";
 import ActionButton from "@/components/ActionButton";
@@ -18,6 +19,7 @@ import { GroupTypeItem } from "./GroupTypeItem";
 
 export function GroupsPage() {
     const loaderData = useLoaderData<GroupsPageLoaderData>();
+    const cache = useCache();
 
     const [ errors, setErrors ] = useState( loaderData.success ? undefined : loaderData.reason );
     const [ filter, setFilter ] = useState( "" );
@@ -63,7 +65,10 @@ export function GroupsPage() {
             title={ edit ? "Editar Tipo de Grupo" : "Criar Tipo de Grupo" }
             callback={ handleForm }
             allowDelete={ edit !== null }
-            deleteAction={ () => UniversimeApi.GroupType.remove( edit!.id ) }
+            deleteAction={ async () => {
+                await UniversimeApi.GroupType.remove( edit!.id );
+                await cache.GroupType.update();
+            } }
         >
             <UniversiForm.Input.Text
                 param="label"
@@ -75,7 +80,10 @@ export function GroupsPage() {
     </GroupsPageContext.Provider>;
 
     async function refreshContext() {
-        const data = await GroupsPageLoaderFetch();
+        const [ data ] = await Promise.all( [
+            GroupsPageLoaderFetch(),
+            cache.GroupType.update(),
+        ] );
 
         if ( data.success ) {
             context.groupTypes = data.types;

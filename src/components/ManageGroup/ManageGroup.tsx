@@ -1,3 +1,4 @@
+import useCache from "@/contexts/Cache";
 import UniversiForm from "@/components/UniversiForm";
 import { UniversimeApi } from "@/services"
 
@@ -14,6 +15,7 @@ export type ManageGroupProps = {
 };
 
 export function ManageGroup(props: Readonly<ManageGroupProps>) {
+    const cache = useCache();
     const { group, parentGroup, callback } = props;
 
     const isCreating = group === null;
@@ -21,11 +23,8 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
 
     const [ availableGroupTypes, setAvailableGroupTypes ] = useState<Group.Type[]>();
     useEffect( () => {
-        UniversimeApi.GroupType.list()
-        .then( res => {
-            if ( res.isSuccess() )
-                setAvailableGroupTypes( res.body );
-        } )
+        cache.GroupType.get()
+        .then( setAvailableGroupTypes );
     }, [] );
 
     if ( availableGroupTypes === undefined )

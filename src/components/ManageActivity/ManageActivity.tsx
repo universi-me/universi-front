@@ -28,11 +28,8 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
 
     const [ availableGroupTypes, setAvailableGroupTypes ] = useState<Group.Type[]>();
     useEffect( () => {
-        UniversimeApi.GroupType.list()
-        .then( res => {
-            if ( res.isSuccess() )
-                setAvailableGroupTypes( res.body );
-        } )
+        cache.GroupType.get()
+        .then( setAvailableGroupTypes );
     }, [] );
 
     const isCreating = props.activity === null;
