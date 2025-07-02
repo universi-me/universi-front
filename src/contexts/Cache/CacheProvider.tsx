@@ -9,15 +9,27 @@ export function CacheProvider( props: Readonly<React.PropsWithChildren<{}>> ) {
     const { children } = props;
 
     const context = useRef<CacheContextType>( {
-        ActivityType: new CacheHandler( UniversimeApi.ActivityType.list ),
-        CompetenceType: new CacheHandler( UniversimeApi.CompetenceType.list ),
-        Institution: new CacheHandler( UniversimeApi.Institution.list ),
-        GroupType: new CacheHandler( UniversimeApi.GroupType.list ),
+        ActivityType: cacheFromApi( UniversimeApi.ActivityType.list ),
+        CompetenceType: cacheFromApi( UniversimeApi.CompetenceType.list ),
+        Institution: cacheFromApi( UniversimeApi.Institution.list ),
+        GroupType: cacheFromApi( UniversimeApi.GroupType.list ),
     } ).current;
 
     return <CacheContext.Provider value={ context }>
         { children }
     </CacheContext.Provider>;
+
+    function cacheFromApi<T extends NonNullable<{}>>( getter: () => Awaitable<ApiResponse<T>> ): CacheHandler<T> {
+        return new CacheHandler( async () => {
+            const res = await getter();
+            if ( !res.isSuccess() ) {
+                console.error( res.error );
+                throw new Error( `Erro ao atualizar cache: ${ res.errorMessage }` );
+            }
+
+            return res.body;
+        } );
+    }
 }
 
 export class CacheHandler<T extends NonNullable<{}>> {
@@ -25,7 +37,7 @@ export class CacheHandler<T extends NonNullable<{}>> {
     private _value: Optional<T>;
 
     constructor (
-        private readonly _getter: () => Awaitable<ApiResponse<T>>
+        private readonly _getter: () => Awaitable<T>
     ) {}
 
     private shouldRefresh(): boolean {
@@ -40,15 +52,9 @@ export class CacheHandler<T extends NonNullable<{}>> {
     }
 
     public async update(): Promise<T> {
-        const res = await this._getter();
-        if ( !res.isSuccess() ) {
-            console.error( res.error );
-            throw new Error( `Erro ao atualizar cache: ${ res.errorMessage }` );
-        }
-
-        this._value = res.body;
+        this._value = await this._getter();
         this._lastUpdatedAt = Date.now();
 
-        return res.body;
+        return this._value;
     }
 }
