@@ -96,11 +96,10 @@ export function ManageJob(props: Readonly<ManageJobsProps>) {
     }
 
     async function updateInstitutions() {
-        const res = await UniversimeApi.Institution.list();
-        if (res.isSuccess())
-            setInstitutions(res.data);
+        const res = await cache.Institution.get();
+        setInstitutions( res );
 
-        return res.data;
+        return res;
     }
 
     async function updateCompetenceTypes() {

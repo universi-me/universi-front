@@ -11,6 +11,7 @@ export function CacheProvider( props: Readonly<React.PropsWithChildren<{}>> ) {
     const context = useRef<CacheContextType>( {
         ActivityType: new CacheHandler( UniversimeApi.ActivityType.list ),
         CompetenceType: new CacheHandler( UniversimeApi.CompetenceType.list ),
+        Institution: new CacheHandler( UniversimeApi.Institution.list ),
     } ).current;
 
     return <CacheContext.Provider value={ context }>

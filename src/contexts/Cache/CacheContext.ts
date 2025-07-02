@@ -10,5 +10,5 @@ export type CacheContextType = {
     // readonly EducationType: CacheHandler<Education.Type[]>;
     // readonly ExperienceType: CacheHandler<Experience.Type[]>;
     // readonly GroupType: CacheHandler<Group.Type[]>;
-    // readonly Institution: CacheHandler<Institution.DTO[]>;
+    readonly Institution: CacheHandler<Institution.DTO[]>;
 };
