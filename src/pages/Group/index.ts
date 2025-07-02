@@ -1,7 +1,7 @@
-import { GroupPage } from "./Group"
+import { GroupPage } from "./GroupPage"
 export default GroupPage;
 
-export * from "./Group"
+export * from "./GroupPage"
 export * from "./GroupIntro/GroupIntro"
 export * from "./GroupTabs"
 export * from "./GroupTabs/GroupTabs"
