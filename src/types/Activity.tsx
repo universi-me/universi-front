@@ -1,3 +1,4 @@
+import useCache from "@/contexts/Cache";
 import { UniversimeApi } from "@/services";
 import { UniversiFormSelectInput, UniversiFormSelectInputProps } from "@/components/UniversiForm/inputs/UniversiFormSelectInput";
 import { stringIncludesIgnoreCase } from "@/utils/stringUtils";
@@ -39,6 +40,8 @@ export function getActivityStatusObject( status: Optional<Activity.Status> ): Op
 }
 
 export function ActivityTypeSelect<C extends Optional<boolean>>( props: Readonly<ActivityTypeSelectProps<C>> ) {
+    const cache = useCache();
+
     return <UniversiFormSelectInput
         { ...props }
         getOptionLabel={ at => at.name }
@@ -46,6 +49,7 @@ export function ActivityTypeSelect<C extends Optional<boolean>>( props: Readonly
         sortOptions={ compareActivityTypes }
         onCreateOption={ async name => {
             const res = await UniversimeApi.ActivityType.create( { name } );
+            await cache.ActivityType.update();
             return res.body;
         } }
     />

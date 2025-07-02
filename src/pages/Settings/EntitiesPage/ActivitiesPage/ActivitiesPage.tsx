@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useLoaderData } from "react-router";
 
+import useCache from "@/contexts/Cache";
 import { UniversimeApi } from "@/services";
 import Filter from "@/components/Filter";
 import ActionButton from "@/components/ActionButton";
@@ -17,6 +18,7 @@ import styles from "./ActivitiesPage.module.less";
 
 export function ActivitiesPage() {
     const loaderData = useLoaderData<ActivitiesPageLoaderData>();
+    const cache = useCache();
 
     const [ errors, setErrors ] = useState( loaderData.success ? undefined : loaderData.reason );
     const [ filter, setFilter ] = useState( "" );
@@ -74,7 +76,10 @@ export function ActivitiesPage() {
     </ActivitiesPageContext.Provider>;
 
     async function refreshContext() {
-        const data = await ActivitiesPageLoaderFetch();
+        const [ data ] = await Promise.all( [
+            ActivitiesPageLoaderFetch(),
+            cache.ActivityType.update(),
+        ] );
 
         if ( data.success ) {
             context.activityTypes = data.types;

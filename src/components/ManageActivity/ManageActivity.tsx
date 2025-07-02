@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+
+import useCache from "@/contexts/Cache";
 import { UniversimeApi } from "@/services";
 import UniversiForm, { UniversiFormStyles } from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -10,14 +12,12 @@ import { isValidUsernamePattern } from "@/types/Profile";
 
 export function ManageActivity( props: Readonly<ManageActivityProps> ) {
     const { activity, group, callback } = props;
+    const cache = useCache();
 
     const [ availableActivityTypes, setAvailableActivityTypes ] = useState<Activity.Type[]>();
     useEffect( () => {
-        UniversimeApi.ActivityType.list()
-        .then( res => {
-            if ( res.isSuccess() )
-                setAvailableActivityTypes( res.body );
-        } )
+        cache.ActivityType.get()
+        .then( setAvailableActivityTypes );
     }, [] );
 
     const [ availableCompetenceTypes, setAvailableCompetenceTypes ] = useState<Competence.Type[]>();

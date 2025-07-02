@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import { Link } from "react-router";
 import DOMPurify from "dompurify";
 
+import useCache from "@/contexts/Cache";
 import { UniversimeApi } from "@/services";
 import UniversiForm from "@/components/UniversiForm";
 import ActionButton from "@/components/ActionButton";
@@ -29,6 +30,7 @@ const GroupActivitiesContext = createContext<Possibly<GroupActivitiesContextType
 export function GroupActivities() {
     const groupContext = useContext( GroupContext );
     const canI = useCanI();
+    const cache = useCache();
 
     const [ activities, setActivities ] = useState( groupContext?.activities );
     const [ activityTypes, setActivityTypes ] = useState<Activity.Type[]>();
@@ -115,11 +117,8 @@ export function GroupActivities() {
     </GroupActivitiesContext.Provider>;
 
     async function loadActivityTypes() {
-        if ( !groupContext ) return;
-
-        const res = await UniversimeApi.ActivityType.list();
-        if ( res.isSuccess() )
-            setActivityTypes( res.body );
+        const res = await cache.ActivityType.get();
+        setActivityTypes( res );
     }
 
     async function handleFilterForm( form: FilterActivitiesForm ) {

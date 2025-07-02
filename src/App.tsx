@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { CacheProvider } from "@/contexts/Cache";
 import { ThemeProvider } from "@/contexts/Theme";
 import UniversiHeader from "@/components/UniversiHeader";
 import useUmami from "@/hooks/useUmami";
@@ -11,6 +12,7 @@ export function App() {
     useUmami();
 
     return (
+        <CacheProvider>
         <AuthProvider>
             <YouTubePlayerProvider>
                 <ThemeProvider>
@@ -24,5 +26,6 @@ export function App() {
                 </ThemeProvider>
             </YouTubePlayerProvider>
         </AuthProvider>
+        </CacheProvider>
     );
 }
