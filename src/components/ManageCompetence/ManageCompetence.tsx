@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
+import useCache from "@/contexts/Cache";
 import { UniversimeApi } from "@/services";
 import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -10,6 +11,8 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import styles from "./ManageCompetence.module.less";
 
 export function ManageCompetence( props: Readonly<ManageCompetenceProps> ) {
+    const cache = useCache();
+
     const { competence, removeTypes, callback } = props;
     const isCreating = competence === null;
 
@@ -57,24 +60,11 @@ export function ManageCompetence( props: Readonly<ManageCompetenceProps> ) {
     </UniversiForm.Root>
 
     async function updateCompetenceTypes() {
-        const res = await UniversimeApi.CompetenceType.list();
+        const res = await cache.CompetenceType.get();
 
-        if ( res.isSuccess() ) {
-            const list = res.body.slice().sort( compareCompetenceTypes );
-            setCompetenceTypes( list );
-            return list;
-        }
-
-        else {
-            await SwalUtils.fireModal({
-                title: "Ocorreu um erro",
-                text: res.errorMessage ?? "Erro ao buscar tipos de competência disponíveis",
-
-                confirmButtonText: "Fechar",
-                confirmButtonColor: "var(--wrong-invalid-color)",
-            });
-            callback?.( undefined );
-        }
+        const list = res.slice().sort( compareCompetenceTypes );
+        setCompetenceTypes( list );
+        return list;
     }
 
     async function handleForm( form: CompetenceForm ) {

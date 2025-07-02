@@ -22,11 +22,8 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
 
     const [ availableCompetenceTypes, setAvailableCompetenceTypes ] = useState<Competence.Type[]>();
     useEffect( () => {
-        UniversimeApi.CompetenceType.list()
-        .then( res => {
-            if ( res.isSuccess() )
-                setAvailableCompetenceTypes( res.body );
-        } )
+        cache.CompetenceType.get()
+        .then( setAvailableCompetenceTypes );
     }, [] );
 
     const [ availableGroupTypes, setAvailableGroupTypes ] = useState<Group.Type[]>();

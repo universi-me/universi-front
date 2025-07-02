@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import useCache from "@/contexts/Cache";
 import { UniversimeApi } from "@/services"
 import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -23,6 +24,8 @@ export type ManageContentProps = {
 };
 
 export function ManageContent(props: Readonly<ManageContentProps>) {
+    const cache = useCache();
+
     const [content, setContent] = useState(props.content);
     const [group, setGroup] = useState(props.group);
 
@@ -127,9 +130,8 @@ export function ManageContent(props: Readonly<ManageContentProps>) {
     }
 
     async function updateCompetenceTypes() {
-        const res = await UniversimeApi.CompetenceType.list();
-        if (res.isSuccess())
-            setAvailableCompetenceTypes(res.data);
+        const res = await cache.CompetenceType.get();
+        setAvailableCompetenceTypes( res );
 
         return res;
     }

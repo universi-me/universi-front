@@ -2,6 +2,7 @@ import { useContext, useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
+import useCache from "@/contexts/Cache";
 import { ProfileClass } from "@/types/Profile";
 import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
 
@@ -26,6 +27,8 @@ type competenceSearch = {
 export function GroupPeople() {
     const groupContext = useContext(GroupContext);
     const authContext = useContext(AuthContext);
+    const cache = useCache();
+
     const [filterPeople, setFilterPeople] = useState<string>("");
     const [allTypeCompetence, setAllTypeCompetence] = useState<Competence.Type[] | undefined>()
     const [currentCompetence, setCurrentCompetence] = useState<competenceSearch>()
@@ -37,13 +40,8 @@ export function GroupPeople() {
     const canI = useCanI();
 
     useEffect(()=>{
-        UniversimeApi.CompetenceType.list().then((response)=>{
-            if(response.isSuccess())
-                return response.data
-        })
-        .then((list)=>{
-            setAllTypeCompetence(list)
-        })
+        cache.CompetenceType.get()
+        .then( setAllTypeCompetence );
     }, [])
 
     useEffect(()=>{

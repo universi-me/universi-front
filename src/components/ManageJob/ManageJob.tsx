@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+
+import useCache from "@/contexts/Cache";
 import { UniversimeApi } from "@/services"
 import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -12,6 +14,8 @@ export type ManageJobsProps = {
 };
 
 export function ManageJob(props: Readonly<ManageJobsProps>) {
+    const cache = useCache();
+
     const { job, callback } = props;
 
     const [institutions, setInstitutions] = useState<Institution[]>();
@@ -100,11 +104,10 @@ export function ManageJob(props: Readonly<ManageJobsProps>) {
     }
 
     async function updateCompetenceTypes() {
-        const res = await UniversimeApi.CompetenceType.list();
-        if (res.isSuccess())
-            setCompetenceTypes(res.data);
+        const res = await cache.CompetenceType.get();
+        setCompetenceTypes( res );
 
-        return res.data;
+        return res;
     }
 }
 

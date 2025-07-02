@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
+import useCache from "@/contexts/Cache";
 import { UniversimeApi } from "@/services"
 import { Filter } from "@/components/Filter/Filter";
 import UniversiForm from "@/components/UniversiForm";
@@ -13,7 +14,8 @@ import { groupArray } from "@/utils/arrayUtils";
 import "./CompetencesSettingsPage.less";
 
 export function CompetencesSettingsPage() {
-    const loaderData = useLoaderData() as CompetencesSettingsLoaderResponse;
+    const loaderData = useLoaderData<CompetencesSettingsLoaderResponse>();
+    const cache = useCache();
     const navigate = useNavigate();
 
     const [reviewedFilter, setReviewedFilter] = useState("");
@@ -116,8 +118,8 @@ export function CompetencesSettingsPage() {
     </div>;
 
     async function refreshCompetenceTypes() {
-        const competenceTypes = await UniversimeApi.CompetenceType.list();
-        setCompetenceTypes(competenceTypes.data ?? []);
+        const competenceTypes = await cache.CompetenceType.update();
+        setCompetenceTypes(competenceTypes);
     }
 
     type MergeCompetencesProps = UniversiForm.Data<{ remainingCompetenceType: Competence.Type }>

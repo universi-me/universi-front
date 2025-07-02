@@ -1,3 +1,4 @@
+import useCache from "@/contexts/Cache";
 import UniversiForm from "@/components/UniversiForm";
 import { UniversiFormSelectInputProps } from "@/components/UniversiForm/inputs/UniversiFormSelectInput";
 import { UniversimeApi } from "@/services";
@@ -79,6 +80,8 @@ export function CompetenceLevelSelect<C extends Optional<boolean> = undefined>( 
 }
 
 export function CompetenceTypeSelect<C extends Optional<boolean>, M extends Optional<boolean>>( props: Readonly<CompetenceTypeSelectProps<C, M>> ) {
+    const cache = useCache();
+
     return <UniversiForm.Input.Select
         { ...props }
         options={ props.options }
@@ -88,6 +91,7 @@ export function CompetenceTypeSelect<C extends Optional<boolean>, M extends Opti
         sortOptions={ compareCompetenceTypes }
         onCreateOption={ async name => {
             const res = await UniversimeApi.CompetenceType.create( { name } );
+            await cache.CompetenceType.update();
             return res.body;
         } }
         createOptionLabel={ props.createOptionLabel ?? ( name => `Criar Tipo de Competência "${ name }"` ) }
