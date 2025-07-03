@@ -45,10 +45,6 @@ export function createApiInstance( path: string ) {
 
 function handleForResponseData( response: ApiResponse<any>, isModalAsDefault: boolean, isError: boolean ) {
     // handle redirect
-    if ( response.token ) {
-        saveJwtToken( response.token );
-    }
-
     if(response.redirectTo) {
         let redirectUrl = response.redirectTo;
 

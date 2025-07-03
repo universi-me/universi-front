@@ -7,7 +7,11 @@ const api = createApiInstance("/")
 
 
 export function signin( body: SignIn_RequestDTO ) {
-    return api.post<LegacyApiResponse<{ user: User.DTO }>>( "/signin", body ).then( ApiResponse.new );
+    return api.post<LegacyApiResponse<{ user: User.DTO }>>( "/signin", body ).then( res => {
+        const response = new ApiResponse( res );
+        if ( response.body?.token ) saveJwtToken( response.body.token );
+        return response;
+    } );
 }
 
 export async function logout() {
