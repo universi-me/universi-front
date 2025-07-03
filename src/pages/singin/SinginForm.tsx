@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
 import { AuthContext } from "@/contexts/Auth/AuthContext";
-import SignInWithGoogle from "@/components/SignInWithGoogle/SignInWithGoogle";
-import { SignInWithKeycloak } from "@/components/SignInWithKeycloak";
+import AlternativeSignIns from "@/components/AlternativeSignIns";
 
 import "./SignInForm.less";
 
@@ -22,10 +21,6 @@ export default function SinginForm() {
   const RECOVERY_ENABLED = organizationEnv?.recovery_enabled ?? true;
   const ENABLE_RECAPTCHA = organizationEnv?.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
   const RECAPTCHA_SITE_KEY = organizationEnv?.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-  
-  const ENABLE_GOOGLE_LOGIN = organizationEnv?.login_google_enabled ?? false;
-  const ENABLE_KEYCLOAK_LOGIN = organizationEnv?.keycloak_enabled ?? false;
-
   const disableSignInButton = !email.length || !password.length || ( ENABLE_RECAPTCHA && !recaptchaToken );
 
   return <div id="signin-form-container">
@@ -86,36 +81,11 @@ export default function SinginForm() {
       </form>
 
 
-      { ENABLE_GOOGLE_LOGIN && <>
-            <div className="container-line-form">
-                <div className="line-form"></div>
-                <div className="enter-with">ou entre com</div>
-                <div className="line-form"></div>
-            </div>
-
-            <SignInWithGoogle
-                client_id={organizationEnv?.google_client_id!}
-                text={ organizationEnv?.google_login_text }
-                imageUrl={ organizationEnv?.google_login_image_url }
-            />
-        </>
-      }
-
-      {
-        !ENABLE_KEYCLOAK_LOGIN ? null :
-        <>
-            <div className="container-line-form">
-                <div className="line-form"></div>
-                <div className="enter-with">ou entre com</div>
-                <div className="line-form"></div>
-            </div>
-
-            <SignInWithKeycloak
-                imageUrl={ organizationEnv?.keycloak_login_image_url }
-                text={ organizationEnv?.keycloak_login_text }
-            />
-        </>
-      }
+      <AlternativeSignIns
+        environment={ organizationEnv }
+        topDivider={ { text: "ou faça login com", color: "var(--font-color-v2)" } }
+        style={ { marginTop: "15px" } }
+      />
 
       { SIGNUP_ENABLED &&
         <Link id="signup" to="/signup">Crie sua conta</Link>

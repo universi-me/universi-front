@@ -31,9 +31,7 @@ namespace Group {
 
     type Settings = {
         theme: Nullable<Theme>;
-        environment: Nullable<{
-            [k in keyof Environment]?: Environment[k];
-        }>;
+        environment: Nullable<Partial<Environment>>;
     };
 
     type Theme = {
