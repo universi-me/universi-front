@@ -60,7 +60,8 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
             return props.optionNotFoundMessage?.( inputValue ) ?? `Não foi possível encontrar ${ inputValue }`;
         },
 
-        filterOption: props.filterOption,
+        filterOption: props.filterOption
+            && ( ( option: SelectOption<SelectOption>, search: string ) => props.filterOption!( option.data.data, search ) ),
     };
 
     return <fieldset className={ formStyles.fieldset }>
@@ -117,10 +118,10 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
         };
     }
 
-    type SelectOption = {
+    type SelectOption<A = T> = {
         value: string;
         label: React.ReactNode;
-        data: T;
+        data: A;
     };
 }
 
