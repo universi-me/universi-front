@@ -187,7 +187,7 @@ function RenderActivity( props: Readonly<RenderActivityProps> ) {
 
             <div>
                 <Link to={ groupHref } className={ styles.link }>
-                    <h3 className={ styles.title }>{ activity.group.name } ({ activity.workload }h)</h3>
+                    <h3 className={ styles.title }>{ activity.group.name } { activity.workload !== null && `(${ activity.workload }h)` }</h3>
                 </Link>
                 <p className={ styles.type }>{ activity.type.name }</p>
                 <p className={ styles.location }>Local: { activity.location }</p>

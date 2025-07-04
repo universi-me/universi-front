@@ -3,7 +3,7 @@ import Select, { ActionMeta, type StylesConfig } from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 import { UniversiFormContext } from "../UniversiFormContext";
-import { handleValidation, RequiredIndicator, useInitialize } from "../utils";
+import { FieldHelp, handleValidation, RequiredIndicator, useInitialize } from "../utils";
 
 import formStyles from "../UniversiForm.module.less";
 
@@ -23,6 +23,7 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
 
         isClearable: props.isClearable ?? !props.required,
         isMulti: props.isMultiSelection,
+        isDisabled: props.disabled,
         placeholder: props.placeholder ?? `Selecionar ${ props.label ?? "campo" }`,
 
         styles: {
@@ -60,7 +61,8 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
             return props.optionNotFoundMessage?.( inputValue ) ?? `Não foi possível encontrar ${ inputValue }`;
         },
 
-        filterOption: props.filterOption,
+        filterOption: props.filterOption
+            && ( ( option: SelectOption<SelectOption>, search: string ) => props.filterOption!( option.data.data, search ) ),
     };
 
     return <fieldset className={ formStyles.fieldset }>
@@ -71,6 +73,7 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
             />
             : <Select {...selectProps} />
         }
+        <FieldHelp>{ props.help }</FieldHelp>
     </fieldset>
 
     async function handleOptionSelection( value: Nullable<SelectOption | SelectOption[]> ) {
@@ -117,10 +120,10 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
         };
     }
 
-    type SelectOption = {
+    type SelectOption<A = T> = {
         value: string;
         label: React.ReactNode;
-        data: T;
+        data: A;
     };
 }
 

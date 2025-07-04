@@ -3,7 +3,7 @@ namespace Activity {
         id: string;
         type: Type;
         location: string;
-        workload: number;
+        workload: Nullable<number>;
         startDate: string;
         endDate: string;
         group: Omit<Group.DTO, "activity">;

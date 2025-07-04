@@ -62,7 +62,7 @@ export function GroupsPage() {
         { edit !== undefined && <UniversiForm.Root
             title={ edit ? "Editar Tipo de Grupo" : "Criar Tipo de Grupo" }
             callback={ handleForm }
-            allowDelete={ edit !== null }
+            allowDelete={ edit?.canBeDeleted }
             deleteAction={ () => UniversimeApi.GroupType.remove( edit!.id ) }
         >
             <UniversiForm.Input.Text

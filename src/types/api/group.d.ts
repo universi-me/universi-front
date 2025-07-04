@@ -101,6 +101,8 @@ namespace Group {
     type Type = {
         label: string;
         id: string;
+        canBeAssigned: boolean;
+        canBeDeleted: boolean;
     };
 
     namespace EmailFilter {
