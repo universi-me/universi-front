@@ -16,12 +16,14 @@ export default function SinginForm() {
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>( null );
 
+  const [ loadingSignIn, setLoadingSignIn ] = useState( false );
+
   const organizationEnv = auth.organization.groupSettings.environment;
   const SIGNUP_ENABLED = organizationEnv?.signup_enabled ?? true;
   const RECOVERY_ENABLED = organizationEnv?.recovery_enabled ?? true;
   const ENABLE_RECAPTCHA = organizationEnv?.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
   const RECAPTCHA_SITE_KEY = organizationEnv?.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-  const disableSignInButton = !email.length || !password.length || ( ENABLE_RECAPTCHA && !recaptchaToken );
+  const disableSignInButton = loadingSignIn || !email.length || !password.length || ( ENABLE_RECAPTCHA && !recaptchaToken );
 
   return <div id="signin-form-container">
       <form action="/login" method="post" className="form-container">
@@ -98,12 +100,11 @@ export default function SinginForm() {
 
     async function handleLogin( e: FormEvent ) {
         e.preventDefault();
+        setLoadingSignIn( true );
 
         await auth.signin(email, password, recaptchaToken);
         recaptchaRef.current?.reset();
-    }
 
-    async function handleAuthLoginKeycloak( ) {
-        window.location.href = import.meta.env.VITE_UNIVERSIME_API + "/login/keycloak/auth";
+        setLoadingSignIn( false );
     }
 }
