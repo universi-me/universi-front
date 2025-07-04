@@ -3,7 +3,7 @@ import Select, { ActionMeta, type StylesConfig } from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 import { UniversiFormContext } from "../UniversiFormContext";
-import { handleValidation, RequiredIndicator, useInitialize } from "../utils";
+import { FieldHelp, handleValidation, RequiredIndicator, useInitialize } from "../utils";
 
 import formStyles from "../UniversiForm.module.less";
 
@@ -23,6 +23,7 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
 
         isClearable: props.isClearable ?? !props.required,
         isMulti: props.isMultiSelection,
+        isDisabled: props.disabled,
         placeholder: props.placeholder ?? `Selecionar ${ props.label ?? "campo" }`,
 
         styles: {
@@ -72,6 +73,7 @@ export function UniversiFormSelectInput<T extends Record<string, any>, M extends
             />
             : <Select {...selectProps} />
         }
+        <FieldHelp>{ props.help }</FieldHelp>
     </fieldset>
 
     async function handleOptionSelection( value: Nullable<SelectOption | SelectOption[]> ) {
