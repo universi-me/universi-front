@@ -122,13 +122,13 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         { isCreating && <>
             <UniversiForm.Input.Image
                 param="image"
-                label={ "Imagem do Grupo" }
+                label={ "Imagem da Atividade" }
                 aspectRatio={ 1 }
             />
 
             <UniversiForm.Input.Image
                 param="bannerImage"
-                label={ "Banner do Grupo" }
+                label={ "Banner da Atividade" }
                 aspectRatio={ 2.5 }
             />
         </> }
