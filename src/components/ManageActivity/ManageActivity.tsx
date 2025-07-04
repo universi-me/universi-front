@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { UniversimeApi } from "@/services";
-import UniversiForm, { UniversiFormStyles } from "@/components/UniversiForm";
+import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { ApiResponse } from "@/utils/apiUtils";
 import { ActivityTypeSelect } from "@/types/Activity";
@@ -120,16 +120,6 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         />
 
         { isCreating && <>
-            <hr/>
-            <div className={ UniversiFormStyles.fieldset }>
-                <legend className={ UniversiFormStyles.legend }>Dados do grupo</legend>
-                <p>
-                    Ao criar uma atividade será criado junto a ela um grupo associado,
-                    que será usado para gerenciar os participantes, conteúdos, feed entre outros.
-                    Preencha os dados necessários para o grupo.
-                </p>
-            </div>
-
             <UniversiForm.Input.Image
                 param="image"
                 label={ "Imagem do Grupo" }
