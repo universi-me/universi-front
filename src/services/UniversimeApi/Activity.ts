@@ -44,7 +44,6 @@ export type ActivityCreate_RequestDTO = {
     startDate: string | number;
     endDate: string | number;
 
-    nickname: string;
     groupType: string;
     image?: string;
     bannerImage?: string;

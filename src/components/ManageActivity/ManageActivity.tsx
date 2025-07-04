@@ -6,7 +6,6 @@ import { ApiResponse } from "@/utils/apiUtils";
 import { ActivityTypeSelect } from "@/types/Activity";
 import { CompetenceTypeSelect } from "@/types/Competence";
 import { GroupTypeSelect } from "@/types/Group";
-import { isValidUsernamePattern } from "@/types/Profile";
 
 export function ManageActivity( props: Readonly<ManageActivityProps> ) {
     const { activity, group, callback } = props;
@@ -133,17 +132,6 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
                 </p>
             </div>
 
-            <UniversiForm.Input.Text
-                param="nickname"
-                label="Apelido"
-                required
-                placeholder="Apelido do Grupo"
-                help="Você só pode usar letras minúsculas, números, hífen (-), underscore (_) e ponto (.)."
-                validations={ [
-                    isValidUsernamePattern
-                ] }
-            />
-
             <GroupTypeSelect
                 param="groupType"
                 label="Tipo"
@@ -195,7 +183,6 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
                 description: form.body.description,
                 group: group.id!,
                 groupType: form.body.groupType!.id,
-                nickname: form.body.nickname!,
                 image: image?.body,
                 bannerImage: bannerImage?.body,
             } )
@@ -221,7 +208,6 @@ type ManageActivityForm<IsCreating extends boolean> = {
     endDate: Date;
     badges: Optional<Competence.Type[]>;
 
-    nickname: IsCreating extends true ? string : undefined;
     groupType: IsCreating extends true ? Group.Type : undefined;
     image: IsCreating extends true ? Optional<File | string> : undefined;
     bannerImage: IsCreating extends true ? Optional<File | string> : undefined;
