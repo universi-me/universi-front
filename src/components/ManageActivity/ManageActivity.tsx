@@ -5,7 +5,6 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import { ApiResponse } from "@/utils/apiUtils";
 import { ActivityTypeSelect } from "@/types/Activity";
 import { CompetenceTypeSelect } from "@/types/Competence";
-import { GroupTypeSelect } from "@/types/Group";
 
 export function ManageActivity( props: Readonly<ManageActivityProps> ) {
     const { activity, group, callback } = props;
@@ -131,14 +130,6 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
                 </p>
             </div>
 
-            <GroupTypeSelect
-                param="groupType"
-                label="Tipo"
-                options={ availableGroupTypes }
-                placeholder="Tipo do Grupo"
-                required
-            />
-
             <UniversiForm.Input.Image
                 param="image"
                 label={ "Imagem do Grupo" }
@@ -181,7 +172,6 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
                 name: form.body.name,
                 description: form.body.description,
                 group: group.id!,
-                groupType: form.body.groupType!.id,
                 image: image?.body,
                 bannerImage: bannerImage?.body,
             } )
@@ -207,7 +197,6 @@ type ManageActivityForm<IsCreating extends boolean> = {
     endDate: Date;
     badges: Optional<Competence.Type[]>;
 
-    groupType: IsCreating extends true ? Group.Type : undefined;
     image: IsCreating extends true ? Optional<File | string> : undefined;
     bannerImage: IsCreating extends true ? Optional<File | string> : undefined;
 };
