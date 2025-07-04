@@ -38,7 +38,7 @@ export type ActivityCreate_RequestDTO = {
     description: string;
     type: string;
     location: string;
-    workload: number,
+    workload?: number,
     badges?: string[],
     group: string;
     startDate: string | number;

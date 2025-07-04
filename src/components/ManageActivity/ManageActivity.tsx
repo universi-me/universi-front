@@ -84,11 +84,10 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         <UniversiForm.Input.Number
             param="workload"
             label="Carga Horária"
-            defaultValue={ activity?.workload }
-            required
+            defaultValue={ activity?.workload ?? undefined }
             placeholder="Carga horária da Atividade"
             validations={ [
-                workload => workload > 0,
+                workload => isNaN( workload ) || workload > 0,
             ] }
         />
 
