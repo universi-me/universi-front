@@ -22,6 +22,7 @@ import { rolesSorter, Permission, FeatureTypesToLabel } from "@/utils/roles/role
 import { removeFalsy } from "@/utils/arrayUtils";
 import { Filter } from "@/components/Filter/Filter";
 import stringUtils from "@/utils/stringUtils";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 type RolesPageProps = {
     group: Group.DTO;
@@ -70,6 +71,9 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     const isFeatureChecked = (row : Role.DTO, column : Role.Feature) => {
         return row.permissions[column];
     };
+
+    if ( participants === null || rows === null )
+        return <LoadingSpinner />
 
     return <div id="roles-settings">
 
