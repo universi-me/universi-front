@@ -22,7 +22,7 @@ export function GroupTypeSelect<C extends Optional<boolean>>( props: Readonly<Gr
         getOptionLabel={ o => o.label }
         canCreateOptions={ false }
         sortOptions={ compareGroupTypes }
-        filterOption={ ( gt, s ) => stringIncludesIgnoreCase( gt.label, s ) }
+        filterOption={ ( gt, s ) => gt.canBeAssigned && stringIncludesIgnoreCase( gt.label, s ) }
     />
 }
 
