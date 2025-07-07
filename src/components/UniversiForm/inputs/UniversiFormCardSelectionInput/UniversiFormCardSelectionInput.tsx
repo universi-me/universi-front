@@ -75,7 +75,7 @@ export function UniversiFormCardSelectionInput<T>( props: Readonly<UniversiFormC
             { filteredOptions.map( option => <div className={ styles.option } key={ props.getOptionUniqueValue( option ) }>
                 { props.render( option ) }
                 <button type="button" onClick={ () => handleToggle( option ) } className={ makeClassName( styles.check, isSelected( option ) && styles.selected ) }>
-                    <BootstrapIcon icon={ isSelected( option ) ? "check-circle-fill" : "x-circle" }/>
+                    <BootstrapIcon icon={ isSelected( option ) ? "check-circle" : "circle" }/>
                 </button>
             </div> ) }
         </div>
