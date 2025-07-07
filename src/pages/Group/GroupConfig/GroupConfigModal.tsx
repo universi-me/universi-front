@@ -36,7 +36,7 @@ export function GroupConfigModal() {
         <div className="tab-content">
           {activeTab === Tab.PERMISSIONS && (
             <div>
-             { <RolesPage group={groupContext?.group}/> }
+             { <RolesPage group={groupContext!.group}/> }
             </div>
           )}
         </div>

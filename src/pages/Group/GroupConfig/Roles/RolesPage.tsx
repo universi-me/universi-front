@@ -24,13 +24,12 @@ import { Filter } from "@/components/Filter/Filter";
 import stringUtils from "@/utils/stringUtils";
 
 type RolesPageProps = {
-    group: Group.DTO | undefined;
+    group: Group.DTO;
 };
 
 
 const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     const auth = useContext(AuthContext);
-    const data = useLoaderData() as RolesResponse;
 
     const [manageRolesMode, setManageRolesMode] = useState(false);
 
@@ -56,9 +55,8 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
         })) ?? [];
 
     useEffect(() => {
-        setValuesWithData(data);
         refreshPage();
-    }, [data]);
+    }, [ group.id ]);
     
     const handleFeatureCheckboxChange = (e : ChangeEvent<HTMLSelectElement>, row : Role.DTO, column : Role.Feature) => {
         const features: { [k in Role.Feature]?: Role.Permission } = {};
