@@ -10,6 +10,20 @@ export function HealthCheckPage() {
     const [servicesHealth, setServicesHealth] = useState(initialState);
     const [ resourcesUsage, setResourcesUsage ] = useState<Health.Usage>();
 
+    const [logText, setLogText] = useState<string>('');
+
+    function logToBoxConsole(message: string) {
+        if(message !== undefined) {
+            setLogText(prev =>
+                (prev!.endsWith(message + '\n') === false) ? (prev + message + '\n') : prev);
+                
+            const textarea = document.getElementById("errors") as HTMLTextAreaElement;
+            if(textarea) {
+                textarea.scrollTop = textarea.scrollHeight;
+            }
+        }
+    }
+
     useEffect(() => {
         checkHealth();
         checkResourcesUsage();
@@ -47,7 +61,7 @@ export function HealthCheckPage() {
                 <UsageItem item="freeMem" value={ resourcesUsage?.freeMemory } />
                 <UsageItem item="maxMem" value={ resourcesUsage?.maxMemory } />
             </table>
-            <textarea id="errors" rows={5}></textarea>
+            <textarea id="errors" rows={5} value={logText} onChange={(e) => setLogText(e.target.value)} />
         </center>
     </main>;
 
@@ -105,14 +119,7 @@ export function HealthCheckPage() {
     }
 }
 
-function logToBoxConsole(message: string) {
-    if(message !== undefined) {
-        const div = document.getElementById('errors');
-        if(div!.innerHTML.endsWith(message + "\n") === false) {
-            div!.innerHTML += message + "\n";
-        }
-    }
-}
+
 
 type HealthItemsProps = {
     serviceName: string;
