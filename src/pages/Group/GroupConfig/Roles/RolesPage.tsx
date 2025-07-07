@@ -22,15 +22,15 @@ import { rolesSorter, Permission, FeatureTypesToLabel } from "@/utils/roles/role
 import { removeFalsy } from "@/utils/arrayUtils";
 import { Filter } from "@/components/Filter/Filter";
 import stringUtils from "@/utils/stringUtils";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 type RolesPageProps = {
-    group: Group.DTO | undefined;
+    group: Group.DTO;
 };
 
 
 const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     const auth = useContext(AuthContext);
-    const data = useLoaderData() as RolesResponse;
 
     const [manageRolesMode, setManageRolesMode] = useState(false);
 
@@ -56,9 +56,8 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
         })) ?? [];
 
     useEffect(() => {
-        setValuesWithData(data);
         refreshPage();
-    }, [data]);
+    }, [ group.id ]);
     
     const handleFeatureCheckboxChange = (e : ChangeEvent<HTMLSelectElement>, row : Role.DTO, column : Role.Feature) => {
         const features: { [k in Role.Feature]?: Role.Permission } = {};
@@ -72,6 +71,9 @@ const RolesPage : React.FC<RolesPageProps> = ({ group }) => {
     const isFeatureChecked = (row : Role.DTO, column : Role.Feature) => {
         return row.permissions[column];
     };
+
+    if ( participants === null || rows === null )
+        return <LoadingSpinner />
 
     return <div id="roles-settings">
 

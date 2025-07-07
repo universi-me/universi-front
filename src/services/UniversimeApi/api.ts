@@ -4,6 +4,7 @@ import axios from "axios";
 import { goTo } from "@/configs/routes";
 import { LOGIN_REDIRECT_PARAM } from "@/pages/singin/Singin";
 import { isApiError } from "@/utils/apiUtils";
+import { getJwtToken, saveJwtToken } from "@/utils/AuthUtils";
 
 const baseApiUrl = import.meta.env.VITE_UNIVERSIME_API;
 
@@ -12,6 +13,12 @@ export function createApiInstance( path: string ) {
         baseURL: `${baseApiUrl}${path}`,
         withCredentials: true,
     });
+
+    api.interceptors.request.use( request => {
+        const token = getJwtToken();
+        if ( token ) request.headers.Authorization = `Bearer ${ token }`;
+        return request;
+    } );
 
     api.interceptors.response.use( response => {
 

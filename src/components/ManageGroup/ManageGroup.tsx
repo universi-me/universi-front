@@ -81,6 +81,8 @@ export function ManageGroup(props: Readonly<ManageGroupProps>) {
             label={ isOrganization ? "Tipo da Organização" : "Tipo do Grupo" }
             defaultValue={ group?.type }
             required
+            disabled={ Boolean( group?.activity ) }
+            help={ group?.activity && "O tipo de um Grupo de Atividade não pode ser mudado" }
         />
 
         <UniversiForm.Input.Switch

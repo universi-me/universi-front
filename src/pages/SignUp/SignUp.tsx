@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 
 import AuthContext from "@/contexts/Auth";
-import SignInWithGoogle from "@/components/SignInWithGoogle/SignInWithGoogle";
+import AlternativeSignIns from "@/components/AlternativeSignIns";
 import { SignUpModal, SignUpPageData } from "@/pages/SignUp";
 
 import "./SignUp.less"
@@ -13,11 +13,6 @@ export default function SignUpPage() {
 
     const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false);
 
-    const googleClientId = authContext.organization.groupSettings.environment?.google_client_id;
-
-    const ENABLE_GOOGLE_LOGIN = googleClientId !== undefined
-        && (authContext.organization.groupSettings.environment?.login_google_enabled ?? false);
-
     return (
         <div id="sign-up-page">
             <div className="page-container">
@@ -28,16 +23,11 @@ export default function SignUpPage() {
 
                 <div className="signup-container">
                     <div className="signup-box">
-                        { ENABLE_GOOGLE_LOGIN && <>
-                                <SignInWithGoogle client_id={ googleClientId } />
-
-                                <div className="signup-line-container">
-                                    <div className="signup-line" />
-                                    <div className="other-email">ou com outro email</div>
-                                    <div className="signup-line" />
-                                </div>
-                            </>
-                        }
+                        <AlternativeSignIns
+                            environment={ authContext.organization.groupSettings.environment }
+                            bottomDivider={ { text: "ou com outro email", color: "var(--font-color-v1)" } }
+                            style={ { marginBottom: "15px" } }
+                        />
 
                         <button className="create-account-button" onClick={() => setShowSignUpModal(true)}>
                             Criar conta

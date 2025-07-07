@@ -48,7 +48,6 @@ export const router = createBrowserRouter([{
         {
             path: "/group/*",
             element: <GroupPage />,
-            loader: GroupPageLoader
         },
         {
             path: "/recovery-password/:id",
