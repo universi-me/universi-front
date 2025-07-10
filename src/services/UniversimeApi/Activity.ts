@@ -46,6 +46,12 @@ export type ActivityCreate_RequestDTO = {
 
     image?: string;
     bannerImage?: string;
+
+    features?: {
+        administrator?: Partial<Record<Role.Feature, Role.Permission>>;
+        participant?: Partial<Record<Role.Feature, Role.Permission>>;
+        visitor?: Partial<Record<Role.Feature, Role.Permission>>;
+    };
 };
 
 export type ActivityUpdate_RequestDTO = {

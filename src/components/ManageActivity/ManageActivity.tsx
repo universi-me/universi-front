@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UniversimeApi } from "@/services";
 import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { ApiResponse } from "@/utils/apiUtils";
+import { getDate } from "@/utils/dateUtils";
 import { ActivityTypeSelect } from "@/types/Activity";
 import { CompetenceTypeSelect } from "@/types/Competence";
+import { RolesPermissionForm, RolesPermissionsFormPage } from "./RolesPermissionsFormPage";
 
 export function ManageActivity( props: Readonly<ManageActivityProps> ) {
     const { activity, group, callback } = props;
@@ -36,18 +38,32 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         } )
     }, [] );
 
+    const [ step, setStep ] = useState<ManageActivityFormSteps>( "ACTIVITY" );
+    const formSavedData = useRef<Partial<ManageActivityForm>>( {
+        name: activity?.group.name,
+        type: activity?.type,
+        description: activity?.group.description,
+        location: activity?.location,
+        workload: activity?.workload ?? undefined,
+        badges: activity?.badges,
+        startDate: getDate( activity?.startDate ),
+        endDate: getDate( activity?.endDate ),
+    } );
+    const rolesFormSavedData = useRef<Partial<RolesPermissionForm>>( { } );
+
     const isCreating = props.activity === null;
     const title = isCreating ? "Criar Atividade" : "Editar Atividade";
 
     if ( availableActivityTypes === undefined || availableCompetenceTypes === undefined || availableGroupTypes === undefined )
         return <LoadingSpinner />
 
-    return <UniversiForm.Root title={ title } callback={ handleForm }>
+    return <>{ step === "ACTIVITY" &&
+    <UniversiForm.Root title={ title } callback={ handleForm } confirmButtonText={ isCreating ? "Avançar" : undefined }>
         <UniversiForm.Input.Text
             param="name"
             label="Título"
             placeholder="Título da Atividade"
-            defaultValue={ activity?.group.name }
+            defaultValue={ formSavedData.current.name }
             disabled={ activity !== null }
             help={ activity && "Para alterar o título desta atividade, entre no grupo associado e altere o título daquele grupo." }
             required
@@ -56,7 +72,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         <ActivityTypeSelect
             param="type"
             label="Tipo da Atividade"
-            defaultValue={ activity?.type }
+            defaultValue={ formSavedData.current.type }
             options={ availableActivityTypes }
             placeholder="Selecione o Tipo da Atividade"
             required
@@ -66,7 +82,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             param="description"
             label="Descrição"
             placeholder="Descrição da Atividade"
-            defaultValue={ activity?.group.description }
+            defaultValue={ formSavedData.current.description }
             disabled={ activity !== null }
             help={ activity && "Para alterar a descrição desta atividade, entre no grupo associado e altere a descrição daquele grupo." }
             required
@@ -75,7 +91,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         <UniversiForm.Input.Text
             param="location"
             label="Local"
-            defaultValue={ activity?.location }
+            defaultValue={ formSavedData.current.location }
             placeholder="Local onde ocorrerá a Atividade"
             required
         />
@@ -83,7 +99,7 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         <UniversiForm.Input.Number
             param="workload"
             label="Carga Horária"
-            defaultValue={ activity?.workload ?? undefined }
+            defaultValue={ formSavedData.current.workload }
             placeholder="Carga horária da Atividade"
             validations={ [
                 workload => isNaN( workload ) || workload > 0,
@@ -94,21 +110,21 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             param="badges"
             label="Competências Relacionadas"
             options={ availableCompetenceTypes }
-            defaultValue={ activity?.badges }
+            defaultValue={ formSavedData.current.badges }
             isMultiSelection
         />
 
         <UniversiForm.Input.Date
             param="startDate"
             label="Data de Início"
-            defaultValue={ activity?.startDate }
+            defaultValue={ formSavedData.current.startDate }
             required
         />
 
         <UniversiForm.Input.Date
             param="endDate"
             label="Data de Término"
-            defaultValue={ activity?.endDate }
+            defaultValue={ formSavedData.current.endDate }
             required
             help="Para Atividades que durem apenas um dia, coloque a mesma data que pôs no campo anterior."
             validations={ [
@@ -117,6 +133,11 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
                     return !!endDate && !!startDate && ( endDate >= startDate );
                 }
             ] }
+        />
+
+        <UniversiForm.Input.Hidden
+            param="group"
+            defaultValue={ group }
         />
 
         { isCreating && <>
@@ -134,38 +155,34 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         </> }
 
     </UniversiForm.Root>
+    }
+
+    { step === "ROLES" && <RolesPermissionsFormPage
+        activitySaveData={ formSavedData.current as ManageActivityForm }
+        saveData={ rolesFormSavedData }
+        setStep={ setStep }
+        callback={ callback }
+    /> }
+    </>;
 
     async function handleForm( form: UniversiForm.Data<ManageActivityForm<typeof isCreating>> ) {
         if ( !form.confirmed )
             return callback();
 
-        const image = form.body.image instanceof File
-            ? await UniversimeApi.Image.upload( { isPublic: true, image: form.body.image } )
-            : undefined;
+        if ( isCreating ) {
+            formSavedData.current = form.body;
+            setStep( "ROLES" );
+            return;
+        }
 
-        const bannerImage = form.body.bannerImage instanceof File
-            ? await UniversimeApi.Image.upload( { isPublic: true, image: form.body.bannerImage } )
-            : undefined;
-
-        const body = {
+        const res = await UniversimeApi.Activity.update( activity!.id, {
             type: form.body.type.id,
             location: form.body.location,
             workload: form.body.workload,
             startDate: form.body.startDate.getTime(),
             endDate: form.body.endDate.getTime(),
             badges: form.body.badges?.map( ct => ct.id ),
-        };
-
-        const res = isCreating
-            ? await UniversimeApi.Activity.create( {
-                ...body,
-                name: form.body.name,
-                description: form.body.description,
-                group: group.id!,
-                image: image?.body,
-                bannerImage: bannerImage?.body,
-            } )
-            : await UniversimeApi.Activity.update( activity!.id, body );
+        } );
 
         return callback?.( res );
     }
@@ -177,7 +194,7 @@ export type ManageActivityProps = {
     callback( res?: ApiResponse<Activity.DTO> ): unknown;
 };
 
-type ManageActivityForm<IsCreating extends boolean> = {
+export type ManageActivityForm<IsCreating extends boolean = boolean> = {
     name: string;
     description: string;
     type: Activity.Type;
@@ -186,7 +203,10 @@ type ManageActivityForm<IsCreating extends boolean> = {
     startDate: Date;
     endDate: Date;
     badges: Optional<Competence.Type[]>;
+    group: Group.DTO;
 
     image: IsCreating extends true ? Optional<File | string> : undefined;
     bannerImage: IsCreating extends true ? Optional<File | string> : undefined;
 };
+
+export type ManageActivityFormSteps = "ACTIVITY" | "ROLES";
