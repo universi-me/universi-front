@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { UniversimeApi } from "@/services";
 import UniversiForm from "@/components/UniversiForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { ApiResponse } from "@/utils/apiUtils";
+import { ApiResponse, groupBannerUrl, groupImageUrl } from "@/utils/apiUtils";
 import { getDate } from "@/utils/dateUtils";
 import { ActivityTypeSelect } from "@/types/Activity";
 import { CompetenceTypeSelect } from "@/types/Competence";
@@ -48,6 +48,8 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         badges: activity?.badges,
         startDate: getDate( activity?.startDate ),
         endDate: getDate( activity?.endDate ),
+        image: activity?.group && groupImageUrl( activity.group ),
+        bannerImage: activity?.group && groupBannerUrl( activity.group ),
     } );
     const rolesFormSavedData = useRef<Partial<RolesPermissionForm>>( { } );
 
@@ -70,8 +72,6 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             label="Título"
             placeholder="Título da Atividade"
             defaultValue={ formSavedData.current.name }
-            disabled={ activity !== null }
-            help={ activity && "Para alterar o título desta atividade, entre no grupo associado e altere o título daquele grupo." }
             required
         />
 
@@ -89,8 +89,6 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             label="Descrição"
             placeholder="Descrição da Atividade"
             defaultValue={ formSavedData.current.description }
-            disabled={ activity !== null }
-            help={ activity && "Para alterar a descrição desta atividade, entre no grupo associado e altere a descrição daquele grupo." }
             required
         />
 
@@ -146,19 +144,19 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             defaultValue={ group }
         />
 
-        { isCreating && <>
-            <UniversiForm.Input.Image
-                param="image"
-                label={ "Imagem da Atividade" }
-                aspectRatio={ 1 }
-            />
+        <UniversiForm.Input.Image
+            param="image"
+            label={ "Imagem da Atividade" }
+            aspectRatio={ 1 }
+            defaultValue={ formSavedData.current.image }
+        />
 
-            <UniversiForm.Input.Image
-                param="bannerImage"
-                label={ "Banner da Atividade" }
-                aspectRatio={ 2.5 }
-            />
-        </> }
+        <UniversiForm.Input.Image
+            param="bannerImage"
+            label={ "Banner da Atividade" }
+            aspectRatio={ 2.5 }
+            defaultValue={ formSavedData.current.bannerImage }
+        />
 
     </UniversiForm.Root>
     }
@@ -181,13 +179,25 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
             return;
         }
 
+        const image = form.body.image instanceof File
+            ? await UniversimeApi.Image.upload( { isPublic: true, image: form.body.image } )
+            : undefined;
+
+        const bannerImage = form.body.bannerImage instanceof File
+            ? await UniversimeApi.Image.upload( { isPublic: true, image: form.body.bannerImage } )
+            : undefined;
+
         const res = await UniversimeApi.Activity.update( activity!.id, {
+            name: form.body.name,
+            description: form.body.description,
             type: form.body.type.id,
             location: form.body.location,
             workload: form.body.workload,
             startDate: form.body.startDate.getTime(),
             endDate: form.body.endDate.getTime(),
             badges: form.body.badges?.map( ct => ct.id ),
+            image: image?.body,
+            bannerImage: bannerImage?.body,
         } );
 
         return callback?.( res );

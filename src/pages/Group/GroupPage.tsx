@@ -63,7 +63,7 @@ export function GroupPage() {
         }
 
         { context.editActivity !== undefined && <ManageActivity
-            activity={ context.editActivity ? { ...context.editActivity, group: context.group } : null }
+            activity={ context.editActivity }
             group={ context.group }
             callback={ async res => {
                 let newContext = context;

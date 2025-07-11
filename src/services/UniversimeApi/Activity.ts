@@ -61,6 +61,11 @@ export type ActivityUpdate_RequestDTO = {
     badges?: string[],
     startDate?: string | number;
     endDate?: string | number;
+
+    name?: string;
+    description?: string;
+    image?: string;
+    bannerImage?: string;
 };
 
 export type ActivityChangeParticipants_RequestDTO = {
