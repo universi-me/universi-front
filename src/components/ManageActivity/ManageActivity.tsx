@@ -58,7 +58,13 @@ export function ManageActivity( props: Readonly<ManageActivityProps> ) {
         return <LoadingSpinner />
 
     return <>{ step === "ACTIVITY" &&
-    <UniversiForm.Root title={ title } callback={ handleForm } confirmButtonText={ isCreating ? "Avançar" : undefined }>
+    <UniversiForm.Root title={ title }
+        callback={ handleForm }
+        confirmButton={ {
+            text: isCreating ? "Avançar" : undefined,
+            biIcon: isCreating ? "arrow-right-circle-fill" : undefined,
+        } }
+    >
         <UniversiForm.Input.Text
             param="name"
             label="Título"

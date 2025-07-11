@@ -16,7 +16,7 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
     const formData = useMemo( () => new Map<string, FormFieldData>, [] );
     const contextValue = useMemo<UniversiFormContextType>( makeFormContext, [] );
 
-    const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, confirmButtonText, cancelButtonText, allowDelete, deleteAction, deleteButtonText, style, ...formAttributes } = props;
+    const { title, inline, callback, children, allowConfirm, skipCancelConfirmation, cancelPopup, confirmButton, cancelButton, allowDelete, deleteAction, deleteButton, style, ...formAttributes } = props;
     const [ isAllValid, setIsAllValid ] = useState<boolean>( true );
 
     const [ hasRequiredField, setHasRequiredField ] = useState( false );
@@ -39,17 +39,20 @@ export function UniversiFormRoot( props: Readonly<UniversiFormRootProps> ) {
             </section>
 
             <section className={ styles.actions }>
-                { allowDelete && <button type="button" className={ styles.delete_button } onClick={ handleDelete }>
-                    <BootstrapIcon icon="trash-fill" /> { deleteButtonText ?? "Excluir" }
-                </button> }
+                { allowDelete && <FormButton type="button" className={ styles.delete_button } onClick={ handleDelete }
+                    biIcon={ deleteButton?.biIcon ?? "trash-fill" }
+                    text={ deleteButton?.text ?? "Excluir" }
+                /> }
 
-                <button type="button" className={ makeClassName( styles.cancel_button ) } onClick={ handleCancel }>
-                    <i className="bi bi-x-circle-fill" /> { cancelButtonText ?? "Cancelar" }
-                </button>
+                <FormButton type="button" className={ styles.cancel_button } onClick={ handleCancel }
+                    biIcon={ cancelButton?.biIcon ?? "x-circle-fill" }
+                    text={ cancelButton?.text ?? "Cancelar" }
+                />
 
-                <button type="button" className={ makeClassName( styles.confirm_button ) } onClick={ handleConfirm } disabled={ !isAllValid || allowConfirm === false }>
-                    <i className="bi bi-check-circle-fill" /> { confirmButtonText ?? "Confirmar" }
-                </button>
+                <FormButton type="button" className={ styles.confirm_button } onClick={ handleConfirm } disabled={ !isAllValid || allowConfirm === false }
+                    biIcon={ confirmButton?.biIcon ?? "check-circle-fill" }
+                    text={ confirmButton?.text ?? "Confirmar" }
+                />
             </section>
         </div>
         { handlingFormEnd && <LoadingSpinner inline={ inline } /> }
@@ -204,9 +207,9 @@ export type UniversiFormRootProps = PropsWithChildren<{
 
     callback( formData: UniversiFormData<Record<string, any>> ): any;
     allowConfirm?: boolean;
-    confirmButtonText?: string;
-    cancelButtonText?: string;
-    deleteButtonText?: string;
+    confirmButton?: Partial<UniversiFormButton>;
+    cancelButton?: Partial<UniversiFormButton>;
+    deleteButton?: Partial<UniversiFormButton>;
 }> & ({
     allowDelete?: false;
     deleteAction?(): unknown;
@@ -214,6 +217,24 @@ export type UniversiFormRootProps = PropsWithChildren<{
     allowDelete: true;
     deleteAction(): unknown;
 }) & FormHTMLAttributes<HTMLDivElement>;
+
+type UniversiFormButton = {
+    text: string;
+    biIcon: string;
+};
+
+function FormButton( props: Readonly<FormButtonProps> ) {
+    const { text, biIcon, ...buttonProps } = props;
+
+    return <button { ...buttonProps }>
+        <BootstrapIcon icon={ biIcon } />
+        { text }
+    </button>;
+}
+
+type FormButtonProps = UniversiFormButton
+    & React.ButtonHTMLAttributes<HTMLButtonElement>
+    & React.HTMLAttributes<HTMLButtonElement>;
 
 export type UniversiFormData<T> = {
     confirmed: true;

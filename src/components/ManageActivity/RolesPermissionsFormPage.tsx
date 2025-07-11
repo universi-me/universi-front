@@ -10,7 +10,10 @@ export function RolesPermissionsFormPage( props: Readonly<RolesPermissionsFormPa
     return <UniversiForm.Root
         title="Configurar papéis"
         callback={ handleRolesForm }
-        cancelButtonText="Voltar"
+        cancelButton={ {
+            text: "Voltar",
+            biIcon: "arrow-left-circle-fill"
+        } }
         skipCancelConfirmation
     >
         <RoleInputField saveData={ saveData } role="administrator" />

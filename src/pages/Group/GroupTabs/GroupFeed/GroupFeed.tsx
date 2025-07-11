@@ -54,7 +54,7 @@ export function GroupFeed(){
 
                 <UniversiForm.Root
                     title={ groupContext.editPost == null ? "Criar publicação" : isGroupPostComment(groupContext.editPost) ? "Editar comentário":"Editar publicação" }
-                    cancelButtonText={ isGroupPostComment(groupContext.editPost) ?"Descartar comentário?":"Descartar publicação?" }
+                    cancelButton={ { text: isGroupPostComment(groupContext.editPost) ?"Descartar comentário?":"Descartar publicação?" } }
                     callback={ handleForm }
                 >
                     <UniversiForm.Input.FormattedText
