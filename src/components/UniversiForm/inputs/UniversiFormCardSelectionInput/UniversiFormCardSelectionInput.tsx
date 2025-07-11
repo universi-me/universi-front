@@ -57,9 +57,8 @@ export function UniversiFormCardSelectionInput<T>( props: Readonly<UniversiFormC
                     title={ props.advancedSearchFilterTitle ?? "Filtrar Resultados" }
                     callback={ handleFilter }
                     skipCancelConfirmation={true}
-                    
-                    confirmButtonText="Filtrar"
-                    cancelButtonText="Limpar Filtro" >
+                    confirmButton={ { text: "Filtrar" } }
+                    cancelButton={ { text: "Limpar Filtro" } } >
                 { props.advancedSearchFilterOptions?.() }
             </UniversiForm.Root>
         }

@@ -138,7 +138,7 @@ export function GroupContents() {
                 :
                 duplicateContentId !== undefined
                 ?
-                <UniversiForm.Root title="Criar uma cópia" callback={ handleDuplicate } confirmButtonText="Copiar">
+                <UniversiForm.Root title="Criar uma cópia" callback={ handleDuplicate } confirmButton={ { text: "Copiar" } }>
                     <UniversiForm.Input.Select
                         param="targetGroup"
                         label="Copiar para:"
@@ -148,7 +148,7 @@ export function GroupContents() {
                         required
                     />
                 </UniversiForm.Root>
-                : moveContentReference !== undefined ? <UniversiForm.Root title="Mover conteúdo" callback={ handleMove } confirmButtonText="Mover">
+                : moveContentReference !== undefined ? <UniversiForm.Root title="Mover conteúdo" callback={ handleMove } confirmButton={ { text: "Mover" } }>
                     <UniversiForm.Input.Select
                         param="targetGroup"
                         label="Mover para:"

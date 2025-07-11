@@ -134,7 +134,7 @@ export function GroupPeople() {
 
                     {
                         showAddPeopleModal && !loadingParticipantsOrganization &&
-                            <UniversiForm.Root title="Adicionar participante" callback={ handleForm } confirmButtonText="Adicionar">
+                            <UniversiForm.Root title="Adicionar participante" callback={ handleForm } confirmButton={ { text: "Adicionar" } }>
                                 <UniversiForm.Input.Select
                                     param="participant"
                                     label="Usuário"

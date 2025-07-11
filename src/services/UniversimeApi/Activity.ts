@@ -46,6 +46,12 @@ export type ActivityCreate_RequestDTO = {
 
     image?: string;
     bannerImage?: string;
+
+    features?: {
+        administrator?: Partial<Record<Role.Feature, Role.Permission>>;
+        participant?: Partial<Record<Role.Feature, Role.Permission>>;
+        visitor?: Partial<Record<Role.Feature, Role.Permission>>;
+    };
 };
 
 export type ActivityUpdate_RequestDTO = {
@@ -55,6 +61,11 @@ export type ActivityUpdate_RequestDTO = {
     badges?: string[],
     startDate?: string | number;
     endDate?: string | number;
+
+    name?: string;
+    description?: string;
+    image?: string;
+    bannerImage?: string;
 };
 
 export type ActivityChangeParticipants_RequestDTO = {

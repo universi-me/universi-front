@@ -1,7 +1,7 @@
 import { IMG_DEFAULT_BANNER, IMG_DEFAULT_CONTENT, IMG_DEFAULT_GROUP } from "@/utils/assets";
 import { isAbsoluteUrl } from "./regexUtils";
 
-export function groupBannerUrl(group: Group.DTO) {
+export function groupBannerUrl(group: Pick<Group.DTO, "bannerImage" | "id">) {
     if(!group?.bannerImage)
         return IMG_DEFAULT_BANNER;
 

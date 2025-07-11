@@ -65,3 +65,11 @@ export const FeatureTypesToLabel: { [k in Role.Feature]: string } = {
     "COMPETENCE":   "Competência",
     "JOBS":         "Vagas",
 };
+
+export const RolePermissionToLabel: { [ k in Role.Permission ]: string } = {
+    0: "Nenhuma",
+    1: "Desabilitado",
+    2: "Ver",
+    3: "Ver e Editar",
+    4: "Ver, Editar e Apagar"
+};
