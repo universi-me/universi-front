@@ -48,7 +48,7 @@ export function GroupSubmenu(){
             text: "Editar este grupo",
             biIcon: "pencil-fill",
             hidden(data) {
-                return !data.canEdit;
+                return !data.canEdit || !!data.activity;
             },
             onSelect(data) {
                 context!.setEditGroup(data);
