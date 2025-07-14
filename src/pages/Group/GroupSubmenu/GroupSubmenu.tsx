@@ -60,7 +60,7 @@ export function GroupSubmenu(){
                 return !data.canEdit || !data.activity;
             },
             onSelect( data ) {
-                context!.setEditActivity( data.activity );
+                context!.setEditActivity( { ...data.activity!, group: data } );
             },
         }, {
             text: "Configurações",
