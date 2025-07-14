@@ -3,23 +3,24 @@ import { useContext } from "react";
 import { GroupContext } from "@/pages/Group";
 import { groupBannerUrl } from "@/utils/apiUtils";
 
-import "./GroupIntro.less";
+import styles from "./GroupIntro.module.less";
 
 export function GroupIntro() {
     const groupContext = useContext(GroupContext);
 
-    return (
-        groupContext === null ? null :
+    if ( !groupContext )
+        return null;
 
-        <div id="group-intro">
-            <div id="banner-wrapper">
-                { groupContext.group.activity && <span className="activity-type">
+    return (
+        <div className={ styles.intro }>
+            <div className={ styles.banner_wrapper }>
+                { groupContext.group.activity && <span className={ styles.activity_type_indicator }>
                     { groupContext.group.activity.type.name }
                 </span> }
-                <img id="organization-banner" src={groupBannerUrl(groupContext.group)} />
+                <img className={ styles.banner_image } src={groupBannerUrl(groupContext.group)} alt=""/>
                 { !groupContext.group.bannerImage && <>
-                <div className="image-overlay"></div>
-                <h3 id="group-name">
+                <div className={ styles.banner_overlay }></div>
+                <h3 className={ styles.name }>
                     { groupContext.group.name }
                 </h3>
                 </> }
