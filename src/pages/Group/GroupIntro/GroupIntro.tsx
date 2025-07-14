@@ -13,6 +13,9 @@ export function GroupIntro() {
 
         <div id="group-intro">
             <div id="banner-wrapper">
+                { groupContext.group.activity && <span className="activity-type">
+                    { groupContext.group.activity.type.name }
+                </span> }
                 <img id="organization-banner" src={groupBannerUrl(groupContext.group)} />
                 { !groupContext.group.bannerImage && <>
                 <div className="image-overlay"></div>
