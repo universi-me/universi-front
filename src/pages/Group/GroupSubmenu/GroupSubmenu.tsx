@@ -48,7 +48,7 @@ export function GroupSubmenu(){
             text: "Editar este grupo",
             biIcon: "pencil-fill",
             hidden(data) {
-                return !data.canEdit;
+                return !data.canEdit || !!data.activity;
             },
             onSelect(data) {
                 context!.setEditGroup(data);
@@ -60,7 +60,7 @@ export function GroupSubmenu(){
                 return !data.canEdit || !data.activity;
             },
             onSelect( data ) {
-                context!.setEditActivity( data.activity );
+                context!.setEditActivity( { ...data.activity!, group: data } );
             },
         }, {
             text: "Configurações",

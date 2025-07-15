@@ -5,7 +5,7 @@ import { FieldHelp, handleValidation, RequiredIndicator, useInitialize } from ".
 import styles from "./UniversiFormDateInput.module.less";
 import formStyles from "../../UniversiForm.module.less";
 import { makeClassName } from "@/utils/tsxUtils";
-import { dateWithoutTimezone } from "@/utils/dateUtils";
+import { dateWithoutTimezone, getDate } from "@/utils/dateUtils";
 
 
 export function UniversiFormDateInput( props: Readonly<UniversiFormDateInputProps> ) {
@@ -13,11 +13,7 @@ export function UniversiFormDateInput( props: Readonly<UniversiFormDateInputProp
     const [ valid, setValid ] = useState<boolean>();
 
     const defaultDate = useMemo( () => {
-        return props.defaultValue instanceof Date
-            ? props.defaultValue
-            : props.defaultValue !== undefined
-                ? dateWithoutTimezone( props.defaultValue )
-                : undefined;
+        return getDate( props.defaultValue );
     }, [] );
 
     useInitialize( { props, value: defaultDate, setValid } );
