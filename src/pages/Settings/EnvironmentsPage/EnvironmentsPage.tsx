@@ -12,6 +12,8 @@ import "./EnvironmentsPage.less";
 import TextboxFormatted from "@/components/TextboxFormatted/TextboxFormatted";
 import { AuthContext } from "@/contexts/Auth";
 import { useContext } from "react";
+import { defaultGoogleImageUrl, defaultGoogleText } from "@/components/SignInWithGoogle";
+import { defaultKaycloakImageUrl, defaultKeycloakText } from "@/components/SignInWithKeycloak";
 
 export function EnvironmentsPage() {
     const data = useLoaderData() as EnvironmentsLoaderResponse;
@@ -167,13 +169,13 @@ export function EnvironmentsPage() {
                         name: "Texto do Botão",
                         key: "google_login_text",
                         type: "string",
-                        defaultValue: "EMAIL GOOGLE"
+                        defaultValue: defaultGoogleText
                     },
                     {
                         name: "Imagem do Botão",
                         key: "google_login_image_url",
                         type: "string",
-                        defaultValue: "https://lh3.googleusercontent.com/d_S5gxu_S1P6NR1gXeMthZeBzkrQMHdI5uvXrpn3nfJuXpCjlqhLQKH_hbOxTHxFhp5WugVOEcl4WDrv9rmKBDOMExhKU5KmmLFQVg"
+                        defaultValue: defaultGoogleImageUrl
                     },
                     {
                         name: "Client ID",
@@ -198,13 +200,13 @@ export function EnvironmentsPage() {
                         name: "Texto do Botão",
                         key: "keycloak_login_text",
                         type: "string",
-                        defaultValue: "Keycloak"
+                        defaultValue: defaultKeycloakText
                     },
                     {
                         name: "Imagem do Botão",
                         key: "keycloak_login_image_url",
                         type: "string",
-                        defaultValue: "https://i.imgur.com/pKFFuoh.png"
+                        defaultValue: defaultKaycloakImageUrl
                     },
                     {
                         name: "Auth URL",
