@@ -2,13 +2,38 @@ import BootstrapIcon from "@/components/BootstrapIcon";
 import { UniversimeApi } from "@/services"
 import { SERVICES_AVAILABLE } from "@/types/Health";
 import { useEffect, useState } from "react";
+import { convertBytes } from "@/utils/fileUtils";
 
 import "./HealthCheckPage.less";
 
 export function HealthCheckPage() {
     const [servicesHealth, setServicesHealth] = useState(initialState);
+    const [ resourcesUsage, setResourcesUsage ] = useState<Health.Usage>();
 
-    useEffect(() => { checkHealth() }, []);
+    const [logText, setLogText] = useState<string>('');
+
+    function logToBoxConsole(message: string) {
+        if(message !== undefined) {
+            setLogText(prev =>
+                (prev!.endsWith(message + '\n') === false) ? (prev + message + '\n') : prev);
+                
+            const textarea = document.getElementById("errors") as HTMLTextAreaElement;
+            if(textarea) {
+                textarea.scrollTop = textarea.scrollHeight;
+            }
+        }
+    }
+
+    useEffect(() => {
+        checkHealth();
+        checkResourcesUsage();
+
+        const interval = setInterval( () => {
+            checkResourcesUsage();
+        }, 5_000 );
+
+        return function() { clearInterval( interval ); }
+    }, []);
 
     return <main id="health-check-page">
         <center>
@@ -23,7 +48,20 @@ export function HealthCheckPage() {
                     .map(([s, h]) => <HealthItem key={s} health={h} serviceName={SERVICES_AVAILABLE[s as ServiceId].name} />)
                 }
             </table>
-            <textarea id="errors" rows={5}></textarea>
+
+            <h1>Uso de recursos da API Rest</h1>
+            <table id="usage-table">
+                <tr>
+                    <th>Recurso</th>
+                    <th>Uso</th>
+                </tr>
+
+                <UsageItem item="cpu" value={ resourcesUsage?.cpuLoad } />
+                <UsageItem item="totalMem" value={ resourcesUsage?.totalMemory } />
+                <UsageItem item="freeMem" value={ resourcesUsage?.freeMemory } />
+                <UsageItem item="maxMem" value={ resourcesUsage?.maxMemory } />
+            </table>
+            <textarea id="errors" rows={5} value={logText} onChange={(e) => setLogText(e.target.value)} />
         </center>
     </main>;
 
@@ -72,16 +110,16 @@ export function HealthCheckPage() {
                 if (service !== "API") procedure(service);
             })
     }
-}
 
-function logToBoxConsole(message: string) {
-    if(message !== undefined) {
-        const div = document.getElementById('errors');
-        if(div!.innerHTML.endsWith(message + "\n") === false) {
-            div!.innerHTML += message + "\n";
-        }
+    async function checkResourcesUsage() {
+        logToBoxConsole( "Iniciando verificação de uso de recursos do servidor REST..." )
+
+        const usage = await UniversimeApi.Health.usage();
+        setResourcesUsage( usage.data );
     }
 }
+
+
 
 type HealthItemsProps = {
     serviceName: string;
@@ -101,6 +139,43 @@ function HealthItem(props: Readonly<HealthItemsProps>) {
         <td>{service}</td>
         <td>{statusIcon}
          {health?.statusMessage !== undefined && <p>{health.statusMessage}</p>}</td>
+    </tr>;
+}
+
+type UsageItemProps = {
+    item: "cpu" | "maxMem" | "freeMem" | "totalMem";
+    value: number | undefined;
+};
+
+const USAGE_LABELS: { [ K in UsageItemProps["item"] ]: string; } = {
+    cpu: "CPU Load",
+    freeMem: "Memória Livre",
+    maxMem: "Memória Máxima",
+    totalMem: "Memória Total",
+};
+
+function UsageItem( props: Readonly<UsageItemProps> ) {
+    const { item, value } = props;
+
+    return <tr>
+        <td>{ USAGE_LABELS[ item ] }</td>
+        <td>{ value === undefined
+            ? <BootstrapIcon icon="clock-history" style={{color:"black"}} />
+            : value < 0
+                ? <>
+                    <BootstrapIcon icon="bug-fill" style={{color:"red"}} />
+                    <p>Indisponível</p>
+                </>
+                : item === "cpu"
+                    ? <>{ ( value * 100 ).toFixed( 2 ) }%</>
+                    : <>
+                        { value } B
+                        { value >= 1024 && <>
+                            <br/>
+                            ( { convertBytes( value, 2 ) } )
+                        </> }
+                    </>
+        }</td>
     </tr>;
 }
 

@@ -12,6 +12,13 @@ namespace Health {
     type AllResponseDTO = {
         [ k in ServiceId ]: ResponseDTO;
     };
+
+    type Usage = {
+        cpuLoad: number;
+        maxMemory: number;
+        totalMemory: number;
+        freeMemory: number;
+    };
 }
 
 type HealthResponseDTO = Health.ResponseDTO;

@@ -58,8 +58,8 @@ export type GroupContextType = null | {
     editPost: Feed.GroupPost | Feed.GroupPostComment | null | undefined;
     setEditPost(post: Feed.GroupPost | Feed.GroupPostComment | null | undefined) : any;
 
-    readonly editActivity: Possibly<Omit<Activity.DTO, "group">>;
-    setEditActivity( activity: Possibly<Omit<Activity.DTO, "group">> ): unknown;
+    readonly editActivity: Possibly<Activity.DTO>;
+    setEditActivity( activity: Possibly<Activity.DTO> ): unknown;
 
     /**
      * The Folder being assigned to someone

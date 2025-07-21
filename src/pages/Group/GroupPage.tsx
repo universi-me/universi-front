@@ -1,7 +1,8 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Navigate, useLoaderData } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, asTabAvailable, type GroupContextType, type GroupPageLoaderResponse, RefreshGroupOptions } from "@/pages/Group";
+import { GroupContext, GroupIntro, GroupTabRenderer, GroupTabs, fetchGroupPageData, type AvailableTabs, type GroupContextType, type GroupPageLoaderResponse, RefreshGroupOptions } from "@/pages/Group";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import ManageGroup from "@/components/ManageGroup";
 import { ProfileInfo } from "@/components/ProfileInfo/ProfileInfo";
 import { AuthContext } from "@/contexts/Auth";
@@ -11,19 +12,19 @@ import GroupConfigModal from './GroupConfig/GroupConfigModal';
 import ManageActivity from "@/components/ManageActivity";
 
 export function GroupPage() {
-    const page = useLoaderData() as GroupPageLoaderResponse;
+    const groupPath = useParams()[ "*" ]!;
     const authContext = useContext(AuthContext);
 
     const tabSave = useRef<AvailableTabs>();
-    const [context, setContext] = useState(makeContext(page));
+    const [context, setContext] = useState<GroupContextType>( null );
 
     useEffect(() => {
-        const newContext = makeContext(page);
-        setContext(newContext);
-    }, [page]);
+        setContext( null );
+        refreshGroupData();
+    }, [ groupPath ]);
 
-    if (!page.loggedData || !page.group) {
-        return (<Navigate to="/login" />);
+    if ( !context ) {
+        return <LoadingSpinner />;
     }
 
     return (
@@ -62,7 +63,7 @@ export function GroupPage() {
         }
 
         { context.editActivity !== undefined && <ManageActivity
-            activity={ context.editActivity ? { ...context.editActivity, group: context.group } : null }
+            activity={ context.editActivity }
             group={ context.group }
             callback={ async res => {
                 let newContext = context;
@@ -77,7 +78,7 @@ export function GroupPage() {
     );
 
     async function refreshGroupData(options?: RefreshGroupOptions) {
-        const data = await fetchGroupPageData({ groupPath: page.group?.path });
+        const data = await fetchGroupPageData({ groupPath });
         const newContext = makeContext(data);
 
         if (options?.currentContentId) {

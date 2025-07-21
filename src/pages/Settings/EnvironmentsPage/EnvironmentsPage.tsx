@@ -12,6 +12,8 @@ import "./EnvironmentsPage.less";
 import TextboxFormatted from "@/components/TextboxFormatted/TextboxFormatted";
 import { AuthContext } from "@/contexts/Auth";
 import { useContext } from "react";
+import { defaultGoogleImageUrl, defaultGoogleText } from "@/components/SignInWithGoogle";
+import { defaultKaycloakImageUrl, defaultKeycloakText } from "@/components/SignInWithKeycloak";
 
 export function EnvironmentsPage() {
     const data = useLoaderData() as EnvironmentsLoaderResponse;
@@ -124,7 +126,7 @@ export function EnvironmentsPage() {
                 items: [
                     {
                         name: "Notificar Novo Conteúdo No Grupo",
-                        key: "alert_new_content_enabled",
+                        key: "message_new_content_enabled",
                         type: "boolean",
                         defaultValue: true,
                     },
@@ -139,7 +141,7 @@ export function EnvironmentsPage() {
                     },
                     {
                         name: "Notificar Conteúdo Atribuído",
-                        key: "alert_assigned_content_enabled",
+                        key: "message_assigned_content_enabled",
                         type: "boolean",
                         defaultValue: true,
                     },
@@ -164,6 +166,18 @@ export function EnvironmentsPage() {
                         defaultValue: false,
                     },
                     {
+                        name: "Texto do Botão",
+                        key: "google_login_text",
+                        type: "string",
+                        defaultValue: defaultGoogleText
+                    },
+                    {
+                        name: "Imagem do Botão",
+                        key: "google_login_image_url",
+                        type: "string",
+                        defaultValue: defaultGoogleImageUrl
+                    },
+                    {
                         name: "Client ID",
                         key: "google_client_id",
                         type: "string",
@@ -181,6 +195,18 @@ export function EnvironmentsPage() {
                         key: "keycloak_enabled",
                         type: "boolean",
                         defaultValue: false,
+                    },
+                    {
+                        name: "Texto do Botão",
+                        key: "keycloak_login_text",
+                        type: "string",
+                        defaultValue: defaultKeycloakText
+                    },
+                    {
+                        name: "Imagem do Botão",
+                        key: "keycloak_login_image_url",
+                        type: "string",
+                        defaultValue: defaultKaycloakImageUrl
                     },
                     {
                         name: "Auth URL",
