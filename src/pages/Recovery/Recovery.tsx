@@ -20,7 +20,7 @@ export default function Recovery(){
     const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
     return(
-        <UniversiForm.Root id="recovery-password-modal" title="Recuperação de Conta" callback={ recoveryAccount } >
+        <UniversiForm.Root id="recovery-password-modal" title="Recuperação de Conta" callback={ recoveryAccount } skipCancelConfirmation={ true } >
             <UniversiForm.Input.Text
                 required
                 param="username"
@@ -53,7 +53,6 @@ export default function Recovery(){
                 SwalUtils.fireToasty({
                     title: "Recuperação de Conta",
                     text: "Uma mensagem foi enviada para o seu e-mail com as instruções de recuperação",
-                    timer: 10_000,
                 });
                 navigate( "/" )
             }
