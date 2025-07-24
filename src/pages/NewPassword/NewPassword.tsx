@@ -1,21 +1,35 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { useState } from "react"
 import "./NewPassword.css"
 import { UniversimeApi } from "@/services"
 import * as SwalUtils from "@/utils/sweetalertUtils"
-import NewPasswordInput from "@/components/NewPasswordInput/NewPasswordInput";
+import UniversiForm from "@/components/UniversiForm";
 
 export default function NewPassword(){
     const navigate = useNavigate();
 
     const { id: token } = useParams();
-    const [password, setPassword] = useState<string>("")
 
-    async function handleNewPassword(){
+    return(
+        <UniversiForm.Root id="new-password-modal" title="Definição de Nova Senha" callback={ newPassword } >
+            <UniversiForm.Input.Password
+                param="newPassword"
+                label="Nova Senha"
+                required
+                mustConfirm
+                mustMatchRequirements
+            />
+        </UniversiForm.Root>
+    )
+
+    async function newPassword( data: UniversiForm.Data<UniversimeApi.Auth.RecoverNewPassword_RequestDTO> ) {
+        if ( !data.confirmed ) {
+            navigate( "/" )
+            return;
+        }
 
         SwalUtils.fireToasty({title: "Verificando dados"})
         const res = await UniversimeApi.Auth.newPassword({
-            newPassword: password,
+            newPassword: data.body!.newPassword,
             token: token!,
         })
 
@@ -27,37 +41,5 @@ export default function NewPassword(){
             });
             navigate( "/" )
         }
-
-        else {
-            SwalUtils.fireModal({
-                title: "Erro ao alterar senha",
-                text: res.errorMessage,
-            });
-        }
-    }
-
-    const [canChangePassword, setCanChangePassword] = useState<NullableBoolean>(false)
-
-    return(
-        <div>
-            <div className="center-container">
-                <h3 className="center-text">Definição de senha: escolha sua nova senha</h3>
-                <div className="container form-container">
-                    <NewPasswordInput password={password} setPassword={setPassword} valid={canChangePassword} setValid={setCanChangePassword}/>
-
-                    <button disabled={!canChangePassword}
-                        type="submit"
-                        value="Entrar"
-                        className="btn_form"
-                        onClick={handleNewPassword}
-                    >
-                        ENVIAR
-                    </button>
-
-                </div>
-            </div>
-        </div>
-    )
-
-
+    };
 }
