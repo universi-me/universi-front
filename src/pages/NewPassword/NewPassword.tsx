@@ -41,7 +41,7 @@ export default function NewPassword(){
     return(
         <div>
             <div className="center-container">
-                <h3 className="center-text">Recuperação de senha: escolha sua nova senha</h3>
+                <h3 className="center-text">Definição de senha: escolha sua nova senha</h3>
                 <div className="container form-container">
                     <NewPasswordInput password={password} setPassword={setPassword} valid={canChangePassword} setValid={setCanChangePassword}/>
 

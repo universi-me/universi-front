@@ -1,6 +1,6 @@
 import "./Recovery.css"
 import "../singin/SignInForm.less"
-import {useState, useContext} from "react"
+import {useState, useContext, useRef} from "react"
 import { UniversimeApi } from "@/services"
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import * as SwalUtils from "@/utils/sweetalertUtils"
@@ -12,7 +12,8 @@ export default function Recovery(){
     const [username, setUsername] = useState("")
     const [msg, setMsg] = useState<null | string>(null)
     const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-    const [recaptchaRef, setRecaptchaRef] = useState<any>(null);
+    const recaptchaRef = useRef<Nullable<ReCAPTCHA>>(null);
+    const [recaptchaWidgetKey, setRecaptchaWidgetKey] = useState(0);
 
     const handleRecaptchaChange = (token: string | null) => {
         setRecaptchaToken(token);
@@ -24,10 +25,10 @@ export default function Recovery(){
         .then(res =>{
             if(res.isSuccess()) {
                 setMsg(res.errorMessage ?? "Houve um erro")
-            } else {
-                recaptchaRef.reset();
             }
         })
+        setRecaptchaWidgetKey(prev => prev + 1);
+        setRecaptchaToken(null);
     }
 
     const organizationEnv = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any);
@@ -55,12 +56,12 @@ export default function Recovery(){
                     </div>
 
                     {
-                        !ENABLE_RECAPTCHA ? null :
-                            <center>
-                                <br/>
-                                <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
-                                <br/>
-                            </center>
+                        ENABLE_RECAPTCHA && RECAPTCHA_SITE_KEY &&
+                        <center>
+                            <br/>
+                                <ReCAPTCHA key={ recaptchaWidgetKey } ref={ recaptchaRef } sitekey={ RECAPTCHA_SITE_KEY } onChange={ handleRecaptchaChange } />
+                            <br/>
+                        </center>
                     }
 
                     <button
