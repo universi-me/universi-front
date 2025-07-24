@@ -53,6 +53,7 @@ export default function Recovery(){
                 SwalUtils.fireToasty({
                     title: "Recuperação de Conta",
                     text: "Uma mensagem foi enviada para o seu e-mail com as instruções de recuperação",
+                    timer: 60_000 * 5,
                 });
                 navigate( "/" )
             }

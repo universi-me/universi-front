@@ -13,6 +13,7 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ProfileClass } from "@/types/Profile";
 import { UserAccessLevelLabel } from "@/types/User";
 import "./RolesPage.less";
+import UniversiForm from "@/components/UniversiForm";
 
 export function RolesPage() {
     const data = useLoaderData() as RolesPageLoaderResponse;
@@ -27,6 +28,9 @@ export function RolesPage() {
 
     const [showActionPopup, setShowActionPopup] = useState(false);
     const [actionSelectionBlock, setActionSelectionBlock] = useState(false);
+
+    const [showOptionProfilePopup, setShowOptionProfilePopup] = useState(false);
+    const [optionProfile, setOptionProfile] = useState<Profile>();
 
     if (!participants) {
         SwalUtils.fireModal({
@@ -123,9 +127,51 @@ export function RolesPage() {
         participantsDispatch({ type: "SET_ALL", setParticipants: participants!.map(p => new ProfileOnList(p)) });
     }
 
-    
+    function showOptionsProfile(profile: ProfileOnList) {
+        setOptionProfile(profile);
+        setShowOptionProfilePopup(true);
+    }
+
+    async function handleOptionsAccount( data: UniversiForm.Data<UniversimeApi.User.UserAccountUpdate_RequestDTO> ) {
+        if ( !data.confirmed ) {
+            setShowOptionProfilePopup(false)
+            return;
+        }
+        await UniversimeApi.User.updateAccount({ userId: data.body!.userId, password: data.body!.password })
+        setShowOptionProfilePopup(false)
+    }
 
     return <div id="roles-settings">
+
+        {   showOptionProfilePopup &&
+        <UniversiForm.Root id="profile-options-modal" title="Opções do Usuário" callback={ handleOptionsAccount } >
+            <UniversiForm.Input.Hidden
+                param="userId"
+                defaultValue={ optionProfile?.user.id }
+            />
+            <UniversiForm.Input.Text
+                param="username"
+                label="Usuário"
+                value={optionProfile?.user.name}
+                disabled
+            />
+            <UniversiForm.Input.Text
+                param="email"
+                label="E-mail"
+                value={optionProfile?.user.email}
+                disabled
+            />
+            <UniversiForm.Input.Password
+                param="password"
+                label="Definir Senha Temporária"
+                passwordPlaceholder="Insira uma senha temporária"
+                confirmPlaceholder="Confirme a senha temporária"
+                required
+                mustConfirm
+                mustMatchRequirements
+            />
+        </UniversiForm.Root> }
+
         <SettingsTitle>Configurar administradores</SettingsTitle>
         <SettingsDescription>Configure os níveis de acesso dos usuários do Universi.me</SettingsDescription>
         <section id="search-submit-wrapper">
@@ -198,7 +244,7 @@ export function RolesPage() {
 
                 <div style={{margin: 0, padding: 0, width: '5%'}}>
                     { isSelectionActive && <h2 onClick={() => toggleSelection(profile) } className={isSelectionProfile(profile) ? "bi-check-circle-fill" : "bi-check-circle"} /> }
-                    { profile.blockedAccount && <><br/><h2 className="bi-ban" style={{color: 'red'}}/></> }
+                    { profile.blockedAccount && <><br/><h2 className="bi bi-x-octagon-fill" style={{color: 'red', paddingRight: '2em'}}/></> }
                 </div>
 
                 <div style={{width: '15%'}}>
@@ -229,8 +275,12 @@ export function RolesPage() {
 
                 <div>
                     <section id="search-submit-wrapper" style={{marginBottom: 'auto'}}>
-                        <button type="button" className="submit" onClick={() => blockProfile(profile, !profile.blockedAccount)} style={{display: 'inline-block' }}>
+                        <button type="button" className="submit" onClick={() => blockProfile(profile, !profile.blockedAccount)} style={{display: 'inline-block', backgroundColor: profile.blockedAccount ? 'red' : 'var(--primary-color)' }}>
                             { profile.blockedAccount ? <><span className="bi bi-lock-fill"/> Bloqueado</> : <><span className="bi bi-unlock-fill"/> Habilitado</> }
+                        </button>
+                        <span  style={{paddingLeft: 10}}/>
+                        <button type="button" className="submit" onClick={() => showOptionsProfile(profile)} style={{ padding: 10, width: 'auto', backgroundColor: 'var(--primary-color)' }}>
+                            <span className="bi bi-three-dots-vertical"/>
                         </button>
                     </section>
                 </div>
