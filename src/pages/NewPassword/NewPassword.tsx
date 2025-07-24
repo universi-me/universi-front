@@ -14,6 +14,8 @@ export default function NewPassword(){
             <UniversiForm.Input.Password
                 param="newPassword"
                 label="Nova Senha"
+                passwordPlaceholder="Insira sua nova senha"
+                confirmPlaceholder="Confirme sua nova senha"
                 required
                 mustConfirm
                 mustMatchRequirements

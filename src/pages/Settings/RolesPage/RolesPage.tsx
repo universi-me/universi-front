@@ -144,7 +144,7 @@ export function RolesPage() {
     return <div id="roles-settings">
 
         {   showOptionProfilePopup &&
-        <UniversiForm.Root id="profile-options-modal" title="Opções do Usuário" callback={ handleOptionsAccount } >
+        <UniversiForm.Root id="profile-options-modal" title="Opções de Usuário" callback={ handleOptionsAccount } >
             <UniversiForm.Input.Hidden
                 param="userId"
                 defaultValue={ optionProfile?.user.id }
