@@ -39,6 +39,7 @@ export function SignUpModal( props: Readonly<SignUpModalProps> ) {
     const emailAvailableChecked = emailUnavailableMessage !== undefined;
 
     const recaptchaRef = useRef<Nullable<ReCAPTCHA>>(null);
+    const [recaptchaWidgetKey, setRecaptchaWidgetKey] = useState(0);
 
     useEffect(() => {
         setUsernameUnavailableMessage( undefined );
@@ -152,10 +153,12 @@ export function SignUpModal( props: Readonly<SignUpModalProps> ) {
             mustMatchRequirements
         />
 
-        { ENABLE_RECAPTCHA && <UniversiForm.Input.ReCaptcha
+        { ENABLE_RECAPTCHA && RECAPTCHA_SITE_KEY && <UniversiForm.Input.ReCaptcha
+            key={ recaptchaWidgetKey }
             param="recaptchaToken"
             sitekey={ RECAPTCHA_SITE_KEY }
             ref={ recaptchaRef }
+            required
         />}
     </UniversiForm.Root>
 
@@ -173,7 +176,7 @@ export function SignUpModal( props: Readonly<SignUpModalProps> ) {
             return;
         }
 
-        recaptchaRef.current?.reset();
+        setRecaptchaWidgetKey(prev => prev + 1);
         SwalUtils.fireModal({
             title: "Erro ao criar sua conta",
             text: res.errorMessage ?? "Houve algo de errado em nosso sistema.",
