@@ -162,6 +162,8 @@ export function RolesPage() {
                 disabled
             />
             <UniversiForm.Input.Password
+                allowCopy={ true }
+                allowGenerate={ true }
                 param="password"
                 label="Definir Senha Temporária"
                 passwordPlaceholder="Insira uma senha temporária"
