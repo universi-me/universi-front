@@ -32,6 +32,9 @@ export function RolesPage() {
     const [showOptionProfilePopup, setShowOptionProfilePopup] = useState(false);
     const [optionProfile, setOptionProfile] = useState<Profile>();
 
+    const [showOptionPasswordProfilePopup, setShowOptionPasswordProfilePopup] = useState(false);
+    const [optionPasswordProfile, setOptionPasswordProfile] = useState<Profile>();
+
     if (!participants) {
         SwalUtils.fireModal({
             title: "Erro ao recuperar dados dos participantes",
@@ -132,19 +135,70 @@ export function RolesPage() {
         setShowOptionProfilePopup(true);
     }
 
-    async function handleOptionsAccount( data: UniversiForm.Data<UniversimeApi.User.UserAccountUpdate_RequestDTO> ) {
+    function showOptionsPasswordProfile(profile: ProfileOnList) {
+        setOptionPasswordProfile(profile);
+        setShowOptionPasswordProfilePopup(true);
+    }
+    async function handleOptionPasswordAccount( data: UniversiForm.Data<UniversimeApi.User.UserAccountUpdate_RequestDTO> ) {
         if ( !data.confirmed ) {
-            setShowOptionProfilePopup(false)
+            setShowOptionPasswordProfilePopup(false)
             return;
         }
         await UniversimeApi.User.updateAccount({ userId: data.body!.userId, password: data.body!.password })
         setShowOptionProfilePopup(false)
     }
 
+    async function handleOptionsAccount( data: UniversiForm.Data<UniversimeApi.User.UserAccountUpdate_RequestDTO> ) {
+        if ( !data.confirmed ) {
+            setShowOptionProfilePopup(false)
+            return;
+        }
+        await UniversimeApi.User.updateAccount({ userId: data.body!.userId, email: data.body!.email })
+        setShowOptionProfilePopup(false)
+    }
+
+    const OPTIONS_DEFINITION: OptionInMenu<ProfileOnList>[] = [
+            {
+                text: "Editar",
+                biIcon: "pencil-fill",
+                onSelect(profile) {
+                    showOptionsProfile(profile)
+                }
+            },
+            {
+                text: "Definir Senha Temporária",
+                biIcon: "key-fill",
+                onSelect(profile) {
+                    showOptionsPasswordProfile(profile)
+                }
+            },
+            {
+                text: "Bloquear",
+                biIcon: "lock-fill",
+                className: "delete",
+                onSelect(profile) {
+                    blockProfile(profile, true)
+                },
+                hidden(profile) {
+                    return profile.blockedAccount!;
+                }
+            },
+            {
+                text: "Desbloquear",
+                biIcon: "unlock-fill",
+                onSelect(profile) {
+                    blockProfile(profile, false)
+                },
+                hidden(profile) {
+                    return !profile.blockedAccount!;
+                }
+            }
+        ];
+
     return <div id="roles-settings">
 
         {   showOptionProfilePopup &&
-        <UniversiForm.Root id="profile-options-modal" title="Opções de Usuário" callback={ handleOptionsAccount } >
+        <UniversiForm.Root id="profile-options-modal" title="Editar Usuário" callback={ handleOptionsAccount } >
             <UniversiForm.Input.Hidden
                 param="userId"
                 defaultValue={ optionProfile?.user.id }
@@ -158,7 +212,21 @@ export function RolesPage() {
             <UniversiForm.Input.Text
                 param="email"
                 label="E-mail"
-                value={optionProfile?.user.email}
+                defaultValue={optionProfile?.user.email}
+                required
+            />
+        </UniversiForm.Root> }
+
+        {   showOptionPasswordProfilePopup &&
+        <UniversiForm.Root id="profile-options-modal" title="Definir Senha Temporária" callback={ handleOptionPasswordAccount } >
+            <UniversiForm.Input.Hidden
+                param="userId"
+                defaultValue={ optionPasswordProfile?.user.id }
+            />
+            <UniversiForm.Input.Text
+                param="username"
+                label="Usuário"
+                value={optionPasswordProfile?.user.name}
                 disabled
             />
             <UniversiForm.Input.Password
@@ -246,7 +314,7 @@ export function RolesPage() {
 
                 <div style={{margin: 0, padding: 0, width: '5%'}}>
                     { isSelectionActive && <h2 onClick={() => toggleSelection(profile) } className={isSelectionProfile(profile) ? "bi-check-circle-fill" : "bi-circle"} /> }
-                    { profile.blockedAccount && <><br/><h2 className="bi bi-x-octagon-fill" style={{color: 'red', paddingRight: '2em'}}/></> }
+                    { profile.blockedAccount && <><br/><h2 className="bi bi-x-octagon-fill" style={{color: 'red', paddingRight: '2em'}} title="Usuário Bloqueado"/></> }
                 </div>
 
                 <div style={{width: '15%'}}>
@@ -277,13 +345,21 @@ export function RolesPage() {
 
                 <div>
                     <section id="search-submit-wrapper" style={{marginBottom: 'auto'}}>
-                        <button type="button" className="submit" onClick={() => blockProfile(profile, !profile.blockedAccount)} style={{display: 'inline-block', backgroundColor: profile.blockedAccount ? 'red' : 'var(--primary-color)' }}>
-                            { profile.blockedAccount ? <><span className="bi bi-lock-fill"/> Bloqueado</> : <><span className="bi bi-unlock-fill"/> Habilitado</> }
-                        </button>
                         <span  style={{paddingLeft: 10}}/>
-                        <button type="button" className="submit" onClick={() => showOptionsProfile(profile)} style={{ padding: 10, width: 'auto', backgroundColor: 'var(--primary-color)' }}>
-                            <span className="bi bi-three-dots-vertical"/>
-                        </button>
+                        { 
+                            <DropdownMenu.Root>
+                                <DropdownMenu.Trigger asChild>
+                                    <button className="user-options-button">
+                                        <i className="bi bi-three-dots-vertical" />
+                                    </button>
+                                </DropdownMenu.Trigger>
+                        
+                                <DropdownMenu.Content className="user-options" side="left">
+                                    { OPTIONS_DEFINITION.map(def => renderOption(profile, def)) }
+                                        <DropdownMenu.Arrow className="user-options-arrow" height=".5rem" width="1rem" />
+                                </DropdownMenu.Content>
+                            </DropdownMenu.Root>
+                        }
                     </section>
                 </div>
 
