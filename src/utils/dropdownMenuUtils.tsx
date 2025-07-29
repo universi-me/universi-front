@@ -30,7 +30,7 @@ export function renderOption<T>(data: T, option: OptionInMenu<T>) {
         { option.biIcon ? <i className={`bi bi-${option.biIcon} right-slot`}/> : null }
     </>
 
-    return <DropdownMenu.Item {...{className, disabled, onSelect, key, title}}>
+    return <DropdownMenu.Item key={key} {...{className, disabled, onSelect, title}}>
         {children}
     </DropdownMenu.Item>
 }

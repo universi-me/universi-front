@@ -174,8 +174,8 @@ export function RolesPage() {
             />
         </UniversiForm.Root> }
 
-        <SettingsTitle>Configurar administradores</SettingsTitle>
-        <SettingsDescription>Configure os níveis de acesso dos usuários do Universi.me</SettingsDescription>
+        <SettingsTitle>Gerenciar Usuários</SettingsTitle>
+        <SettingsDescription>Gerencie os usuários, definir senha temporária, bloquear ou configurar os níveis de acesso na plataforma</SettingsDescription>
         <section id="search-submit-wrapper">
             <input type="search" placeholder="Pesquisar usuário" onChange={setStateAsValue(setFilter)} />
             <button type="button" onClick={submitChanges} className="submit" disabled={!canSubmit} title={canSubmit ? undefined : "Faça uma alteração primeiro"}>Salvar mudanças</button>
@@ -245,7 +245,7 @@ export function RolesPage() {
                 <div style={{  display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', justifyContent: 'space-between',  width: '100%', }}>
 
                 <div style={{margin: 0, padding: 0, width: '5%'}}>
-                    { isSelectionActive && <h2 onClick={() => toggleSelection(profile) } className={isSelectionProfile(profile) ? "bi-check-circle-fill" : "bi-check-circle"} /> }
+                    { isSelectionActive && <h2 onClick={() => toggleSelection(profile) } className={isSelectionProfile(profile) ? "bi-check-circle-fill" : "bi-circle"} /> }
                     { profile.blockedAccount && <><br/><h2 className="bi bi-x-octagon-fill" style={{color: 'red', paddingRight: '2em'}}/></> }
                 </div>
 
