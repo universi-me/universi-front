@@ -10,7 +10,7 @@ export default function NewPassword(){
     const { id: token } = useParams();
 
     return(
-        <UniversiForm.Root id="new-password-modal" title="Definição de Nova Senha" callback={ newPassword } >
+        <UniversiForm.Root id="new-password-modal" title="Definição de Senha" callback={ newPassword } >
             <UniversiForm.Input.Password
                 param="newPassword"
                 label="Nova Senha"

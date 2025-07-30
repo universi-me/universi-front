@@ -29,10 +29,7 @@ export function RolesPage() {
     const [showActionPopup, setShowActionPopup] = useState(false);
     const [actionSelectionBlock, setActionSelectionBlock] = useState(false);
 
-    const [showOptionProfilePopup, setShowOptionProfilePopup] = useState(false);
     const [optionProfile, setOptionProfile] = useState<Profile>();
-
-    const [showOptionPasswordProfilePopup, setShowOptionPasswordProfilePopup] = useState(false);
     const [optionPasswordProfile, setOptionPasswordProfile] = useState<Profile>();
 
     if (!participants) {
@@ -132,32 +129,28 @@ export function RolesPage() {
 
     function showOptionsProfile(profile: ProfileOnList) {
         setOptionProfile(profile);
-        setShowOptionProfilePopup(true);
     }
 
     function showOptionsPasswordProfile(profile: ProfileOnList) {
         setOptionPasswordProfile(profile);
-        setShowOptionPasswordProfilePopup(true);
     }
     async function handleOptionPasswordAccount( data: UniversiForm.Data<UniversimeApi.User.UserAccountUpdate_RequestDTO> ) {
         if ( !data.confirmed ) {
-            setShowOptionPasswordProfilePopup(false)
+            setOptionPasswordProfile(undefined);
             return;
         }
         await UniversimeApi.User.updateAccount({ userId: data.body!.userId, password: data.body!.password })
         await refreshParticipants();
-        setShowOptionPasswordProfilePopup(false);
         setOptionPasswordProfile(undefined);
     }
 
     async function handleOptionsAccount( data: UniversiForm.Data<UniversimeApi.User.UserAccountUpdate_RequestDTO> ) {
         if ( !data.confirmed ) {
-            setShowOptionProfilePopup(false)
+            setOptionProfile(undefined);
             return;
         }
         await UniversimeApi.User.updateAccount(data.body)
         await refreshParticipants();
-        setShowOptionProfilePopup(false)
         setOptionProfile(undefined);
     }
 
@@ -201,7 +194,7 @@ export function RolesPage() {
 
     return <div id="roles-settings">
 
-        {   showOptionProfilePopup &&
+        {   optionProfile &&
         <UniversiForm.Root id="profile-options-modal" title="Editar Usuário" callback={ handleOptionsAccount } >
             <UniversiForm.Input.Hidden
                 param="userId"
@@ -221,7 +214,7 @@ export function RolesPage() {
             />
             <UniversiForm.Input.Switch
                 param="temporarilyPassword"
-                label="Requerer Definição de Nova Senha"
+                label="Requerer Definição de Senha"
                 defaultValue={optionProfile?.user.temporarilyPassword}
             />
             <UniversiForm.Input.Switch
@@ -231,7 +224,7 @@ export function RolesPage() {
             />
         </UniversiForm.Root> }
 
-        {   showOptionPasswordProfilePopup &&
+        {   optionPasswordProfile &&
         <UniversiForm.Root id="profile-options-modal" title="Definir Senha Temporária" callback={ handleOptionPasswordAccount } >
             <UniversiForm.Input.Hidden
                 param="userId"
