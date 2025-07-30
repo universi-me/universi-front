@@ -145,7 +145,9 @@ export function RolesPage() {
             return;
         }
         await UniversimeApi.User.updateAccount({ userId: data.body!.userId, password: data.body!.password })
-        setShowOptionProfilePopup(false)
+        await refreshParticipants();
+        setShowOptionPasswordProfilePopup(false);
+        setOptionPasswordProfile(undefined);
     }
 
     async function handleOptionsAccount( data: UniversiForm.Data<UniversimeApi.User.UserAccountUpdate_RequestDTO> ) {
@@ -154,7 +156,9 @@ export function RolesPage() {
             return;
         }
         await UniversimeApi.User.updateAccount(data.body)
+        await refreshParticipants();
         setShowOptionProfilePopup(false)
+        setOptionProfile(undefined);
     }
 
     const OPTIONS_DEFINITION: OptionInMenu<ProfileOnList>[] = [
