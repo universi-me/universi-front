@@ -153,7 +153,7 @@ export function RolesPage() {
             setShowOptionProfilePopup(false)
             return;
         }
-        await UniversimeApi.User.updateAccount({ userId: data.body!.userId, email: data.body!.email })
+        await UniversimeApi.User.updateAccount(data.body)
         setShowOptionProfilePopup(false)
     }
 
@@ -214,6 +214,16 @@ export function RolesPage() {
                 label="E-mail"
                 defaultValue={optionProfile?.user.email}
                 required
+            />
+            <UniversiForm.Input.Switch
+                param="temporarilyPassword"
+                label="Requerer Definição de Nova Senha"
+                defaultValue={optionProfile?.user.temporarilyPassword}
+            />
+            <UniversiForm.Input.Switch
+                param="blockedAccount"
+                label="Bloquear Conta"
+                defaultValue={optionProfile?.user.blocked_account}
             />
         </UniversiForm.Root> }
 

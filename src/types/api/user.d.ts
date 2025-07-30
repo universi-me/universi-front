@@ -8,6 +8,7 @@ namespace User {
         accessLevel?: AccessLevel;
         hasPassword?: boolean;
         blocked_account?: boolean;
+        temporarilyPassword?: boolean;
     };
 
     type AccessLevel = "ROLE_USER" | "ROLE_DEV" | "ROLE_ADMIN";
