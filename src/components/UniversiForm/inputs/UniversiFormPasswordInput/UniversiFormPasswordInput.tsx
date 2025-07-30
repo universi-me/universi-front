@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 import MaterialIcon from "@/components/MaterialIcon";
 import { PasswordValidity } from "@/utils/passwordValidation";
@@ -121,6 +121,7 @@ export type UniversiFormPasswordInputProps = Omit<UniversiFormFieldProps<string>
     mustMatchRequirements?: boolean;
     onCheckValidity?( validity: PasswordValidity ): any;
 
+    allowClear?: boolean;
     allowCopy?: boolean;
     allowGenerate?: boolean;
 
@@ -135,6 +136,7 @@ type UniversiFormPasswordInputContextType = UniversiFormPasswordInputProps & {
 function PasswordField( props: Readonly<PasswordFieldProps> ) {
     const [ visible, setVisible ] = useState<boolean>( false );
     const context = useContext( UniversiFormPasswordInputContext );
+    const refInput = useRef<HTMLInputElement>({} as HTMLInputElement | null);
 
     if ( context === undefined ) return null;
 
@@ -146,11 +148,17 @@ function PasswordField( props: Readonly<PasswordFieldProps> ) {
     function copyToClipboard() {
         if ( !props.value ) return;
         navigator.clipboard.writeText( props.value )
+        refInput?.current?.select();
+    }
+
+    function clearValue() {
+        props.onChange?.( "" );
     }
 
     return <div className={ styles.input_wrapper }>
         <MaterialIcon icon="lock" className={ styles.lock_icon } />
         <input
+            ref={ refInput }
             type={ (visible || props.needVisibilityPassword) ? "text" : "password" }
             name={ context.param }
             id={ props.id ?? context.param }
@@ -160,6 +168,12 @@ function PasswordField( props: Readonly<PasswordFieldProps> ) {
             placeholder={ props.placeholder }
         />
         <div className={styles.buttons}>
+            {
+                context.allowClear && props.value &&
+                <button type="button" onClick={clearValue} className={ styles.buttons_button } disabled={ !props.value } title="Limpar">
+                    <i className="bi bi-x-lg" style={{fontSize: "1.5em" }} />
+                </button>
+            }
             {   context.allowGenerate && props.generateAction &&
                 <button type="button" onClick={ () => { props.generateAction?.(); } } className={ styles.buttons_button } title="Gerar senha">
                     <i className="bi bi-arrow-repeat" style={{fontSize: "1.5em" }}/>

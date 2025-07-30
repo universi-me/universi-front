@@ -230,8 +230,8 @@ export function RolesPage() {
                 disabled
             />
             <UniversiForm.Input.Password
-                allowCopy={ true }
-                allowGenerate={ true }
+                allowCopy
+                allowGenerate
                 param="password"
                 label="Definir Senha"
                 passwordPlaceholder="Insira uma senha"
