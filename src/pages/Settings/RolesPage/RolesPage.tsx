@@ -134,24 +134,17 @@ export function RolesPage() {
     function showOptionsPasswordProfile(profile: ProfileOnList) {
         setOptionPasswordProfile(profile);
     }
-    async function handleOptionPasswordAccount( data: UniversiForm.Data<UniversimeApi.User.UserAccountUpdate_RequestDTO> ) {
-        if ( !data.confirmed ) {
-            setOptionPasswordProfile(undefined);
-            return;
-        }
-        await UniversimeApi.User.updateAccount({ userId: data.body!.userId, password: data.body!.password })
-        await refreshParticipants();
-        setOptionPasswordProfile(undefined);
-    }
 
     async function handleOptionsAccount( data: UniversiForm.Data<UniversimeApi.User.UserAccountUpdate_RequestDTO> ) {
         if ( !data.confirmed ) {
             setOptionProfile(undefined);
+            setOptionPasswordProfile(undefined);
             return;
         }
         await UniversimeApi.User.updateAccount(data.body)
         await refreshParticipants();
         setOptionProfile(undefined);
+        setOptionPasswordProfile(undefined);
     }
 
     const OPTIONS_DEFINITION: OptionInMenu<ProfileOnList>[] = [
@@ -225,7 +218,7 @@ export function RolesPage() {
         </UniversiForm.Root> }
 
         {   optionPasswordProfile &&
-        <UniversiForm.Root id="profile-options-modal" title="Definir Senha Temporária" callback={ handleOptionPasswordAccount } >
+        <UniversiForm.Root id="profile-options-modal" title="Definir Senha Temporária" callback={ handleOptionsAccount } >
             <UniversiForm.Input.Hidden
                 param="userId"
                 defaultValue={ optionPasswordProfile?.user.id }
@@ -240,12 +233,17 @@ export function RolesPage() {
                 allowCopy={ true }
                 allowGenerate={ true }
                 param="password"
-                label="Definir Senha Temporária"
-                passwordPlaceholder="Insira uma senha temporária"
-                confirmPlaceholder="Confirme a senha temporária"
+                label="Definir Senha"
+                passwordPlaceholder="Insira uma senha"
+                confirmPlaceholder="Confirme a senha"
                 required
                 mustConfirm
                 mustMatchRequirements
+            />
+            <UniversiForm.Input.Switch
+                param="temporarilyPassword"
+                label="Senha Temporária"
+                defaultValue={true}
             />
         </UniversiForm.Root> }
 
