@@ -1,81 +1,63 @@
 import "./Recovery.css"
 import "../singin/SignInForm.less"
-import {useState, useContext} from "react"
+import {useState, useContext, useRef} from "react"
+import { useNavigate } from "react-router-dom"
 import { UniversimeApi } from "@/services"
 import { AuthContext } from "@/contexts/Auth/AuthContext";
 import * as SwalUtils from "@/utils/sweetalertUtils"
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
+import UniversiForm from "@/components/UniversiForm";
 
 export default function Recovery(){
+    const navigate = useNavigate();
     const auth = useContext(AuthContext);
 
-    const [username, setUsername] = useState("")
-    const [msg, setMsg] = useState<null | string>(null)
-    const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-    const [recaptchaRef, setRecaptchaRef] = useState<any>(null);
-
-    const handleRecaptchaChange = (token: string | null) => {
-        setRecaptchaToken(token);
-    };
-
-    function handleRecover(){
-        SwalUtils.fireToasty({title: "Verificando dados"})
-        UniversimeApi.Auth.recoverPassword({username, recaptchaToken: recaptchaToken ?? undefined})
-        .then(res =>{
-            if(res.isSuccess()) {
-                setMsg(res.errorMessage ?? "Houve um erro")
-            } else {
-                recaptchaRef.reset();
-            }
-        })
-    }
+    const recaptchaRef = useRef<Nullable<ReCAPTCHA>>(null);
+    const [recaptchaWidgetKey, setRecaptchaWidgetKey] = useState(0);
 
     const organizationEnv = (((auth.organization??{} as any).groupSettings??{} as any).environment??{} as any);
     const ENABLE_RECAPTCHA = organizationEnv.recaptcha_enabled ?? (import.meta.env.VITE_ENABLE_RECAPTCHA === "true" || import.meta.env.VITE_ENABLE_RECAPTCHA === "1");
     const RECAPTCHA_SITE_KEY = organizationEnv.recaptcha_site_key ?? import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
     return(
-        <div>
-            <div className="center-container container">
-                <h3 className="center-text">Recuperação de senha</h3>
-                <div className="form-container">
-                    <div className="form-group">
-                        <div className="label-form">
-                            <span className="material-symbols-outlined">mail</span>
-                        </div>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            placeholder="Insira seu usuario ou e-mail"
-                            required
-                        />
-                    </div>
-
-                    {
-                        !ENABLE_RECAPTCHA ? null :
-                            <center>
-                                <br/>
-                                <ReCAPTCHA ref={(r) => setRecaptchaRef(r) } sitekey={RECAPTCHA_SITE_KEY} onChange={handleRecaptchaChange} />
-                                <br/>
-                            </center>
-                    }
-
-                    <button
-                        type="submit"
-                        value="Entrar"
-                        className="btn_form"
-                        onClick={handleRecover}
-                    >
-                        ENVIAR
-                    </button>
-
-                </div>
-            </div>
-        </div>
-
+        <UniversiForm.Root id="recovery-password-modal" title="Recuperação de Conta" callback={ recoveryAccount } skipCancelConfirmation={ true } >
+            <UniversiForm.Input.Text
+                required
+                param="username"
+                label="Nome de usuário ou e-mail"
+                placeholder="Insira seu usuario ou e-mail"
+            />
+            { ENABLE_RECAPTCHA && RECAPTCHA_SITE_KEY && <UniversiForm.Input.ReCaptcha
+                key={ recaptchaWidgetKey }
+                param="recaptchaToken"
+                sitekey={ RECAPTCHA_SITE_KEY }
+                ref={ recaptchaRef }
+                required
+            />}
+        </UniversiForm.Root>
     )
 
+    async function recoveryAccount( data: UniversiForm.Data<UniversimeApi.Auth.RecoverPassword_RequestDTO> ) {
+        if ( !data.confirmed ) {
+            navigate( "/" )
+            return;
+        }
+    
+        SwalUtils.fireToasty({title: "Verificando dados"})
+        const res = await UniversimeApi.Auth.recoverPassword({
+            username: data.body!.username,
+            recaptchaToken: data.body!.recaptchaToken ?? undefined,
+        })
+        .then(res =>{
+            if(res.isSuccess()) {
+                SwalUtils.fireToasty({
+                    title: "Recuperação de Conta",
+                    text: "Uma mensagem foi enviada para o seu e-mail com as instruções de recuperação",
+                    timer: 60_000 * 5,
+                });
+                navigate( "/" )
+            }
+        })
+        setRecaptchaWidgetKey(prev => prev + 1);
+    };
 }

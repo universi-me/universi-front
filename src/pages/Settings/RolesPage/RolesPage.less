@@ -59,6 +59,9 @@
     }
 
     #participants-list {
+
+        @options-width: 2rem;
+
         .profile-item {
             display: flex;
             flex-direction: row;
@@ -138,6 +141,88 @@
 
                     &:hover{
                         background-color: @card-background-color;
+                    }
+                }
+            }
+        }
+        .user-options-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: none;
+            border-radius: 50%;
+            background-color: transparent;
+
+            font-size: 1.5rem;
+            width: @options-width;
+            height: fit-content;
+            aspect-ratio: 1;
+
+            will-change: background-color;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #C1C1C1;
+            }
+        }
+
+        .user-options {
+            background-color: var(--primary-color);
+            border-radius: .625rem;
+            padding: .25rem .5rem;
+
+            min-width: 7rem;
+
+            .user-options-arrow {
+                fill: var(--primary-color);
+            }
+
+            .dropdown-options-item {
+                color: white;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                width: 100%;
+
+                gap: 1rem;
+
+                padding: .25rem .5rem;
+                border-radius: .625rem;
+
+                font-size: .9rem;
+
+                cursor: pointer;
+
+                &:hover {
+                    background-color: @button-hover-color;
+                    outline: none;
+                    color: black;
+
+                    &.delete {
+                        background-color: @font-color-alert;
+                        color: @font-color-v1;
+                    }
+                }
+
+                &[data-disabled] {
+                    color: @font-color-disabled;
+
+                    &:hover {
+                        background-color: transparent;
+                    }
+                }
+
+                &:not(:last-child) {
+                    margin-bottom: .25rem;
+                }
+
+                .right-slot {
+                    width: fit-content;
+                    margin-left: auto;
+
+                    &.bi {
+                        font-size: 1.2em;
                     }
                 }
             }
