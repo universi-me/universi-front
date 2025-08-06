@@ -74,7 +74,7 @@ export function ProfileExperiences() {
             showConfirmButton: true,
             confirmButtonColor: "var(--font-color-alert)",
 
-            title : "Excluir competência?",
+            title : "Excluir experiência?",
             text: "Tem certeza? Esta ação é irreversível", 
             confirmButtonText: "Sim",
             cancelButtonText: "Não"

@@ -63,7 +63,7 @@ export function ProfileEducations() {
             showConfirmButton: true,
             confirmButtonColor: "var(--font-color-alert)",
 
-            title : "Excluir competência?",
+            title : "Excluir formação acadêmica?",
             text: "Tem certeza? Esta ação é irreversível", 
             confirmButtonText: "Sim",
             cancelButtonText: "Não"
