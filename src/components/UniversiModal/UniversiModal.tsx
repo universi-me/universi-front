@@ -17,6 +17,7 @@ export type UniversiModalProps = {
     onClickOutside?: MouseEventHandler<HTMLDivElement>;
 
     contentProps?: HTMLAttributes<HTMLDivElement>;
+    overlayProps?: Omit<HTMLAttributes<HTMLDivElement>, "onClick">;
 };
 
 /**
@@ -31,7 +32,7 @@ export function UniversiModal( props: Readonly<UniversiModalProps> ) {
     return (
         <Portal node={document.getElementById("modal-container")}>
             <div className="universi-modal" >
-                <div className="universi-modal-overlay" onClick={props.onClickOutside} />
+                <div { ...props.overlayProps } className={ makeClassName( "universi-modal-overlay", props.overlayProps?.className ) } onClick={props.onClickOutside} />
                 <div { ...props.contentProps } className={ makeClassName( "universi-modal-content", props.contentProps?.className ) }>
                     { props.children }
                 </div>

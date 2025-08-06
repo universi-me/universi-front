@@ -1,5 +1,6 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigation } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/Theme";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import UniversiHeader from "@/components/UniversiHeader";
 import useUmami from "@/hooks/useUmami";
 import { AuthProvider } from "@/contexts/Auth";
@@ -9,6 +10,7 @@ import "./App.less";
 
 export function App() {
     useUmami();
+    const navigation = useNavigation();
 
     return (
         <AuthProvider>
@@ -18,7 +20,10 @@ export function App() {
                         <UniversiHeader />
 
                         <div id="app-main">
-                            <Outlet />
+                            { navigation.location
+                                ? <LoadingSpinner noOverlay/>
+                                : <Outlet />
+                            }
                         </div>
                     </div>
                 </ThemeProvider>
