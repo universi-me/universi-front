@@ -1,9 +1,8 @@
 import { useContext, useState, useMemo, useEffect } from "react";
-import { Link } from "react-router-dom";
 
 import { EMPTY_LIST_CLASS, GroupContext } from "@/pages/Group";
 import { ProfileClass } from "@/types/Profile";
-import { ProfileImage } from "@/components/ProfileImage/ProfileImage";
+import { ChangeGroupParticipantsForm } from "./ChangeGroupParticipantsForm";
 
 import "./GroupPeople.less";
 import { Filter } from "@/components/Filter/Filter";
@@ -13,7 +12,6 @@ import { UniversimeApi } from "@/services"
 import ActionButton from "@/components/ActionButton";
 import useCanI from "@/hooks/useCanI";
 import { Permission } from "@/utils/roles/rolesUtils";
-import UniversiForm from "@/components/UniversiForm";
 import { AuthContext } from "@/contexts/Auth";
 import ProfileCard from "@/components/ProfileCard";
 
@@ -85,32 +83,11 @@ export function GroupPeople() {
     if (!groupContext)
         return null;
 
-    const [participantsOrganization, setParticipantsOrganization] = useState<ProfileClass[]>();
-    const loadingParticipantsOrganization = participantsOrganization === undefined;
-
     function handleShowAddPeople(){
         return () => {
             setShowAddPeopleModal(true);
         }
     }
-
-    useEffect(() => {
-        const fetchParticipants = () => {
-            setParticipantsOrganization( undefined );
-            UniversimeApi.GroupParticipant.get(authContext.organization.id as string).then((response) => {
-                if (response.isSuccess() && Array.isArray(response.data)) {
-                    setParticipantsOrganization(
-                        response.data
-                        .filter( p => undefined === groupContext.participants.find( gp => gp.id === p.id ) )
-                        .map( ProfileClass.new )
-                    );
-                }
-            });
-        }
-        if (showAddPeopleModal) {
-            fetchParticipants();
-        }
-    }, [showAddPeopleModal, authContext.organization.id]);
 
     return (
         <section id="people" className="group-tab">
@@ -128,22 +105,19 @@ export function GroupPeople() {
                     }
 
                     {
-                        canI("PEOPLE", Permission.READ_WRITE, groupContext.group) &&
-                            <ActionButton name="Adicionar" buttonProps={{ onClick: handleShowAddPeople() }} />
+                        canI("PEOPLE", Permission.READ_WRITE, groupContext.group) && groupContext.group.organization !== undefined &&
+                            <ActionButton name="Alterar" buttonProps={{ onClick: handleShowAddPeople() }} biIcon="people-fill" />
                     }
 
                     {
-                        showAddPeopleModal && !loadingParticipantsOrganization &&
-                            <UniversiForm.Root title="Adicionar participante" callback={ handleForm } confirmButton={ { text: "Adicionar" } }>
-                                <UniversiForm.Input.Select
-                                    param="participant"
-                                    label="Usuário"
-                                    required
-                                    options={ participantsOrganization }
-                                    getOptionUniqueValue={ p => p.id }
-                                    getOptionLabel={ p => p.fullname! }
-                                />
-                            </UniversiForm.Root>
+                        showAddPeopleModal &&
+                            <ChangeGroupParticipantsForm
+                                group={ groupContext.group }
+                                callback={ async res => {
+                                    if ( res ) await groupContext.refreshData();
+                                    setShowAddPeopleModal( false );
+                                } }
+                            />
                     }
 
                 </div>
@@ -321,35 +295,7 @@ export function GroupPeople() {
             </div>
         )
     }
-
-    async function handleForm( form: GroupPeopleForm ) {
-        if ( !form.confirmed ) {
-            setShowAddPeopleModal( false );
-            return;
-        }
-
-        await UniversimeApi.GroupParticipant.add({
-            groupId: groupContext!.group.id!,
-            participant: form.body.participant.id,
-        });
-
-        await groupContext!.refreshData();
-        setShowAddPeopleModal( false );
-    }
 }
-
-type GroupPeopleForm = UniversiForm.Data<{
-    participant: ProfileClass;
-}>;
-
-
-// function toggleAdvancedSearch(){
-//     let searchDiv = document.getElementById("advanced-search");
-//     if(searchDiv?.style.display != "none")
-//         searchDiv?.style.setProperty("display", "none")
-//     else
-//         searchDiv?.style.setProperty("display", "")
-// }
 
 function makePeopleList(people: ProfileClass[], filter: string) {
     if (people.length === 0) {

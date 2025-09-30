@@ -13,6 +13,7 @@ import * as SwalUtils from "@/utils/sweetalertUtils";
 import { ProfileClass } from "@/types/Profile";
 import { UserAccessLevelLabel } from "@/types/User";
 import "./RolesPage.less";
+import UniversiForm from "@/components/UniversiForm";
 
 export function RolesPage() {
     const data = useLoaderData() as RolesPageLoaderResponse;
@@ -27,6 +28,9 @@ export function RolesPage() {
 
     const [showActionPopup, setShowActionPopup] = useState(false);
     const [actionSelectionBlock, setActionSelectionBlock] = useState(false);
+
+    const [optionProfile, setOptionProfile] = useState<Profile>();
+    const [optionPasswordProfile, setOptionPasswordProfile] = useState<Profile>();
 
     if (!participants) {
         SwalUtils.fireModal({
@@ -123,11 +127,128 @@ export function RolesPage() {
         participantsDispatch({ type: "SET_ALL", setParticipants: participants!.map(p => new ProfileOnList(p)) });
     }
 
-    
+    function showOptionsProfile(profile: ProfileOnList) {
+        setOptionProfile(profile);
+    }
+
+    function showOptionsPasswordProfile(profile: ProfileOnList) {
+        setOptionPasswordProfile(profile);
+    }
+
+    async function handleOptionsAccount( data: UniversiForm.Data<UniversimeApi.User.UserAccountUpdate_RequestDTO> ) {
+        if ( !data.confirmed ) {
+            setOptionProfile(undefined);
+            setOptionPasswordProfile(undefined);
+            return;
+        }
+        await UniversimeApi.User.updateAccount(data.body)
+        await refreshParticipants();
+        setOptionProfile(undefined);
+        setOptionPasswordProfile(undefined);
+    }
+
+    const OPTIONS_DEFINITION: OptionInMenu<ProfileOnList>[] = [
+            {
+                text: "Editar",
+                biIcon: "pencil-fill",
+                onSelect(profile) {
+                    showOptionsProfile(profile)
+                }
+            },
+            {
+                text: "Definir Senha Temporária",
+                biIcon: "key-fill",
+                onSelect(profile) {
+                    showOptionsPasswordProfile(profile)
+                }
+            },
+            {
+                text: "Bloquear",
+                biIcon: "lock-fill",
+                className: "delete",
+                onSelect(profile) {
+                    blockProfile(profile, true)
+                },
+                hidden(profile) {
+                    return profile.blockedAccount!;
+                }
+            },
+            {
+                text: "Desbloquear",
+                biIcon: "unlock-fill",
+                onSelect(profile) {
+                    blockProfile(profile, false)
+                },
+                hidden(profile) {
+                    return !profile.blockedAccount!;
+                }
+            }
+        ];
 
     return <div id="roles-settings">
-        <SettingsTitle>Configurar administradores</SettingsTitle>
-        <SettingsDescription>Configure os níveis de acesso dos usuários do Universi.me</SettingsDescription>
+
+        {   optionProfile &&
+        <UniversiForm.Root id="profile-options-modal" title="Editar Usuário" callback={ handleOptionsAccount } >
+            <UniversiForm.Input.Hidden
+                param="userId"
+                defaultValue={ optionProfile?.user.id }
+            />
+            <UniversiForm.Input.Text
+                param="username"
+                label="Usuário"
+                value={optionProfile?.user.name}
+                disabled
+            />
+            <UniversiForm.Input.Text
+                param="email"
+                label="E-mail"
+                defaultValue={optionProfile?.user.email}
+                required
+            />
+            <UniversiForm.Input.Switch
+                param="temporarilyPassword"
+                label="Requerer Definição de Senha"
+                defaultValue={optionProfile?.user.temporarilyPassword}
+            />
+            <UniversiForm.Input.Switch
+                param="blockedAccount"
+                label="Bloquear Conta"
+                defaultValue={optionProfile?.user.blocked_account}
+            />
+        </UniversiForm.Root> }
+
+        {   optionPasswordProfile &&
+        <UniversiForm.Root id="profile-options-modal" title="Definir Senha Temporária" callback={ handleOptionsAccount } >
+            <UniversiForm.Input.Hidden
+                param="userId"
+                defaultValue={ optionPasswordProfile?.user.id }
+            />
+            <UniversiForm.Input.Text
+                param="username"
+                label="Usuário"
+                value={optionPasswordProfile?.user.name}
+                disabled
+            />
+            <UniversiForm.Input.Password
+                allowCopy
+                allowGenerate
+                param="password"
+                label="Definir Senha"
+                passwordPlaceholder="Insira uma senha"
+                confirmPlaceholder="Confirme a senha"
+                required
+                mustConfirm
+                mustMatchRequirements
+            />
+            <UniversiForm.Input.Switch
+                param="temporarilyPassword"
+                label="Senha Temporária"
+                defaultValue={true}
+            />
+        </UniversiForm.Root> }
+
+        <SettingsTitle>Gerenciar Usuários</SettingsTitle>
+        <SettingsDescription>Gerencie os usuários, definir senha temporária, bloquear ou configurar os níveis de acesso na plataforma</SettingsDescription>
         <section id="search-submit-wrapper">
             <input type="search" placeholder="Pesquisar usuário" onChange={setStateAsValue(setFilter)} />
             <button type="button" onClick={submitChanges} className="submit" disabled={!canSubmit} title={canSubmit ? undefined : "Faça uma alteração primeiro"}>Salvar mudanças</button>
@@ -197,8 +318,8 @@ export function RolesPage() {
                 <div style={{  display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', justifyContent: 'space-between',  width: '100%', }}>
 
                 <div style={{margin: 0, padding: 0, width: '5%'}}>
-                    { isSelectionActive && <h2 onClick={() => toggleSelection(profile) } className={isSelectionProfile(profile) ? "bi-check-circle-fill" : "bi-check-circle"} /> }
-                    { profile.blockedAccount && <><br/><h2 className="bi-ban" style={{color: 'red'}}/></> }
+                    { isSelectionActive && <h2 onClick={() => toggleSelection(profile) } className={isSelectionProfile(profile) ? "bi-check-circle-fill" : "bi-circle"} /> }
+                    { profile.blockedAccount && <><br/><h2 className="bi bi-x-octagon-fill" style={{color: 'red', paddingRight: '2em'}} title="Usuário Bloqueado"/></> }
                 </div>
 
                 <div style={{width: '15%'}}>
@@ -229,9 +350,21 @@ export function RolesPage() {
 
                 <div>
                     <section id="search-submit-wrapper" style={{marginBottom: 'auto'}}>
-                        <button type="button" className="submit" onClick={() => blockProfile(profile, !profile.blockedAccount)} style={{display: 'inline-block' }}>
-                            { profile.blockedAccount ? <><span className="bi bi-lock-fill"/> Bloqueado</> : <><span className="bi bi-unlock-fill"/> Habilitado</> }
-                        </button>
+                        <span  style={{paddingLeft: 10}}/>
+                        { 
+                            <DropdownMenu.Root>
+                                <DropdownMenu.Trigger asChild>
+                                    <button className="user-options-button">
+                                        <i className="bi bi-three-dots-vertical" />
+                                    </button>
+                                </DropdownMenu.Trigger>
+                        
+                                <DropdownMenu.Content className="user-options" side="left">
+                                    { OPTIONS_DEFINITION.map(def => renderOption(profile, def)) }
+                                        <DropdownMenu.Arrow className="user-options-arrow" height=".5rem" width="1rem" />
+                                </DropdownMenu.Content>
+                            </DropdownMenu.Root>
+                        }
                     </section>
                 </div>
 

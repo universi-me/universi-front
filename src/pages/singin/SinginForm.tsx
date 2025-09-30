@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useRef, useState } from "react";
+import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha-enterprise";
 
@@ -15,6 +15,7 @@ export default function SinginForm() {
   const [email, setEmail] = useState("");
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>( null );
+  const [recaptchaWidgetKey, setRecaptchaWidgetKey] = useState(0);
 
   const [ loadingSignIn, setLoadingSignIn ] = useState( false );
 
@@ -63,12 +64,12 @@ export default function SinginForm() {
         </div>
 
         {
-          !ENABLE_RECAPTCHA ? null :
-            <center>
-              <br/>
-              <ReCAPTCHA ref={ recaptchaRef } sitekey={ RECAPTCHA_SITE_KEY } onChange={ setRecaptchaToken } />
-              <br/>
-            </center>
+          ENABLE_RECAPTCHA && RECAPTCHA_SITE_KEY &&
+          <center>
+            <br/>
+              <ReCAPTCHA key={ recaptchaWidgetKey } ref={ recaptchaRef } sitekey={ RECAPTCHA_SITE_KEY } onChange={ setRecaptchaToken } />
+            <br/>
+          </center>
         }
 
         <button
@@ -103,7 +104,8 @@ export default function SinginForm() {
         setLoadingSignIn( true );
 
         await auth.signin(email, password, recaptchaToken);
-        recaptchaRef.current?.reset();
+        setRecaptchaWidgetKey(prev => prev + 1);
+        setRecaptchaToken(null);
 
         setLoadingSignIn( false );
     }
